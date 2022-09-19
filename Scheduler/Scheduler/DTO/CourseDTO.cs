@@ -15,7 +15,6 @@ namespace Scheduler.DTO
         public string Description { get; set; }
         public int SlotAmount { get; set; }
         public int status { get; set; }
-
         public CourseDTO()
         {
         }

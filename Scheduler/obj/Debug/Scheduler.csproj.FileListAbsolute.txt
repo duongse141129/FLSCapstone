@@ -1,3 +1,0 @@
-E:\Scheduler\Scheduler\obj\Debug\Scheduler.csproj.AssemblyReference.cache
-E:\Scheduler\Scheduler\obj\Debug\Scheduler.csproj.SuggestedBindingRedirects.cache
-E:\Scheduler\Scheduler\obj\Debug\Scheduler.csproj.CoreCompileInputs.cache

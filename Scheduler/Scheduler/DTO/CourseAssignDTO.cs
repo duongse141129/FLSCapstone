@@ -24,5 +24,10 @@ namespace Scheduler.DTO
             CourseID = courseID;
             this.status = status;
         }
+
+        public override string ToString()
+        {
+            return "CourseAssign: " + CourseAssignID+"------"+LecturerID+"-------"+ CourseID+"--------"+status;
+        }
     }
 }

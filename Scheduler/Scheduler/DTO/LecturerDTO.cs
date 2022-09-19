@@ -18,7 +18,6 @@ namespace Scheduler.DTO
         public string Phone { get; set; }
         public int status { get; set; }
         public string DepartmentID { set; get; }
-
         public LecturerDTO()
         {
         }
