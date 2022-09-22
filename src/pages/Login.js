@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import React from 'react'
 import fptlogo from '../images/FPT-logo.webp'
 import googleIcon from '../images/google.png'
@@ -11,7 +11,6 @@ const Login = () => {
       justifyContent='center'
       alignItems='center'
       sx={{
-        background: "rgb(50,168,82)",
         background: "linear-gradient(90deg, rgba(50,168,82,1) 0%, rgba(25,184,123,1) 100%)"
       }}
     >
