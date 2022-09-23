@@ -3,7 +3,7 @@ import React from 'react'
 import fptlogo from '../images/FPT-logo.webp'
 import googleIcon from '../images/google.png'
 
-const Login = () => {
+const Login = ({handleClick}) => {
   return (
     <Stack
       height='100vh'
@@ -19,7 +19,7 @@ const Login = () => {
         width='80vw'
         bgcolor='white'
         direction='row'
-        
+
         py={4}
         borderRadius='12px'
         boxShadow="rgba(0, 0, 0, 0.24) 0px 3px 8px"
@@ -34,30 +34,11 @@ const Login = () => {
           direction='column-reverse'
         >
           <Stack
-            direction='row'
-            justifyContent='space-around'
             alignItems='center'
           >
-            <Stack
-              bgcolor='#32a852'
-              height='80px'
-              width='80px'
-              justifyContent='center'
-              alignItems='center'
-              borderRadius='20px'
-            >
-              <Typography 
-                color='white' 
-                fontSize='24px' 
-                fontWeight='bold'
-                textAlign='center'
-              >
-                FLS
-              </Typography>
-            </Stack>
-            <img src={fptlogo} alt="" width='160px'/>
+            <img src={fptlogo} alt="" width='160px' />
           </Stack>
-          <Typography 
+          <Typography
             textAlign='center'
             variant='h4'
             letterSpacing='1px'
@@ -81,7 +62,7 @@ const Login = () => {
           borderLeft='2px solid lightgray'
           px={4}
         >
-          <Typography 
+          <Typography
             textAlign='center'
             variant='h5'
           >
@@ -97,12 +78,13 @@ const Login = () => {
             pl='2px'
             gap={1.2}
             sx={{
-              transition:'all 0.2s linear',
+              transition: 'all 0.2s linear',
               '&:hover': {
                 bgcolor: '#1565c0',
                 cursor: 'pointer'
               }
             }}
+            onClick={handleClick}
           >
             <Stack
               bgcolor='white'
@@ -111,10 +93,11 @@ const Login = () => {
               justifyContent='center'
               alignItems='center'
             >
-              <img src={googleIcon} alt="" width='24px'/>
+              <img src={googleIcon} alt="" width='24px' />
             </Stack>
             <Typography color='white'>Sign in email @fpt.edu.vn</Typography>
           </Stack>
+
         </Stack>
       </Stack>
     </Stack>

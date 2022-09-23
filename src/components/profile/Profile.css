@@ -1,0 +1,46 @@
+.input-date, .input-text, textarea{
+  transition: all 0.2s linear;
+}
+
+.input-text {
+  outline: none;
+  height: 40px;
+  background: transparent;
+  width: 360px;
+  padding: 8px;
+  font-size: 16px;
+  border: 1px solid grey;
+}
+
+.input-text:focus, .input-date:focus, textarea:focus{
+  border: 2px solid #32a852;
+}
+
+.input-date {
+  outline: none;
+  height: 40px;
+  background: transparent;
+  width: 160px;
+  padding: 8px;
+  font-size: 16px;
+  margin-right: 200px;
+  border: 1px solid grey;
+}
+
+.input-email{
+  border: none;
+}
+
+textarea {
+  outline: none;
+  height: 120px;
+  background: transparent;
+  width: 360px;
+  padding: 8px;
+  font-size: 16px;
+  resize: none
+}
+
+label{
+  font-weight: 500;
+}
