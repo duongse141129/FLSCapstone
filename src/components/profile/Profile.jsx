@@ -1,9 +1,15 @@
 import { Box, Stack, Typography } from '@mui/material'
-import React from 'react';
+import React, { useState } from 'react';
 import { Save } from '@mui/icons-material';
 import './Profile.css';
+import EditModal from './EditModal';
 
 const Profile = () => {
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <Box flex={5} p={1}>
       <Stack
@@ -29,6 +35,7 @@ const Profile = () => {
               background: 'green'
             }
           }}
+          onClick={handleShow}
         >
           <Typography>Save</Typography>
           <Save />
@@ -42,24 +49,25 @@ const Profile = () => {
         <Stack
           height='100%'
           width='480px'
-          gap={3}
+          gap={2}
         >
           {/**fullname */}
           <Stack
             direction='row'
             alignItems='center'
             justifyContent='space-between'
-            className='row-field'
           >
             <label htmlFor="fullname">Full name</label>
-            <input id='fullname' className='input-text' />
+            <input 
+              id='fullname' 
+              className='input-text' 
+            />
           </Stack>
           {/**gender */}
           <Stack
             direction='row'
             alignItems='center'
             justifyContent='space-between'
-            className='row-field'
           >
             <label htmlFor="">Gender</label>
             <Stack width='360px' height='40px' alignItems='center' direction='row'>
@@ -84,7 +92,6 @@ const Profile = () => {
             direction='row'
             alignItems='center'
             justifyContent='space-between'
-            className='row-field'
           >
             <label htmlFor="birthday">Birthday</label>
             <input id='birthday' className='input-date' type='date' />
@@ -94,7 +101,6 @@ const Profile = () => {
             direction='row'
             alignItems='center'
             justifyContent='space-between'
-            className='row-field'
           >
             <label htmlFor="phone">Phone</label>
             <input id='phone' className='input-text' />
@@ -104,27 +110,36 @@ const Profile = () => {
             direction='row'
             alignItems='center'
             justifyContent='space-between'
-            className='row-field'
           >
             <label htmlFor="address">Address</label>
-            <textarea id='address' />
+            <input id='address' className='input-text' />
           </Stack>
           {/**Email */}
           <Stack
             direction='row'
             alignItems='center'
             justifyContent='space-between'
-            className='row-field'
           >
-            <label htmlFor="email">Email</label>
-            <input id='email' className='input-text input-email'
+            <label>Email</label>
+            <input className='input-text input-read'
               value='duonghdse140501@fpt.edu.vn' readOnly
             />
           </Stack>
-
+          {/**Department */}
+          <Stack
+            direction='row'
+            alignItems='center'
+            justifyContent='space-between'
+          >
+            <label>Department</label>
+            <input className='input-text input-read'
+              value='Software Engineering' readOnly
+            />
+          </Stack>
 
         </Stack>
       </Stack>
+      <EditModal show={show} handleClose={handleClose} />
     </Box>
   )
 }
