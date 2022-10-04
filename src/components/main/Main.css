@@ -1,0 +1,7 @@
+.slot:hover{
+  background-color: #e3e3e3;
+}
+
+.slot:hover .info{
+  display: block;
+}

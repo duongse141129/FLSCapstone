@@ -5,6 +5,7 @@ import Main from "./components/main/Main";
 import Rating from "./components/rating/Rating";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
+import Course from "./components/course/Course";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -22,6 +23,7 @@ function App() {
             <Route index element={<Main/>}/>
             <Route path='profile' element={<Profile/>}/>
             <Route path='rating' element={<Rating/>}/>
+            <Route path='course' element={<Course/>}/>
           </Route>
         </Routes>
       ) : <Login handleClick={handleClick}/>

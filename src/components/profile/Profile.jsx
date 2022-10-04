@@ -11,7 +11,7 @@ const Profile = () => {
   const handleShow = () => setShow(true);
 
   return (
-    <Box flex={5} p={1}>
+    <Box flex={5} m={1}>
       <Stack
         direction='row'
         alignItems='center'
