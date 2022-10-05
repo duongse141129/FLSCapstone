@@ -5,8 +5,10 @@ import Day from './Day'
 const Schedule = () => {
   return (
     <Stack
-      height='81vh'
+      height='77vh'
       gap={2}
+      px={2}
+      my={2}
     >
       <Stack 
         direction='row'

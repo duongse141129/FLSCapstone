@@ -11,9 +11,9 @@ const Rating = () => {
         Rating
       </Typography>
       <Stack
-        height='82vh'
+        height='80vh'
         alignItems='center'
-        py={1}
+        mb={2}
       >
         <Stack
           bgcolor='white'
@@ -21,8 +21,8 @@ const Rating = () => {
           width='800px'
           gap={2}
         >
-          <SubjectRating/>
           <SlotRating/>
+          <SubjectRating/>
         </Stack>
       </Stack>
     </Stack>

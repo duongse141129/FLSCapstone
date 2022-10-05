@@ -1,4 +1,4 @@
-import { Box } from '@mui/material';
+import { Button } from '@mui/material';
 import React from 'react';
 import Modal from 'react-bootstrap/Modal';
 
@@ -10,41 +10,23 @@ const EditModal = ({show, handleClose}) => {
       </Modal.Header>
       <Modal.Body>Are you sure to save ?</Modal.Body>
       <Modal.Footer>
-        <Box
-          sx={{
-            width: '80px',
-            bgcolor: 'lightgray',
-            textAlign: 'center',
-            p: '8px',
-            borderRadius: '4px',
-            transition: 'all 0.2s linear',
-            '&:hover':{
-              bgcolor: 'gray',
-              cursor: 'pointer'
-            }
-          }}
+        <Button
+          variant='outlined'
+          color='info'
           onClick={handleClose}
+          sx={{
+            mr: '12px'
+          }}
         >
           Cancel
-        </Box>
-        <Box
-          sx={{
-            width: '80px',
-            bgcolor: '#32a852',
-            textAlign: 'center',
-            p: '8px',
-            color: 'white',
-            borderRadius: '4px',
-            transition: 'all 0.2s linear',
-            '&:hover':{
-              bgcolor: 'green',
-              cursor: 'pointer'
-            }
-          }}
+        </Button>
+        <Button
+          variant='contained'
+          color='success'
           onClick={handleClose}
         >
           Save
-        </Box>
+        </Button>
       </Modal.Footer>
     </Modal>
   )

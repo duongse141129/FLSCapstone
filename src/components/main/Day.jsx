@@ -13,8 +13,8 @@ const Day = ({rightSide}) => {
     >
       <Stack 
         height='50px'
+        mb={1}
         textAlign='center'
-        mb={1.5}
         bgcolor='#32a852'
         color='white'
         borderRadius='12px 12px 0 0'
@@ -27,10 +27,10 @@ const Day = ({rightSide}) => {
         </Typography>
       </Stack>
       <Stack
-        height='180px' 
+        height='180px'
         overflow='auto'
         px={2}
-        
+        justifyContent='space-between'
       >
         <Slot rightSide={rightSide}/>
         <Slot rightSide={rightSide}/>

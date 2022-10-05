@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Button, Stack, Typography } from '@mui/material'
 import React, { useState } from 'react';
 import { Save } from '@mui/icons-material';
 import './Profile.css';
@@ -21,25 +21,15 @@ const Profile = () => {
         <Typography variant='h6' color='#778899'>
           View Profile
         </Typography>
-        <Stack
-          width='100px' height='50px' bgcolor='#32a852' color='white'
-          borderRadius={2}
-          alignItems='center'
-          justifyContent='center'
-          direction='row'
-          gap={1}
-          sx={{
-            transition: 'all 0.2s linear',
-            '&:hover': {
-              cursor: 'pointer',
-              background: 'green'
-            }
-          }}
+        <Button
+          variant='contained'
+          color='success'
+          endIcon={<Save/>}
+          size='large'
           onClick={handleShow}
         >
-          <Typography>Save</Typography>
-          <Save />
-        </Stack>
+          Save
+        </Button>
       </Stack>
       <Stack
         height='76vh'

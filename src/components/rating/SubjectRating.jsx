@@ -28,8 +28,8 @@ const SubjectRating = () => {
       {
         !isRating ? (
           <TableContainer component={Stack} overflow='auto'
-            px={2} height={300} alignItems='center'>
-            <Table sx={{ width: 700 }} aria-label="simple table">
+            px={2} height={330} alignItems='center'>
+            <Table sx={{ width: 700 }} stickyHeader>
               <TableHead>
                 <TableRow>
                   <TableCell>Subject ID</TableCell>
@@ -42,9 +42,11 @@ const SubjectRating = () => {
                 {rows.map((row) => (
                   <TableRow
                     key={row.id}
-                    sx={{}}
+                    sx={{
+                      '&:last-child td, &:last-child th': { border: 0 } 
+                    }}
                   >
-                    <TableCell component="th" scope="row">
+                    <TableCell>
                       {row.id}
                     </TableCell>
                     <TableCell>{row.name}</TableCell>

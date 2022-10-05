@@ -9,7 +9,7 @@ const Main = () => {
       flex={5}
       m={1}
     >
-      <Stack direction='row' justifyContent='space-between' mb={1}>
+      <Stack direction='row' justifyContent='space-between'>
         <Typography variant='h6' color='#778899'>
           View Schedule of Lecturer (Hong Dai Duong)
         </Typography>
