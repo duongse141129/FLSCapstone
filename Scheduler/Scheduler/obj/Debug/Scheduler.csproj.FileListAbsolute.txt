@@ -1,0 +1,17 @@
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\Scheduler.exe.config
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\Scheduler.exe
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\Scheduler.pdb
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\EPPlus.dll
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\EPPlus.Interfaces.dll
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\EPPlus.System.Drawing.dll
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\FPTULecturerScheduler.dll
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\Microsoft.IO.RecyclableMemoryStream.dll
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\FPTULecturerScheduler.pdb
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\EPPlus.xml
+C:\Users\84393\Desktop\Scheduler\Scheduler\bin\Debug\Microsoft.IO.RecyclableMemoryStream.xml
+C:\Users\84393\Desktop\Scheduler\Scheduler\obj\Debug\Scheduler.csproj.AssemblyReference.cache
+C:\Users\84393\Desktop\Scheduler\Scheduler\obj\Debug\Scheduler.csproj.SuggestedBindingRedirects.cache
+C:\Users\84393\Desktop\Scheduler\Scheduler\obj\Debug\Scheduler.csproj.CoreCompileInputs.cache
+C:\Users\84393\Desktop\Scheduler\Scheduler\obj\Debug\Scheduler.csproj.CopyComplete
+C:\Users\84393\Desktop\Scheduler\Scheduler\obj\Debug\Scheduler.exe
+C:\Users\84393\Desktop\Scheduler\Scheduler\obj\Debug\Scheduler.pdb
