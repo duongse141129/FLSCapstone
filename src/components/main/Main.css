@@ -1,7 +1,17 @@
-.slot:hover{
-  background-color: #e3e3e3;
+.timetable-time{
+  color: white;
+  border-bottom: 1px solid #e3e3e3;
+  text-align: center;
 }
 
-.slot:hover .info{
-  display: block;
+.timetable-slot{
+  border: 1px solid #e3e3e3;
+  border-top: none;
+  border-left: none;
+  /* background-color: #f8f8ff; */
+}
+
+.is-sunday{
+  background-color: gray;
+  opacity: 0.2;
 }

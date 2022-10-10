@@ -2,43 +2,36 @@ import { Stack, Typography } from '@mui/material'
 import React from 'react'
 import Slot from './Slot'
 
-const Day = ({rightSide}) => {
+const Day = ({ day, date, slots }) => {
   return (
-    <Stack 
-      flex={1} 
-      bgcolor='white' 
-      boxShadow='rgba(0, 0, 0, 0.24) 0px 3px 8px'
-      borderRadius='12px'
-      position='relative'
-    >
-      <Stack 
-        height='50px'
-        mb={1}
-        textAlign='center'
-        bgcolor='#32a852'
-        color='white'
-        borderRadius='12px 12px 0 0'
-      >
-        <Typography>
-          Mon 
-        </Typography>
-        <Typography>
-          26-09-2022
-        </Typography>
+    <Stack flex={1}>
+      <Stack flex={1} alignItems='center' justifyContent='center'
+        color='white' bgcolor='#32a852' borderRight='1px solid #e3e3e3'>
+        <Typography>{day}</Typography>
+        <Typography>{date}</Typography>
       </Stack>
-      <Stack
-        height='180px'
-        overflow='auto'
-        px={2}
-        justifyContent='space-between'
-      >
-        <Slot rightSide={rightSide}/>
-        <Slot rightSide={rightSide}/>
-        <Slot rightSide={rightSide}/>
-        <Slot rightSide={rightSide}/>
+      <Stack flex={9}>
+        {
+          day === 'SUN' ? (
+            <>
+              <Stack flex={1} className='timetable-slot is-sunday'></Stack>
+              <Stack flex={1} className='timetable-slot is-sunday'></Stack>
+              <Stack flex={1} className='timetable-slot is-sunday'></Stack>
+              <Stack flex={1} className='timetable-slot is-sunday'></Stack>
+            </>
+          ) : (
+            <>
+              <Slot slot={slots.find((slot) => slot.number === 1) || {}}/>
+              <Slot slot={slots.find((slot) => slot.number === 2) || {}}/>
+              <Slot slot={slots.find((slot) => slot.number === 3) || {}}/>
+              <Slot slot={slots.find((slot) => slot.number === 4) || {}}/>
+            </>
+          )
+        }
       </Stack>
     </Stack>
   )
 }
 
 export default Day
+

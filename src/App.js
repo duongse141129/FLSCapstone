@@ -6,6 +6,8 @@ import Rating from "./components/rating/Rating";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Course from "./components/course/Course";
+import Feedback from "./components/feedback/Feedback";
+import Semester from "./components/semester/Semester";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -24,6 +26,8 @@ function App() {
             <Route path='profile' element={<Profile/>}/>
             <Route path='rating' element={<Rating/>}/>
             <Route path='course' element={<Course/>}/>
+            <Route path='feedback' element={<Feedback/>}/>
+            <Route path='semester' element={<Semester/>}/>
           </Route>
         </Routes>
       ) : <Login handleClick={handleClick}/>

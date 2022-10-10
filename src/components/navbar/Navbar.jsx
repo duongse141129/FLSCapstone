@@ -1,9 +1,10 @@
 import React from 'react';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
+import ReorderIcon from '@mui/icons-material/Reorder';
 import { Avatar, Box, Stack, Typography } from '@mui/material'
 
-const Navbar = () => {
+const Navbar = ({isExtend, setIsExtend}) => {
   return (
     <Box 
       bgcolor='white' 
@@ -16,9 +17,17 @@ const Navbar = () => {
       }}
     >
       <Stack direction='row' justifyContent='space-between' alignItems='center'>
-        <Stack direction='row' gap={1}
-          alignItems='center'
-        >
+        <Stack direction='row' alignItems='center'>
+          <ReorderIcon 
+            sx={{
+              mr: '36px',
+              '&:hover':{
+                color:'#32a852',
+                cursor: 'pointer'
+              } 
+            }}
+            onClick={() => setIsExtend(!isExtend)}
+          />
           <Stack
             bgcolor='#32a852'
             color='white'
@@ -30,7 +39,7 @@ const Navbar = () => {
           >
             <Typography fontWeight='bold'>FLS</Typography>
           </Stack>
-          <Typography variant='h5'>FPT Lecturer Scheduler</Typography>
+          <Typography variant='h5' ml='4px'>FPT Lecturer Scheduler</Typography>
         </Stack>
 
         <Stack direction='row' alignItems='center' gap={4}>
