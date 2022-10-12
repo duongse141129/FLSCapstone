@@ -15,11 +15,10 @@ const Login = ({handleClick}) => {
       }}
     >
       <Stack
-        height='70vh'
-        width='80vw'
+        height='60vh'
+        width='70vw'
         bgcolor='white'
         direction='row'
-
         py={4}
         borderRadius='12px'
         boxShadow="rgba(0, 0, 0, 0.24) 0px 3px 8px"
