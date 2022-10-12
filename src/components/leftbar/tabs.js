@@ -1,6 +1,7 @@
-import {CalendarMonth, AccountBox, 
-  StarBorder, LibraryBooks, FeedbackOutlined, AccessTime} 
-  from '@mui/icons-material';
+import {CalendarMonth, AccountBox, AccessTime, LocalLibraryOutlined,
+  //StarBorder, LibraryBooks, FeedbackOutlined, 
+} 
+from '@mui/icons-material';
 
 export const tabs = [
   {
@@ -8,21 +9,25 @@ export const tabs = [
     icon: <CalendarMonth/>
   },
   {
-    name: 'rating',
-    icon: <StarBorder/>
+    name: 'subject',
+    icon: <LocalLibraryOutlined/>
   },
-  {
-    name: 'course',
-    icon: <LibraryBooks/>
-  },
+  // {
+  //   name: 'course',
+  //   icon: <LibraryBooks/>
+  // },
   {
     name: 'semester',
     icon: <AccessTime/>
   },
-  {
-    name: 'feedback',
-    icon: <FeedbackOutlined/>
-  },
+  // {
+  //   name: 'feedback',
+  //   icon: <FeedbackOutlined/>
+  // },
+  // {
+  //   name: 'rating',
+  //   icon: <StarBorder/>
+  // },
   {
     name: 'profile',
     icon: <AccountBox/>

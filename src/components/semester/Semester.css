@@ -1,0 +1,58 @@
+.detail-tab{
+  opacity: 0.6;
+}
+
+.detail-tab:hover{
+  color: green;
+  text-decoration: underline;
+  opacity: 1;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.selected-tab{
+  color: green;
+  text-decoration: underline;
+  opacity: 1;
+  font-weight: 500 !important;
+}
+
+.slot-type-row{
+  border-bottom: 1px solid grey;
+}
+
+.slot-type-time{
+  border: 1px solid grey;
+  border-top: none;
+  border-bottom: none;
+}
+
+.slot-type-slot{
+  border-right: 1px solid grey;
+}
+
+.slot-type-slot:hover{
+  background-color: green;
+  cursor: pointer;
+}
+
+.slot-type-day{
+  border: 1px solid grey;
+  border-bottom: none;
+  border-left: none;
+}
+
+.picked-slot{
+  background-color: green;
+}
+
+.picked-full{
+  background-color: #e3e3e3;
+  color: #e3e3e3 !important;
+}
+
+.picked-full:hover{
+  background-color: #e3e3e3;
+  color: #e3e3e3 !important;
+  cursor: default;
+}

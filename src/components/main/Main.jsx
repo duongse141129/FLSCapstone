@@ -11,7 +11,7 @@ const Main = () => {
       mb={2}
     >
       <Stack direction='row' gap={12} mb={1}>
-        <Typography variant='h6' color='#778899'>
+        <Typography variant='h5' color='#778899' fontWeight='500'>
           View Schedule of Lecturer (Hong Dai Duong)
         </Typography>
         <Stack direction='row' gap={4}>
