@@ -16,7 +16,7 @@ const Semester = () => {
             <Typography variant='h5' color='#778899' fontWeight={500}>
               Semester
             </Typography>
-            <Stack mt={1} alignItems='center'>
+            <Stack mt={1} alignItems='center' gap={2}>
               {
                 years.map(year => (
                   <Year key={year.id} year={year} setIsShowDetail={setIsShowDetail}/>
@@ -40,7 +40,9 @@ const years = [
     semesters: [
       {
         id: 'Spring 2023',
-        status: 'Not Yet'
+        status: 'Not Yet',
+        start: '01/01',
+        end: '30/04',
       }
     ]
   },
@@ -49,32 +51,46 @@ const years = [
     semesters: [
       {
         id: 'Fall 2022',
-        status: 'On Going'
+        status: 'On Going',
+        start: '01/09',
+        end: '31/12',
       },
       {
         id: 'Summer 2022',
-        status: 'Closed'
+        status: 'Closed',
+        start: '01/05',
+        end: '31/08',
       },
       {
         id: 'Spring 2022',
-        status: 'Closed'
+        status: 'Closed',
+        start: '01/01',
+        end: '31/04',
       },
     ]
   },
   {
     id: 2021,
+    start: '01/09',
+    end: '31/12',
     semesters: [
       {
         id: 'Fall 2021',
-        status: 'Closed'
+        status: 'Closed',
+        start: '01/09',
+        end: '31/12',
       },
       {
         id: 'Summer 2021',
-        status: 'Closed'
+        status: 'Closed',
+        start: '01/05',
+        end: '31/08',
       },
       {
         id: 'Spring 2021',
-        status: 'Closed'
+        status: 'Closed',
+        start: '01/01',
+        end: '31/04',
       },
     ]
   },

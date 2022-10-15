@@ -28,14 +28,14 @@ const Login = ({handleClick}) => {
           bgcolor=''
           flex={1}
           justifyContent='center'
-          gap={4}
+          gap={2}
           px={4}
-          direction='column-reverse'
+          direction='column'
         >
           <Stack
             alignItems='center'
           >
-            <img src={fptlogo} alt="" width='160px' />
+            <img src={fptlogo} alt="" width='140px' />
           </Stack>
           <Typography
             textAlign='center'

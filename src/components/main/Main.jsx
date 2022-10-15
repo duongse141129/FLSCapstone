@@ -10,14 +10,14 @@ const Main = () => {
       m={1}
       mb={2}
     >
-      <Stack direction='row' gap={12} mb={1}>
+      <Stack direction='row' mb={1} gap={12}>
         <Typography variant='h5' color='#778899' fontWeight='500'>
-          View Schedule of Lecturer (Hong Dai Duong)
+          Schedule of Lecturer (Hong Dai Duong)
         </Typography>
-        <Stack direction='row' gap={4}>
+        <Stack direction='row' gap={4} px={1}>
           <Stack direction='row' gap={1} alignItems='center'>
             <Typography fontWeight={500}>Year</Typography>
-            <select>
+            <select className='year-cbx'>
               <option>2022</option>
               <option>2023</option>
               <option>2024</option>
@@ -25,7 +25,7 @@ const Main = () => {
           </Stack>
           <Stack direction='row' gap={1} alignItems='center'>
             <Typography fontWeight={500}>Week</Typography>
-            <select>
+            <select className='week-cbx'>
               <option>26-09 to 02-10</option>
               <option>03-10 to 09-10</option>
               <option>10-10 to 16-10</option>

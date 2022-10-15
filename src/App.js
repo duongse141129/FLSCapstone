@@ -9,6 +9,7 @@ import Course from "./components/course/Course";
 import Feedback from "./components/feedback/Feedback";
 import Semester from "./components/semester/Semester";
 import Subject from "./components/subject/Subject";
+import Department from "./components/department/Department";
 
 function App() {
   const [isLogin, setIsLogin] = useState(false);
@@ -30,6 +31,7 @@ function App() {
             <Route path='feedback' element={<Feedback/>}/>
             <Route path='semester' element={<Semester/>}/>
             <Route path='subject' element={<Subject/>}/>
+            <Route path='department' element={<Department/>}/>
           </Route>
         </Routes>
       ) : <Login handleClick={handleClick}/>

@@ -1,44 +1,56 @@
-import { Stack, Typography } from '@mui/material'
+import { Stack, Typography } from '@mui/material';
 import React from 'react'
 import Day from './Day'
 
 const Timetable = () => {
   return (
     <Stack height='100%' direction='row' px={1}>
-      <Stack flex={0.8} bgcolor='white'>
-        <Stack flex={1} bgcolor='transparent' color='white'
-          sx={{userSelect: 'none'}}
+      <Stack flex={0.6} bgcolor='white'>
+        <Stack flex={0.8} color='white' bgcolor='#32a852'
+          borderRight='1px solid #e3e3e3' borderBottom='1px solid #e3e3e3'
+          sx={{}}
         >
-          <Typography>Day</Typography>
-          <Typography>Slot</Typography>
+          <Typography textAlign='right' mr={1} fontWeight={500} 
+            color='white'>
+            Day
+          </Typography>
+          <Typography ml={1} fontWeight={500} color='white'>
+            Slot
+          </Typography>
         </Stack>
         <Stack flex={9} bgcolor='#32a852'>
           <Stack flex={1}
-            alignItems='center' justifyContent='center'
+            justifyContent='center'
             className='timetable-time'
           >
-            <Typography>Slot 1</Typography>
-            <Typography>07:00 - 09:15</Typography>
+            <Typography className='time-title'>Slot 1</Typography>
           </Stack>
           <Stack flex={1}
-            alignItems='center' justifyContent='center'
+            justifyContent='center'
             className='timetable-time'
           >
-            <Typography>Slot 2</Typography>
-            <Typography>09:45 - 12:00</Typography>
+            <Typography className='time-title'>Slot 2</Typography>
           </Stack>
           <Stack flex={1}
-            alignItems='center' justifyContent='center'
+            justifyContent='center'
             className='timetable-time'
           >
-            <Typography>Slot 3</Typography>
-            <Typography>12:30 - 14:45</Typography>
+            <Typography className='time-title'>Slot 3</Typography>
           </Stack>
-          <Stack flex={1} alignItems='center' justifyContent='center'
+          <Stack flex={1} justifyContent='center'
             className='timetable-time'
           >
-            <Typography>Slot 4</Typography>
-            <Typography>15:15 - 17:30</Typography>
+            <Typography className='time-title'>Slot 4</Typography>
+          </Stack>
+          <Stack flex={1} justifyContent='center'
+            className='timetable-time'
+          >
+            <Typography className='time-title'>Slot 5</Typography>
+          </Stack>
+          <Stack flex={1} justifyContent='center'
+            className='timetable-time'
+          >
+            <Typography className='time-title'>Slot 6</Typography>
           </Stack>
         </Stack>
       </Stack>

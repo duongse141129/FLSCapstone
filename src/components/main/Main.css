@@ -1,7 +1,12 @@
 .timetable-time{
   color: white;
   border-bottom: 1px solid #e3e3e3;
+  border-right: 1px solid #e3e3e3;
   text-align: center;
+}
+
+.time-title{
+  font-weight: 500 !important;
 }
 
 .timetable-slot{
@@ -14,4 +19,9 @@
 .is-sunday{
   background-color: gray;
   opacity: 0.2;
+}
+
+.year-cbx, .week-cbx{
+  border: none;
+  border: 1px solid black;
 }

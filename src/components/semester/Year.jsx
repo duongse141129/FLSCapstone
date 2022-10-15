@@ -5,7 +5,7 @@ import SemesterCard from './SemesterCard'
 const Year = ({year, setIsShowDetail}) => {
   return (
     <Box width='80%' mb={2}>
-      <Typography variant='h6' sx={{ textDecoration: 'underline' }}>
+      <Typography variant='h6'>
         {year.id}
       </Typography>
       <Stack direction='row' justifyContent='space-between' gap={2}>

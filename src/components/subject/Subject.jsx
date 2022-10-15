@@ -1,170 +1,91 @@
-import { Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import React from 'react';
+import {
+  Box, Paper, Stack, Table, TableBody, TableCell, TableContainer,
+  TableHead, TableRow, Typography, TablePagination, Button
+} from '@mui/material';
+import { CheckBox, Send } from '@mui/icons-material';
+import React, { useState } from 'react';
+import RequestModal from '../department/RequestModal';
 import './Subject.css';
+import { subjects } from '../../utils/sampleData';
 
 const Subject = () => {
+  const [page, setPage] = useState(0);
+  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [isRequest, setIsRequest] = useState(false);
+
+  const handleChangePage = (event, newPage) => {
+    setPage(newPage);
+  };
+
+  const handleChangeRowsPerPage = (event) => {
+    setRowsPerPage(parseInt(event.target.value, 10));
+    setPage(0);
+  };
+
   return (
     <Box flex={5} m={1} height='87vh' overflow='auto'>
       <Typography variant='h5' color='#778899' mb={1} fontWeight={500}>
-        In my department
+        Subject
       </Typography>
-      <Stack px={12} mb={4} alignItems='center'>
-        <Typography>Department: Software Engineering</Typography>
-        <TableContainer component={Paper} className='table-container'
-          sx={{ width: 700, height: 300, overflow: 'auto' }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell size='small' className='subject-header'>Code</TableCell>
-                <TableCell size='small' className='subject-header'>Name</TableCell>
-                <TableCell size='small' className='subject-header'>Favorite Point</TableCell>
-                <TableCell size='small' className='subject-header'>Rating</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                subjects.map((subject, index) => (
-                  <TableRow key={index} hover>
-                    <TableCell size='small'>{subject.id}</TableCell>
-                    <TableCell size='small'>{subject.name}</TableCell>
-                    <TableCell size='small'>{subject.point}</TableCell>
-                    <TableCell size='small'>
-                      <Button color='success'>Rate</Button>
-                    </TableCell>
-                  </TableRow>
-                ))
-              }
-            </TableBody>
-          </Table>
-        </TableContainer>
+      <Stack px={8}>
+        <Paper mb={4} sx={{ minWidth: 700 }}>
+          <TableContainer component={Box} className='table-container'
+            sx={{ overflow: 'auto' }}>
+            <Table>
+              <TableHead>
+                <TableRow>
+                  <TableCell size='small' className='subject-header'>Code</TableCell>
+                  <TableCell size='small' className='subject-header'>Name</TableCell>
+                  <TableCell size='small' className='subject-header'>Department</TableCell>
+                  <TableCell size='small' className='subject-header'>Available</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {
+                  subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((subject, index) => (
+                      <TableRow key={index} hover>
+                        <TableCell size='small'>{subject.id}</TableCell>
+                        <TableCell size='small'>{subject.name}</TableCell>
+                        <TableCell size='small'>{subject.department.name}</TableCell>
+                        <TableCell size='small'>
+                          {
+                            subject.status === 'available' &&
+                            <CheckBox sx={{ color: 'green' }} />
+                          }
+                          {
+                            subject.status !== 'available' &&
+                            <Button variant='contained' size='small' endIcon={<Send />}
+                              color='warning' onClick={() => setIsRequest(true)}
+                            >
+                              Send
+                            </Button>
+                          }
+                        </TableCell>
+                      </TableRow>
+                    ))
+                }
+              </TableBody>
+            </Table>
+          </TableContainer>
+          <TablePagination
+            rowsPerPageOptions={[3, 4, 5, 10]}
+            component='div'
+            count={subjects.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+            labelRowsPerPage={<span>Rows:</span>}
+            showFirstButton
+            showLastButton
+          />
+        </Paper>
       </Stack>
-      <Typography variant='h5' color='#778899' mb={1} fontWeight={500}>
-        Similar to my department
-      </Typography>
-      <Stack px={12} mb={4} alignItems='center'>
-        <Typography mb={1}>
-          <span>Department</span>
-          <span>
-            <select style={{ marginLeft: '8px' }}>
-              <option>LAB</option>
-              <option>Computing Fundamental</option>
-              <option>Information Technology Specialization</option>
-            </select>
-          </span>
-        </Typography>
-        <TableContainer component={Paper} className='table-container'
-          sx={{ width: 700, height: 300, overflow: 'auto' }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell size='small' className='subject-header'>Code</TableCell>
-                <TableCell size='small' className='subject-header'>Name</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                subjects.map((subject, index) => (
-                  <TableRow key={index} hover>
-                    <TableCell size='small'>{subject.id}</TableCell>
-                    <TableCell size='small'>{subject.name}</TableCell>
-                  </TableRow>
-                ))
-              }
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Stack>
-      <Typography variant='h5' color='#778899' mb={1} fontWeight={500}>
-        In other departments
-      </Typography>
-      <Stack px={12} mb={2} alignItems='center'>
-        <Typography mb={1}>
-          <span>Department</span>
-          <span>
-            <select style={{ marginLeft: '8px' }}>
-              <option>Chinese</option>
-              <option>Japanese</option>
-              <option>Soft Skill</option>
-            </select>
-          </span>
-        </Typography>
-        <TableContainer component={Paper} className='table-container'
-          sx={{ width: 700, height: 300, overflow: 'auto' }}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell size='small' className='subject-header'>Code</TableCell>
-                <TableCell size='small' className='subject-header'>Name</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {
-                subjects.map((subject, index) => (
-                  <TableRow key={index} hover>
-                    <TableCell size='small'>{subject.id}</TableCell>
-                    <TableCell size='small'>{subject.name}</TableCell>
-                  </TableRow>
-                ))
-              }
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </Stack>
+      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest}/>
     </Box>
   )
 }
 
 export default Subject
 
-const subjects = [
-  {
-    id: 'SWR301',
-    name: 'Software Requirement',
-    point: 3
-  },
-  {
-    id: 'SWT301',
-    name: 'Software Testing',
-    point: 3
-  },
-  {
-    id: 'PRN201',
-    name: 'Basic Programming C#',
-    point: 3
-  },
-  {
-    id: 'SWE101',
-    name: 'Introduce Software Engineering',
-    point: 3
-  },
-  {
-    id: 'SWD391',
-    name: 'Software Architecture and Design',
-    point: 3
-  },
-  {
-    id: 'SWR301',
-    name: 'Software Requirement',
-    point: 3
-  },
-  {
-    id: 'SWT301',
-    name: 'Software Testing',
-    point: 3
-  },
-  {
-    id: 'PRN201',
-    name: 'Basic Programming C#',
-    point: 3
-  },
-  {
-    id: 'SWE101',
-    name: 'Introduce Software Engineering',
-    point: 3
-  },
-  {
-    id: 'SWD391',
-    name: 'Software Architecture and Design',
-    point: 3
-  },
-]

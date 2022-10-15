@@ -18,8 +18,8 @@ const Profile = () => {
         justifyContent='space-between'
         mb={2}
       >
-        <Typography variant='h6' color='#778899'>
-          View Profile
+        <Typography variant='h5' color='#778899' fontWeight={500}>
+          Profile
         </Typography>
         <Button
           variant='contained'
