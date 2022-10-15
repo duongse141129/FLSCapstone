@@ -1,0 +1,11 @@
+{
+  "version": 2,
+  "dgSpecHash": "yDv/h/HlW5CbujFnJLxBNBpSAdItMRTSrdCawYbX7+lKCcTNh5hdo1FlMRVAMXLmMIlLlW79PbOxlMcO00nrUg==",
+  "success": true,
+  "projectFilePath": "G:\\CSharpProject\\TestConvert\\TestConvert\\TestConvert.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Admin\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\microsoft.netcore.app.host.win-x64\\5.0.13\\microsoft.netcore.app.host.win-x64.5.0.13.nupkg.sha512"
+  ],
+  "logs": []
+}
