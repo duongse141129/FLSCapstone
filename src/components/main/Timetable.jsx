@@ -1,4 +1,5 @@
 import { Stack, Typography } from '@mui/material';
+import { green } from '@mui/material/colors';
 import React from 'react'
 import Day from './Day'
 
@@ -6,7 +7,7 @@ const Timetable = () => {
   return (
     <Stack height='100%' direction='row' px={1}>
       <Stack flex={0.6} bgcolor='white'>
-        <Stack flex={0.8} color='white' bgcolor='#32a852'
+        <Stack flex={0.8} color='white' bgcolor={green[600]}
           borderRight='1px solid #e3e3e3' borderBottom='1px solid #e3e3e3'
           sx={{}}
         >
@@ -18,7 +19,7 @@ const Timetable = () => {
             Slot
           </Typography>
         </Stack>
-        <Stack flex={9} bgcolor='#32a852'>
+        <Stack flex={9} bgcolor={green[600]}>
           <Stack flex={1}
             justifyContent='center'
             className='timetable-time'

@@ -6,7 +6,6 @@ import EditModal from './EditModal';
 
 const Profile = () => {
   const [show, setShow] = useState(false);
-
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
@@ -24,7 +23,7 @@ const Profile = () => {
         <Button
           variant='contained'
           color='success'
-          endIcon={<Save/>}
+          endIcon={<Save />}
           size='large'
           onClick={handleShow}
         >
@@ -48,9 +47,9 @@ const Profile = () => {
             justifyContent='space-between'
           >
             <label htmlFor="fullname">Full name</label>
-            <input 
-              id='fullname' 
-              className='input-text' 
+            <input
+              id='fullname'
+              className='input-text'
             />
           </Stack>
           {/**gender */}

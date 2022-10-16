@@ -1,16 +1,25 @@
-import { Button, Rating, Stack, Typography } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle,
+  Rating, Stack, Typography } 
+from '@mui/material';
+import {Star} from '@mui/icons-material';
 import React, { useState } from 'react'
-import { Modal } from 'react-bootstrap'
+import { blue } from '@mui/material/colors';
 
 const RatingModal = ({ isRating, setIsRating }) => {
   const [value, setValue] = useState(3);
 
   return (
-    <Modal show={isRating} centered>
-      <Modal.Header>
-        <Modal.Title style={{ fontSize: '20px', color: 'green' }}>Subject Rating</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>
+    <Dialog
+      open={isRating}
+      onClose={() => setIsRating(false)}
+    >
+      <DialogTitle color={blue[600]} mb={1}>
+        <Stack direction='row' alignItems='center' gap={1}>
+          <Star/>
+          <Typography variant='h5'>Subject Rating</Typography>
+        </Stack>
+      </DialogTitle>
+      <DialogContent>
         <Stack direction='row' mb={1}>
           <Typography width='100px' fontWeight={500}>Subject: </Typography>
           <Typography>SWE101 - Introduce to Software Engineering</Typography>
@@ -25,26 +34,14 @@ const RatingModal = ({ isRating, setIsRating }) => {
             onChange={(e, newValue) => setValue(newValue)}
           />
         </Stack>
-      </Modal.Body>
-      <Modal.Footer>
-        <Button
-          variant='outlined'
-          color='info'
-          onClick={() => setIsRating(false)}
-          sx={{
-            mr: '12px'
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant='outlined'
-          onClick={() => setIsRating(false)}
-        >
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={() => setIsRating(false)} color='info'>Cancel</Button>
+        <Button variant='contained' onClick={() => setIsRating(false)} autoFocus>
           Save
         </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   )
 }
 

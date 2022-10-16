@@ -37,7 +37,7 @@ const SemesterDetail = ({ setIsShowDetail }) => {
           <Stack direction='row' gap={4} px={1} mb={1}>
             <Stack direction='row' gap={1} alignItems='center'>
               <Typography fontWeight={500}>Year</Typography>
-              <select className='year-cbx'>
+              <select className='year-cbx' style={{fontSize: '16px'}}>
                 <option>2022</option>
                 <option>2023</option>
                 <option>2024</option>
@@ -45,7 +45,7 @@ const SemesterDetail = ({ setIsShowDetail }) => {
             </Stack>
             <Stack direction='row' gap={1} alignItems='center'>
               <Typography fontWeight={500}>Week</Typography>
-              <select className='week-cbx'>
+              <select className='week-cbx' style={{fontSize: '16px'}}>
                 <option>26-09 to 02-10</option>
                 <option>03-10 to 09-10</option>
                 <option>10-10 to 16-10</option>

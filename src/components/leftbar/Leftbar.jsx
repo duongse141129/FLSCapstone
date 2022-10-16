@@ -1,4 +1,5 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Box, Stack, Typography } from '@mui/material';
+import { green } from "@mui/material/colors";
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
@@ -39,7 +40,7 @@ const Leftbar = ({ isExtend }) => {
                 height='50px'
                 sx={{
                   bgcolor: isSelected === tab.name && '#e3e3e3',
-                  borderRight: isExtend && isSelected === tab.name && '4px solid #32a852',
+                  borderRight: isExtend && isSelected === tab.name && `4px solid ${green[600]}`,
                   '&:hover': {
                     bgcolor: 'lightgrey'
                   },
@@ -47,13 +48,13 @@ const Leftbar = ({ isExtend }) => {
                 }}
 
               >
-                <span style={{ color: isSelected === tab.name && '#32a852' }}>
+                <span style={{ color: isSelected === tab.name && green[600] }}>
                   {tab.icon}
                 </span>
                 {isExtend &&
                   <Typography
                     ml='16px'
-                    color={isSelected === tab.name && '#32a852'}
+                    color={isSelected === tab.name && 'success.main'}
                     fontWeight={isSelected === tab.name && '500'}
                   >
                     {tab.name[0].toUpperCase() + tab.name.slice(1)}

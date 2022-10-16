@@ -22,14 +22,14 @@ const Navbar = ({isExtend, setIsExtend}) => {
             sx={{
               mr: '36px',
               '&:hover':{
-                color:'#32a852',
+                color:'success.main',
                 cursor: 'pointer'
               } 
             }}
             onClick={() => setIsExtend(!isExtend)}
           />
           <Stack
-            bgcolor='#32a852'
+            bgcolor='success.main'
             color='white'
             width='48px'
             height='48px'
@@ -47,7 +47,7 @@ const Navbar = ({isExtend, setIsExtend}) => {
             <NotificationsIcon 
               fontSize='medium'
               sx={{
-                color: '#32a852',
+                color: 'success.main',
                 fontSize: '28px'
               }}
             />

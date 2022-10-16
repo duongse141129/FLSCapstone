@@ -1,34 +1,22 @@
-import { Button } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
 import React from 'react';
-import Modal from 'react-bootstrap/Modal';
 
-const EditModal = ({show, handleClose}) => {
+const EditModal = ({ show, handleClose }) => {
   return (
-    <Modal show={show}>
-      <Modal.Header>
-        <Modal.Title style={{fontSize: '20px'}}>Edit Confirm</Modal.Title>
-      </Modal.Header>
-      <Modal.Body>Are you sure to save ?</Modal.Body>
-      <Modal.Footer>
-        <Button
-          variant='outlined'
-          color='info'
-          onClick={handleClose}
-          sx={{
-            mr: '12px'
-          }}
-        >
-          Cancel
-        </Button>
-        <Button
-          variant='contained'
-          color='success'
-          onClick={handleClose}
-        >
+    <Dialog
+      open={show}
+      onClose={handleClose}
+    >
+      <DialogContent>
+        <Typography px={2}>Are you sure to save ?</Typography>
+      </DialogContent>
+      <DialogActions>
+        <Button onClick={handleClose} color='info'>Cancel</Button>
+        <Button color='success' variant='contained' onClick={handleClose} autoFocus>
           Save
         </Button>
-      </Modal.Footer>
-    </Modal>
+      </DialogActions>
+    </Dialog>
   )
 }
 

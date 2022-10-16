@@ -32,7 +32,7 @@
 }
 
 .slot-type-slot:hover{
-  background-color: green;
+  background-color: #43a047;
   cursor: pointer;
 }
 
@@ -43,7 +43,7 @@
 }
 
 .picked-slot{
-  background-color: green;
+  background-color: #43a047;
 }
 
 .picked-full{

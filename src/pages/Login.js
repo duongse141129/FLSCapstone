@@ -1,4 +1,5 @@
 import { Stack, Typography } from '@mui/material'
+import { green } from '@mui/material/colors'
 import React from 'react'
 import fptlogo from '../images/FPT-logo.webp'
 import googleIcon from '../images/google.png'
@@ -11,7 +12,7 @@ const Login = ({handleClick}) => {
       justifyContent='center'
       alignItems='center'
       sx={{
-        background: "linear-gradient(90deg, rgba(50,168,82,1) 0%, rgba(25,184,123,1) 100%)"
+        background: `linear-gradient(90deg, ${green[600]} 0%, ${green[500]} 100%)`
       }}
     >
       <Stack
@@ -41,7 +42,7 @@ const Login = ({handleClick}) => {
             textAlign='center'
             variant='h4'
             letterSpacing='1px'
-            color='#32a852'
+            color={green[600]}
             fontWeight='500'
             sx={{
               wordSpacing: '4px'

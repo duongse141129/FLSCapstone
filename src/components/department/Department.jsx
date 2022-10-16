@@ -1,13 +1,15 @@
-import { Box, Button, Paper, Stack, Table, TableBody, TableCell, 
-  TableContainer, TableHead, TablePagination, TableRow, Typography 
+import {
+  Box, Button, Paper, Stack, Table, TableBody, TableCell,
+  TableContainer, TableHead, TablePagination, TableRow, Typography
 } from '@mui/material';
-import {Send, Star} from '@mui/icons-material';
+import { Send, Star } from '@mui/icons-material';
 import { HashLoader } from 'react-spinners';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { subjects } from '../../utils/sampleData'
 import RatingModal from './RatingModal';
 import RequestModal from './RequestModal';
+import { green } from '@mui/material/colors';
 
 const Department = () => {
   const [page, setPage] = useState(0);
@@ -45,7 +47,7 @@ const Department = () => {
       <Box mt={2} px={8}>
         <Stack direction='row' mb={1}>
           <Typography width='100px' fontWeight={500}>Name:</Typography>
-          <select value={selectedDepartment} onChange={handleSelect}>
+          <select value={selectedDepartment} onChange={handleSelect} style={{ fontSize: '16px' }}>
             <option value='CFL'>Computing Fundamental</option>
             <option value='SWE'>Software Engineering</option>
             <option value='ITS'>Information Technology Specialization</option>
@@ -53,75 +55,84 @@ const Department = () => {
           </select>
         </Stack>
         {
-          loading && <HashLoader size={30} color='green'/>
+          loading && <HashLoader size={30} color={green[600]} />
         }
-        {!loading && 
-        <Box>
-          <Stack direction='row' mb={1}>
-            <Typography width='100px' fontWeight={500}>Manager:</Typography>
-            <Typography>{selectedDepartment === 'SWE' ? 'Nguyen Thi Cam Huong' : 'Nguyen Trong Tai'}</Typography>
-          </Stack>
-          <Typography fontWeight={500}>Subject List</Typography>
-          <Stack>
-            <Paper sx={{minWidth: 700}}>
-              <TableContainer component={Box} height={360} overflow='auto'>
-                <Table>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell size='small' className='subject-header'>Code</TableCell>
-                      <TableCell size='small' className='subject-header'>Name</TableCell>
-                      <TableCell size='small' className='subject-header'>Status</TableCell>
-                      <TableCell size='small' className='subject-header'>Option</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {
-                      subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((subject, index) => (
-                          <TableRow key={index} hover>
-                            <TableCell size='small'>{subject.id}</TableCell>
-                            <TableCell size='small'>{subject.name}</TableCell>
-                            <TableCell size='small'>{subject.status}</TableCell>
-                            <TableCell size='small'>
+        {!loading &&
+          <Box>
+            <Stack direction='row' mb={1}>
+              <Typography width='100px' fontWeight={500}>Manager:</Typography>
+              <Typography>{selectedDepartment === 'SWE' ? 'Nguyen Thi Cam Huong' : 'Nguyen Trong Tai'}</Typography>
+            </Stack>
+            <Typography fontWeight={500}>Subject List</Typography>
+            <Stack>
+              <Paper sx={{ minWidth: 700 }}>
+                <TableContainer component={Box} height={360} overflow='auto'>
+                  <Table>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell size='small' className='subject-header'>Code</TableCell>
+                        <TableCell size='small' className='subject-header'>Name</TableCell>
+                        {
+                          selectedDepartment === 'SWE' &&
+                          <TableCell size='small' className='subject-header'>Favorite Point</TableCell>
+                        }
+                        <TableCell size='small' className='subject-header'>Option</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+                        subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map((subject, index) => (
+                            <TableRow key={index} hover>
+                              <TableCell size='small'>{subject.id}</TableCell>
+                              <TableCell size='small'>{subject.name}</TableCell>
                               {
-                                selectedDepartment === 'SWE' ? (
-                                  <Button variant='contained' size='small' endIcon={<Star/>}
-                                    onClick={() => setIsRating(true)}>
-                                    Rate
-                                  </Button>
-                                ) : (
-                                  <Button variant='contained' size='small' endIcon={<Send/>}
-                                    color='warning' onClick={() => setIsRequest(true)}
-                                  >
-                                    Send
-                                  </Button>
-                                )
+                                selectedDepartment === 'SWE' &&
+                                <TableCell size='small'>3</TableCell>
                               }
-                            </TableCell>
-                          </TableRow>
-                        ))
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[3, 4, 5, 10]}
-                component='div'
-                count={subjects.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage={<span>Rows:</span>}
-                showFirstButton
-                showLastButton
-              />
-            </Paper>
-          </Stack>
-        </Box>}
+                              <TableCell size='small'>
+                                {
+                                  selectedDepartment === 'SWE' ? (
+                                    <Button variant='contained' size='small' endIcon={<Star />}
+                                      onClick={() => setIsRating(true)}>
+                                      Rate
+                                    </Button>
+                                  ) : (
+                                    <Button variant='contained' size='small' endIcon={<Send />}
+                                      color='warning' onClick={() => setIsRequest(true)}
+                                    >
+                                      Send
+                                    </Button>
+                                  )
+                                }
+                              </TableCell>
+                            </TableRow>
+                          ))
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[3, 4, 5, 10]}
+                  component='div'
+                  count={subjects.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  labelRowsPerPage={<span>Rows:</span>}
+                  showFirstButton
+                  showLastButton
+                  sx={{
+                    bgcolor: 'ghostwhite'
+                  }}
+                />
+              </Paper>
+            </Stack>
+          </Box>}
       </Box>
-      <RatingModal isRating={isRating} setIsRating={setIsRating}/>
-      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest}/>
+      <RatingModal isRating={isRating} setIsRating={setIsRating} />
+      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} />
     </Box>
   )
 }

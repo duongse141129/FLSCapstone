@@ -1,15 +1,19 @@
 import {
   Box, Paper, Stack, Table, TableBody,
-  TableCell, TableContainer, TableHead, TableRow, TablePagination
+  TableCell, TableContainer, TableHead, TableRow, TablePagination, Button
 } from '@mui/material';
-import {CheckBox} from '@mui/icons-material';
+import { Send, Star } from '@mui/icons-material';
 import React from 'react';
 import { useState } from 'react';
 import { subjects } from '../../utils/sampleData'
+import RequestModal from '../department/RequestModal';
+import RatingModal from '../department/RatingModal';
 
 const SubjectInSemester = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [isRequest, setIsRequest] = useState(false);
+  const [isRating, setIsRating] = useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -21,10 +25,10 @@ const SubjectInSemester = () => {
   };
 
   return (
-    <Stack px={4} mt={1}>
+    <Stack px={4} mt={1} height='100%'>
       <Paper sx={{ minWidth: 700 }}>
         <TableContainer component={Box} className='table-container'
-          sx={{ overflow: 'auto' }}>
+          sx={{ height: '68vh', overflow: 'auto' }}>
           <Table>
             <TableHead>
               <TableRow>
@@ -44,8 +48,20 @@ const SubjectInSemester = () => {
                       <TableCell size='small'>{subject.department.name}</TableCell>
                       <TableCell size='small'>
                         {
-                          subject.status === 'available' &&
-                          <CheckBox sx={{ color: 'green' }} />
+                          subject.department.id === 'SE' &&
+                          <Button variant='contained' size='small' endIcon={<Star />}
+                            onClick={() => setIsRating(true)}
+                          >
+                            Rate
+                          </Button>
+                        }
+                        {
+                          subject.department.id !== 'SE' &&
+                          <Button variant='contained' size='small' endIcon={<Send />}
+                            color='warning' onClick={() => setIsRequest(true)}
+                          >
+                            Send
+                          </Button>
                         }
                       </TableCell>
                     </TableRow>
@@ -66,8 +82,13 @@ const SubjectInSemester = () => {
           labelRowsPerPage={<span>Rows:</span>}
           showFirstButton
           showLastButton
+          sx={{
+            bgcolor: 'ghostwhite'
+          }}
         />
       </Paper>
+      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} />
+      <RatingModal isRating={isRating} setIsRating={setIsRating}/>
     </Stack>
   )
 }

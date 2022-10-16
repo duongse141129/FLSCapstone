@@ -2,16 +2,18 @@ import {
   Box, Paper, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Typography, TablePagination, Button
 } from '@mui/material';
-import { CheckBox, Send } from '@mui/icons-material';
+import { Send, Star} from '@mui/icons-material';
 import React, { useState } from 'react';
 import RequestModal from '../department/RequestModal';
+import RatingModal from '../department/RatingModal';
 import './Subject.css';
 import { subjects } from '../../utils/sampleData';
 
 const Subject = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isRequest, setIsRequest] = useState(false);
+  const [isRating, setIsRating] = useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -23,7 +25,7 @@ const Subject = () => {
   };
 
   return (
-    <Box flex={5} m={1} height='87vh' overflow='auto'>
+    <Stack flex={5} m={1} height='100%'>
       <Typography variant='h5' color='#778899' mb={1} fontWeight={500}>
         Subject
       </Typography>
@@ -37,7 +39,8 @@ const Subject = () => {
                   <TableCell size='small' className='subject-header'>Code</TableCell>
                   <TableCell size='small' className='subject-header'>Name</TableCell>
                   <TableCell size='small' className='subject-header'>Department</TableCell>
-                  <TableCell size='small' className='subject-header'>Available</TableCell>
+                  <TableCell size='small' className='subject-header'>Favorite Point</TableCell>
+                  <TableCell size='small' className='subject-header'>Option</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -50,11 +53,25 @@ const Subject = () => {
                         <TableCell size='small'>{subject.department.name}</TableCell>
                         <TableCell size='small'>
                           {
-                            subject.status === 'available' &&
-                            <CheckBox sx={{ color: 'green' }} />
+                            subject.department.id === 'SE' &&
+                            <span>3</span>
                           }
                           {
-                            subject.status !== 'available' &&
+                            subject.department.id !== 'SE' &&
+                            <Typography color='gray' fontSize='14px'>outside department</Typography>
+                          }
+                        </TableCell>
+                        <TableCell size='small'>
+                          {
+                            subject.department.id === 'SE' &&
+                            <Button variant='contained' size='small' endIcon={<Star />}
+                              onClick={() => setIsRating(true)}
+                            >
+                              Rate
+                            </Button>
+                          }
+                          {
+                            subject.department.id !== 'SE' &&
                             <Button variant='contained' size='small' endIcon={<Send />}
                               color='warning' onClick={() => setIsRequest(true)}
                             >
@@ -69,21 +86,24 @@ const Subject = () => {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[3, 4, 5, 10]}
+            rowsPerPageOptions={[5, 10, 15, 20]}
             component='div'
             count={subjects.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
             onRowsPerPageChange={handleChangeRowsPerPage}
-            labelRowsPerPage={<span>Rows:</span>}
             showFirstButton
             showLastButton
+            sx={{
+              bgcolor: 'ghostwhite'
+            }}
           />
         </Paper>
       </Stack>
-      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest}/>
-    </Box>
+      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} />
+      <RatingModal isRating={isRating} setIsRating={setIsRating}/>
+    </Stack>
   )
 }
 

@@ -1,4 +1,5 @@
 import { Stack, Typography } from '@mui/material'
+import { green } from '@mui/material/colors'
 import React from 'react'
 import Slot from './Slot'
 
@@ -6,7 +7,7 @@ const Day = ({ day, date, slots }) => {
   return (
     <Stack flex={1}>
       <Stack flex={0.8} alignItems='center' justifyContent='center'
-        color='white' bgcolor='#32a852'
+        color='white' bgcolor={green[600]}
         sx={{
           borderRight: '1px solid #e3e3e3',
           borderBottom: '1px solid #e3e3e3',
