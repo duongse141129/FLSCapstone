@@ -1,15 +1,15 @@
 import {
-  Box, Button, Paper, Stack, Table, TableBody, TableCell,
-  TableContainer, TableHead, TablePagination, TableRow, Typography
+  Box, IconButton, Paper, Stack, Table, TableBody, TableCell,
+  TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material';
-import { Send, Star } from '@mui/icons-material';
+import { Send, StarBorder, Beenhere } from '@mui/icons-material';
 import { HashLoader } from 'react-spinners';
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { subjects } from '../../utils/sampleData'
 import RatingModal from './RatingModal';
 import RequestModal from './RequestModal';
-import { green } from '@mui/material/colors';
+import { green, grey, red, } from '@mui/material/colors';
 
 const Department = () => {
   const [page, setPage] = useState(0);
@@ -40,34 +40,68 @@ const Department = () => {
   }
 
   return (
-    <Box flex={5} m={1}>
-      <Typography variant='h5' color='#778899' fontWeight={500}>
+    <Stack flex={5} m={1} mb={1} height='87vh' overflow='auto'>
+      <Typography variant='h5' color='#778899' fontWeight={500} px={8}>
         Department
       </Typography>
-      <Box mt={2} px={8}>
-        <Stack direction='row' mb={1}>
-          <Typography width='100px' fontWeight={500}>Name:</Typography>
-          <select value={selectedDepartment} onChange={handleSelect} style={{ fontSize: '16px' }}>
+      <Typography color='gray' px={8} variant='subtitle1'>
+        My department and relative departments
+      </Typography>
+      <Box mt={4} px={8}>
+        <Stack direction='row' mb={2} alignItems='center'>
+          <Typography width='100px' fontWeight={500}>
+            Name :
+          </Typography>
+          <select value={selectedDepartment} onChange={handleSelect} className='year-cbx'
+            style={{ fontSize: '16px', padding: '4px 0 4px 0' }}>
             <option value='CFL'>Computing Fundamental</option>
             <option value='SWE'>Software Engineering</option>
             <option value='ITS'>Information Technology Specialization</option>
             <option value='LAB'>LAB</option>
           </select>
+          <Tooltip title='My Department' placement='top' arrow>
+            <Beenhere onClick={() => {if(selectedDepartment !== 'SWE') setSelectedDepartment('SWE')}}
+              sx={{
+                ml: 2,
+                color: selectedDepartment === 'SWE' ? green[600] : grey[400],
+                fontSize: '28px',
+                '&:hover': {
+                  cursor: 'pointer',
+                  color: green[600]
+                }
+              }}
+            />
+          </Tooltip>
         </Stack>
         {
           loading && <HashLoader size={30} color={green[600]} />
         }
         {!loading &&
           <Box>
-            <Stack direction='row' mb={1}>
-              <Typography width='100px' fontWeight={500}>Manager:</Typography>
+            <Stack direction='row' mb={2}>
+              <Typography width='100px' fontWeight={500}>
+                Manager :
+              </Typography>
               <Typography>{selectedDepartment === 'SWE' ? 'Nguyen Thi Cam Huong' : 'Nguyen Trong Tai'}</Typography>
             </Stack>
-            <Typography fontWeight={500}>Subject List</Typography>
+            <Stack direction='row' mb={2}>
+              <Typography fontWeight={500} width='100px'>
+                Subject List -
+              </Typography>
+              {
+                selectedDepartment === 'SWE' ?
+                  <Typography color={green[600]}>
+                    In my department
+                  </Typography> :
+                  <Typography color={red[600]}>
+                    Out my department
+                  </Typography>
+              }
+            </Stack>
             <Stack>
-              <Paper sx={{ minWidth: 700 }}>
-                <TableContainer component={Box} height={360} overflow='auto'>
-                  <Table>
+              <Paper sx={{ minWidth: 700, borderBottom: '1px solid gray' }}>
+                <TableContainer component={Stack} overflow='auto'>
+                  <Table size='small'>
                     <TableHead>
                       <TableRow>
                         <TableCell size='small' className='subject-header'>Code</TableCell>
@@ -76,7 +110,7 @@ const Department = () => {
                           selectedDepartment === 'SWE' &&
                           <TableCell size='small' className='subject-header'>Favorite Point</TableCell>
                         }
-                        <TableCell size='small' className='subject-header'>Option</TableCell>
+                        <TableCell size='small' className='subject-header'>Request</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -88,23 +122,27 @@ const Department = () => {
                               <TableCell size='small'>{subject.name}</TableCell>
                               {
                                 selectedDepartment === 'SWE' &&
-                                <TableCell size='small'>3</TableCell>
+                                <TableCell size='small'>
+                                  <Stack direction='row' alignItems='center' gap={2}>
+                                    <Typography borderRight='1px solid gray' pr={3}>3</Typography>
+                                    <Tooltip title='Rating' placement='left'>
+                                      <IconButton color='primary' size='small'
+                                        onClick={() => setIsRating(true)}
+                                      >
+                                        <StarBorder />
+                                      </IconButton>
+                                    </Tooltip>
+                                  </Stack>
+                                </TableCell>
                               }
                               <TableCell size='small'>
-                                {
-                                  selectedDepartment === 'SWE' ? (
-                                    <Button variant='contained' size='small' endIcon={<Star />}
-                                      onClick={() => setIsRating(true)}>
-                                      Rate
-                                    </Button>
-                                  ) : (
-                                    <Button variant='contained' size='small' endIcon={<Send />}
-                                      color='warning' onClick={() => setIsRequest(true)}
-                                    >
-                                      Send
-                                    </Button>
-                                  )
-                                }
+                                <Tooltip title='Request' placement='left'>
+                                  <IconButton color='warning' size='small'
+                                    onClick={() => setIsRequest(true)}
+                                  >
+                                    <Send />
+                                  </IconButton>
+                                </Tooltip>
                               </TableCell>
                             </TableRow>
                           ))
@@ -113,7 +151,7 @@ const Department = () => {
                   </Table>
                 </TableContainer>
                 <TablePagination
-                  rowsPerPageOptions={[3, 4, 5, 10]}
+                  rowsPerPageOptions={[5, 10]}
                   component='div'
                   count={subjects.length}
                   rowsPerPage={rowsPerPage}
@@ -133,7 +171,7 @@ const Department = () => {
       </Box>
       <RatingModal isRating={isRating} setIsRating={setIsRating} />
       <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} />
-    </Box>
+    </Stack>
   )
 }
 

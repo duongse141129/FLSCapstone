@@ -21,27 +21,38 @@
   border-bottom: 1px solid grey;
 }
 
+.slot-type-row:hover{
+  background-color: #e3e3e3;
+}
+
 .slot-type-time{
-  border: 1px solid grey;
-  border-top: none;
-  border-bottom: none;
+  border-left: 1px solid grey;
+  border-right: 1px solid grey;
+}
+
+.slot-type-day{
+  border-right: 1px solid #e3e3e3;
+  border-top: 1px solid #e3e3e3;
+}
+
+.slot-type-day:first-child{
+  border-right: 1px solid #e3e3e3;
+  border-top: 1px solid #e3e3e3;
+  border-left: 1px solid grey;
+}
+
+.slot-type-day:last-child{
+  border-right: 1px solid grey;
+  border-top: 1px solid #e3e3e3;
 }
 
 .slot-type-slot{
   border-right: 1px solid grey;
 }
-
 .slot-type-slot:hover{
   background-color: #43a047;
   cursor: pointer;
 }
-
-.slot-type-day{
-  border: 1px solid grey;
-  border-bottom: none;
-  border-left: none;
-}
-
 .picked-slot{
   background-color: #43a047;
 }

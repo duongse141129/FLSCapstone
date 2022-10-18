@@ -12,11 +12,11 @@ const Semester = () => {
     <>
       {
         !isShowDetail ? (
-          <Box flex={5} m={1} height='86vh' overflow='auto'>
-            <Typography variant='h5' color='#778899' fontWeight={500}>
+          <Box flex={5} m={1} height='87vh' overflow='auto'>
+            <Typography variant='h5' color='#778899' fontWeight={500} px={8} mb={4}>
               Semester
             </Typography>
-            <Stack mt={1} alignItems='center' gap={2}>
+            <Stack px={8} gap={2}>
               {
                 years.map(year => (
                   <Year key={year.id} year={year} setIsShowDetail={setIsShowDetail}/>

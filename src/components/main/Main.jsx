@@ -10,17 +10,17 @@ const Main = () => {
       m={1}
       mb={2}
     >
-      <Stack direction='row' mb={1} gap={12}>
+      <Stack direction='row' mb={2}  px={8} justifyContent='space-between'>
         <Typography variant='h5' color='#778899' fontWeight='500'>
           Schedule of Lecturer (Hong Dai Duong)
         </Typography>
-        <Stack direction='row' gap={4} px={1}>
+        <Stack direction='row' gap={4}>
           <Stack direction='row' gap={1} alignItems='center'>
-            <Typography fontWeight={500}>Year</Typography>
+            <Typography fontWeight={500}>Semester</Typography>
             <select className='year-cbx' style={{fontSize: '16px'}}>
-              <option>2022</option>
-              <option>2023</option>
-              <option>2024</option>
+              <option>Fall 2022</option>
+              <option>Summer 2022</option>
+              <option>Spring 2022</option>
             </select>
           </Stack>
           <Stack direction='row' gap={1} alignItems='center'>

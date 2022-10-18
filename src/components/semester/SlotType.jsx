@@ -1,6 +1,8 @@
 import { Box, Button, Stack, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import SlotTime from './SlotTime'
+import { slotTime } from '../../utils/favoriteSlot'
+import { green } from '@mui/material/colors'
 
 const SlotType = () => {
   const [pickedSlot, setPickedSlot] = useState([]);
@@ -10,7 +12,7 @@ const SlotType = () => {
       setPickedSlot(pickedSlot.filter(slot => slot !== id))
     }
     else {
-      if(pickedSlot.length === 3){
+      if (pickedSlot.length === 3) {
         return;
       }
       setPickedSlot([...pickedSlot, id]);
@@ -19,37 +21,35 @@ const SlotType = () => {
   console.log(pickedSlot);
 
   return (
-    <Box px={4} mt={1}>
-      <Typography fontWeight={500} fontSize='20px' mb={1}>
-        Choose Favorite Slot
-      </Typography>
-      <Stack height='50vh' width='70%'>
-        <Stack flex={1} direction='row' className='slot-type-row'>
-          <Stack flex={1} justifyContent='center'
-            sx={{
-              border: '1px solid grey',
-              borderBottom: 'none'
-            }}
+    <Box px={8}>
+      <Stack direction='row' alignItems='center' width='70%' justifyContent='space-between'>
+        <Stack>
+          <Typography color='red'>Selection: {pickedSlot.length}/3</Typography>
+          <Typography color='gray'>*Re-select to select new one</Typography>
+        </Stack>
+        <Button variant='contained' disabled={pickedSlot.length === 3 ? false : true}>
+          Save</Button>
+      </Stack>
+      <Stack height='64vh' width='70%' overflow='auto'>
+        <Stack flex={0.8} direction='row' borderBottom='1px solid grey'
+          bgcolor={green[600]} color='white'>
+          <Stack flex={1} justifyContent='center' alignItems='center'
+            className='slot-type-day'
           >
-            <Typography textAlign='right' mr={1} fontWeight={500}>Day</Typography>
-            <Box width='100%' height='1px' bgcolor='gray'
-              sx={{ transform: 'rotate(17deg)'}}
-            >
-            </Box>
-            <Typography ml={1} fontWeight={500}>Slot</Typography>
+            Slot
           </Stack>
           <Stack flex={1} justifyContent='center'
             alignItems='center' className='slot-type-day'
           >
-            <Typography>Monday - Thursday</Typography>
+            <Typography>From - To</Typography>
           </Stack>
           <Stack flex={1} justifyContent='center'
             alignItems='center' className='slot-type-day'>
-            <Typography>Tuesday - Friday</Typography>
+            <Typography>Day of Week</Typography>
           </Stack>
           <Stack flex={1} justifyContent='center'
             alignItems='center' className='slot-type-day'>
-            <Typography>Wednesday - Saturday</Typography>
+            <Typography>Choose</Typography>
           </Stack>
         </Stack>
         {
@@ -60,40 +60,60 @@ const SlotType = () => {
           ))
         }
       </Stack>
-      <Stack mt={1} width='70%' direction='row' 
-        justifyContent='space-between' alignItems='center'>
-        <Stack>
-          <Typography color='red'>Selection: {pickedSlot.length}/3</Typography>
-          <Typography color='gray'>*Re-select to select new one</Typography>
-        </Stack>
-        <Button variant='contained' disabled={pickedSlot.length === 3 ? false : true}>
-          Save</Button>
-      </Stack>
+
     </Box>
   )
 }
 
 export default SlotType
 
-const slotTime = [
-  {
-    id: 1,
-    name: 'Slot 1',
-    range: '07:00 - 09:15'
-  },
-  {
-    id: 2,
-    name: 'Slot 2',
-    range: '09:45 - 12:00'
-  },
-  {
-    id: 3,
-    name: 'Slot 3',
-    range: '12:30 - 14:45'
-  },
-  {
-    id: 4,
-    name: 'Slot 4',
-    range: '15:15 - 17:30'
-  },
-]
+// const slotTime = [
+//   {
+//     id: 11,
+//     name: 'Slot 11',
+//     range: '07:00 - 09:15',
+//     day: 'Monday, Thursday'
+//   },
+//   {
+//     id: 12,
+//     name: 'Slot 12',
+//     range: '09:45 - 12:00',
+//     day: 'Monday, Thursday'
+//   },
+//   {
+//     id: 13,
+//     name: 'Slot 13',
+//     range: '12:30 - 14:45',
+//     day: 'Monday, Thursday'
+//   },
+//   {
+//     id: 14,
+//     name: 'Slot 14',
+//     range: '15:15 - 17:30',
+//     day: 'Monday, Thursday'
+//   },
+//   {
+//     id: 21,
+//     name: 'Slot 21',
+//     range: '07:00 - 09:15',
+//     day: 'Tuesday, Friday'
+//   },
+//   {
+//     id: 22,
+//     name: 'Slot 22',
+//     range: '09:45 - 12:00',
+//     day: 'Tuesday, Friday'
+//   },
+//   {
+//     id: 13,
+//     name: 'Slot 13',
+//     range: '12:30 - 14:45',
+//     day: 'Monday, Thursday'
+//   },
+//   {
+//     id: 14,
+//     name: 'Slot 14',
+//     range: '15:15 - 17:30',
+//     day: 'Monday, Thursday'
+//   },
+// ]

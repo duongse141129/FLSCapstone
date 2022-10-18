@@ -14,7 +14,7 @@ const Day = ({ day, date, slots }) => {
         }}
       >
         <Typography className='time-title'>{day}</Typography>
-        <Typography>{date}</Typography>
+        <Typography fontSize='14px'>{date}</Typography>
       </Stack>
       <Stack flex={9}>
         {

@@ -4,7 +4,7 @@ import React from 'react'
 import fptlogo from '../images/FPT-logo.webp'
 import googleIcon from '../images/google.png'
 
-const Login = ({handleClick}) => {
+const Login = ({handleSignIn}) => {
   return (
     <Stack
       height='100vh'
@@ -84,7 +84,7 @@ const Login = ({handleClick}) => {
                 cursor: 'pointer'
               }
             }}
-            onClick={handleClick}
+            onClick={handleSignIn}
           >
             <Stack
               bgcolor='white'

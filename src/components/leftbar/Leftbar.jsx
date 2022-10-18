@@ -1,25 +1,26 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { green } from "@mui/material/colors";
 import React, { useState } from 'react';
 import { useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { tabs } from './tabs';
 import './Leftbar.css'
 
-const Leftbar = ({ isExtend }) => {
-  const [isSelected, setIsSelected] = useState();
+const Leftbar = ({ isExtend, user, tabs }) => {
+  const indexTab = tabs[0];
+  const [selectedTab, setSelectedTab] = useState();
   const location = useLocation();
 
   useEffect(() => {
-    if (location.pathname.slice(1)) {
-      setIsSelected(location.pathname.slice(1))
+    const tabName = location.pathname.split('/')[2];
+    if (tabName) {
+      setSelectedTab(tabName)
       return;
     }
-    setIsSelected('schedule')
-  }, [location])
+    setSelectedTab(indexTab.name)
+  }, [location, indexTab])
 
   return (
-    <Box flex={isExtend ? 0.9 : 0.15} height='90vh'
+    <Stack flex={isExtend ? 0.9 : 0.15} height='90vh'
       borderRight='1px solid lightgray'
     >
       <Stack py={4}>
@@ -27,7 +28,7 @@ const Leftbar = ({ isExtend }) => {
           tabs.map((tab, index) => (
             <Link
               key={index}
-              to={tab.name === 'schedule' ? '/' : `/${tab.name}`}
+              to={tab.name === indexTab.name ? `/${user}` : `/${user}/${tab.name}`}
               style={{
                 textDecoration: 'none',
                 color: 'black'
@@ -39,8 +40,8 @@ const Leftbar = ({ isExtend }) => {
                 justifyContent='flex-start'
                 height='50px'
                 sx={{
-                  bgcolor: isSelected === tab.name && '#e3e3e3',
-                  borderRight: isExtend && isSelected === tab.name && `4px solid ${green[600]}`,
+                  bgcolor: selectedTab === tab.name && '#e3e3e3',
+                  borderRight: isExtend && selectedTab === tab.name && `4px solid ${green[600]}`,
                   '&:hover': {
                     bgcolor: 'lightgrey'
                   },
@@ -48,14 +49,14 @@ const Leftbar = ({ isExtend }) => {
                 }}
 
               >
-                <span style={{ color: isSelected === tab.name && green[600] }}>
+                <span style={{ color: selectedTab === tab.name && green[600] }}>
                   {tab.icon}
                 </span>
                 {isExtend &&
                   <Typography
                     ml='16px'
-                    color={isSelected === tab.name && 'success.main'}
-                    fontWeight={isSelected === tab.name && '500'}
+                    color={selectedTab === tab.name && 'success.main'}
+                    fontWeight={selectedTab === tab.name && '500'}
                   >
                     {tab.name[0].toUpperCase() + tab.name.slice(1)}
                   </Typography>
@@ -65,7 +66,7 @@ const Leftbar = ({ isExtend }) => {
           ))
         }
       </Stack>
-    </Box>
+    </Stack>
   )
 }
 

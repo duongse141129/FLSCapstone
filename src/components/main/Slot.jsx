@@ -4,11 +4,10 @@ import React from 'react'
 
 const Slot = ({slot}) => {
   return (
-    <Stack flex={1}
-      px={1} justifyContent='center'
+    <Stack flex={1} px={1}
       className={Object.values(slot).length === 0 ? 'timetable-slot is-sunday' : 'timetable-slot '}
     >
-      <Typography fontWeight={500}>{slot.subject}</Typography>
+      <Typography fontWeight={500} fontSize='15px'>{slot.subject}</Typography>
       <Typography fontSize='14px'>{slot.group}</Typography>
       {
         slot.number === 1 &&

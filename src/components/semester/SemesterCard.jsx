@@ -9,7 +9,7 @@ const SemesterCard = ({semester, setIsShowDetail}) => {
   }
 
   return (
-    <Stack width='240px' height='150px' bgcolor='white' minWidth='240px'
+    <Stack width='250px' height='160px' bgcolor='white' minWidth='250px'
       borderRadius='16px'
       boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
       sx={{

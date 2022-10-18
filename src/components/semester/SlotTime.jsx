@@ -10,31 +10,25 @@ const SlotTime = ({slot, handlePick, pickedSlot}) => {
         className='slot-type-time'
       >
         <Typography>{slot.name}</Typography>
+        {/* <Typography>{slot.range}</Typography> */}
+      </Stack>
+      <Stack flex={1} justifyContent='center' alignItems='center'
+        borderRight='1px solid grey'
+      >
         <Typography>{slot.range}</Typography>
       </Stack>
-      <Stack flex={1} justifyContent='center' alignItems='center' color='white'
-        className={pickedSlot.find(time => time === `1${slot.id}`) ? 
-          'slot-type-slot picked-slot' : (pickedSlot.length === 3 ? 
-            'slot-type-slot picked-full' : 'slot-type-slot')}
-        onClick={() => handlePick(`1${slot.id}`)}
+      <Stack flex={1} justifyContent='center' alignItems='center'
+        borderRight='1px solid grey'
       >
-        <ThumbUp sx={{fontSize: '28px'}}/>
+        <Typography>{slot.day}</Typography>
       </Stack>
       <Stack flex={1} justifyContent='center' alignItems='center' color='white'
-        className={pickedSlot.find(time => time === `2${slot.id}`) ? 
+        className={pickedSlot.find(time => time === slot.id) ? 
           'slot-type-slot picked-slot' : (pickedSlot.length === 3 ? 
           'slot-type-slot picked-full' : 'slot-type-slot')}
-        onClick={() => handlePick(`2${slot.id}`)}
+        onClick={() => handlePick(slot.id)}
       >
-        <ThumbUp sx={{fontSize: '28px'}}/>
-      </Stack>
-      <Stack flex={1} justifyContent='center' alignItems='center' color='white'
-        className={pickedSlot.find(time => time === `3${slot.id}`) ? 
-          'slot-type-slot picked-slot' : (pickedSlot.length === 3 ? 
-          'slot-type-slot picked-full' : 'slot-type-slot')}
-        onClick={() => handlePick(`3${slot.id}`)}
-      >
-        <ThumbUp sx={{fontSize: '28px'}}/>
+        <ThumbUp sx={{fontSize: '20px'}}/>
       </Stack>
     </Stack>
   )

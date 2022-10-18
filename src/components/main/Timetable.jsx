@@ -5,17 +5,17 @@ import Day from './Day'
 
 const Timetable = () => {
   return (
-    <Stack height='100%' direction='row' px={1}>
+    <Stack height='100%' direction='row' px={8}>
       <Stack flex={0.6} bgcolor='white'>
         <Stack flex={0.8} color='white' bgcolor={green[600]}
           borderRight='1px solid #e3e3e3' borderBottom='1px solid #e3e3e3'
-          sx={{}}
+          justifyContent='center' 
         >
           <Typography textAlign='right' mr={1} fontWeight={500} 
-            color='white'>
+            color='white' fontSize='14px'>
             Day
           </Typography>
-          <Typography ml={1} fontWeight={500} color='white'>
+          <Typography ml={1} fontWeight={500} color='white' fontSize='14px'>
             Slot
           </Typography>
         </Stack>

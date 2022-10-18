@@ -4,7 +4,7 @@ import SemesterCard from './SemesterCard'
 
 const Year = ({year, setIsShowDetail}) => {
   return (
-    <Box width='80%' mb={2}>
+    <Box mb={2}>
       <Typography variant='h6'>
         {year.id}
       </Typography>

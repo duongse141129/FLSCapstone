@@ -25,10 +25,9 @@ const SubjectInSemester = () => {
   };
 
   return (
-    <Stack px={4} mt={1} height='100%'>
+    <Stack px={8} mb={2}>
       <Paper sx={{ minWidth: 700 }}>
-        <TableContainer component={Box} className='table-container'
-          sx={{ height: '68vh', overflow: 'auto' }}>
+        <TableContainer component={Box} className='table-container'>
           <Table>
             <TableHead>
               <TableRow>
