@@ -40,14 +40,15 @@ const Department = () => {
   }
 
   return (
-    <Stack flex={5} m={1} mb={1} height='87vh' overflow='auto'>
-      <Typography variant='h5' color='#778899' fontWeight={500} px={8}>
+    <Stack flex={5} height='90vh' overflow='auto'>
+      <Typography variant='h5' color='#778899' fontWeight={500} px={9}
+        mt={1}>
         Department
       </Typography>
-      <Typography color='gray' px={8} variant='subtitle1'>
+      <Typography color='gray' px={9} variant='subtitle1'>
         My department and relative departments
       </Typography>
-      <Box mt={4} px={8}>
+      <Box mt={4} px={9}>
         <Stack direction='row' mb={2} alignItems='center'>
           <Typography width='100px' fontWeight={500}>
             Name :
@@ -99,7 +100,7 @@ const Department = () => {
               }
             </Stack>
             <Stack>
-              <Paper sx={{ minWidth: 700, borderBottom: '1px solid gray' }}>
+              <Paper sx={{ minWidth: 700, mb: 2 }}>
                 <TableContainer component={Stack} overflow='auto'>
                   <Table size='small'>
                     <TableHead>

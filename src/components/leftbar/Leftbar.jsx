@@ -13,6 +13,10 @@ const Leftbar = ({ isExtend, user, tabs }) => {
   useEffect(() => {
     const tabName = location.pathname.split('/')[2];
     if (tabName) {
+      if(tabName === indexTab.name){
+        setSelectedTab(indexTab.name)
+        return;
+      }
       setSelectedTab(tabName)
       return;
     }

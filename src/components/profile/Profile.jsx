@@ -16,32 +16,16 @@ const Profile = () => {
   const handleShow = () => setShow(true);
 
   return (
-    <Stack flex={5} m={1}>
-      <Stack
-        direction='row'
-        alignItems='center'
-        justifyContent='space-between'
-        px={8}
-        mb={4}
-      >
-        <Typography variant='h5' color='#778899' fontWeight={500}>
-          Profile
-        </Typography>
-        <Button
-          variant='contained'
-          color='success'
-          endIcon={<Save />}
-          size='large'
-          onClick={handleShow}
-        >
-          Save
-        </Button>
-      </Stack>
-      <Stack px={8} width='60%'>
+    <Stack flex={5} height='90vh' overflow='auto'>
+      <Typography variant='h5' color='#778899' fontWeight={500}
+        px={9} mt={1}>
+        Profile
+      </Typography>
+      <Stack px={9} width='60%'>
         <TextField label='Full Name' variant='outlined' color='success' margin='normal' size='small' />
         <Stack direction={'row'} gap={4}>
           <TextField label='Birthday' variant='outlined' color='success' margin='normal' size='small'
-            type='date' InputLabelProps={{ shrink: true, }} sx={{width: '36%'}}/>
+            type='date' InputLabelProps={{ shrink: true, }} sx={{ width: '36%' }} />
           <FormControl margin='normal'>
             <RadioGroup
               value={radioValue}
@@ -56,13 +40,21 @@ const Profile = () => {
         </Stack>
         <TextField label='Phone' variant='outlined' color='success' margin='normal' size='small' />
         <TextField label='Address' variant='outlined' color='success' margin='normal' size='small'
-          multiline rows={3}/>
+          multiline rows={3} />
         <TextField label='Email' variant='outlined' color='success' margin='normal' size='small'
           defaultValue='duonghdse140501@fpt.edu.vn'
           InputProps={{ readOnly: true }} />
         <TextField label='Department' variant='outlined' color='success' margin='normal' size='small'
           defaultValue='Software Engineering'
           InputProps={{ readOnly: true }} />
+        <Button
+          variant='contained'
+          color='success'
+          endIcon={<Save />}
+          onClick={handleShow}
+        >
+          Save
+        </Button>
       </Stack>
       <EditModal show={show} handleClose={handleClose} />
     </Stack>

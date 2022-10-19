@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material'
+import { Stack, Typography } from '@mui/material'
 import React from 'react'
 import { useState } from 'react'
 import SemesterDetail from './SemesterDetail'
@@ -12,18 +12,19 @@ const Semester = () => {
     <>
       {
         !isShowDetail ? (
-          <Box flex={5} m={1} height='87vh' overflow='auto'>
-            <Typography variant='h5' color='#778899' fontWeight={500} px={8} mb={4}>
+          <Stack flex={5} height='90vh' overflow='auto'>
+            <Typography variant='h5' color='#778899' fontWeight={500} px={9} 
+              mb={4} mt={1}>
               Semester
             </Typography>
-            <Stack px={8} gap={2}>
+            <Stack px={9} gap={2}>
               {
                 years.map(year => (
                   <Year key={year.id} year={year} setIsShowDetail={setIsShowDetail}/>
                 ))
               }
             </Stack>
-          </Box>
+          </Stack>
         ) : (
           <SemesterDetail setIsShowDetail={setIsShowDetail}/>
         )

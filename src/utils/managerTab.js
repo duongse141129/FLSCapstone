@@ -1,4 +1,4 @@
-import {Group, LocalLibraryOutlined} from '@mui/icons-material';
+import {Group, LocalLibraryOutlined, AccountBox, Assignment, Chat} from '@mui/icons-material';
 
 export const managerTabs = [
   {
@@ -8,5 +8,17 @@ export const managerTabs = [
   {
     name: 'subject',
     icon: <LocalLibraryOutlined/>
+  },
+  {
+    name: 'assignment',
+    icon: <Assignment/>
+  },
+  {
+    name: 'feedback',
+    icon: <Chat/>
+  },
+  {
+    name: 'profile',
+    icon: <AccountBox/>
   },
 ]

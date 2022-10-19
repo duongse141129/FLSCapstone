@@ -1,4 +1,4 @@
-import { Box, Stack, Typography } from '@mui/material';
+import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { ArrowBackIosNew } from '@mui/icons-material';
 import React from 'react';
 import { useState } from 'react';
@@ -10,18 +10,19 @@ const SemesterDetail = ({ setIsShowDetail }) => {
   const [isSelected, setIsSelected] = useState(1)
 
   return (
-    <Stack flex={5} m={1} height='87vh' overflow='auto'>
-      <Stack color='#778899' mb={1} fontWeight={500} direction='row' alignItems='center' px={4}
-        gap={1}
+    <Stack flex={5} height='90vh' overflow='auto'>
+      <Stack color='#778899' mb={1} direction='row' mt={1}
+        alignItems='center' gap={4}
       >
-        <ArrowBackIosNew
-          sx={{ '&:hover': { color: 'black', cursor: 'pointer' } }}
-          onClick={() => setIsShowDetail(false)}
-        />
+        <Tooltip title='Back to Semester' arrow>
+          <IconButton onClick={() => setIsShowDetail(false)}>
+            <ArrowBackIosNew />
+          </IconButton>
+        </Tooltip>
         <Typography variant='h5' fontWeight={500}>
           Semester Detail: Fall 2022</Typography>
       </Stack>
-      <Stack direction='row' px={8} gap={8} mb={3}>
+      <Stack direction='row' px={9} gap={8} mb={3}>
         {
           tabs.map(tab => (
             <Typography key={tab.id} fontSize='18px' onClick={() => setIsSelected(tab.id)}
@@ -36,8 +37,8 @@ const SemesterDetail = ({ setIsShowDetail }) => {
       </Stack>
       {
         isSelected === 1 &&
-        <Box height='100vh'>
-          <Stack direction='row' gap={1} alignItems='center' px={8} mb={2}>
+        <Box height='100%'>
+          <Stack direction='row' gap={1} alignItems='center' px={9} mb={2}>
             <Typography fontWeight={500}>Week</Typography>
             <select className='week-cbx' style={{ fontSize: '16px' }}>
               <option>26-09 to 02-10</option>

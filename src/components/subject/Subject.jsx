@@ -31,15 +31,16 @@ const Subject = ({semesterDetail}) => {
   }
 
   return (
-    <Stack flex={5} m={!semesterDetail && 1} mb={1} height='87vh' overflow={!semesterDetail && 'auto'}>
+    <Stack flex={5} height='90vh' overflow={!semesterDetail && 'auto'}>
       {!semesterDetail && 
-        <><Typography variant='h5' color='#778899' fontWeight={500} px={8}>
+        <><Typography variant='h5' color='#778899' fontWeight={500} px={9} mt={1}>
           Subject
         </Typography>
-      <Typography color='gray' variant='subtitle1' px={8} mb={4}>
+      <Typography color='gray' variant='subtitle1' px={9} mb={4}>
         Teachable subjects in next semester
       </Typography></>}
-      <Stack direction='row' alignItems='center' justifyContent='space-between' px={8} mb={2}>
+      <Stack direction='row' alignItems='center' justifyContent='space-between' 
+        px={9} mb={2}>
         <Stack direction='row' alignItems='center'>
           <Typography width='110px' fontWeight={500}>Department</Typography>
           <select className='year-cbx' value={selectedDepartment} onChange={handleSelect}
@@ -74,8 +75,8 @@ const Subject = ({semesterDetail}) => {
           </Tooltip>
         </Stack>
       </Stack>
-      <Stack px={8}>
-        <Paper sx={{ minWidth: 700, borderBottom: '1px solid gray' }}>
+      <Stack px={9}>
+        <Paper sx={{ minWidth: 700, mb: 2}}>
           <TableContainer component={Box}
             sx={{ overflow: 'auto' }}>
             <Table>

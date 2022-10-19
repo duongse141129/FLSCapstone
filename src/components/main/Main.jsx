@@ -5,12 +5,8 @@ import './Main.css'
 
 const Main = () => {
   return (
-    <Stack
-      flex={5}
-      m={1}
-      mb={2}
-    >
-      <Stack direction='row' mb={2}  px={8} justifyContent='space-between'>
+    <Stack flex={5} height='90vh' overflow='auto'>
+      <Stack direction='row' mb={2}  px={9} justifyContent='space-between' mt={1}>
         <Typography variant='h5' color='#778899' fontWeight='500'>
           Schedule of Lecturer (Hong Dai Duong)
         </Typography>
