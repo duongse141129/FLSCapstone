@@ -170,3 +170,17 @@ export const lecturers = [
     isFullTime: 1,
   },
 ]
+
+export const courses =[
+  'SWR301_SE1410',
+  'SWR301_SE1411',
+  'SWR301_SE1412',
+  'SWR301_SE1413',
+  'SWR301_SE1414',
+  'SWR301_SE1415',
+  'SWR301_SE1416',
+  'SWR301_SE1417',
+  'SWR301_SE1418',
+  'SWR301_SE1419',
+  'SWR301_SE1420',
+]

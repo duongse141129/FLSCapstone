@@ -18,6 +18,10 @@ const LecturerInfo = () => {
     navigate(`/manager/feedback/${id}`)
   }
 
+  const toAssignmentList = () => {
+    navigate(`/manager/assignment/${id}`)
+  }
+
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
       <Stack direction='row' alignItems='center' color='#778899' gap={4} 
@@ -37,6 +41,7 @@ const LecturerInfo = () => {
           Feedback
         </Button>
         <Button size='small' variant='contained' color='error'
+          onClick={toAssignmentList}
           startIcon={<Assignment />}>
           Assignment
         </Button>
@@ -46,7 +51,7 @@ const LecturerInfo = () => {
         </Button>
       </Stack>
       <Stack px={9} width='100%' mb={2}>
-        <Stack direction='row' gap={4} mb={1}>
+        <Stack direction='row' gap={4} mb={2}>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Name: </span>
             <span>{lecturer.name}</span>
@@ -56,7 +61,7 @@ const LecturerInfo = () => {
             <span>{lecturer.email}</span>
           </Typography>
         </Stack>
-        <Stack direction='row' gap={4} mb={1}>
+        <Stack direction='row' gap={4} mb={2}>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Department: </span>
             <span>Software Engineering</span>
@@ -66,7 +71,7 @@ const LecturerInfo = () => {
             <span>{lecturer.isFullTime === 1 ? 'Full time' : 'Contract'}</span>
           </Typography>
         </Stack>
-        <Stack direction='row' gap={4} mb={1}>
+        <Stack direction='row' gap={4} mb={2}>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Birthday: </span>
             <span>{lecturer.dob}</span>
@@ -76,7 +81,7 @@ const LecturerInfo = () => {
             <span>{lecturer.gender}</span>
           </Typography>
         </Stack>
-        <Stack direction='row' gap={4} mb={1}>
+        <Stack direction='row' gap={4} mb={2}>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Phone: </span>
             <span>{lecturer.phone}</span>

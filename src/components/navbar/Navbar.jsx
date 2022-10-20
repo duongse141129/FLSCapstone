@@ -3,8 +3,21 @@ import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import ReorderIcon from '@mui/icons-material/Reorder';
 import { Avatar, Box, Stack, Typography } from '@mui/material'
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const Navbar = ({isExtend, setIsExtend}) => {
+  const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleNavigate = () => {
+    if(location.pathname.includes('manager')){
+      navigate('/lecturer')
+    }
+    else{
+      navigate('/manager')
+    }
+  }
+
   return (
     <Box 
       bgcolor='white' 
@@ -43,6 +56,9 @@ const Navbar = ({isExtend, setIsExtend}) => {
         </Stack>
 
         <Stack direction='row' alignItems='center' gap={4}>
+          <Typography onClick={handleNavigate}>
+            {location.pathname.includes('manager') ? 'Manager' : 'Lecturer'}
+          </Typography>
           <Badge badgeContent={4} color="error">
             <NotificationsIcon 
               fontSize='medium'

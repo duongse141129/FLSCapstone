@@ -39,7 +39,7 @@ const Feedback = () => {
         <span style={{ fontWeight: 500 }}>Department: </span>
         <span>Software Engineering</span>
       </Typography>
-      <Typography px={9} mb={1} fontWeight={500}>List of lecturers</Typography>
+      <Typography px={9} mb={1} fontWeight={500}>Lecturers</Typography>
       <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}>

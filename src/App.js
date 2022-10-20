@@ -13,6 +13,7 @@ import LecturerInfo from "./components/lecturer/LecturerInfo";
 import SubjectOfManager from "./components/subject/SubjectOfManager";
 import Assignment from "./components/assignment/Assignment";
 import FeedbackSelection from "./components/feedback/FeedbackSelection";
+import AssignmentList from "./components/assignment/AssignmentList";
 
 function App() {
   const navigate = useNavigate();
@@ -40,6 +41,7 @@ function App() {
           <Route path='feedback' element={<Feedback />} />
           <Route path='feedback/:id' element={<FeedbackSelection />} />
           <Route path='assignment' element={<Assignment />} />
+          <Route path='assignment/:id' element={<AssignmentList />} />
         </Route>
       </Routes>
     </>

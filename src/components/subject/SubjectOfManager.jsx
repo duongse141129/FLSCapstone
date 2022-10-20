@@ -1,4 +1,4 @@
-import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
+import { Box, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
 import React from 'react'
 import { useState } from 'react';
 import { subjects } from '../../utils/sampleData';
@@ -6,6 +6,7 @@ import { subjects } from '../../utils/sampleData';
 const SubjectOfManager = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [semester, setSemester] = React.useState('spring2023');
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -14,6 +15,10 @@ const SubjectOfManager = () => {
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
+  };
+
+  const handleChange = (event) => {
+    setSemester(event.target.value);
   };
 
   return (
@@ -26,19 +31,22 @@ const SubjectOfManager = () => {
       </Typography>
       <Stack px={9} direction='row' alignItems='center' mb={2}>
         <Typography width='100px' fontWeight={500}>Semester</Typography>
-        <select className='year-cbx'
-          style={{ fontSize: '16px', padding: '2px 0 2px 0' }}>
-          <option value='Spring2023'>Spring 2023</option>
-          <option value='Fall2022'>Fall 2022</option>
-          <option value='Summer2022'>Summer 2022</option>
-          <option value='Spring2022'>Spring 2022</option>
-        </select>
+        <Select color='success'
+          size='small'
+          value={semester}
+          onChange={handleChange}
+        >
+          <MenuItem value='spring2023'>Spring 2023</MenuItem>
+          <MenuItem value='fall2022'>Fall 2022</MenuItem>
+          <MenuItem value='summer2022'>Summer 2022</MenuItem>
+          <MenuItem value='spring2022'>Spring 2022</MenuItem>
+        </Select>
       </Stack>
       <Stack px={9} direction='row' alignItems='center' mb={2}>
         <Typography width='100px' fontWeight={500}>Department: </Typography>
         <Typography>Software Engineering</Typography>
       </Stack>
-      <Typography px={9} fontWeight={500} mb={1}>List of Subjects</Typography>
+      <Typography px={9} fontWeight={500} mb={1}>Subjects and Courses</Typography>
       <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}
