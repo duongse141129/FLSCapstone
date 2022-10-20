@@ -434,7 +434,6 @@ namespace BEAPICapstoneProjectFLS.Entities
                     .IsUnicode(false)
                     .HasColumnName("RoomTypeID");
 
-                entity.Property(e => e.RoomTypeName).HasMaxLength(100);
 
                 entity.Property(e => e.SemesterId)
                     .HasMaxLength(30)

@@ -67,14 +67,14 @@ namespace BEAPICapstoneProjectFLS.Services
                 (_mapper.ConfigurationProvider)).DynamicFilter(flitter);
             switch (sortBy.ToString())
             {
-                case "RoomTypeName":
+                case "Quantity":
                     if (order.ToString() == "Asc")
                     {
-                        listRoomSemesterViewModel = (IQueryable<RoomSemesterViewModel>)listRoomSemesterViewModel.OrderBy(x => x.RoomTypeName);
+                        listRoomSemesterViewModel = (IQueryable<RoomSemesterViewModel>)listRoomSemesterViewModel.OrderBy(x => x.Quantity);
                     }
                     else
                     {
-                        listRoomSemesterViewModel = (IQueryable<RoomSemesterViewModel>)listRoomSemesterViewModel.OrderByDescending(x => x.RoomTypeName);
+                        listRoomSemesterViewModel = (IQueryable<RoomSemesterViewModel>)listRoomSemesterViewModel.OrderByDescending(x => x.Quantity);
                     }
                     break;
                 case "Id":

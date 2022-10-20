@@ -17,6 +17,7 @@ namespace BEAPICapstoneProjectFLS.Entities
         public TimeSpan? TimeStart { get; set; }
         public TimeSpan? TimeEnd { get; set; }
         public int? SlotNumber { get; set; }
+        public int? DateOfWeek { get; set; }
         public int Status { get; set; }
 
         public virtual ICollection<Course> Courses { get; set; }
