@@ -29,7 +29,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCourseAssign([FromQuery] CourseAssignViewModel flitter, CourseAssignSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllCourseAssign([FromQuery] CourseAssignViewModel flitter, CourseAssignSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listCourseAssignModel = _ICourseAssignService.GetAllCourseAssign(flitter, pageIndex, pageSize, sortBy, order);
             return Ok(listCourseAssignModel);

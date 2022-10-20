@@ -29,7 +29,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllSubjectOfLecturer([FromQuery] SubjectOfLecturerViewModel flitter, SubjectOfLecturerSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllSubjectOfLecturer([FromQuery] SubjectOfLecturerViewModel flitter, SubjectOfLecturerSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listSubjectOfLecturerModel = _ISubjectOfLecturerService.GetAllSubjectOfLecturer(flitter, pageIndex, pageSize, sortBy, order);
             return Ok(listSubjectOfLecturerModel);

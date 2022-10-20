@@ -29,7 +29,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllLecturerCourseGroup([FromQuery] LecturerCourseGroupViewModel flitter, LecturerCourseGroupSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllLecturerCourseGroup([FromQuery] LecturerCourseGroupViewModel flitter, LecturerCourseGroupSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listLecturerCourseGroupModel = _ILecturerCourseGroupService.GetAllLecturerCourseGroup(flitter, pageIndex, pageSize, sortBy, order);
             return Ok(listLecturerCourseGroupModel);

@@ -28,7 +28,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllCourseGroupItem([FromQuery] CourseGroupItemViewModel flitter, CourseGroupItemSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllCourseGroupItem([FromQuery] CourseGroupItemViewModel flitter, CourseGroupItemSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listCourseGroupItemModel = _ICourseGroupItemService.GetAllCourseGroupItem(flitter, pageIndex, pageSize, sortBy, order);
             return Ok(listCourseGroupItemModel);

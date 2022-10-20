@@ -29,7 +29,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllRoomType([FromQuery] RoomTypeViewModel flitter, RoomTypeSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllRoomType([FromQuery] RoomTypeViewModel flitter, RoomTypeSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listRoomTypeModel = _IRoomTypeService.GetAllRoomType(flitter, pageIndex, pageSize, sortBy, order);
             return Ok(listRoomTypeModel);

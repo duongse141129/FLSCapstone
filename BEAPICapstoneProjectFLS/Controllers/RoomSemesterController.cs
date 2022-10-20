@@ -29,7 +29,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllRoomSemester([FromQuery] RoomSemesterViewModel flitter, RoomSemesterSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllRoomSemester([FromQuery] RoomSemesterViewModel flitter, RoomSemesterSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listRoomSemesterModel = _IRoomSemesterService.GetAllRoomSemester(flitter, pageIndex, pageSize, sortBy, order);
             return Ok(listRoomSemesterModel);

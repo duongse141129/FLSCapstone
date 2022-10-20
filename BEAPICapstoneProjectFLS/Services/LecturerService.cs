@@ -127,6 +127,7 @@ namespace BEAPICapstoneProjectFLS.Services
 
         public async Task<LecturerViewModel> GetLecturerByEmail(string email)
         {
+            var e = email.ToString();
             var de = await _res.GetAllByIQueryable()
                 .Where(x => x.Email == email && x.Status == (int)LecturerStatus.Active)
                 .Include(x => x.Department)

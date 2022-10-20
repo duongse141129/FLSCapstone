@@ -29,7 +29,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllDepartment([FromQuery] DepartmentViewModel flitter, DepartmentSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllDepartment([FromQuery] DepartmentViewModel flitter, DepartmentSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listDepartmentModel = _IDepartmentService.GetAllDepartment(flitter, pageIndex, pageSize,sortBy, order);
             return Ok(listDepartmentModel);

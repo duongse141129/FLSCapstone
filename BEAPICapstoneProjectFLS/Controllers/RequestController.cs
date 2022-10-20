@@ -29,7 +29,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllRequest([FromQuery] RequestViewModel flitter, RequestSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllRequest([FromQuery] RequestViewModel flitter, RequestSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listRequestModel = _IRequestService.GetAllRequest(flitter, pageIndex, pageSize, sortBy, order);
             return Ok(listRequestModel);

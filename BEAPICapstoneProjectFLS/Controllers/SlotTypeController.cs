@@ -29,7 +29,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllSlotType([FromQuery] SlotTypeViewModel flitter, SlotTypeSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllSlotType([FromQuery] SlotTypeViewModel flitter, SlotTypeSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listSlotTypeModel = _ISlotTypeService.GetAllSlotType(flitter, pageIndex, pageSize, sortBy, order);
             return Ok(listSlotTypeModel);

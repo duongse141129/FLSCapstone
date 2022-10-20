@@ -28,7 +28,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllSemester([FromQuery] SemesterViewModel flitter, SemesterSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllSemester([FromQuery] SemesterViewModel flitter, SemesterSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listSemesterModel = _ISemesterService.GetAllSemester(flitter, pageIndex, pageSize,
                 sortBy, order);

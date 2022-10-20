@@ -29,7 +29,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllLecturerSlotConfig([FromQuery] LecturerSlotConfigViewModel flitter, LecturerSlotConfigSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllLecturerSlotConfig([FromQuery] LecturerSlotConfigViewModel flitter, LecturerSlotConfigSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listLecturerSlotConfigModel = _ILecturerSlotConfigService.GetAllLecturerSlotConfig(flitter, pageIndex, pageSize, sortBy, order);
             return Ok(listLecturerSlotConfigModel);
