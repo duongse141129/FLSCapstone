@@ -37,8 +37,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.InsertAsync(lc);
                 await _res.SaveAsync();
 
-                var lecturer = await GetLecturerById(lc.Id);
-                return _mapper.Map<LecturerViewModel>(lecturer);
+                var lecturerVM = await GetLecturerById(lc.Id);
+                return lecturerVM;
             }
             catch
             {
@@ -166,8 +166,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.UpdateAsync(lecturer);
                 await _res.SaveAsync();
 
-                var d = await GetLecturerById(lecturer.Id);
-                return _mapper.Map<LecturerViewModel>(d);
+                var lecturerVM = await GetLecturerById(lecturer.Id);
+                return lecturerVM;
             }
             catch
             {

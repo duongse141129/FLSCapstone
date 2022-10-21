@@ -37,7 +37,7 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.SaveAsync();
 
                 var d = await GetDepartmentById(de.Id);
-                return _mapper.Map<DepartmentViewModel>(d);
+                return d;
             }
             catch
             {
@@ -122,7 +122,7 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.SaveAsync();
 
                 var d = await GetDepartmentById(department.Id);
-                return _mapper.Map<DepartmentViewModel>(d);
+                return d;
             }
             catch
             {

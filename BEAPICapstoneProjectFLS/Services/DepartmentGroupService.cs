@@ -36,7 +36,9 @@ namespace BEAPICapstoneProjectFLS.Services
                 dg.Id = RandomPKKey.NewRamDomPKKey();
                 await _res.InsertAsync(dg);
                 await _res.SaveAsync();
-                return _mapper.Map<DepartmentGroupViewModel>(dg);
+
+                var dgVM = await GetDepartmentGroupById(dg.Id);
+                return dgVM;
             }
             catch
             {
@@ -122,7 +124,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.UpdateAsync(departmentGroup);
                 await _res.SaveAsync();
 
-                return _mapper.Map<DepartmentGroupViewModel>(departmentGroup);
+                var dgVM = await GetDepartmentGroupById(departmentGroup.Id);
+                return dgVM;
             }
             catch
             {

@@ -52,7 +52,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAllAdmin([FromQuery] AdminViewModel flitter, AdminSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 1)
+        public IActionResult GetAllAdmin([FromQuery] AdminViewModel flitter, AdminSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)
         {
             var listAdminModel = _IAdminService.GetAllAdmin(flitter, pageIndex, pageSize, sortBy, order);
             return Ok(listAdminModel);

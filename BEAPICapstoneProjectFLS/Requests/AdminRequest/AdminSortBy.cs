@@ -1,4 +1,6 @@
-﻿namespace BEAPICapstoneProjectFLS.Requests.AdminRequest
+﻿using System;
+using Newtonsoft.Json;
+namespace BEAPICapstoneProjectFLS.Requests.AdminRequest
 {
     public enum AdminSortBy
     {

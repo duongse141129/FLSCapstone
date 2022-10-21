@@ -37,8 +37,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.InsertAsync(dmr);
                 await _res.SaveAsync();
 
-                var DepartmentManager = await GetDepartmentManagerById(dmr.Id);
-                return _mapper.Map<DepartmentManagerViewModel>(DepartmentManager);
+                var DepartmentManagerVM = await GetDepartmentManagerById(dmr.Id);
+                return DepartmentManagerVM;
             }
             catch
             {
@@ -160,8 +160,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.UpdateAsync(DepartmentManager);
                 await _res.SaveAsync();
 
-                var d = await GetDepartmentManagerById(DepartmentManager.Id);
-                return _mapper.Map<DepartmentManagerViewModel>(d);
+                var departmentManagerVM = await GetDepartmentManagerById(DepartmentManager.Id);
+                return departmentManagerVM;
             }
             catch
             {

@@ -39,8 +39,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.InsertAsync(ad);
                 await _res.SaveAsync();
 
-                var Admin = await GetAdminById(ad.Id);
-                return _mapper.Map<AdminViewModel>(Admin);
+                var adVM = await GetAdminById(ad.Id);
+                return adVM;
             }
             catch
             {
@@ -155,8 +155,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.UpdateAsync(ad);
                 await _res.SaveAsync();
 
-                var d = await GetAdminById(ad.Id);
-                return _mapper.Map<AdminViewModel>(d);
+                var adVM = await GetAdminById(ad.Id);
+                return adVM;
             }
             catch
             {

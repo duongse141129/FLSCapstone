@@ -37,7 +37,9 @@ namespace BEAPICapstoneProjectFLS.Services
                 se.Id = RandomPKKey.NewRamDomPKKey();
                 await _res.InsertAsync(se);
                 await _res.SaveAsync();
-                return _mapper.Map<SemesterViewModel>(se);
+
+                var seVM = await GetSemesterById(se.Id);
+                return seVM;
             }
             catch
             {
@@ -125,7 +127,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.UpdateAsync(semester);
                 await _res.SaveAsync();
 
-                return _mapper.Map<SemesterViewModel>(semester);
+                var seVM = await GetSemesterById(semester.Id);
+                return seVM;
             }
             catch
             {

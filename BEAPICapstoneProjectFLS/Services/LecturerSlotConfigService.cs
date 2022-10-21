@@ -37,7 +37,9 @@ namespace BEAPICapstoneProjectFLS.Services
                 lsc.Id = RandomPKKey.NewRamDomPKKey();
                 await _res.InsertAsync(lsc);
                 await _res.SaveAsync();
-                return _mapper.Map<LecturerSlotConfigViewModel>(lsc);
+
+                var lscVM = await GetLecturerSlotConfigById(lsc.Id);
+                return lscVM;
             }
             catch
             {
@@ -125,7 +127,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.UpdateAsync(lecturerSlotConfig);
                 await _res.SaveAsync();
 
-                return _mapper.Map<LecturerSlotConfigViewModel>(lecturerSlotConfig);
+                var lscVM = await GetLecturerSlotConfigById(lecturerSlotConfig.Id);
+                return lscVM;
             }
             catch
             {

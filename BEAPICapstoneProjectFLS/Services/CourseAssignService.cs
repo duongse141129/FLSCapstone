@@ -37,7 +37,9 @@ namespace BEAPICapstoneProjectFLS.Services
                 ca.Id = RandomPKKey.NewRamDomPKKey();
                 await _res.InsertAsync(ca);
                 await _res.SaveAsync();
-                return _mapper.Map<CourseAssignViewModel>(ca);
+
+                var caVM = await GetCourseAssignById(ca.Id);
+                return caVM;
             }
             catch
             {
@@ -108,6 +110,8 @@ namespace BEAPICapstoneProjectFLS.Services
 
             var dg = await _res.GetAllByIQueryable()
                 .Where(x => x.Id == id && x.Status == (int)CourseAssignStatus.Active)
+                .Include(x => x.Lecturer)
+                .Include(x => x.Course)
                 .FirstOrDefaultAsync();
             if (dg == null)
                 return null;
@@ -133,7 +137,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.UpdateAsync(courseAssign);
                 await _res.SaveAsync();
 
-                return _mapper.Map<CourseAssignViewModel>(courseAssign);
+                var caVM = await GetCourseAssignById(courseAssign.Id);
+                return caVM;
             }
             catch
             {

@@ -37,7 +37,10 @@ namespace BEAPICapstoneProjectFLS.Services
                 rt.Id = RandomPKKey.NewRamDomPKKey();
                 await _res.InsertAsync(rt);
                 await _res.SaveAsync();
-                return _mapper.Map<RoomTypeViewModel>(rt);
+
+
+                var rtVM = await GetRoomTypeById(rt.Id);
+                return rtVM;
             }
             catch
             {
@@ -122,7 +125,8 @@ namespace BEAPICapstoneProjectFLS.Services
                 await _res.UpdateAsync(roomType);
                 await _res.SaveAsync();
 
-                return _mapper.Map<RoomTypeViewModel>(roomType);
+                var rtVM = await GetRoomTypeById(roomType.Id);
+                return rtVM;
             }
             catch
             {
