@@ -184,3 +184,41 @@ export const courses =[
   'SWR301_SE1419',
   'SWR301_SE1420',
 ]
+
+export const priorityCourses = [
+  {
+    subjectCode: 'SWR301',
+    subjectName: 'Software Requirement',
+    course: 'SWR301_SE1410',
+    priority: 'High',
+    slot: '07:00 - 09:15 (Monday, Thursday)'
+  },
+  {
+    subjectCode: 'SWR301',
+    subjectName: 'Software Requirement',
+    course: 'SWR301_SE1411',
+    priority: 'High',
+    slot: '09:30 - 11:45 (Monday, Thursday)'
+  },
+  {
+    subjectCode: 'SWR301',
+    subjectName: 'Software Requirement',
+    course: 'SWR301_SE1412',
+    priority: 'Medium',
+    slot: '12:30 - 14:45 (Monday, Thursday)'
+  },
+  {
+    subjectCode: 'SWR301',
+    subjectName: 'Software Requirement',
+    course: 'SWR301_SE1413',
+    priority: 'Low',
+    slot: '07:00 - 09:15 (Tuesday, Friday)'
+  },
+  {
+    subjectCode: 'SWR301',
+    subjectName: 'Software Requirement',
+    course: 'SWR301_SE1414',
+    priority: 'Low',
+    slot: '09:30 - 11:45 (Tuesday, Friday)'
+  },
+]

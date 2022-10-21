@@ -5,19 +5,26 @@ import {
   Stack, TextField, Typography
 }
   from '@mui/material';
-import { Assignment } from '@mui/icons-material';
+import { Try } from '@mui/icons-material';
 import React, { useState } from 'react'
-import { green, grey, blueGrey, red } from '@mui/material/colors';
+import { green, grey, orange, red } from '@mui/material/colors';
 import { subjects, courses } from '../../utils/sampleData';
-import { slotTime } from '../../utils/favoriteSlot';
 
-const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
+const PriorityModal = ({ isPriority, setIsPriority, lecturer }) => {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
-  const [selectedSlot, setSelectedSlot] = useState({});
   const [listSubject, setListSubject] = useState(subjects);
   const [searchValue, setSearchValue] = useState('');
   const [department, setDepartment] = useState('swe');
+  const [priority, setPriority] = useState('');
+
+  const handleChangeDepartment = (event) => {
+    setDepartment(event.target.value);
+  };
+
+  const handleChangePriority = (event) => {
+    setPriority(event.target.value);
+  }
 
   const selectSubject = (subjectID) => {
     setSelectedSubject(subjectID);
@@ -26,10 +33,6 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
 
   const selectCourse = (course) => {
     setSelectedCourse(course);
-  }
-
-  const selectSlot = (slot) => {
-    setSelectedSlot(slot)
   }
 
   const handleSearch = (value) => {
@@ -43,37 +46,33 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
     }
   }
 
-  const handleChangeDepartment = (event) => {
-    setDepartment(event.target.value);
-  };
-
   return (
     <Dialog
       maxWidth='md'
       fullWidth={true}
-      open={isAssign}
-      onClose={() => setIsAssign(false)}
+      open={isPriority}
+      onClose={() => setIsPriority(false)}
     >
-      <DialogTitle color={blueGrey[600]}>
+      <DialogTitle color={orange[700]}>
         <Stack direction='row' alignItems='center' gap={1}>
-          <Assignment />
-          <Typography variant='h5'>Assign course to lecturer</Typography>
+          <Try />
+          <Typography variant='h5'>Add priority course</Typography>
         </Stack>
       </DialogTitle>
       <DialogContent>
         {
-          selectedSubject && selectedCourse &&
+          selectedSubject && selectedCourse && priority &&
           <Typography variant='subtitle1' color={green[500]}>*Ready to save</Typography>
         }
         {
-          (!selectedSubject || !selectedCourse) &&
-          <Typography variant='subtitle1' color={grey[500]}>*Choose subject then choose course and slot type</Typography>
+          (!selectedSubject || !selectedCourse || !priority) &&
+          <Typography variant='subtitle1' color={grey[500]}>*Choose subject then choose course and priority level</Typography>
         }
         <Stack direction='row' mb={1} gap={1}>
-          <Typography fontWeight={500}>Lecturer: </Typography>
+          <Typography fontWeight={500}>Lecturer:</Typography>
           <Typography>{lecturer.name}</Typography>
         </Stack>
-        <Stack direction='row' gap={4} mb={1}>
+        <Stack direction='row' gap={4} mb={1} alignItems='center'>
           <Stack direction='row' gap={1}>
             <Typography fontWeight={500}>Subject<span style={{ color: red[500] }}>*</span>:</Typography>
             <Typography>{selectedSubject || <span style={{ color: red[600] }}>required</span>}</Typography>
@@ -82,17 +81,23 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
             <Typography fontWeight={500}>Course<span style={{ color: red[500] }}>*</span>:</Typography>
             <Typography>{selectedCourse || <span style={{ color: red[600] }}>required</span>}</Typography>
           </Stack>
-          <Stack direction='row' gap={1}>
-            <Typography fontWeight={500}>Slot:</Typography>
-            <Typography>
-              {selectedSlot?.id ? `${selectedSlot.range} (${selectedSlot.day})` :
-                <span style={{ color: grey[500] }}>optional</span>}
-            </Typography>
+          <Stack direction='row' alignItems='center' gap={1}>
+            <Typography fontWeight={500}>Priority<span style={{ color: red[500] }}>*</span></Typography>
+            <Select color='warning'
+              size='small'
+              value={priority}
+              onChange={handleChangePriority}
+              placeholder='Choose priority'
+            >
+              <MenuItem value='4'>High</MenuItem>
+              <MenuItem value='3'>Medium</MenuItem>
+              <MenuItem value='2'>Low</MenuItem>
+            </Select>
           </Stack>
         </Stack>
         <Stack direction='row' alignItems='center' gap={1} mb={2}>
           <Typography fontWeight={500}>Department</Typography>
-          <Select color='secondary'
+          <Select color='warning'
             size='small'
             value={department}
             onChange={handleChangeDepartment}
@@ -107,19 +112,19 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
           <Stack flex={1}>
             <Stack flex={1} mb={1}>
               <TextField label='Subject' variant='outlined' size='small'
-                placeholder='Search by id or name' color='secondary'
+                placeholder='Search by id or name' color='warning'
                 value={searchValue} onChange={(e) => handleSearch(e.target.value)} />
             </Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
               {
                 listSubject.map(subject => (
                   <Typography key={subject.id} p={1} fontSize='15px'
-                    borderBottom='1px solid #e3e3e3' bgcolor={subject.id === selectedSubject && blueGrey[200]}
+                    borderBottom='1px solid #e3e3e3' bgcolor={subject.id === selectedSubject && orange[300]}
                     sx={{
                       transition: 'all 0.1s linear',
                       '&:hover': {
                         cursor: 'pointer',
-                        bgcolor: blueGrey[200]
+                        bgcolor: orange[300]
                       }
                     }}
                     onClick={() => selectSubject(subject.id)}
@@ -137,12 +142,12 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
                 selectedSubject &&
                 courses.map(course => (
                   <Typography key={course} p={1} fontSize='15px'
-                    borderBottom='1px solid #e3e3e3' bgcolor={selectedCourse === course && blueGrey[200]}
+                    borderBottom='1px solid #e3e3e3' bgcolor={selectedCourse === course && orange[300]}
                     sx={{
                       transition: 'all 0.1s linear',
                       '&:hover': {
                         cursor: 'pointer',
-                        bgcolor: blueGrey[200]
+                        bgcolor: orange[300]
                       }
                     }}
                     onClick={() => selectCourse(course)}
@@ -153,34 +158,12 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
               }
             </Box>
           </Stack>
-          <Stack flex={1} >
-            <Stack flex={1} mb={1} fontWeight={500} justifyContent='center'>Slot Type</Stack>
-            <Box flex={9} border='1px solid gray' overflow='auto'>
-              {
-                slotTime.map(slot => (
-                  <Typography key={slot.id} p={1} fontSize='15px' bgcolor={selectedSlot === slot && blueGrey[200]}
-                    borderBottom='1px solid #e3e3e3'
-                    sx={{
-                      transition: 'all 0.1s linear',
-                      '&:hover': {
-                        cursor: 'pointer',
-                        bgcolor: blueGrey[200]
-                      }
-                    }}
-                    onClick={() => selectSlot(slot)}
-                  >
-                    {slot.range} ({slot.day})
-                  </Typography>
-                ))
-              }
-            </Box>
-          </Stack>
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setIsAssign(false)} color='info'>Cancel</Button>
-        <Button variant='contained' onClick={() => setIsAssign(false)} autoFocus
-          color='secondary' disabled={(!selectedSubject || !selectedCourse) && true}>
+        <Button onClick={() => setIsPriority(false)} color='info'>Cancel</Button>
+        <Button variant='contained' onClick={() => setIsPriority(false)} autoFocus
+          color='warning' disabled={(!selectedSubject || !selectedCourse || !priority) && true}>
           Save
         </Button>
       </DialogActions>
@@ -188,4 +171,4 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
   )
 }
 
-export default AssignmentModal
+export default PriorityModal

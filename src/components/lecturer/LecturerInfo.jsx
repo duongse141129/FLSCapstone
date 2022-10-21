@@ -1,5 +1,5 @@
 import { Button, IconButton, Stack, Tooltip, Typography } from '@mui/material';
-import { ArrowBackIosNew, Assignment, Chat, CalendarMonth } from '@mui/icons-material';
+import { ArrowBackIosNew, Assignment, Chat, CalendarMonth, Try } from '@mui/icons-material';
 import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { lecturers } from '../../utils/sampleData';
@@ -22,6 +22,14 @@ const LecturerInfo = () => {
     navigate(`/manager/assignment/${id}`)
   }
 
+  const toPriorityList = () => {
+    navigate(`/manager/priority/${id}`)
+  }
+
+  const toSchedule = () => {
+    navigate(`/manager/schedule/${id}`)
+  }
+
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
       <Stack direction='row' alignItems='center' color='#778899' gap={4} 
@@ -32,21 +40,24 @@ const LecturerInfo = () => {
           </IconButton>
         </Tooltip>
         <Typography variant='h5' fontWeight={500}>
-          Lecturer Information: <span style={{ color: green[600] }}>{lecturer.id}</span>
+          Lecturer Information: <span style={{ color: green[600] }}>{lecturer.name} - {lecturer.id}</span>
         </Typography>
       </Stack>
       <Stack direction='row' alignItems='center' px={9} mb={4} gap={2}>
+        <Button size='small' variant='contained' onClick={toAssignmentList} startIcon={<Assignment />}
+          color='secondary'>
+          Assignment
+        </Button>
+        <Button size='small' variant='contained' color='warning'
+          startIcon={<Try/>} onClick={toPriorityList}>
+          Priority
+        </Button>
         <Button size='small' variant='contained' startIcon={<Chat />}
           onClick={giveFeedback}>
           Feedback
         </Button>
-        <Button size='small' variant='contained' color='error'
-          onClick={toAssignmentList}
-          startIcon={<Assignment />}>
-          Assignment
-        </Button>
         <Button size='small' variant='contained' color='success'
-          startIcon={<CalendarMonth />}>
+          startIcon={<CalendarMonth />} onClick={toSchedule}>
           Schedule
         </Button>
       </Stack>

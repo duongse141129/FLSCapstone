@@ -1,7 +1,7 @@
 import {Button, Stack, Typography} from '@mui/material';
 import { useNavigate } from 'react-router-dom';
 
-const Assignment = () => {
+const Priority = () => {
   const navigate = useNavigate();
 
   const toLecturerList = () => {
@@ -11,13 +11,13 @@ const Assignment = () => {
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
       <Typography variant='h5' color='#778899' fontWeight={500} px={9} mt={1}>
-        Assignment
+        Priority
       </Typography>
       <Typography color='gray' px={9} variant='subtitle1' mb={4}>
-        Courses which lecturer is assigned
+        Courses which lecturer is given priority
       </Typography>
       <Typography px={9} mb={2}>
-        Please select Lecturer to view Courses have been assigned
+        Please select Lecturer to view Courses have been given priority
       </Typography>
       <Typography px={9} mb={2}>
         <Button color='success' variant='contained'
@@ -25,9 +25,8 @@ const Assignment = () => {
           Go to Lecturer
         </Button>
       </Typography>
-
     </Stack>
   )
 }
 
-export default Assignment
+export default Priority

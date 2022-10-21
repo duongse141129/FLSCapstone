@@ -14,6 +14,10 @@ import SubjectOfManager from "./components/subject/SubjectOfManager";
 import Assignment from "./components/assignment/Assignment";
 import FeedbackSelection from "./components/feedback/FeedbackSelection";
 import AssignmentList from "./components/assignment/AssignmentList";
+import Priority from "./components/priority/Priority";
+import PriorityList from "./components/priority/PriorityList";
+import ScheduleManager from "./components/schedule/ScheduleManager";
+import ScheduleDetail from "./components/schedule/ScheduleDetail";
 
 function App() {
   const navigate = useNavigate();
@@ -42,6 +46,10 @@ function App() {
           <Route path='feedback/:id' element={<FeedbackSelection />} />
           <Route path='assignment' element={<Assignment />} />
           <Route path='assignment/:id' element={<AssignmentList />} />
+          <Route path='priority' element={<Priority />} />
+          <Route path='priority/:id' element={<PriorityList />} />
+          <Route path='schedule' element={<ScheduleManager />} />
+          <Route path='schedule/:id' element={<ScheduleDetail />} />
         </Route>
       </Routes>
     </>

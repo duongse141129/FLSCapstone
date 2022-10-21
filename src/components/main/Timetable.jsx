@@ -5,7 +5,7 @@ import Day from './Day'
 
 const Timetable = () => {
   return (
-    <Stack height='100%' direction='row' px={9} mb={1}>
+    <Stack height='100%' direction='row' px={9} mb={1} minWidth='920px' minHeight='445px'>
       <Stack flex={0.6} bgcolor='white'>
         <Stack flex={0.8} color='white' bgcolor={green[600]}
           borderRight='1px solid #e3e3e3' borderBottom='1px solid #e3e3e3'

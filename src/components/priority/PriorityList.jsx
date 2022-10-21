@@ -1,24 +1,24 @@
-import { ArrowBackIosNew, AssignmentOutlined, DeleteOutline } from '@mui/icons-material';
+import { ArrowBackIosNew, TryOutlined, DeleteOutline } from '@mui/icons-material';
 import {
   Box, Button, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
   Tooltip, Typography
 } from '@mui/material'
-import { blueGrey } from '@mui/material/colors';
+import { orange } from '@mui/material/colors';
 import React from 'react';
 import { useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { lecturers, priorityCourses } from '../../utils/sampleData';
-import DeleteModal from '../priority/DeleteModal';
-import AssignmentModal from './AssignmentModal';
+import DeleteModal from './DeleteModal';
+import PriorityModal from './PriorityModal';
 
-const AssignmentList = () => {
+const PriorityList = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const lecturer = lecturers.find(each => each.id === id);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [semester, setSemester] = React.useState('spring2023');
-  const [isAssign, setIsAssign] = useState(false);
+  const [isPriority, setIsPriority] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
 
   const handleChangePage = (event, newPage) => {
@@ -47,11 +47,11 @@ const AssignmentList = () => {
           </IconButton>
         </Tooltip>
         <Typography variant='h5' fontWeight={500}>
-          Assignment
+          Priority
         </Typography>
       </Stack>
       <Typography color='gray' px={9} variant='subtitle1' mb={4}>
-        Courses which lecturer is assigned
+        Courses which lecturer is given priority
       </Typography>
       <Stack direction='row' alignItems='center' px={9} mb={2} gap={1}>
         <Typography width='300px'>
@@ -69,7 +69,7 @@ const AssignmentList = () => {
       </Stack>
       <Stack direction='row' alignItems='center' px={9} mb={2} gap={1}>
         <Typography fontWeight={500}>Semester</Typography>
-        <Select color='secondary'
+        <Select color='warning'
           size='small'
           value={semester}
           onChange={handleChange}
@@ -81,10 +81,10 @@ const AssignmentList = () => {
         </Select>
       </Stack>
       <Stack direction='row' alignItems='center' px={9} mb={1} justifyContent='space-between'>
-        <Typography fontWeight={500}>Assigned Courses</Typography>
-        <Button variant='contained' color='secondary' size='small' endIcon={<AssignmentOutlined />}
-          onClick={() => setIsAssign(true)}>
-          Assign
+        <Typography fontWeight={500}>Priority Courses</Typography>
+        <Button variant='contained' color='warning' size='small' endIcon={<TryOutlined />}
+          onClick={() => setIsPriority(true)}>
+          More
         </Button>
       </Stack>
       <Stack px={9} mb={2}>
@@ -93,7 +93,7 @@ const AssignmentList = () => {
             sx={{ overflow: 'auto' }}>
             <Table>
               <TableHead>
-                <TableRow sx={{ bgcolor: blueGrey[600] }}>
+                <TableRow sx={{ bgcolor: orange[700] }}>
                   <TableCell size='small'>
                     <Typography sx={{ fontWeight: 500, color: 'white' }}>Subject</Typography>
                   </TableCell>
@@ -101,7 +101,7 @@ const AssignmentList = () => {
                     <Typography sx={{ fontWeight: 500, color: 'white' }}>Course</Typography>
                   </TableCell>
                   <TableCell size='small'>
-                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Slot Type</Typography>
+                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Priority Level</Typography>
                   </TableCell>
                   <TableCell size='small'>
                     <Typography sx={{ fontWeight: 500, color: 'white' }}>Option</Typography>
@@ -113,14 +113,15 @@ const AssignmentList = () => {
                   priorityCourses.map(course => (
                     <TableRow hover key={course.course}>
                       <TableCell size='small'>
-                        <span style={{ fontWeight: 500 }}>{course.subjectCode}</span> - {course.subjectName}</TableCell>
+                        <span style={{ fontWeight: 500 }}>{course.subjectCode}</span> - {course.subjectName}
+                      </TableCell>
                       <TableCell size='small'>{course.course}</TableCell>
-                      <TableCell size='small'>{course.slot}</TableCell>
+                      <TableCell size='small'>{course.priority}</TableCell>
                       <TableCell size='small'>
-                        <Tooltip title='Delete' placement='right' arrow>
-                          <IconButton size='small' color='error'
+                        <Tooltip title='delete' placement='right' arrow>
+                          <IconButton size='small' color='error' 
                             onClick={() => setIsDelete(true)}>
-                            <DeleteOutline/>
+                            <DeleteOutline />
                           </IconButton>
                         </Tooltip>
                       </TableCell>
@@ -146,10 +147,11 @@ const AssignmentList = () => {
           />
         </Paper>
       </Stack>
-      <AssignmentModal isAssign={isAssign} setIsAssign={setIsAssign} lecturer={lecturer} />
+      <PriorityModal isPriority={isPriority} setIsPriority={setIsPriority}
+        lecturer={lecturer} />
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} />
     </Stack>
   )
 }
 
-export default AssignmentList
+export default PriorityList

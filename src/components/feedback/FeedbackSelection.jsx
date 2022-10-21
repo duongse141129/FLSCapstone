@@ -32,7 +32,7 @@ const FeedbackSelection = () => {
   };
 
   const backToList = () => {
-    navigate('/manager/feedback')
+    navigate(`/manager/lecturer/${id}`)
   }
 
   return (
@@ -44,15 +44,29 @@ const FeedbackSelection = () => {
           </IconButton>
         </Tooltip>
         <Typography variant='h5' fontWeight={500}>
-          Feedback List
+          Feedback
         </Typography>
       </Stack>
       <Typography color='gray' px={9} variant='subtitle1' mb={4}>
         Give feedback point to a lecturer with each subject
       </Typography>
-      <Stack direction='row' alignItems='center' px={9} mb={2} width='50vw'>
-        <Typography width='100px' fontWeight={500}>Semester</Typography>
-        <Select color='success'
+      <Stack direction='row' alignItems='center' px={9} mb={2} gap={1}>
+        <Typography width='300px'>
+          <span style={{ fontWeight: 500 }}>Lecturer: </span>
+          <span>{lecturer.name}</span>
+        </Typography>
+        <Typography width='300px'>
+          <span style={{ fontWeight: 500 }}>Department: </span>
+          <span>Software Engineering</span>
+        </Typography>
+        <Typography width='300px'>
+          <span style={{ fontWeight: 500 }}>Email: </span>
+          <span>{lecturer.email}</span>
+        </Typography>
+      </Stack>
+      <Stack direction='row' alignItems='center' px={9} mb={2} gap={1}>
+        <Typography fontWeight={500}>Semester</Typography>
+        <Select
           size='small'
           value={semester}
           onChange={handleChange}
@@ -63,21 +77,7 @@ const FeedbackSelection = () => {
           <MenuItem value='spring2022'>Spring 2022</MenuItem>
         </Select>
       </Stack>
-      <Stack direction='row' alignItems='center' px={9} mb={2}>
-        <Typography width='100px' fontWeight={500}>Department: </Typography>
-        <Typography>Software Engineering</Typography>
-      </Stack>
-      <Stack direction='row' alignItems='center' px={9} mb={2} gap={1}>
-        <Typography width='350px'>
-          <span style={{ fontWeight: 500 }}>Lecturer: </span>
-          <span>{lecturer.name}</span>
-        </Typography>
-        <Typography width='350px'>
-          <span style={{ fontWeight: 500 }}>Email: </span>
-          <span>{lecturer.email}</span>
-        </Typography>
-      </Stack>
-      <Typography px={9} mb={1} fontWeight={500}>Subjects</Typography>
+      <Typography px={9} mb={1} fontWeight={500}>Subjects in Software Engineering department</Typography>
       <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}

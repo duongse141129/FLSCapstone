@@ -2,7 +2,7 @@ import {
   Box, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead,
   TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material';
-import { Visibility, TaskAlt } from '@mui/icons-material';
+import {Visibility, TaskAlt} from '@mui/icons-material';
 import { lecturers } from '../../utils/sampleData';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
@@ -47,8 +47,6 @@ const Lecturer = () => {
                   <TableCell size='small' className='subject-header'>ID</TableCell>
                   <TableCell size='small' className='subject-header'>Name</TableCell>
                   <TableCell size='small' className='subject-header'>Email</TableCell>
-                  <TableCell size='small' className='subject-header'>Phone</TableCell>
-                  <TableCell size='small' className='subject-header'>Full time</TableCell>
                   <TableCell size='small' className='subject-header'>Detail</TableCell>
                 </TableRow>
               </TableHead>
@@ -56,19 +54,23 @@ const Lecturer = () => {
                 {
                   lecturers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((lecturer, index) => (
-                      <TableRow key={index} hover>
+                      <TableRow key={index} hover sx={{'&:hover': {cursor: 'pointer'}}}
+                        onClick={() => viewDetail(lecturer.id)}>
                         <TableCell size='small'>{lecturer.id}</TableCell>
-                        <TableCell size='small'>{lecturer.name}</TableCell>
-                        <TableCell size='small'>{lecturer.email}</TableCell>
-                        <TableCell size='small'>{lecturer.phone}</TableCell>
                         <TableCell size='small'>
-                          {
-                            lecturer.isFullTime === 1 && 
-                            <TaskAlt sx={{ color: green[600] }} />
-                          }
+                          <Stack direction='row' alignItems='center' gap={1}>
+                            <Typography fontSize='14px'>{lecturer.name}</Typography>
+                            {
+                              lecturer.isFullTime === 1 &&
+                              <Tooltip title='Full-time Lecturer' placement='top' arrow>
+                                <TaskAlt sx={{ color: green[600], fontSize: '24px' }} />
+                              </Tooltip>
+                            }
+                          </Stack>
                         </TableCell>
+                        <TableCell size='small'>{lecturer.email}</TableCell>
                         <TableCell size='small'>
-                          <Tooltip title='View detail' placement='right' arrow>
+                          <Tooltip title='More Information' placement='right' arrow>
                             <IconButton onClick={() => viewDetail(lecturer.id)}>
                               <Visibility />
                             </IconButton>
