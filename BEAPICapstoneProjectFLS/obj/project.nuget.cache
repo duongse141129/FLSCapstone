@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "AxgydNzwn0/ZChNN9O8Nn5Emwd+r/8/XtK4V5H9lyhH1ytEw28ADiqJfoXmH/zsxoPXHjt0VFqD//9LE854XmQ==",
+  "dgSpecHash": "jEdxHvXTYW/zZfnTDdD3F0LVAk/uCf3e+6w6ajT6rsd1b9q8SzS4gY4M0u0K7bZvqdNiodYXtCD82HGGOrSFFA==",
   "success": true,
   "projectFilePath": "G:\\CSharpProject\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj",
   "expectedPackageFiles": [
@@ -49,7 +49,7 @@
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.openapi\\1.2.3\\microsoft.openapi.1.2.3.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.win32.registry\\4.7.0\\microsoft.win32.registry.4.7.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\microsoft.win32.systemevents\\4.7.0\\microsoft.win32.systemevents.4.7.0.nupkg.sha512",
-    "C:\\Users\\Admin\\.nuget\\packages\\newtonsoft.json\\12.0.3\\newtonsoft.json.12.0.3.nupkg.sha512",
+    "C:\\Users\\Admin\\.nuget\\packages\\newtonsoft.json\\13.0.1\\newtonsoft.json.13.0.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\newtonsoft.json.bson\\1.0.2\\newtonsoft.json.bson.1.0.2.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\pagedlist\\1.17.0\\pagedlist.1.17.0.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\pagedlist.mvc\\4.5.0\\pagedlist.mvc.4.5.0.nupkg.sha512",

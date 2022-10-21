@@ -14,6 +14,7 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="5.0.2" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
     <PackageReference Include="PagedList.Mvc" Version="4.5.0" />
     <PackageReference Include="Reso.Core" Version="1.0.19" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="5.6.3" />
