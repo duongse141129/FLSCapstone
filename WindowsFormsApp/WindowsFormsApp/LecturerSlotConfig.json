@@ -1,0 +1,401 @@
+[
+ {
+  "LecturerSlotConfigID": "SC1",
+  "SlotTypeID": "ST11",
+  "LecturerID": "AnNDH2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC2",
+  "SlotTypeID": "ST21",
+  "LecturerID": "AnNDH2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC3",
+  "SlotTypeID": "ST31",
+  "LecturerID": "AnNDH2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC4",
+  "SlotTypeID": "ST12",
+  "LecturerID": "HoaDNT",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC5",
+  "SlotTypeID": "ST22",
+  "LecturerID": "HoaDNT",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC6",
+  "SlotTypeID": "ST32",
+  "LecturerID": "HoaDNT",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC7",
+  "SlotTypeID": "ST12",
+  "LecturerID": "HoangNT20",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC8",
+  "SlotTypeID": "ST22",
+  "LecturerID": "HoangNT20",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC9",
+  "SlotTypeID": "ST32",
+  "LecturerID": "HoangNT20",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC10",
+  "SlotTypeID": "ST12",
+  "LecturerID": "HungBT3",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC11",
+  "SlotTypeID": "ST22",
+  "LecturerID": "HungBT3",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC12",
+  "SlotTypeID": "ST32",
+  "LecturerID": "HungBT3",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC13",
+  "SlotTypeID": "ST12",
+  "LecturerID": "HungLD5",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC14",
+  "SlotTypeID": "ST22",
+  "LecturerID": "HungLD5",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC15",
+  "SlotTypeID": "ST32",
+  "LecturerID": "HungLD5",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC16",
+  "SlotTypeID": "ST12",
+  "LecturerID": "HuongNTC2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC17",
+  "SlotTypeID": "ST22",
+  "LecturerID": "HuongNTC2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC18",
+  "SlotTypeID": "ST32",
+  "LecturerID": "HuongNTC2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC19",
+  "SlotTypeID": "ST12",
+  "LecturerID": "KhanhKT",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC20",
+  "SlotTypeID": "ST22",
+  "LecturerID": "KhanhKT",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC21",
+  "SlotTypeID": "ST32",
+  "LecturerID": "KhanhKT",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC22",
+  "SlotTypeID": "ST12",
+  "LecturerID": "KiemHH",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC23",
+  "SlotTypeID": "ST22",
+  "LecturerID": "KiemHH",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC24",
+  "SlotTypeID": "ST32",
+  "LecturerID": "KiemHH",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC25",
+  "SlotTypeID": "ST12",
+  "LecturerID": "LoiND9",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC26",
+  "SlotTypeID": "ST22",
+  "LecturerID": "LoiND9",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC27",
+  "SlotTypeID": "ST32",
+  "LecturerID": "LoiND9",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC28",
+  "SlotTypeID": "ST12",
+  "LecturerID": "NamH3",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC29",
+  "SlotTypeID": "ST22",
+  "LecturerID": "NamH3",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC30",
+  "SlotTypeID": "ST32",
+  "LecturerID": "NamH3",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC31",
+  "SlotTypeID": "ST12",
+  "LecturerID": "NguyenTT15",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC32",
+  "SlotTypeID": "ST22",
+  "LecturerID": "NguyenTT15",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC33",
+  "SlotTypeID": "ST32",
+  "LecturerID": "NguyenTT15",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC34",
+  "SlotTypeID": "ST13",
+  "LecturerID": "PhongVT12",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC35",
+  "SlotTypeID": "ST23",
+  "LecturerID": "PhongVT12",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC36",
+  "SlotTypeID": "ST33",
+  "LecturerID": "PhongVT12",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC37",
+  "SlotTypeID": "ST13",
+  "LecturerID": "Phuonglhk",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC38",
+  "SlotTypeID": "ST23",
+  "LecturerID": "Phuonglhk",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC39",
+  "SlotTypeID": "ST33",
+  "LecturerID": "Phuonglhk",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC40",
+  "SlotTypeID": "ST13",
+  "LecturerID": "Taint5",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC41",
+  "SlotTypeID": "ST23",
+  "LecturerID": "Taint5",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC42",
+  "SlotTypeID": "ST33",
+  "LecturerID": "Taint5",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC43",
+  "SlotTypeID": "ST13",
+  "LecturerID": "ThongNT",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC44",
+  "SlotTypeID": "ST23",
+  "LecturerID": "ThongNT",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC45",
+  "SlotTypeID": "ST33",
+  "LecturerID": "ThongNT",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC46",
+  "SlotTypeID": "ST13",
+  "LecturerID": "TruongLV11",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC47",
+  "SlotTypeID": "ST23",
+  "LecturerID": "TruongLV11",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC48",
+  "SlotTypeID": "ST33",
+  "LecturerID": "TruongLV11",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC49",
+  "SlotTypeID": "ST13",
+  "LecturerID": "TuanBA16",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC50",
+  "SlotTypeID": "ST23",
+  "LecturerID": "TuanBA16",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC51",
+  "SlotTypeID": "ST33",
+  "LecturerID": "TuanBA16",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC52",
+  "SlotTypeID": "ST13",
+  "LecturerID": "TuanMT2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC53",
+  "SlotTypeID": "ST23",
+  "LecturerID": "TuanMT2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC54",
+  "SlotTypeID": "ST33",
+  "LecturerID": "TuanMT2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC55",
+  "SlotTypeID": "ST13",
+  "LecturerID": "VanTTN2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC56",
+  "SlotTypeID": "ST23",
+  "LecturerID": "VanTTN2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ },
+ {
+  "LecturerSlotConfigID": "SC57",
+  "SlotTypeID": "ST33",
+  "LecturerID": "VanTTN2",
+  "SesmeterID": "FA22",
+  "Status": 1
+ }
+]
