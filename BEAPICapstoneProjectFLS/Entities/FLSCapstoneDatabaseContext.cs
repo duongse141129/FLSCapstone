@@ -321,7 +321,7 @@ namespace BEAPICapstoneProjectFLS.Entities
                     .IsUnicode(false)
                     .HasColumnName("ID");
 
-                entity.Property(e => e.GroupName).HasMaxLength(30);
+                entity.Property(e => e.GroupName).HasMaxLength(150);
 
                 entity.Property(e => e.LecturerId)
                     .HasMaxLength(30)

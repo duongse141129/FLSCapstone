@@ -26,6 +26,7 @@ namespace BEAPICapstoneProjectFLS
 {
     public class Startup
     {
+        private readonly string _corsName = "FLS";
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -38,7 +39,7 @@ namespace BEAPICapstoneProjectFLS
         {
             services.AddCors(option =>
             {
-                option.AddPolicy(name: "FLS",
+                option.AddPolicy(name: _corsName,
                                     builder =>
                                     {
                                         builder.WithOrigins().AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod();
@@ -176,6 +177,8 @@ namespace BEAPICapstoneProjectFLS
 
             app.UseRouting();
 
+            app.UseCors(_corsName);
+
             app.UseAuthorization();
             app.UseAuthentication();
 
@@ -184,7 +187,7 @@ namespace BEAPICapstoneProjectFLS
                 endpoints.MapControllers();
             });
 
-            app.UseCors();
+            
         }
     }
 }

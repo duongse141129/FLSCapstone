@@ -39,7 +39,7 @@ namespace BEAPICapstoneProjectFLS.Services
                 };
             }
             var resultDepartManager = await _departmentManager.GetDepartmentManagerByEmail(email);
-            if (result != null)
+            if (resultDepartManager != null)
             {
                 return new UserAccountViewModel
                 {
@@ -50,7 +50,7 @@ namespace BEAPICapstoneProjectFLS.Services
                 };
             }
             var resultAdmmin = await _admin.GetAdminByEmail(email);
-            if (result != null)
+            if (resultAdmmin != null)
             {
                 return new UserAccountViewModel
                 {
