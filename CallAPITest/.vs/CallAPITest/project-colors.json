@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "eb04582a-dd9e-444f-9367-c1d4d2ce84c2": {
+      "ProjectGuid": "eb04582a-dd9e-444f-9367-c1d4d2ce84c2",
+      "DisplayName": "CallAPITest",
+      "ColorIndex": 0
+    }
+  },
+  "NextColorIndex": 1
+}
