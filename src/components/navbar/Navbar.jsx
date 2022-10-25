@@ -1,43 +1,60 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import ReorderIcon from '@mui/icons-material/Reorder';
-import { Avatar, Box, Stack, Typography } from '@mui/material'
+import { Reorder, AccountBox, Logout } from '@mui/icons-material';
+import { Avatar, Box, Divider, Menu, MenuItem, Stack, Typography } from '@mui/material'
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useGoogleAuth } from '../../utils/googleAuth';
 
-const Navbar = ({isExtend, setIsExtend}) => {
+const Navbar = ({ isExtend, setIsExtend }) => {
   const location = useLocation();
   const navigate = useNavigate();
+  const { signOut, googleUser } = useGoogleAuth();
+  const [anchorEl, setAnchorEl] = useState(null);
+  const open = Boolean(anchorEl);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+
+  const handleSignOut = () => {
+    setAnchorEl(null);
+    signOut();
+  }
 
   const handleNavigate = () => {
-    if(location.pathname.includes('manager')){
+    if (location.pathname.includes('manager')) {
       navigate('/lecturer')
     }
-    else{
+    else {
       navigate('/manager')
     }
   }
 
   return (
-    <Box 
-      bgcolor='white' 
-      px={4} 
-      py={1} 
+    <Box
+      bgcolor='white'
+      px={4}
+      py={1}
       sx={{
-        position: 'sticky', 
+        position: 'sticky',
         top: '0',
         borderBottom: '1px solid lightgray'
       }}
     >
       <Stack direction='row' justifyContent='space-between' alignItems='center'>
         <Stack direction='row' alignItems='center'>
-          <ReorderIcon 
+          <Reorder
             sx={{
               mr: '36px',
-              '&:hover':{
-                color:'success.main',
+              '&:hover': {
+                color: 'success.main',
                 cursor: 'pointer'
-              } 
+              }
             }}
             onClick={() => setIsExtend(!isExtend)}
           />
@@ -60,7 +77,7 @@ const Navbar = ({isExtend, setIsExtend}) => {
             {location.pathname.includes('manager') ? 'Manager' : 'Lecturer'}
           </Typography>
           <Badge badgeContent={4} color="error">
-            <NotificationsIcon 
+            <NotificationsIcon
               fontSize='medium'
               sx={{
                 color: 'success.main',
@@ -69,11 +86,28 @@ const Navbar = ({isExtend, setIsExtend}) => {
             />
           </Badge>
           <Avatar
-            src='https://4gvietnamobile.net/wp-content/uploads/2022/06/logo-free-fire-gaming-nu-6.jpeg'
+            src={googleUser && googleUser?.profileObj.imageUrl}
             sx={{
-              border: '1px solid grey'
+              '&:hover': {
+                cursor: 'pointer',
+                boxShadow: 'rgba(0, 0, 0, 0.35) 0px 5px 15px'
+              }
             }}
+            onClick={handleClick}
           />
+          <Menu
+            anchorEl={anchorEl}
+            open={open}
+            onClose={handleClose}
+          >
+            <MenuItem onClick={handleClose}>
+              <AccountBox sx={{ mr: 1 }} /> Profile
+            </MenuItem>
+            <Divider />
+            <MenuItem onClick={handleSignOut}>
+              <Logout sx={{ mr: 1, color: 'gray' }} />  Logout
+            </MenuItem>
+          </Menu>
         </Stack>
       </Stack>
     </Box>

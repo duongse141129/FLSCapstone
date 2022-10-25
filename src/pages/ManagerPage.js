@@ -1,12 +1,31 @@
 import { Box, Stack } from '@mui/material'
-import React, { useState } from 'react'
-import { Outlet } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Outlet, useNavigate } from 'react-router-dom'
 import Leftbar from '../components/leftbar/Leftbar'
 import Navbar from '../components/navbar/Navbar'
+import { useGoogleAuth } from '../utils/googleAuth'
 import {managerTabs} from '../utils/managerTab'
+import request from '../utils/request'
 
 const ManagerPage = () => {
-  const [isExtend, setIsExtend] = useState(true)
+  const navigate = useNavigate();
+  const [isExtend, setIsExtend] = useState(true);
+  const { isSignedIn, signOut, googleUser } = useGoogleAuth();
+
+  useEffect(() => {
+    if (isSignedIn) {
+      request.get(`DepartmentManager/email/${googleUser.profileObj.email}`)
+      .then(res => {
+        localStorage.setItem('web-user', res.data)
+      })
+      .catch(err => {
+        navigate(-1);
+      })
+    }
+    else{
+      navigate('/')
+    }
+  }, [isSignedIn])
 
   return (
     <Box height='100vh'>

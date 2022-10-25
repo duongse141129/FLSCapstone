@@ -18,18 +18,52 @@ import Priority from "./components/priority/Priority";
 import PriorityList from "./components/priority/PriorityList";
 import ScheduleManager from "./components/schedule/ScheduleManager";
 import ScheduleDetail from "./components/schedule/ScheduleDetail";
+import { useGoogleAuth } from './utils/googleAuth';
+import { useEffect } from "react";
+import { gapi } from "gapi-script";
+import request from './utils/request'
 
 function App() {
   const navigate = useNavigate();
+  const { signIn, isSignedIn, googleUser, signOut } = useGoogleAuth();
 
-  const handleSignIn = () => {
-    navigate('/lecturer')
-  }
+  console.log(gapi);
+
+  useEffect(() => {
+    if(isSignedIn){
+      request.get('UserAccount',
+      {
+        params: {
+          email: googleUser.profileObj.email
+        }
+      })
+      .then(res => {
+        console.log(res.data)
+        if(res.data){
+          if(res.data.Role === 'lecturer'){
+            navigate('/lecturer')
+          }
+          else{
+            navigate('/manager')
+          }
+        }
+      })
+      .catch(err => {
+        signOut();
+        alert('Login Fail!')
+      })
+    }
+  }, [isSignedIn])
+
+  // const handleSignIn = () => {
+  //   signIn();
+  //   console.log(googleUser)
+  // }
 
   return (
     <>
       <Routes>
-        <Route path='/' element={<Login handleSignIn={handleSignIn}/>}/>
+        <Route path='/' element={<Login handleSignIn={signIn} />} />
         <Route path="/lecturer" element={<LecturerPage />}>
           <Route index element={<Main />} />
           <Route path='profile' element={<Profile />} />
@@ -37,10 +71,10 @@ function App() {
           <Route path='subject' element={<Subject />} />
           <Route path='department' element={<Department />} />
         </Route>
-        <Route path="manager" element={<ManagerPage/>}>
-          <Route index element={<Lecturer/>}/>
-          <Route path='lecturer/:id' element={<LecturerInfo/>}/>
-          <Route path='subject' element={<SubjectOfManager/>}/>
+        <Route path="manager" element={<ManagerPage />}>
+          <Route index element={<Lecturer />} />
+          <Route path='lecturer/:id' element={<LecturerInfo />} />
+          <Route path='subject' element={<SubjectOfManager />} />
           <Route path='profile' element={<Profile />} />
           <Route path='feedback' element={<Feedback />} />
           <Route path='feedback/:id' element={<FeedbackSelection />} />
