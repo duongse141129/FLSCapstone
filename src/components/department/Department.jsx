@@ -265,7 +265,8 @@ const Department = () => {
         </Box>
       </Box>
       <RatingModal isRating={isRating} setIsRating={setIsRating} subjectId={subjectId} 
-        favoriteSubjects={favoriteSubjects} loadPoint={loadPoint}/>
+        favoriteSubjects={favoriteSubjects} loadPoint={loadPoint} subjects={subjects}
+        manager={manager}/>
       <RequestModal isRequest={isRequest} setIsRequest={setIsRequest}/>
     </Stack>
   )

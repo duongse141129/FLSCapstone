@@ -236,7 +236,8 @@ const Subject = ({ semesterDetail }) => {
         </Paper>
       </Stack>
       <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} />
-      <RatingModal isRating={isRating} setIsRating={setIsRating} subjectId={subjectId}
+      <RatingModal isRating={isRating} setIsRating={setIsRating} 
+        subjectId={subjectId} subjects={subjects}
         favoriteSubjects={favoriteSubjects} loadPoint={loadPoint}/>
     </Stack>
   )

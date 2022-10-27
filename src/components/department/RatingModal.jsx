@@ -7,36 +7,59 @@ import { blue } from '@mui/material/colors'
 import { useEffect } from 'react';
 import request from '../../utils/request';
 
-const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadPoint }) => {
-  const subject = favoriteSubjects?.length > 0 &&
+const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadPoint, subjects, manager }) => {
+  const subjectFavorite = favoriteSubjects?.length > 0 &&
                  favoriteSubjects.find(item => item.SubjectId === subjectId)
+  const subjectNot = subjects.find(item => item.Id === subjectId)
   const [value, setValue] = useState(3);
   const account = JSON.parse(localStorage.getItem('web-user'));
 
   useEffect(() => {
-    if(subject){
-      setValue(subject.FavoritePoint)
+    if(subjectFavorite){
+      setValue(subjectFavorite.FavoritePoint)
     }
-  }, [subject, loadPoint])
+  }, [subjectFavorite, loadPoint])
 
   const handleSave = () => {
-    request.put(`SubjectOfLecturer/${subject.Id}`, {
-      DepartmentManagerId: subject.DepartmentManagerId,
-      SemesterId: subject.SemesterId,
-      SubjectId: subject.SubjectId,
-      LecturerId: subject.LecturerId,
-      FavoritePoint: value,
-      FeedbackPoint: subject.FeedbackPoint,
-      MaxCourseSubject: subject.MaxCourseSubject
-    })
-    .then(res => {
-      if(res.status === 200){
-        setIsRating(false)
-      }
-    })
-    .catch(err => {
-      alert('Fail to rate!')
-    })
+    if(subjectFavorite){
+      request.put(`SubjectOfLecturer/${subjectFavorite.Id}`, {
+        DepartmentManagerId: subjectFavorite.DepartmentManagerId,
+        SemesterId: subjectFavorite.SemesterId,
+        SubjectId: subjectFavorite.SubjectId,
+        LecturerId: subjectFavorite.LecturerId,
+        FavoritePoint: value,
+        FeedbackPoint: subjectFavorite.FeedbackPoint,
+        MaxCourseSubject: subjectFavorite.MaxCourseSubject
+      })
+      .then(res => {
+        if(res.status === 200){
+          setIsRating(false)
+        }
+      })
+      .catch(err => {
+        alert('Fail to rate!')
+      })
+    }
+    else{
+      request.post('SubjectOfLecturer', {
+        DepartmentManagerId: manager ? manager.Id : null,
+        SemesterId: 'FA22',
+        SubjectId: subjectId,
+        LecturerId: account.Id,
+        FavoritePoint: value,
+        FeedbackPoint: 0,
+        MaxCourseSubject: 3,
+        isEnable: null
+      })
+      .then(res => {
+        if(res.status === 201){
+          setIsRating(false)
+        }
+      })
+      .catch(err => {
+        alert('Fail to rate!')
+      })
+    }
   }
 
   return (
@@ -53,7 +76,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
       <DialogContent>
         <Stack direction='row' mb={1}>
           <Typography width='100px' fontWeight={500}>Subject: </Typography>
-          <Typography>{subjectId} - {subject?.SubjectName}</Typography>
+          <Typography>{subjectId} - {subjectNot?.SubjectName}</Typography>
         </Stack>
         <Stack direction='row' mb={1}>
           <Typography width='100px' fontWeight={500}>Department: </Typography>
@@ -70,7 +93,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
       <DialogActions>
         <Button onClick={() => setIsRating(false)} color='info'>Cancel</Button>
         <Button variant='contained' onClick={handleSave} autoFocus
-          disabled={value === subject?.FavoritePoint}>
+          disabled={value === subjectFavorite?.FavoritePoint}>
           Save
         </Button>
       </DialogActions>
