@@ -13,6 +13,10 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public string LecturerName { get; set; }
         [JsonProperty("CourseId")]
         public string CourseId { get; set; }
+        [JsonProperty("isAssign")]
+        public int? isAssign { get; set; }
+        [JsonProperty("isPublic")]
+        public int? isPublic { get; set; }
         [JsonProperty("Status")]
         public int? Status { get; set; }
     }

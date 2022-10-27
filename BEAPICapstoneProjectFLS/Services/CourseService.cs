@@ -34,7 +34,6 @@ namespace BEAPICapstoneProjectFLS.Services
             try
             {
                 var cr = _mapper.Map<Course>(request);
-                cr.Id = RandomPKKey.NewRamDomPKKey();
                 await _res.InsertAsync(cr);
                 await _res.SaveAsync();
 

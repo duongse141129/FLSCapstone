@@ -19,5 +19,7 @@ namespace BEAPICapstoneProjectFLS.Requests.SubjectOfLecturerRequest
         public int? FeedbackPoint { get; set; }
         [JsonProperty("MaxCourseSubject")]
         public int? MaxCourseSubject { get; set; }
+        [JsonProperty("isEnable")]
+        public int? isEnable { get; set; }
     }
 }

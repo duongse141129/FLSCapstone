@@ -21,5 +21,8 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public string? DateEndFormat { get; set; }
         [JsonProperty("Status")]
         public int? Status { get; set; }
+        [JsonProperty("DateStatus")]
+        public string? DateStatus { get; set; }
+
     }
 }

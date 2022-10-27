@@ -9,5 +9,9 @@ namespace BEAPICapstoneProjectFLS.Requests.CourseAssignRequest
         public string LecturerId { get; set; }
         [JsonProperty("CourseId")]
         public string CourseId { get; set; }
+        [JsonProperty("isAssign")]
+        public int? isAssign { get; set; }
+        [JsonProperty("isPublic")]
+        public int? isPublic { get; set; }
     }
 }

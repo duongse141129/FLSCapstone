@@ -5,12 +5,14 @@ namespace BEAPICapstoneProjectFLS.Requests.CourseRequest
     [Serializable]
     public class CreateCourseRequest
     {
+        [JsonProperty("Id")]
+        public string Id { get; set; }
         [JsonProperty("SubjectId")]
-        public string SubjectId { get; set; }
+        public string? SubjectId { get; set; }
         [JsonProperty("SemesterId")]
-        public string SemesterId { get; set; }
+        public string? SemesterId { get; set; }
         [JsonProperty("SlotTypeId")]
-        public string SlotTypeId { get; set; }
+        public string? SlotTypeId { get; set; }
         [JsonProperty("Description")]
         public string Description { get; set; }
         [JsonProperty("SlotAmount")]

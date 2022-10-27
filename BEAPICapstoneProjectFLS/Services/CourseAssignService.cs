@@ -115,6 +115,7 @@ namespace BEAPICapstoneProjectFLS.Services
                 .FirstOrDefaultAsync();
             if (dg == null)
                 return null;
+
             var courseAssignVM = _mapper.Map<CourseAssignViewModel>(dg);
             return courseAssignVM;
         }

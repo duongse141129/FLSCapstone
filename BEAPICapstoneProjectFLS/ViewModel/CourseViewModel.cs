@@ -8,15 +8,15 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         [JsonProperty("Id")]
         public string Id { get; set; }
         [JsonProperty("SubjectId")]
-        public string SubjectId { get; set; }
+        public string? SubjectId { get; set; }
         [JsonProperty("SubjectName")]
-        public string SubjectName { get; set; }
+        public string? SubjectName { get; set; }
         [JsonProperty("SemesterId")]
-        public string SemesterId { get; set; }
+        public string? SemesterId { get; set; }
         [JsonProperty("Term")]
-        public string Term { get; set; }
+        public string? Term { get; set; }
         [JsonProperty("SlotTypeId")]
-        public string SlotTypeId { get; set; }
+        public string? SlotTypeId { get; set; }
         [JsonProperty("Description")]
         public string Description { get; set; }
         [JsonProperty("SlotAmount")]

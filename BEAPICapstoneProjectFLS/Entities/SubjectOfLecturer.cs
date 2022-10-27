@@ -15,6 +15,7 @@ namespace BEAPICapstoneProjectFLS.Entities
         public int? FavoritePoint { get; set; }
         public int? FeedbackPoint { get; set; }
         public int? MaxCourseSubject { get; set; }
+        public int? isEnable { get; set; }
         public int Status { get; set; }
 
         public virtual DepartmentManager DepartmentManager { get; set; }
