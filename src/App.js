@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes } from "react-router-dom";
 import Profile from "./components/profile/Profile";
 import Main from "./components/main/Main";
 import LecturerPage from "./pages/LecturerPage";
@@ -18,52 +18,12 @@ import Priority from "./components/priority/Priority";
 import PriorityList from "./components/priority/PriorityList";
 import ScheduleManager from "./components/schedule/ScheduleManager";
 import ScheduleDetail from "./components/schedule/ScheduleDetail";
-import { useGoogleAuth } from './utils/googleAuth';
-import { useEffect } from "react";
-import { gapi } from "gapi-script";
-import request from './utils/request'
 
 function App() {
-  const navigate = useNavigate();
-  const { signIn, isSignedIn, googleUser, signOut } = useGoogleAuth();
-
-  console.log(gapi);
-
-  useEffect(() => {
-    if(isSignedIn){
-      request.get('UserAccount',
-      {
-        params: {
-          email: googleUser.profileObj.email
-        }
-      })
-      .then(res => {
-        console.log(res.data)
-        if(res.data){
-          if(res.data.Role === 'lecturer'){
-            navigate('/lecturer')
-          }
-          else{
-            navigate('/manager')
-          }
-        }
-      })
-      .catch(err => {
-        signOut();
-        alert('Login Fail!')
-      })
-    }
-  }, [isSignedIn])
-
-  // const handleSignIn = () => {
-  //   signIn();
-  //   console.log(googleUser)
-  // }
-
   return (
     <>
       <Routes>
-        <Route path='/' element={<Login handleSignIn={signIn} />} />
+        <Route path='/' element={<Login/>} />
         <Route path="/lecturer" element={<LecturerPage />}>
           <Route index element={<Main />} />
           <Route path='profile' element={<Profile />} />

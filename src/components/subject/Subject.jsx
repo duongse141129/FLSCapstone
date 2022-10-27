@@ -7,10 +7,9 @@ import React, { useState } from 'react';
 import RequestModal from '../department/RequestModal';
 import RatingModal from '../department/RatingModal';
 import './Subject.css';
-import { subjects } from '../../utils/sampleData';
 import { green, grey, red } from '@mui/material/colors';
 import { useEffect } from 'react';
-import request from '../../utils/request';
+import request from '../../utils/request'
 
 const Subject = ({ semesterDetail }) => {
   const [page, setPage] = useState(0);
@@ -19,15 +18,16 @@ const Subject = ({ semesterDetail }) => {
   const [isRating, setIsRating] = useState(false);
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [departments, setDepartments] = useState([]);
-  const [selectedDepartment, setSelectedDepartment] = useState('')
-
-  console.log(account);
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [subjects, setSubjects] = useState([]);
+  const [favoriteSubjects, setFavoriteSubjects] = useState([]);
+  const [subjectId, setSubjectId] = useState('');
+  const [loadPoint, setLoadPoint] = useState(false);
 
   useEffect(() => {
-    const getGroupId = async() => {
+    const getDepartments = async() => {
       try {
         const response = await request.get(`Department/${account.DepartmentId}`);
-        console.log(response.data)
         const departmentList = await request.get('Department',{
             params:{
               DepartmentGroupId: response.data.DepartmentGroupId,
@@ -39,12 +39,57 @@ const Subject = ({ semesterDetail }) => {
         setSelectedDepartment(account.DepartmentId)
       } 
       catch (error) {
-        alert('Fail to get Departmet!')
+        alert('Fail to get Department!')
       }
     }
 
-    getGroupId();
-  }, [])
+    getDepartments();
+  }, [account.DepartmentId])
+
+  useEffect(() => {
+    const getSubjects = async() => {
+      try {
+        const response = await request.get('Subject', {
+          params: {
+            DepartmentId: selectedDepartment,
+            pageIndex: 1,
+            pageSize: 9999 
+          }
+        })
+        if(response.data){
+          setSubjects(response.data)
+        }  
+      } 
+      catch (error) {
+        alert('Fail to load subjects!');
+      }
+    }
+
+    getSubjects();
+  }, [selectedDepartment])
+
+  useEffect(() => {
+    const getFavoriteSubjects = async() => {
+      try {
+        const response = await request.get('SubjectOfLecturer', {
+          params: {
+            SemesterId: 'FA22',
+            LecturerId: account.Id,
+            pageIndex: 1,
+            pageSize: 9999
+          }
+        })
+        if(response.data){
+          setFavoriteSubjects(response.data)
+        }  
+      } 
+      catch (error) {
+        alert('Fail to load favortite points')
+      }
+    }
+
+    getFavoriteSubjects();
+  }, [isRating, account.Id])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -57,6 +102,12 @@ const Subject = ({ semesterDetail }) => {
 
   const handleSelect = (e) => {
     setSelectedDepartment(e.target.value)
+  }
+
+  const handleRating = (id) => {
+    setSubjectId(id);
+    setLoadPoint(prev => !prev);
+    setIsRating(true);
   }
 
   return (
@@ -88,7 +139,7 @@ const Subject = ({ semesterDetail }) => {
         </Stack>
         <Stack direction='row' alignItems='center' gap={2}>
           {
-            selectedDepartment === 'SWE' ?
+            selectedDepartment === account.DepartmentId ?
               <Typography color={green[600]}>
                 my department
               </Typography> :
@@ -97,9 +148,9 @@ const Subject = ({ semesterDetail }) => {
               </Typography>
           }
           <Tooltip title='My Department' placement='top' arrow>
-            <Beenhere onClick={() => { if (selectedDepartment !== 'SWE') setSelectedDepartment('SWE') }}
+            <Beenhere onClick={() => { if (selectedDepartment !== account.DepartmentId) setSelectedDepartment(account.DepartmentId) }}
               sx={{
-                color: selectedDepartment === 'SWE' ? green[600] : grey[400],
+                color: selectedDepartment === account.DepartmentId ? green[600] : grey[400],
                 fontSize: '28px',
                 '&:hover': {
                   cursor: 'pointer',
@@ -120,7 +171,7 @@ const Subject = ({ semesterDetail }) => {
                   <TableCell size='small' className='subject-header'>Code</TableCell>
                   <TableCell size='small' className='subject-header'>Name</TableCell>
                   {
-                    selectedDepartment === 'SWE' &&
+                    selectedDepartment === account.DepartmentId &&
                     <TableCell size='small' className='subject-header'>Favorite Point</TableCell>
                   }
                   <TableCell size='small' className='subject-header'>Request</TableCell>
@@ -129,18 +180,23 @@ const Subject = ({ semesterDetail }) => {
               <TableBody>
                 {
                   subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((subject, index) => (
-                      <TableRow key={index} hover>
-                        <TableCell size='small'>{subject.id}</TableCell>
-                        <TableCell size='small'>{subject.name}</TableCell>
+                    .map((subject) => (
+                      <TableRow key={subject.Id} hover>
+                        <TableCell size='small'>{subject.Id}</TableCell>
+                        <TableCell size='small'>{subject.SubjectName}</TableCell>
                         {
-                          selectedDepartment === 'SWE' &&
+                          selectedDepartment === account.DepartmentId &&
                           <TableCell size='small'>
-                            <Stack direction='row' alignItems='center' gap={2}>
-                              <Typography borderRight='1px solid gray' pr={3}>3</Typography>
-                              <Tooltip title='Rating' placement='left'>
+                            <Stack direction='row' alignItems='center' gap={1}>
+                              <Typography borderRight='1px solid gray' pr={2}>
+                                {
+                                  favoriteSubjects.length > 0 &&
+                                  favoriteSubjects.find(item => item.SubjectId === subject.Id)?.FavoritePoint
+                                }
+                              </Typography>
+                              <Tooltip title='Rating' placement='right' arrow>
                                 <IconButton color='primary' size='small'
-                                  onClick={() => setIsRating(true)}
+                                  onClick={() => handleRating(subject.Id)}
                                 >
                                   <StarBorder />
                                 </IconButton>
@@ -180,7 +236,8 @@ const Subject = ({ semesterDetail }) => {
         </Paper>
       </Stack>
       <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} />
-      <RatingModal isRating={isRating} setIsRating={setIsRating} />
+      <RatingModal isRating={isRating} setIsRating={setIsRating} subjectId={subjectId}
+        favoriteSubjects={favoriteSubjects} loadPoint={loadPoint}/>
     </Stack>
   )
 }

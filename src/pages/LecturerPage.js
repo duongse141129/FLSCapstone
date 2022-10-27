@@ -10,13 +10,15 @@ import request from '../utils/request'
 const LecturerPage = () => {
   const navigate = useNavigate();
   const [isExtend, setIsExtend] = useState(true)
-  const { isSignedIn, signOut, googleUser } = useGoogleAuth();
+  const { isSignedIn, googleUser } = useGoogleAuth();
 
   useEffect(() => {
     if (isSignedIn) {
       request.get(`Lecturer/email/${googleUser.profileObj.email}`)
       .then(res => {
-        localStorage.setItem('web-user', JSON.stringify(res.data))
+        if(res.data){
+          localStorage.setItem('web-user', JSON.stringify(res.data))
+        }
       })
       .catch(err => {
         navigate(-1);
@@ -25,7 +27,7 @@ const LecturerPage = () => {
     else{
       navigate('/')
     }
-  }, [isSignedIn])
+  }, [isSignedIn, googleUser, navigate])
 
   return (
     <Box height='100vh'>

@@ -29,12 +29,12 @@ const Day = ({ day, date, slots }) => {
             </>
           ) : (
             <>
-              <Slot slot={slots.find((slot) => slot.number === 1) || {}}/>
-              <Slot slot={slots.find((slot) => slot.number === 2) || {}}/>
-              <Slot slot={slots.find((slot) => slot.number === 3) || {}}/>
-              <Slot slot={slots.find((slot) => slot.number === 4) || {}}/>
-              <Slot slot={slots.find((slot) => slot.number === 5) || {}}/>
-              <Slot slot={slots.find((slot) => slot.number === 6) || {}}/>
+              <Slot slot={slots.find((slot) => slot.SlotNumber === 1) || {}}/>
+              <Slot slot={slots.find((slot) => slot.SlotNumber === 2) || {}}/>
+              <Slot slot={slots.find((slot) => slot.SlotNumber === 3) || {}}/>
+              <Slot slot={slots.find((slot) => slot.SlotNumber === 4) || {}}/>
+              <Slot slot={slots.find((slot) => slot.SlotNumber === 5) || {}}/>
+              <Slot slot={slots.find((slot) => slot.SlotNumber === 6) || {}}/>
             </>
           )
         }
