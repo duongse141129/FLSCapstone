@@ -96,7 +96,7 @@ const Main = () => {
     <Stack flex={5} height='90vh' overflow='auto'>
       <Stack direction='row' mb={2} px={9} justifyContent='space-between' mt={1}>
         <Typography variant='h5' color='#778899' fontWeight='500'>
-          Schedule of Lecturer ({account.Name})
+          Schedule of Lecturer ({account && account.Name})
         </Typography>
         <Stack direction='row' gap={4}>
           <Stack direction='row' gap={1} alignItems='center'>

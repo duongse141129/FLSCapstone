@@ -11,6 +11,7 @@ const LecturerPage = () => {
   const navigate = useNavigate();
   const [isExtend, setIsExtend] = useState(true)
   const { isSignedIn, googleUser } = useGoogleAuth();
+  const [wait, setWait] = useState(true);
 
   useEffect(() => {
     if (isSignedIn) {
@@ -18,6 +19,7 @@ const LecturerPage = () => {
       .then(res => {
         if(res.data){
           localStorage.setItem('web-user', JSON.stringify(res.data))
+          setWait(false)
         }
       })
       .catch(err => {
@@ -34,7 +36,12 @@ const LecturerPage = () => {
       <Navbar isExtend={isExtend} setIsExtend={setIsExtend}/>
       <Stack direction='row'>
         <Leftbar isExtend={isExtend} user={'lecturer'} tabs={lecturerTabs}/>
-        <Outlet/>
+        {!wait && <Outlet/>}
+        {wait && 
+          <Stack flex={5}>
+            
+          </Stack>
+        }
       </Stack>
     </Box>
   )
