@@ -3,7 +3,7 @@ import { ArrowBackIosNew } from '@mui/icons-material';
 import React from 'react';
 import { useState } from 'react';
 import SlotType from './SlotType';
-import Timetable from '../main/Timetable';
+// import Timetable from '../main/Timetable';
 import Subject from '../subject/Subject';
 
 const SemesterDetail = ({ setIsShowDetail }) => {
@@ -46,7 +46,7 @@ const SemesterDetail = ({ setIsShowDetail }) => {
               <option>10-10 to 16-10</option>
             </select>
           </Stack>
-          <Timetable />
+          {/* <Timetable /> */}
         </Box>
       }
       {

@@ -28,7 +28,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
         const response1 = await request.get('CourseAssign', {
           params: {
             LecturerId: Id,
-            Public: 1,
+            isPublic: 1,
             pageIndex: 1,
             pageSize: 100
           }
@@ -37,7 +37,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
           params: {
             SemesterId: selectedSemester,
             pageIndex: 1,
-            pageSize: 1000
+            pageSize: 9999
           }
         })
         const data1 = response1.data;

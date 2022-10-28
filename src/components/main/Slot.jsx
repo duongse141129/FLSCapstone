@@ -4,7 +4,7 @@ import React from 'react'
 
 const Slot = ({ slot }) => {
   return (
-    <Stack flex={1} px={1}
+    <Stack flex={1} px={1} justifyContent='center'
       className={Object.values(slot).length === 0 ? 'timetable-slot is-sunday' : 'timetable-slot '}
     >
       <Typography fontWeight={500} fontSize='15px'>

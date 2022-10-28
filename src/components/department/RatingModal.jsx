@@ -29,7 +29,8 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
         LecturerId: subjectFavorite.LecturerId,
         FavoritePoint: value,
         FeedbackPoint: subjectFavorite.FeedbackPoint,
-        MaxCourseSubject: subjectFavorite.MaxCourseSubject
+        MaxCourseSubject: subjectFavorite.MaxCourseSubject,
+        isEnable: subjectFavorite.isEnable
       })
       .then(res => {
         if(res.status === 200){
@@ -49,7 +50,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
         FavoritePoint: value,
         FeedbackPoint: 0,
         MaxCourseSubject: 3,
-        isEnable: null
+        isEnable: 1
       })
       .then(res => {
         if(res.status === 201){
