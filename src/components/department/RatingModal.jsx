@@ -192,7 +192,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
             }
             <Button onClick={() => setIsRating(false)} color='info'>Cancel</Button>
             <Button variant='contained' onClick={handleSave} autoFocus
-              disabled={value === subjectFavorite?.FavoritePoint || error}>
+              disabled={value === subjectFavorite?.FavoritePoint || error.length > 0}>
               Save
             </Button>
           </>

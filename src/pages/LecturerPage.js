@@ -37,12 +37,7 @@ const LecturerPage = () => {
       <Navbar isExtend={isExtend} setIsExtend={setIsExtend}/>
       <Stack direction='row'>
         <Leftbar isExtend={isExtend} user={'lecturer'} tabs={lecturerTabs}/>
-        {!wait && <Outlet/>}
-        {wait && 
-          <Stack flex={5}>
-            
-          </Stack>
-        }
+        {!wait ? <Outlet/> : <Stack flex={5}></Stack>}
       </Stack>
     </Box>
   )
