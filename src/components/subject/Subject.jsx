@@ -26,6 +26,7 @@ const Subject = ({ semesterId }) => {
   const [pointFive, setPointFive] = useState(0);
   const [pointOne, setPointOne] = useState(0);
 
+  //get Department to get Department Group --> list department in group
   useEffect(() => {
     const getDepartments = async () => {
       try {
@@ -48,6 +49,7 @@ const Subject = ({ semesterId }) => {
     getDepartments();
   }, [account.DepartmentId])
 
+  //get Subject by selected department
   useEffect(() => {
     const getSubjects = async () => {
       try {
@@ -70,6 +72,7 @@ const Subject = ({ semesterId }) => {
     getSubjects();
   }, [selectedDepartment])
 
+  //get subjectoflecturer (get point) by semesterId, lecturerId
   useEffect(() => {
     const getFavoriteSubjects = async () => {
       try {
@@ -93,6 +96,7 @@ const Subject = ({ semesterId }) => {
     getFavoriteSubjects();
   }, [isRating, account.Id, semesterId])
 
+  //set number subjecs at point 1 and 5
   useEffect(() => {
     if (favoriteSubjects.length > 0) {
       setPointFive(favoriteSubjects.filter(item => item.FavoritePoint === 5).length)

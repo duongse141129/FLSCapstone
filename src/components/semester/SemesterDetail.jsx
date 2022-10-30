@@ -14,6 +14,7 @@ const SemesterDetail = () => {
   const navigate = useNavigate();
   const [semester, setSemester] = useState({});
 
+  //get semester by id
   useEffect(() => {
     request.get(`Semester/${id}`)
     .then(res => {

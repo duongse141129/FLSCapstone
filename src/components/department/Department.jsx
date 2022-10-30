@@ -16,6 +16,7 @@ const Department = () => {
   const [subjects, setSubjects] = useState([]);
   const [manager, setManager] = useState({});
 
+  //get Department Group List
   useEffect(() => {
     const getDepartments = async () => {
       try {
@@ -38,6 +39,7 @@ const Department = () => {
     getDepartments();
   }, [account.DepartmentId])
 
+  //get subject list by department
   useEffect(() => {
     const getSubjects = async () => {
       try {
@@ -60,6 +62,7 @@ const Department = () => {
     getSubjects();
   }, [selectedDepartment])
 
+  //get Manager by department
   useEffect(() => {
     if(selectedDepartment){
       request.get(`DepartmentManager/departmentID/${selectedDepartment}`)

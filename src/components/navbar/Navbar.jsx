@@ -3,12 +3,11 @@ import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Reorder, AccountBox, Logout } from '@mui/icons-material';
 import { Avatar, Box, Divider, Menu, MenuItem, Stack, Typography } from '@mui/material'
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { useGoogleAuth } from '../../utils/googleAuth';
 
 const Navbar = ({ isExtend, setIsExtend }) => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { signOut, googleUser } = useGoogleAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -24,15 +23,6 @@ const Navbar = ({ isExtend, setIsExtend }) => {
   const handleSignOut = () => {
     setAnchorEl(null);
     signOut();
-  }
-
-  const handleNavigate = () => {
-    if (location.pathname.includes('manager')) {
-      navigate('/lecturer')
-    }
-    else {
-      navigate('/manager')
-    }
   }
 
   return (
@@ -73,7 +63,7 @@ const Navbar = ({ isExtend, setIsExtend }) => {
         </Stack>
 
         <Stack direction='row' alignItems='center' gap={4}>
-          <Typography onClick={handleNavigate}>
+          <Typography>
             {location.pathname.includes('manager') ? 'Manager' : 'Lecturer'}
           </Typography>
           <Badge badgeContent={4} color="error">

@@ -9,15 +9,14 @@ const Schedule = ({ semester }) => {
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedWeekObj, setSelectedWeekObj] = useState({})
 
-  console.log(weeksInYear)
-  console.log(weeksInSemester)
-
+  //set Week in year
   useEffect(() => {
     if (Object.values(semester).length > 0) {
       setWeeksInYear(getWeeksInYear(Number(semester.Term.split(' ')[1])))
     }
   }, [semester])
 
+  //set Week in semester
   useEffect(() => {
     if (Object.values(semester).length > 0 && weeksInYear.length > 0) {
       const result = getSemesterWeeks(weeksInYear, semester.DateStartFormat, semester.DateEndFormat)
@@ -25,6 +24,7 @@ const Schedule = ({ semester }) => {
     }
   }, [semester, weeksInYear])
 
+  //set slected week by current time
   useEffect(() => {
     if (weeksInSemester.length > 0) {
       const currentDay = new Date();
@@ -32,7 +32,9 @@ const Schedule = ({ semester }) => {
       for (let i in weeksInSemester) {
         const week = weeksInSemester[i].week;
         const start = new Date(week.split(' to ')[0]);
+        start.setDate(start.getDate() - 1);
         const end = new Date(week.split(' to ')[1]);
+        end.setDate(end.getDate() + 1);
         if (currentDay >= start && currentDay <= end) {
           state = true;
           setSelectedWeek(weeksInSemester[i].id)

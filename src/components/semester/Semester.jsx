@@ -8,6 +8,7 @@ import SemesterCard from './SemesterCard';
 const Semester = () => {
   const [semesters, setSemesters] = useState([]);
 
+  //get semester list
   useEffect(() => {
     request.get('Semester', {
       params: {

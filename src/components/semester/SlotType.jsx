@@ -16,9 +16,7 @@ const SlotType = ({ semesterId }) => {
   const [show, setShow] = useState(false);
   const [isLoadingSave, setIsLoadingSave] = useState(false);
 
-  console.log('pick', pickedSlot);
-  console.log('clone', clonePick);
-
+  //get slottype list
   useEffect(() => {
     request.get('SlotType', {
       params: {
@@ -36,6 +34,7 @@ const SlotType = ({ semesterId }) => {
       })
   }, [])
 
+  //get slotfavorite by lecturerId, semesterId
   useEffect(() => {
     request.get('LecturerSlotConfig', {
       params: {
@@ -55,6 +54,7 @@ const SlotType = ({ semesterId }) => {
       })
   }, [account.Id, semesterId, isLoadingSave])
 
+  //set pickedslot
   useEffect(() => {
     if (favoriteSlots.length > 0) {
       for (let i in favoriteSlots) {

@@ -20,6 +20,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
   const [fri, setFri] = useState([]);
   const [sat, setSat] = useState([]);
 
+  //get courseAssign by lecturerId and course list by semesterId
   useEffect(() => {
     const getCourseAssign = async () => {
       let courses = [];
@@ -64,6 +65,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
     }
   }, [Id, selectedSemester, selectedWeekObj])
 
+  //get slottype list
   useEffect(() => {
     const getSlotType = async () => {
       setLoadingSlotType(true)
@@ -91,6 +93,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
     }
   }, [])
 
+  //clarify courseAssign into 6 days by slottype list
   useEffect(() => {
     if (courseAssign.length > 0 && slotType.length > 0) {
       for (let i in courseAssign) {
@@ -134,6 +137,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
     }
   }, [courseAssign, slotType])
 
+  //seperate weekObj into each day to pass slot
   useEffect(() => {
     if (Object.values(selectedWeekObj).length > 0) {
       const result = [];

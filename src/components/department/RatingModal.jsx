@@ -18,6 +18,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
   const [isSuccess, setIsSuccess] = useState(false);
   const [error, setError] = useState('');
 
+  // for first load to get current point
   useEffect(() => {
     if (subjectFavorite) {
       setValue(subjectFavorite.FavoritePoint)

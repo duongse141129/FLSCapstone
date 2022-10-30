@@ -15,11 +15,14 @@ const Main = () => {
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedWeekObj, setSelectedWeekObj] = useState({});
 
+  //get semester list
   useEffect(() => {
     const getSemesters = async() => {
       try {
         const response = await request.get('Semester', {
           params: {
+            sortBy: 'DateEnd',
+            order: 'Des',
             pageIndex: 1,
             pageSize: 999
           }
@@ -36,21 +39,29 @@ const Main = () => {
     getSemesters();
   }, [])
 
+  //after response semester list, set selected semester by current time
   useEffect(() => {
     if(semesters.length > 0){
+      let state = false;
       const currentDate = new Date();
       for(let i in semesters){
         if(currentDate >= new Date(semesters[i].DateStartFormat) && 
             currentDate <= new Date(semesters[i].DateEndFormat))
         {
+          state = true;
           setSelectedSemester(semesters[i].Id)
           setSelectedSemesterObj(semesters[i]);
           break;
         }
       }
+      if(!state){
+        setSelectedSemester(semesters[0].Id)
+        setSelectedSemesterObj(semesters[0]);
+      }
     }
   }, [semesters])
 
+  //get weeks in semesters after set selected semester
   useEffect(() => {
     if(Object.values(selectedSemesterObj).length > 0){
       const result = getSemesterWeeks(weeksInYear, selectedSemesterObj.DateStartFormat, selectedSemesterObj.DateEndFormat)
@@ -58,6 +69,7 @@ const Main = () => {
     }
   }, [selectedSemesterObj, weeksInYear])
 
+  //set selected weeks by current time
   useEffect(() => {
     if(weeksInSemester.length > 0){
       const currentDay = new Date();
@@ -65,7 +77,9 @@ const Main = () => {
       for(let i in weeksInSemester){
         const week = weeksInSemester[i].week;
         const start = new Date(week.split(' to ')[0]);
+        start.setDate(start.getDate() - 1);
         const end = new Date(week.split(' to ')[1]);
+        end.setDate(end.getDate() + 1)
         if(currentDay >= start && currentDay <= end){
           state=true;
           setSelectedWeek(weeksInSemester[i].id)
