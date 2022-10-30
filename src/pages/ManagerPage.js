@@ -19,6 +19,7 @@ const ManagerPage = () => {
       .then(res => {
         if(res.data){
           localStorage.setItem('web-user', JSON.stringify(res.data))
+          localStorage.setItem('user-role', 'manager');
           setWait(false);
         }
       })

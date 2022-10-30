@@ -3,15 +3,14 @@ import {
   TableHead, TableRow, Typography, TablePagination, Tooltip, IconButton, Select, MenuItem
 } from '@mui/material';
 import { Send, StarBorder, Beenhere } from '@mui/icons-material';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import RequestModal from '../department/RequestModal';
 import RatingModal from '../department/RatingModal';
 import './Subject.css';
-import { green, grey, red } from '@mui/material/colors';
-import { useEffect } from 'react';
+import { green, grey } from '@mui/material/colors';
 import request from '../../utils/request'
 
-const Subject = ({ semesterDetail }) => {
+const Subject = ({ semesterId }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isRequest, setIsRequest] = useState(false);
@@ -22,22 +21,25 @@ const Subject = ({ semesterDetail }) => {
   const [subjects, setSubjects] = useState([]);
   const [favoriteSubjects, setFavoriteSubjects] = useState([]);
   const [subjectId, setSubjectId] = useState('');
+  const [subjectName, setSubjectName] = useState('');
   const [loadPoint, setLoadPoint] = useState(false);
+  const [pointFive, setPointFive] = useState(0);
+  const [pointOne, setPointOne] = useState(0);
 
   useEffect(() => {
-    const getDepartments = async() => {
+    const getDepartments = async () => {
       try {
         const response = await request.get(`Department/${account.DepartmentId}`);
-        const departmentList = await request.get('Department',{
-            params:{
-              DepartmentGroupId: response.data.DepartmentGroupId,
-              pageIndex: 1,
-              pageSize: 9999 
-            }
-          })
+        const departmentList = await request.get('Department', {
+          params: {
+            DepartmentGroupId: response.data.DepartmentGroupId,
+            pageIndex: 1,
+            pageSize: 9999
+          }
+        })
         setDepartments(departmentList.data)
         setSelectedDepartment(account.DepartmentId)
-      } 
+      }
       catch (error) {
         alert('Fail to get Department!')
       }
@@ -47,19 +49,19 @@ const Subject = ({ semesterDetail }) => {
   }, [account.DepartmentId])
 
   useEffect(() => {
-    const getSubjects = async() => {
+    const getSubjects = async () => {
       try {
         const response = await request.get('Subject', {
           params: {
             DepartmentId: selectedDepartment,
             pageIndex: 1,
-            pageSize: 9999 
+            pageSize: 9999
           }
         })
-        if(response.data){
+        if (response.data) {
           setSubjects(response.data)
-        }  
-      } 
+        }
+      }
       catch (error) {
         alert('Fail to load subjects!');
       }
@@ -69,27 +71,34 @@ const Subject = ({ semesterDetail }) => {
   }, [selectedDepartment])
 
   useEffect(() => {
-    const getFavoriteSubjects = async() => {
+    const getFavoriteSubjects = async () => {
       try {
         const response = await request.get('SubjectOfLecturer', {
           params: {
-            SemesterId: 'FA22',
+            SemesterId: semesterId,
             LecturerId: account.Id,
             pageIndex: 1,
             pageSize: 9999
           }
         })
-        if(response.data){
+        if (response.data) {
           setFavoriteSubjects(response.data)
-        }  
-      } 
+        }
+      }
       catch (error) {
         alert('Fail to load favortite points')
       }
     }
 
     getFavoriteSubjects();
-  }, [isRating, account.Id])
+  }, [isRating, account.Id, semesterId])
+
+  useEffect(() => {
+    if (favoriteSubjects.length > 0) {
+      setPointFive(favoriteSubjects.filter(item => item.FavoritePoint === 5).length)
+      setPointOne(favoriteSubjects.filter(item => item.FavoritePoint === 1).length)
+    }
+  }, [favoriteSubjects])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -104,21 +113,18 @@ const Subject = ({ semesterDetail }) => {
     setSelectedDepartment(e.target.value)
   }
 
-  const handleRating = (id) => {
+  const handleRating = (id, name) => {
     setSubjectId(id);
+    setSubjectName(name);
     setLoadPoint(prev => !prev);
     setIsRating(true);
   }
 
   return (
-    <Stack flex={5} height='90vh' overflow={!semesterDetail && 'auto'}>
-      {!semesterDetail &&
-        <><Typography variant='h5' color='#778899' fontWeight={500} px={9} mt={1}>
-          Subject
-        </Typography>
-          <Typography color='gray' variant='subtitle1' px={9} mb={4}>
-            Teachable subjects in next semester
-          </Typography></>}
+    <Stack flex={5} height='90vh'>
+      <Typography color='gray' fontSize='14px' px={9} mb={1}>
+        *My department and relative departments
+      </Typography>
       <Stack direction='row' alignItems='center' justifyContent='space-between'
         px={9} mb={2}>
         <Stack direction='row' alignItems='center' gap={1}>
@@ -136,17 +142,6 @@ const Subject = ({ semesterDetail }) => {
               ))
             }
           </Select>
-        </Stack>
-        <Stack direction='row' alignItems='center' gap={2}>
-          {
-            selectedDepartment === account.DepartmentId ?
-              <Typography color={green[600]}>
-                my department
-              </Typography> :
-              <Typography color={red[600]}>
-                not my department
-              </Typography>
-          }
           <Tooltip title='My Department' placement='top' arrow>
             <Beenhere onClick={() => { if (selectedDepartment !== account.DepartmentId) setSelectedDepartment(account.DepartmentId) }}
               sx={{
@@ -159,6 +154,14 @@ const Subject = ({ semesterDetail }) => {
               }}
             />
           </Tooltip>
+        </Stack>
+        <Stack>
+          <Typography color='red' fontSize='14px'>
+            Subjects at point 1: {pointOne}/3
+          </Typography>
+          <Typography color='red' fontSize='14px'>
+            Subjects at point 5: {pointFive}/3
+          </Typography>
         </Stack>
       </Stack>
       <Stack px={9}>
@@ -196,7 +199,7 @@ const Subject = ({ semesterDetail }) => {
                               </Typography>
                               <Tooltip title='Rating' placement='right' arrow>
                                 <IconButton color='primary' size='small'
-                                  onClick={() => handleRating(subject.Id)}
+                                  onClick={() => handleRating(subject.Id, subject.SubjectName)}
                                 >
                                   <StarBorder />
                                 </IconButton>
@@ -236,9 +239,9 @@ const Subject = ({ semesterDetail }) => {
         </Paper>
       </Stack>
       <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} />
-      <RatingModal isRating={isRating} setIsRating={setIsRating} 
-        subjectId={subjectId} subjects={subjects}
-        favoriteSubjects={favoriteSubjects} loadPoint={loadPoint}/>
+      <RatingModal isRating={isRating} setIsRating={setIsRating}
+        subjectId={subjectId} subjectName={subjectName} semesterId={semesterId}
+        favoriteSubjects={favoriteSubjects} loadPoint={loadPoint} />
     </Stack>
   )
 }

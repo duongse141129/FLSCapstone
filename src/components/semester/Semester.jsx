@@ -1,98 +1,50 @@
 import { Stack, Typography } from '@mui/material'
-import React from 'react'
 import { useState } from 'react'
-import SemesterDetail from './SemesterDetail'
-import Year from './Year';
 import './Semester.css'
+import { useEffect } from 'react';
+import request from '../../utils/request';
+import SemesterCard from './SemesterCard';
 
 const Semester = () => {
-  const [isShowDetail, setIsShowDetail] = useState(false);
+  const [semesters, setSemesters] = useState([]);
+
+  useEffect(() => {
+    request.get('Semester', {
+      params: {
+        sortBy: 'DateEnd',
+        order: 'Des',
+        pageIndex: 1,
+        pageSize: 100
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          setSemesters(res.data)
+        }
+      })
+      .catch(err => {
+        alert('Fail to load semesters!')
+      })
+  }, [])
 
   return (
-    <>
-      {
-        !isShowDetail ? (
-          <Stack flex={5} height='90vh' overflow='auto'>
-            <Typography variant='h5' color='#778899' fontWeight={500} px={9} 
-              mb={4} mt={1}>
-              Semester
-            </Typography>
-            <Stack px={9} gap={2}>
-              {
-                years.map(year => (
-                  <Year key={year.id} year={year} setIsShowDetail={setIsShowDetail}/>
-                ))
-              }
-            </Stack>
-          </Stack>
-        ) : (
-          <SemesterDetail setIsShowDetail={setIsShowDetail}/>
-        )
-      }
-    </>
+    <Stack flex={5} height='90vh' overflow='auto'>
+      <Typography variant='h5' color='#778899' fontWeight={500} px={9} mt={1}>
+        Semester
+      </Typography>
+      <Typography color='gray' px={9} variant='subtitle1' mb={4}>
+        List of all semesters
+      </Typography>
+      <Stack px={9} gap={4} direction='row' flexWrap='wrap' justifyContent='center'>
+        {
+          semesters &&
+          semesters.map(semester => (
+            <SemesterCard key={semester.Id} semester={semester} />
+          ))
+        }
+      </Stack>
+    </Stack>
   )
 }
 
 export default Semester
-
-const years = [
-  {
-    id: 2023,
-    semesters: [
-      {
-        id: 'Spring 2023',
-        status: 'Not Yet',
-        start: '01/01',
-        end: '30/04',
-      }
-    ]
-  },
-  {
-    id: 2022,
-    semesters: [
-      {
-        id: 'Fall 2022',
-        status: 'On Going',
-        start: '01/09',
-        end: '31/12',
-      },
-      {
-        id: 'Summer 2022',
-        status: 'Closed',
-        start: '01/05',
-        end: '31/08',
-      },
-      {
-        id: 'Spring 2022',
-        status: 'Closed',
-        start: '01/01',
-        end: '31/04',
-      },
-    ]
-  },
-  {
-    id: 2021,
-    start: '01/09',
-    end: '31/12',
-    semesters: [
-      {
-        id: 'Fall 2021',
-        status: 'Closed',
-        start: '01/09',
-        end: '31/12',
-      },
-      {
-        id: 'Summer 2021',
-        status: 'Closed',
-        start: '01/05',
-        end: '31/08',
-      },
-      {
-        id: 'Spring 2021',
-        status: 'Closed',
-        start: '01/01',
-        end: '31/04',
-      },
-    ]
-  },
-]

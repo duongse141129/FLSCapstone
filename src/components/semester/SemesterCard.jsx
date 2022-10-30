@@ -1,11 +1,17 @@
 import { Stack, Typography } from '@mui/material'
-import { blue, orange, pink, red, indigo } from '@mui/material/colors';
+import { red, indigo, green, grey } from '@mui/material/colors';
 import React from 'react'
+import { useNavigate } from 'react-router-dom';
 
-const SemesterCard = ({semester, setIsShowDetail}) => {
+const SemesterCard = ({semester}) => {
+  const navigate = useNavigate();
 
   if(!semester){
     return;
+  }
+
+  const toSemesterDetail = () => {
+    navigate(`/lecturer/semester/${semester.Id}`)
   }
 
   return (
@@ -19,29 +25,28 @@ const SemesterCard = ({semester, setIsShowDetail}) => {
           transition: 'all 0.2s linear'
         }
       }}
-      onClick={() => setIsShowDetail(true)}
+      onClick={toSemesterDetail}
     >
       <Stack flex={4} alignItems='center' justifyContent='center' 
-        bgcolor={semester.id.includes('Spring') ? pink[600] : (
-          semester.id.includes('Summer') ? orange[600] : indigo[600]
-        )} 
+        bgcolor={green[600]} 
         sx={{borderRadius: '16px 16px 0 0'}}>
-        <Typography variant='h6' color='white'>{semester?.id}</Typography>
+        <Typography variant='h6' color='white'>{semester.Term}</Typography>
       </Stack>
-      <Stack flex={1.5} alignItems='center' justifyContent='center' 
-        direction='row' gap={1}
+      <Stack flex={1.5} alignItems='center' my={1} gap={0.5}
       >
-        <Typography
-          color={semester.status === 'Not Yet' ? red[500] : 
-          (semester.status === 'On Going' ? blue[600] : 'gray' )}
-        >
-          {semester?.start} - {semester?.end}
+        <Typography color={semester?.DateStatus === 'On Going' ? indigo[500] : (
+          semester?.DateStatus === 'Close' ? grey[500] : red[500]
+        )}>
+          {semester?.DateStartFormat.split('-').reverse().join('/')} to {' '}
+          {semester?.DateEndFormat.split('-').reverse().join('/')}
         </Typography>
-        <Typography bgcolor={semester.status === 'Not Yet' ? red[500] : 
-          (semester.status === 'On Going' ? blue[600] : 'gray' )} color='white'
+        <Typography
           px={1}
+          bgcolor={semester?.DateStatus === 'On Going' ? indigo[500] : (
+            semester?.DateStatus === 'Close' ? grey[500] : red[500])}
+          color='white'
         >
-          {semester?.status}
+          {semester?.DateStatus}
         </Typography>
       </Stack>
     </Stack>

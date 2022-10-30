@@ -19,6 +19,7 @@ const LecturerPage = () => {
       .then(res => {
         if(res.data){
           localStorage.setItem('web-user', JSON.stringify(res.data))
+          localStorage.setItem('user-role', 'lecturer');
           setWait(false)
         }
       })

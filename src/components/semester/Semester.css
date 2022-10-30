@@ -50,11 +50,11 @@
   border-right: 1px solid grey;
 }
 .slot-type-slot:hover{
-  background-color: #43a047;
+  background-color: #1976d2;
   cursor: pointer;
 }
 .picked-slot{
-  background-color: #43a047;
+  background-color: #1976d2;
 }
 
 .picked-full{

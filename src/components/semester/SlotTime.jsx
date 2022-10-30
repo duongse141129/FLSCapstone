@@ -9,24 +9,24 @@ const SlotTime = ({slot, handlePick, pickedSlot}) => {
       <Stack flex={1} justifyContent='center' alignItems='center'
         className='slot-type-time'
       >
-        <Typography>{slot.name}</Typography>
+        <Typography>{slot.Id}</Typography>
         {/* <Typography>{slot.range}</Typography> */}
       </Stack>
       <Stack flex={1} justifyContent='center' alignItems='center'
         borderRight='1px solid grey'
       >
-        <Typography>{slot.range}</Typography>
+        <Typography>{slot.Duration}</Typography>
       </Stack>
       <Stack flex={1} justifyContent='center' alignItems='center'
         borderRight='1px solid grey'
       >
-        <Typography>{slot.day}</Typography>
+        <Typography>{slot.ConvertDateOfWeek}</Typography>
       </Stack>
       <Stack flex={1} justifyContent='center' alignItems='center' color='white'
-        className={pickedSlot.find(time => time === slot.id) ? 
+        className={pickedSlot.find(time => time === slot.Id) ? 
           'slot-type-slot picked-slot' : (pickedSlot.length === 3 ? 
           'slot-type-slot picked-full' : 'slot-type-slot')}
-        onClick={() => handlePick(slot.id)}
+        onClick={() => handlePick(slot.Id)}
       >
         <ThumbUp sx={{fontSize: '20px'}}/>
       </Stack>

@@ -5,7 +5,6 @@ import LecturerPage from "./pages/LecturerPage";
 import Login from "./pages/Login";
 import Feedback from "./components/feedback/Feedback";
 import Semester from "./components/semester/Semester";
-import Subject from "./components/subject/Subject";
 import Department from "./components/department/Department";
 import ManagerPage from "./pages/ManagerPage";
 import Lecturer from './components/lecturer/Lecturer';
@@ -18,6 +17,7 @@ import Priority from "./components/priority/Priority";
 import PriorityList from "./components/priority/PriorityList";
 import ScheduleManager from "./components/schedule/ScheduleManager";
 import ScheduleDetail from "./components/schedule/ScheduleDetail";
+import SemesterDetail from './components/semester/SemesterDetail'
 
 function App() {
   return (
@@ -28,7 +28,7 @@ function App() {
           <Route index element={<Main />} />
           <Route path='profile' element={<Profile />} />
           <Route path='semester' element={<Semester />} />
-          <Route path='subject' element={<Subject />} />
+          <Route path='semester/:id' element={<SemesterDetail />} />
           <Route path='department' element={<Department />} />
         </Route>
         <Route path="manager" element={<ManagerPage />}>

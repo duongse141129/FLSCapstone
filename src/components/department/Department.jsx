@@ -1,27 +1,19 @@
 import {
-  Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell,
+  Box, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell,
   TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material';
-import { Send, StarBorder, Beenhere } from '@mui/icons-material';
-import React, { useState } from 'react';
-import { useEffect } from 'react';
-import RatingModal from './RatingModal';
-import RequestModal from './RequestModal';
-import { green, grey, red, } from '@mui/material/colors';
+import { Beenhere } from '@mui/icons-material';
+import React, { useState, useEffect } from 'react';
+import { green, grey } from '@mui/material/colors';
 import request from '../../utils/request'
 
 const Department = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedDepartment, setSelectedDepartment] = useState('')
-  const [isRating, setIsRating] = useState(false);
-  const [isRequest, setIsRequest] = useState(false);
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [departments, setDepartments] = useState([]);
   const [subjects, setSubjects] = useState([]);
-  const [favoriteSubjects, setFavoriteSubjects] = useState([]);
-  const [subjectId, setSubjectId] = useState('');
-  const [loadPoint, setLoadPoint] = useState(false);
   const [manager, setManager] = useState({});
 
   useEffect(() => {
@@ -82,29 +74,6 @@ const Department = () => {
     }
   }, [selectedDepartment])
 
-  useEffect(() => {
-    const getFavoriteSubjects = async () => {
-      try {
-        const response = await request.get('SubjectOfLecturer', {
-          params: {
-            SemesterId: 'FA22',
-            LecturerId: account.Id,
-            pageIndex: 1,
-            pageSize: 9999
-          }
-        })
-        if (response.data) {
-          setFavoriteSubjects(response.data)
-        }
-      }
-      catch (error) {
-        alert('Fail to load favortite points')
-      }
-    }
-
-    getFavoriteSubjects();
-  }, [isRating, account.Id])
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -116,12 +85,6 @@ const Department = () => {
 
   const handleSelect = (e) => {
     setSelectedDepartment(e.target.value)
-  }
-
-  const handleRating = (id) => {
-    setSubjectId(id)
-    setLoadPoint(prev => !prev)
-    setIsRating(true)
   }
 
   return (
@@ -136,7 +99,7 @@ const Department = () => {
       <Box mt={4} px={9}>
         <Stack direction='row' mb={2} alignItems='center' gap={1}>
           <Typography fontWeight={500}>
-            Name:
+            Department:
           </Typography>
           <Select color='success'
             size='small'
@@ -174,19 +137,10 @@ const Department = () => {
               {manager && manager.Name + ' (' + manager.Email + ') '}
             </Typography>
           </Stack>
-          <Stack direction='row' mb={2} gap={1}>
+          <Stack direction='row' mb={1} gap={1}>
             <Typography fontWeight={500}>
-              Subjects:
+              Subjects
             </Typography>
-            {
-              selectedDepartment === account.DepartmentId ?
-                <Typography color={green[600]}>
-                  In my department
-                </Typography> :
-                <Typography color={red[600]}>
-                  Out my department
-                </Typography>
-            }
           </Stack>
           <Stack>
             <Paper sx={{ minWidth: 700, mb: 2 }}>
@@ -196,11 +150,6 @@ const Department = () => {
                     <TableRow>
                       <TableCell size='small' className='subject-header'>Code</TableCell>
                       <TableCell size='small' className='subject-header'>Name</TableCell>
-                      {
-                        selectedDepartment === account.DepartmentId &&
-                        <TableCell size='small' className='subject-header'>Favorite Point</TableCell>
-                      }
-                      <TableCell size='small' className='subject-header'>Request</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -210,35 +159,6 @@ const Department = () => {
                           <TableRow key={subject.Id} hover>
                             <TableCell size='small'>{subject.Id}</TableCell>
                             <TableCell size='small'>{subject.SubjectName}</TableCell>
-                            {
-                              selectedDepartment === account.DepartmentId &&
-                              <TableCell size='small'>
-                                <Stack direction='row' alignItems='center' gap={1}>
-                                  <Typography borderRight='1px solid gray' pr={2}>
-                                    {
-                                      favoriteSubjects.length > 0 &&
-                                      favoriteSubjects.find(item => item.SubjectId === subject.Id)?.FavoritePoint
-                                    }
-                                  </Typography>
-                                  <Tooltip title='Rating' placement='right'>
-                                    <IconButton color='primary' size='small'
-                                      onClick={() => handleRating(subject.Id)}
-                                    >
-                                      <StarBorder />
-                                    </IconButton>
-                                  </Tooltip>
-                                </Stack>
-                              </TableCell>
-                            }
-                            <TableCell size='small'>
-                              <Tooltip title='Request' placement='right'>
-                                <IconButton color='warning' size='small'
-                                  onClick={() => setIsRequest(true)}
-                                >
-                                  <Send />
-                                </IconButton>
-                              </Tooltip>
-                            </TableCell>
                           </TableRow>
                         ))
                     }
@@ -264,10 +184,6 @@ const Department = () => {
           </Stack>
         </Box>
       </Box>
-      <RatingModal isRating={isRating} setIsRating={setIsRating} subjectId={subjectId} 
-        favoriteSubjects={favoriteSubjects} loadPoint={loadPoint} subjects={subjects}
-        manager={manager}/>
-      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest}/>
     </Stack>
   )
 }

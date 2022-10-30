@@ -1,13 +1,34 @@
-import { Box, IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { ArrowBackIosNew } from '@mui/icons-material';
 import React from 'react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import SlotType from './SlotType';
-// import Timetable from '../main/Timetable';
 import Subject from '../subject/Subject';
+import { useNavigate, useParams } from 'react-router-dom';
+import Schedule from './Schedule';
+import request from '../../utils/request';
 
-const SemesterDetail = ({ setIsShowDetail }) => {
+const SemesterDetail = () => {
   const [isSelected, setIsSelected] = useState(1)
+  const {id} = useParams();
+  const navigate = useNavigate();
+  const [semester, setSemester] = useState({});
+
+  useEffect(() => {
+    request.get(`Semester/${id}`)
+    .then(res => {
+      if(res.status === 200){
+        setSemester(res.data)
+      }
+    })
+    .catch(err => {
+      alert('Fail to load Semester Detail!')
+    })
+  }, [id])
+
+  const backToSemester = () => {
+    navigate('/lecturer/semester')
+  }
 
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
@@ -15,12 +36,17 @@ const SemesterDetail = ({ setIsShowDetail }) => {
         alignItems='center' gap={4}
       >
         <Tooltip title='Back to Semester' arrow>
-          <IconButton onClick={() => setIsShowDetail(false)}>
+          <IconButton onClick={backToSemester}>
             <ArrowBackIosNew />
           </IconButton>
         </Tooltip>
+        {Object.values(semester).length > 0 && 
         <Typography variant='h5' fontWeight={500}>
-          Semester Detail: Fall 2022</Typography>
+          Semester: {semester?.Term} {'('}
+          {semester?.DateStartFormat.split('-').reverse().join('/')} to {' '}
+          {semester?.DateEndFormat.split('-').reverse().join('/')} - {' '}
+          {semester?.DateStatus}{')'}
+        </Typography>}
       </Stack>
       <Stack direction='row' px={9} gap={8} mb={3}>
         {
@@ -37,25 +63,15 @@ const SemesterDetail = ({ setIsShowDetail }) => {
       </Stack>
       {
         isSelected === 1 &&
-        <Box height='100%'>
-          <Stack direction='row' gap={1} alignItems='center' px={9} mb={2}>
-            <Typography fontWeight={500}>Week</Typography>
-            <select className='week-cbx' style={{ fontSize: '16px' }}>
-              <option>26-09 to 02-10</option>
-              <option>03-10 to 09-10</option>
-              <option>10-10 to 16-10</option>
-            </select>
-          </Stack>
-          {/* <Timetable /> */}
-        </Box>
+        <Schedule semester={semester}/>
       }
       {
         isSelected === 2 &&
-        <Subject semesterDetail={true} />
+        <Subject semesterId={id}/>
       }
       {
         isSelected === 3 &&
-        <SlotType />
+        <SlotType semesterId={id}/>
       }
     </Stack>
   )

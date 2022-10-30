@@ -1,67 +1,82 @@
-import { Stack, Typography } from '@mui/material'
-import React from 'react'
+import { Box, MenuItem, Select, Stack, Typography } from '@mui/material'
+import { useState, useEffect } from 'react'
+import { getWeeksInYear, getSemesterWeeks } from '../../utils/weeksInYear';
+import Timetable from '../main/Timetable'
 
-const Schedule = () => {
+const Schedule = ({ semester }) => {
+  const [weeksInYear, setWeeksInYear] = useState([]);
+  const [weeksInSemester, setWeeksInSemester] = useState([]);
+  const [selectedWeek, setSelectedWeek] = useState('');
+  const [selectedWeekObj, setSelectedWeekObj] = useState({})
+
+  console.log(weeksInYear)
+  console.log(weeksInSemester)
+
+  useEffect(() => {
+    if (Object.values(semester).length > 0) {
+      setWeeksInYear(getWeeksInYear(Number(semester.Term.split(' ')[1])))
+    }
+  }, [semester])
+
+  useEffect(() => {
+    if (Object.values(semester).length > 0 && weeksInYear.length > 0) {
+      const result = getSemesterWeeks(weeksInYear, semester.DateStartFormat, semester.DateEndFormat)
+      setWeeksInSemester(result);
+    }
+  }, [semester, weeksInYear])
+
+  useEffect(() => {
+    if (weeksInSemester.length > 0) {
+      const currentDay = new Date();
+      let state = false;
+      for (let i in weeksInSemester) {
+        const week = weeksInSemester[i].week;
+        const start = new Date(week.split(' to ')[0]);
+        const end = new Date(week.split(' to ')[1]);
+        if (currentDay >= start && currentDay <= end) {
+          state = true;
+          setSelectedWeek(weeksInSemester[i].id)
+          setSelectedWeekObj(weeksInSemester[i])
+          break;
+        }
+      }
+      if (!state) {
+        setSelectedWeek(weeksInSemester[0].id)
+        setSelectedWeekObj(weeksInSemester[0])
+      }
+    }
+  }, [weeksInSemester])
+
+  const handleSelectWeek = (e) => {
+    setSelectedWeek(e.target.value)
+    setSelectedWeekObj(weeksInSemester.find(item => item.id === e.target.value))
+  }
+
   return (
-    <Stack height='75vh' gap={1} mt={1} px={4}>
-      <Stack flex={1} width='60%' direction='row' gap={1} border='1px solid gray'>
-        <Stack flex={1} alignItems='center' justifyContent='center' bgcolor='green' color='white'>
-          <Typography>MON & THU</Typography>
-        </Stack>
-        <Stack flex={3} justifyContent='center'>
-          <Stack direction='row' gap={2}>
-            <Typography fontWeight={500}>07:00 - 09:15</Typography>
-            <Typography>MAS291 - SE1410</Typography>
-          </Stack>
-          <Stack direction='row' gap={2}>
-            <Typography fontWeight={500}>09:45 - 12:00</Typography>
-            <Typography>MAS291 - SE1411</Typography>
-          </Stack>
-          <Stack direction='row' gap={2}>
-            <Typography fontWeight={500}>12:30 - 14:45</Typography>
-            <Typography>MAS291 - SE1412</Typography>
-          </Stack>
-        </Stack>
+    <Box height='100%' mb={1}>
+      <Stack direction='row' gap={1} alignItems='center' px={9} mb={2}>
+        <Typography fontWeight={500}>Week</Typography>
+        <Select color='success'
+          size='small'
+          value={selectedWeek}
+          onChange={handleSelectWeek}
+        >
+          {
+            weeksInSemester.length > 0 &&
+            weeksInSemester.map(week => (
+              <MenuItem value={week.id} key={week.id}>
+                <span>{week.week.split(' to ')[0].split('-')[2]}</span>
+                <span>/{week.week.split(' to ')[0].split('-')[1]}</span>
+                <span>{' - '}</span>
+                <span>{week.week.split(' to ')[1].split('-')[2]}</span>
+                <span>/{week.week.split(' to ')[1].split('-')[1]}</span>
+              </MenuItem>
+            ))
+          }
+        </Select>
       </Stack>
-      <Stack flex={1} width='60%' direction='row' gap={1} border='1px solid gray'>
-        <Stack flex={1} alignItems='center' justifyContent='center' bgcolor='green' color='white'>
-          <Typography>TUE & FRI</Typography>
-        </Stack>
-        <Stack flex={3} justifyContent='center'>
-          <Stack direction='row' gap={2}>
-            <Typography fontWeight={500}>07:00 - 09:15</Typography>
-            <Typography>MAS291 - SE1410</Typography>
-          </Stack>
-          <Stack direction='row' gap={2}>
-            <Typography fontWeight={500}>09:45 - 12:00</Typography>
-            <Typography>MAS291 - SE1411</Typography>
-          </Stack>
-          <Stack direction='row' gap={2}>
-            <Typography fontWeight={500}>12:30 - 14:45</Typography>
-            <Typography>MAS291 - SE1412</Typography>
-          </Stack>
-        </Stack>
-      </Stack>
-      <Stack flex={1} width='60%' direction='row' gap={1} border='1px solid gray'>
-        <Stack flex={1} alignItems='center' justifyContent='center' bgcolor='green' color='white'>
-          <Typography>WED & SAT</Typography>
-        </Stack>
-        <Stack flex={3} justifyContent='center'>
-          <Stack direction='row' gap={2}>
-            <Typography fontWeight={500}>07:00 - 09:15</Typography>
-            <Typography>MAS291 - SE1410</Typography>
-          </Stack>
-          <Stack direction='row' gap={2}>
-            <Typography fontWeight={500}>09:45 - 12:00</Typography>
-            <Typography>MAS291 - SE1411</Typography>
-          </Stack>
-          <Stack direction='row' gap={2}>
-            <Typography fontWeight={500}>12:30 - 14:45</Typography>
-            <Typography>MAS291 - SE1412</Typography>
-          </Stack>
-        </Stack>
-      </Stack>
-    </Stack>
+      <Timetable selectedSemester={semester?.Id} selectedWeekObj={selectedWeekObj}/>
+    </Box>
   )
 }
 
