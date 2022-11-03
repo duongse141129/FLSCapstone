@@ -5,8 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Day from './Day';
 import request from '../../utils/request'
 
-const Timetable = ({ selectedSemester, selectedWeekObj }) => {
-  const { Id } = JSON.parse(localStorage.getItem('web-user'));
+const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId }) => {
   const [courseAssign, setCourseAssign] = useState([]);
   const [slotType, setSlotType] = useState([]);
   const [loadingCourseAssign, setLoadingCourseAssign] = useState(false);
@@ -20,41 +19,41 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
   const [fri, setFri] = useState([]);
   const [sat, setSat] = useState([]);
 
-  //get courseAssign by lecturerId and course list by semesterId
+  //1. get Schedule by semester, ispublic - 2.get course assign by lecturerId, scheduleId
   useEffect(() => {
     const getCourseAssign = async () => {
-      let courses = [];
       setLoadingCourseAssign(true)
       try {
-        const response1 = await request.get('CourseAssign', {
+        const responseSchedule = await request.get('Schedule', {
           params: {
-            LecturerId: Id,
-            isPublic: 1,
-            pageIndex: 1,
-            pageSize: 100
-          }
-        })
-        const response2 = await request.get('Course', {
-          params: {
+            IsPublic:1,
             SemesterId: selectedSemester,
             pageIndex: 1,
-            pageSize: 9999
+            pageSize: 1
           }
         })
-        const data1 = response1.data;
-        const data2 = response2.data;
-        for (let i = 0; i < data2.length; i++) {
-          for (let j = 0; j < data1.length; j++) {
-            if (data1[j].CourseId === data2[i].Id) {
-              courses.push(data2[i]);
+        if(responseSchedule.data.length > 0){
+          const scheduleId = responseSchedule.data[0].Id;
+          const responseCourseAssign = await request.get('CourseAssign', {
+            params: {
+              LecturerId: lecturerId,
+              ScheduleId: scheduleId,
+              pageIndex: 1,
+              pageSize: 50
             }
+          })
+          if(responseCourseAssign.data){
+            setCourseAssign(responseCourseAssign.data)
+            setLoadingCourseAssign(false)
           }
         }
-        setCourseAssign(courses)
-        setLoadingCourseAssign(false)
+        else{
+          setLoadingCourseAssign(false)
+        }
       }
       catch (error) {
         alert('Fail to load Schedule!')
+        setLoadingCourseAssign(false)
       }
     }
 
@@ -63,7 +62,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
     return () => {
       setCourseAssign([]);
     }
-  }, [Id, selectedSemester, selectedWeekObj])
+  }, [lecturerId, selectedSemester, selectedWeekObj])
 
   //get slottype list
   useEffect(() => {
@@ -72,8 +71,9 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
       try {
         const response = await request.get('SlotType', {
           params: {
+            SemesterId: selectedSemester,
             pageIndex: 1,
-            pageSize: 100
+            pageSize: 50
           }
         })
         if (response.status === 200) {
@@ -87,11 +87,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
     }
 
     getSlotType();
-
-    return () => {
-      setSlotType([]);
-    }
-  }, [])
+  }, [selectedSemester])
 
   //clarify courseAssign into 6 days by slottype list
   useEffect(() => {
@@ -221,19 +217,33 @@ const Timetable = ({ selectedSemester, selectedWeekObj }) => {
                 </Stack>
               </Stack>
             </Stack>
-            <Day day='MON' date={dates.length > 0 && dates[0].split('-')[2] + '/' + dates[0].split('-')[1]}
-              slots={mon} />
-            <Day day='TUE' date={dates.length > 0 && dates[1].split('-')[2] + '/' + dates[1].split('-')[1]}
-              slots={tue} />
-            <Day day='WED' date={dates.length > 0 && dates[2].split('-')[2] + '/' + dates[2].split('-')[1]}
-              slots={wed} />
-            <Day day='THU' date={dates.length > 0 && dates[3].split('-')[2] + '/' + dates[3].split('-')[1]}
-              slots={thu} />
-            <Day day='FRI' date={dates.length > 0 && dates[4].split('-')[2] + '/' + dates[4].split('-')[1]}
-              slots={fri} />
-            <Day day='SAT' date={dates.length > 0 && dates[5].split('-')[2] + '/' + dates[5].split('-')[1]}
-              slots={sat} />
-            <Day day='SUN' date={dates.length > 0 && dates[6].split('-')[2] + '/' + dates[6].split('-')[1]} />
+            <Day day='MON'
+              date={dates.length > 0 && dates[0].split('-')[2] + '/' + dates[0].split('-')[1]}
+              slots={mon} 
+            />
+            <Day day='TUE'
+              date={dates.length > 0 && dates[1].split('-')[2] + '/' + dates[1].split('-')[1]}
+              slots={tue} 
+            />
+            <Day day='WED'
+              date={dates.length > 0 && dates[2].split('-')[2] + '/' + dates[2].split('-')[1]}
+              slots={wed} 
+            />
+            <Day day='THU'
+              date={dates.length > 0 && dates[3].split('-')[2] + '/' + dates[3].split('-')[1]}
+              slots={thu} 
+            />
+            <Day day='FRI'
+              date={dates.length > 0 && dates[4].split('-')[2] + '/' + dates[4].split('-')[1]}
+              slots={fri} 
+            />
+            <Day day='SAT'
+              date={dates.length > 0 && dates[5].split('-')[2] + '/' + dates[5].split('-')[1]}
+              slots={sat} 
+            />
+            <Day day='SUN'
+              date={dates.length > 0 && dates[6].split('-')[2] + '/' + dates[6].split('-')[1]} 
+            />
           </Stack>
           </>
         )

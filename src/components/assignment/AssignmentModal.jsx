@@ -1,7 +1,5 @@
 import {
   Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  MenuItem,
-  Select,
   Stack, TextField, Typography
 }
   from '@mui/material';
@@ -17,7 +15,6 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
   const [selectedSlot, setSelectedSlot] = useState({});
   const [listSubject, setListSubject] = useState(subjects);
   const [searchValue, setSearchValue] = useState('');
-  const [department, setDepartment] = useState('swe');
 
   const selectSubject = (subjectID) => {
     setSelectedSubject(subjectID);
@@ -42,10 +39,6 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
       setListSubject(subjects)
     }
   }
-
-  const handleChangeDepartment = (event) => {
-    setDepartment(event.target.value);
-  };
 
   return (
     <Dialog
@@ -89,19 +82,6 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
                 <span style={{ color: grey[500] }}>optional</span>}
             </Typography>
           </Stack>
-        </Stack>
-        <Stack direction='row' alignItems='center' gap={1} mb={2}>
-          <Typography fontWeight={500}>Department</Typography>
-          <Select color='secondary'
-            size='small'
-            value={department}
-            onChange={handleChangeDepartment}
-          >
-            <MenuItem value='swe'>Software Engineering</MenuItem>
-            <MenuItem value='its'>Information Technology Specialization</MenuItem>
-            <MenuItem value='cfl'>Computing Fundamental</MenuItem>
-            <MenuItem value='lab'>LAB</MenuItem>
-          </Select>
         </Stack>
         <Stack direction='row' height='400px' gap={2}>
           <Stack flex={1}>

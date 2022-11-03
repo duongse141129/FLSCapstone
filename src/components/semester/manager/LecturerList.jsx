@@ -1,18 +1,13 @@
-import {
-  Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead,
-  TablePagination, TableRow, Tooltip, Typography
-} from '@mui/material';
-import { CalendarMonth, AutoAwesomeOutlined, Beenhere } from '@mui/icons-material';
-import { lecturers } from '../../utils/sampleData';
-import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom';
+import { RadioButtonUnchecked, Beenhere, CheckCircleOutline, AutoAwesomeOutlined } from '@mui/icons-material'
+import { Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
 import { green, yellow } from '@mui/material/colors';
+import { lecturers } from '../../../utils/sampleData';
+import React, { useState } from 'react';
 
-const ScheduleManager = ({admin}) => {
+const LecturerList = ({ handleSelect, selectedId, admin }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedDepartment, setSelectedDepartment] = useState('swe');
-  const navigate = useNavigate();
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -27,23 +22,12 @@ const ScheduleManager = ({admin}) => {
     setSelectedDepartment(e.target.value);
   }
 
-  const toSchedule = (id) => {
-    if(admin){
-      navigate(`/admin/schedule/${id}`)
-    }
-    else{
-      navigate(`/manager/schedule/${id}`)
-    }
+  const handlePick = (id) => {
+    handleSelect(id);
   }
 
   return (
-    <Stack flex={5} height='90vh' overflow='auto'>
-      <Typography variant='h5' color='#778899' fontWeight={500} px={9} mt={1}>
-        Schedule
-      </Typography>
-      <Typography color='gray' px={9} variant='subtitle1' mb={4}>
-        View schedule in current semester
-      </Typography>
+    <>
       <Stack direction='row' mb={1} alignItems='center' gap={1} px={9}>
         <Typography fontWeight={500}>
           Department:
@@ -80,15 +64,14 @@ const ScheduleManager = ({admin}) => {
                   <TableCell size='small' className='subject-header'>ID</TableCell>
                   <TableCell size='small' className='subject-header'>Name</TableCell>
                   <TableCell size='small' className='subject-header'>Email</TableCell>
-                  <TableCell size='small' className='subject-header'>Schedule</TableCell>
+                  <TableCell size='small' className='subject-header'>Selection</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {
                   lecturers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((lecturer, index) => (
-                      <TableRow key={index} hover sx={{'&:hover': {cursor: 'pointer'}}}
-                        onClick={() => toSchedule(lecturer.id)}>
+                      <TableRow key={index} hover>
                         <TableCell size='small'>{lecturer.id}</TableCell>
                         <TableCell size='small'>
                           <Stack direction='row' alignItems='center' gap={1}>
@@ -103,9 +86,13 @@ const ScheduleManager = ({admin}) => {
                         </TableCell>
                         <TableCell size='small'>{lecturer.email}</TableCell>
                         <TableCell size='small'>
-                          <Tooltip title='View Schedule' placement='right'>
-                            <IconButton>
-                              <CalendarMonth />
+                          <Tooltip title='Select' placement='right'>
+                            <IconButton color={selectedId === lecturer.id ? 'success' : 'info'} 
+                              onClick={() => handlePick(lecturer.id)}>
+                              {
+                                selectedId === lecturer.id ? <CheckCircleOutline /> :
+                                <RadioButtonUnchecked/>
+                              }
                             </IconButton>
                           </Tooltip>
                         </TableCell>
@@ -131,8 +118,8 @@ const ScheduleManager = ({admin}) => {
           />
         </Paper>
       </Stack>
-    </Stack>
+    </>
   )
 }
 
-export default ScheduleManager
+export default LecturerList

@@ -8,10 +8,10 @@ const Slot = ({ slot }) => {
       className={Object.values(slot).length === 0 ? 'timetable-slot is-sunday' : 'timetable-slot '}
     >
       <Typography fontWeight={500} fontSize='15px'>
-        {slot.Id && slot.Id.split('_')[0]}
+        {slot.CourseId && slot.CourseId.split('_')[0]}
       </Typography>
       <Typography fontSize='14px'>
-        {slot.Id && slot.Id.split('_')[1]}
+        {slot.CourseId && slot.CourseId.split('_')[1]}
       </Typography>
       <Stack bgcolor={blue[600]} width='90px'>
         <Typography fontSize='14px' textAlign='center' color='white'>

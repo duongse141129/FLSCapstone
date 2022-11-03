@@ -3,8 +3,8 @@ import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import { Reorder, AccountBox, Logout } from '@mui/icons-material';
 import { Avatar, Box, Divider, Menu, MenuItem, Stack, Typography } from '@mui/material'
-import { useLocation } from 'react-router-dom';
 import { useGoogleAuth } from '../../utils/googleAuth';
+import { useLocation } from 'react-router-dom';
 
 const Navbar = ({ isExtend, setIsExtend }) => {
   const location = useLocation();
@@ -64,7 +64,9 @@ const Navbar = ({ isExtend, setIsExtend }) => {
 
         <Stack direction='row' alignItems='center' gap={4}>
           <Typography>
-            {location.pathname.includes('manager') ? 'Manager' : 'Lecturer'}
+            {location.pathname.startsWith('/lecturer') && 'Lecturer'}
+            {location.pathname.startsWith('/manager') && 'Department Manager'}
+            {location.pathname.startsWith('/admin') && 'Admin'}
           </Typography>
           <Badge badgeContent={4} color="error">
             <NotificationsIcon
@@ -76,7 +78,7 @@ const Navbar = ({ isExtend, setIsExtend }) => {
             />
           </Badge>
           <Avatar
-            src={googleUser && googleUser?.profileObj.imageUrl}
+            src={googleUser && googleUser?.profileObj?.imageUrl}
             sx={{
               '&:hover': {
                 cursor: 'pointer',

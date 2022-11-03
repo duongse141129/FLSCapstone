@@ -4,10 +4,10 @@ import { Outlet, useNavigate } from 'react-router-dom'
 import Leftbar from '../components/leftbar/Leftbar'
 import Navbar from '../components/navbar/Navbar'
 import { useGoogleAuth } from '../utils/googleAuth'
-import {managerTabs} from '../utils/managerTab'
 import request from '../utils/request'
+import {adminTabs} from '../utils/adminTab';
 
-const ManagerPage = () => {
+const AdminPage = () => {
   const navigate = useNavigate();
   const [isExtend, setIsExtend] = useState(true);
   const { isSignedIn, googleUser } = useGoogleAuth();
@@ -18,7 +18,7 @@ const ManagerPage = () => {
       request.get(`User/email/${googleUser.profileObj.email}`)
       .then(res => {
         if(res.data){
-          if(res.data.RoleIDs.includes('DMA')){
+          if(res.data.RoleIDs.includes('AD')){
             setData(localStorage.setItem('web-user', JSON.stringify(res.data)))
           }
           else{
@@ -37,12 +37,11 @@ const ManagerPage = () => {
 
   return (
     <Box height='100vh'>
-      <Navbar isExtend={isExtend} setIsExtend={setIsExtend} />
+      <Navbar isExtend={isExtend} setIsExtend={setIsExtend}/>
       <Stack direction='row'>
-        {
-          data !== null &&
+        {data !== null && 
           <>
-            <Leftbar isExtend={isExtend} user={'manager'} tabs={managerTabs} />
+            <Leftbar isExtend={isExtend} user={'admin'} tabs={adminTabs}/>
             <Outlet/>
           </>
         }
@@ -51,4 +50,4 @@ const ManagerPage = () => {
   )
 }
 
-export default ManagerPage
+export default AdminPage

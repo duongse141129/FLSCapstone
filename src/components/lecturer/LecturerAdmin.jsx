@@ -2,17 +2,18 @@ import {
   Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead,
   TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material';
-import { CalendarMonth, AutoAwesomeOutlined, Beenhere } from '@mui/icons-material';
+import { Visibility, AutoAwesomeOutlined } from '@mui/icons-material';
 import { lecturers } from '../../utils/sampleData';
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom';
-import { green, yellow } from '@mui/material/colors';
+import { yellow } from '@mui/material/colors';
+import Title from '../title/Title'
 
-const ScheduleManager = ({admin}) => {
+const LecturerAdmin = () => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [selectedDepartment, setSelectedDepartment] = useState('swe');
-  const navigate = useNavigate();
+  const navigate = useNavigate()
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -27,23 +28,15 @@ const ScheduleManager = ({admin}) => {
     setSelectedDepartment(e.target.value);
   }
 
-  const toSchedule = (id) => {
-    if(admin){
-      navigate(`/admin/schedule/${id}`)
-    }
-    else{
-      navigate(`/manager/schedule/${id}`)
-    }
+  const viewDetail = (id) => {
+    navigate(`/admin/lecturer/${id}`)
   }
 
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
-      <Typography variant='h5' color='#778899' fontWeight={500} px={9} mt={1}>
-        Schedule
-      </Typography>
-      <Typography color='gray' px={9} variant='subtitle1' mb={4}>
-        View schedule in current semester
-      </Typography>
+      <Stack mt={1} mb={4} px={9}>
+        <Title title='Lecturer' subTitle='List of all lecturers'/>
+      </Stack>
       <Stack direction='row' mb={1} alignItems='center' gap={1} px={9}>
         <Typography fontWeight={500}>
           Department:
@@ -57,19 +50,6 @@ const ScheduleManager = ({admin}) => {
           <MenuItem value='its'>Information Techonology Specialization</MenuItem>
           <MenuItem value='cfl'>Computing Fundamental</MenuItem>
         </Select>
-        {!admin && <Tooltip title='My Department' placement='top' arrow>
-          <Beenhere
-            sx={{
-              ml: 2,
-              color: green[600],
-              fontSize: '28px',
-              '&:hover': {
-                cursor: 'pointer',
-                color: green[600]
-              }
-            }}
-          />
-        </Tooltip>}
       </Stack>
       <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
@@ -80,15 +60,16 @@ const ScheduleManager = ({admin}) => {
                   <TableCell size='small' className='subject-header'>ID</TableCell>
                   <TableCell size='small' className='subject-header'>Name</TableCell>
                   <TableCell size='small' className='subject-header'>Email</TableCell>
-                  <TableCell size='small' className='subject-header'>Schedule</TableCell>
+                  <TableCell size='small' className='subject-header'>Department</TableCell>
+                  <TableCell size='small' className='subject-header'>Detail</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {
                   lecturers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((lecturer, index) => (
-                      <TableRow key={index} hover sx={{'&:hover': {cursor: 'pointer'}}}
-                        onClick={() => toSchedule(lecturer.id)}>
+                      <TableRow key={index} hover sx={{ '&:hover': { cursor: 'pointer' } }}
+                        onClick={() => viewDetail(lecturer.id)}>
                         <TableCell size='small'>{lecturer.id}</TableCell>
                         <TableCell size='small'>
                           <Stack direction='row' alignItems='center' gap={1}>
@@ -102,10 +83,11 @@ const ScheduleManager = ({admin}) => {
                           </Stack>
                         </TableCell>
                         <TableCell size='small'>{lecturer.email}</TableCell>
+                        <TableCell size='small'>Department</TableCell>
                         <TableCell size='small'>
-                          <Tooltip title='View Schedule' placement='right'>
-                            <IconButton>
-                              <CalendarMonth />
+                          <Tooltip title='More Information' placement='right' arrow>
+                            <IconButton onClick={() => viewDetail(lecturer.id)}>
+                              <Visibility />
                             </IconButton>
                           </Tooltip>
                         </TableCell>
@@ -135,4 +117,4 @@ const ScheduleManager = ({admin}) => {
   )
 }
 
-export default ScheduleManager
+export default LecturerAdmin

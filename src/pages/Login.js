@@ -19,21 +19,20 @@ const Login = () => {
   useEffect(() => {
     if (isSignedIn) {
       setIsLoading(true)
-      request.get('UserAccount',
-        {
-          params: {
-            email: googleUser.profileObj.email
-          }
-        })
+      localStorage.removeItem('web-user')
+      request.get(`User/email/${googleUser.profileObj.email}`)
         .then(res => {
           console.log(res.data)
           setIsLoading(false)
           if (res.data) {
-            if (res.data.Role === 'lecturer') {
+            if (res.data.RoleIDs.includes('LC')) {
               navigate('/lecturer')
             }
-            else {
+            else if(res.data.RoleIDs.includes('DMA')){
               navigate('/manager')
+            }
+            else {
+              navigate('/admin')
             }
           }
         })

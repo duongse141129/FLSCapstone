@@ -8,7 +8,6 @@ import { ToastContainer, toast } from 'react-toastify';
 
 const Profile = () => {
   const [account, setAccount] = useState(JSON.parse(localStorage.getItem('web-user')));
-  const role = localStorage.getItem('user-role');
   const [name, setName] = useState(account.Name);
   const [dob, setDob] = useState(account.DateOfBirthFormatted);
   const [phone, setPhone] = useState(account.Phone);
@@ -28,40 +27,38 @@ const Profile = () => {
   const handleShow = () => setShow(true);
 
   const handleSave = () => {
-    if (role === 'lecturer') {
-      request.put(`Lecturer/${account.Id}`, {
-        Name: name,
-        Email: email,
-        Dob: dob,
-        Gender: radioValue,
-        Idcard: idCard,
-        Address: address,
-        Phone: phone,
-        PriorityLecturer: account.PriorityLecturer,
-        IsFullTime: account.IsFullTime,
-        DepartmentId: account.DepartmentId
+    request.put(`User/${account.Id}`, {
+      Name: name,
+      Email: email,
+      Dob: dob,
+      Gender: radioValue,
+      Idcard: idCard,
+      Address: address,
+      Phone: phone,
+      PriorityLecturer: account.PriorityLecturer,
+      IsFullTime: account.IsFullTime,
+      DepartmentId: account.DepartmentId
+    })
+      .then(res => {
+        if (res.status === 200) {
+          localStorage.setItem('web-user', JSON.stringify(res.data))
+          setAccount(res.data)
+          setShow(false);
+          toast.success('Update Profile Successfully!', {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+            theme: "colored",
+          });
+        }
       })
-        .then(res => {
-          if (res.status === 200) {
-            localStorage.setItem('web-user', JSON.stringify(res.data))
-            setAccount(res.data)
-            setShow(false);
-            toast.success('Update Profile Successfully!', {
-              position: "top-right",
-              autoClose: 5000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-          }
-        })
-        .catch(err => {
-          alert('Fail to save changes in profile!')
-        })
-    }
+      .catch(err => {
+        alert('Fail to save changes in profile!')
+      })
   }
 
   return (
@@ -106,11 +103,10 @@ const Profile = () => {
         </Tooltip>
         <Tooltip title='Can not modify' placement='right' arrow>
           <TextField label='Department' variant='outlined' color='success' margin='normal' size='small'
-            defaultValue={department} 
+            defaultValue={department}
             InputProps={{ readOnly: true }} />
         </Tooltip>
-        {
-          role && role === 'lecturer' &&
+        {account.RoleIDs.includes('LC') &&
           <Tooltip title='Can not modify' placement='right' arrow>
             <TextField label='Lecturer Type' variant='outlined' color='success' margin='normal' size='small'
               defaultValue={type}
@@ -125,7 +121,7 @@ const Profile = () => {
           size='small'
           disabled={
             (name === account.Name || name.length === 0) && dob === account.DateOfBirthFormatted &&
-            radioValue === account.Gender && (phone === account.Phone || !/^([0-9]{10,11})$/.test(phone)) 
+            radioValue === account.Gender && (phone === account.Phone || !/^([0-9]{10,11})$/.test(phone))
             && (idCard === account.Idcard || !/^([0-9]{12})$/.test(idCard)) &&
             address === account.Address
           }

@@ -1,17 +1,23 @@
 import { Stack, Typography } from '@mui/material'
 import { red, indigo, green, grey } from '@mui/material/colors';
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const SemesterCard = ({semester}) => {
   const navigate = useNavigate();
+  const location = useLocation();
 
   if(!semester){
     return;
   }
 
   const toSemesterDetail = () => {
-    navigate(`/lecturer/semester/${semester.Id}`)
+    if(location.pathname.startsWith('/lecturer')){
+      navigate(`/lecturer/semester/${semester.Id}`)
+    }
+    else{
+      navigate(`/manager/semester/${semester.Id}`)
+    }
   }
 
   return (
@@ -32,7 +38,7 @@ const SemesterCard = ({semester}) => {
         sx={{borderRadius: '16px 16px 0 0'}}>
         <Typography variant='h6' color='white'>{semester.Term}</Typography>
       </Stack>
-      <Stack flex={1.5} alignItems='center' my={1} gap={0.5}
+      <Stack flex={1} alignItems='center' my={1} gap={0.5}
       >
         <Typography color={semester?.DateStatus === 'On Going' ? indigo[500] : (
           semester?.DateStatus === 'Close' ? grey[500] : red[500]

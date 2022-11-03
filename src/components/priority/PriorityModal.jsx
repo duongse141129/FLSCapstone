@@ -15,12 +15,7 @@ const PriorityModal = ({ isPriority, setIsPriority, lecturer }) => {
   const [selectedCourse, setSelectedCourse] = useState('');
   const [listSubject, setListSubject] = useState(subjects);
   const [searchValue, setSearchValue] = useState('');
-  const [department, setDepartment] = useState('swe');
   const [priority, setPriority] = useState('');
-
-  const handleChangeDepartment = (event) => {
-    setDepartment(event.target.value);
-  };
 
   const handleChangePriority = (event) => {
     setPriority(event.target.value);
@@ -94,19 +89,6 @@ const PriorityModal = ({ isPriority, setIsPriority, lecturer }) => {
               <MenuItem value='2'>Low</MenuItem>
             </Select>
           </Stack>
-        </Stack>
-        <Stack direction='row' alignItems='center' gap={1} mb={2}>
-          <Typography fontWeight={500}>Department</Typography>
-          <Select color='warning'
-            size='small'
-            value={department}
-            onChange={handleChangeDepartment}
-          >
-            <MenuItem value='swe'>Software Engineering</MenuItem>
-            <MenuItem value='its'>Information Technology Specialization</MenuItem>
-            <MenuItem value='cfl'>Computing Fundamental</MenuItem>
-            <MenuItem value='lab'>LAB</MenuItem>
-          </Select>
         </Stack>
         <Stack direction='row' height='400px' gap={2}>
           <Stack flex={1}>

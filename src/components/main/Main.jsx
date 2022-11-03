@@ -152,7 +152,8 @@ const Main = () => {
           </Stack>
         </Stack>
       </Stack>
-      <Timetable selectedSemester={selectedSemester} selectedWeekObj={selectedWeekObj}/>
+      <Timetable selectedSemester={selectedSemester} selectedWeekObj={selectedWeekObj}
+        lecturerId={account.Id}/>
     </Stack>
   )
 }

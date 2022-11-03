@@ -11,16 +11,19 @@ const LecturerPage = () => {
   const navigate = useNavigate();
   const [isExtend, setIsExtend] = useState(true)
   const { isSignedIn, googleUser } = useGoogleAuth();
-  const [wait, setWait] = useState(true);
+  const [data, setData] = useState(JSON.parse(localStorage.getItem('web-user')));
 
   useEffect(() => {
     if (isSignedIn) {
-      request.get(`Lecturer/email/${googleUser.profileObj.email}`)
+      request.get(`User/email/${googleUser.profileObj.email}`)
       .then(res => {
         if(res.data){
-          localStorage.setItem('web-user', JSON.stringify(res.data))
-          localStorage.setItem('user-role', 'lecturer');
-          setWait(false)
+          if(res.data.RoleIDs.includes('LC')){
+            setData(localStorage.setItem('web-user', JSON.stringify(res.data)))
+          }
+          else{
+            navigate(-1);
+          }
         }
       })
       .catch(err => {
@@ -36,8 +39,13 @@ const LecturerPage = () => {
     <Box height='100vh'>
       <Navbar isExtend={isExtend} setIsExtend={setIsExtend}/>
       <Stack direction='row'>
-        <Leftbar isExtend={isExtend} user={'lecturer'} tabs={lecturerTabs}/>
-        {!wait ? <Outlet/> : <Stack flex={5}></Stack>}
+        {
+          data !== null &&
+          <>
+            <Leftbar isExtend={isExtend} user={'lecturer'} tabs={lecturerTabs}/>
+            <Outlet/>
+          </>
+        }
       </Stack>
     </Box>
   )

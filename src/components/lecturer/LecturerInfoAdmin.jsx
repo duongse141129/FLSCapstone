@@ -5,15 +5,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { lecturers } from '../../utils/sampleData';
 import { green } from '@mui/material/colors';
 
-const LecturerInfo = () => {
+const LecturerInfoAdmin = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const lecturer = lecturers.find(each => each.id === id);
 
   const backToList = () => {
-    navigate('/manager/lecturer')
+    navigate('/admin/lecturer')
   }
-  
+
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
       <Stack direction='row' alignItems='center' color='#778899' gap={4} 
@@ -77,4 +77,4 @@ const LecturerInfo = () => {
   )
 }
 
-export default LecturerInfo
+export default LecturerInfoAdmin

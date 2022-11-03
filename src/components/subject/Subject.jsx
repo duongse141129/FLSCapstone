@@ -104,6 +104,12 @@ const Subject = ({ semesterId }) => {
     }
   }, [favoriteSubjects])
 
+  useEffect(() => {
+    if(subjects.length > 0){
+      setRowsPerPage(subjects.length)
+    }
+  }, [subjects])
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -115,6 +121,7 @@ const Subject = ({ semesterId }) => {
 
   const handleSelect = (e) => {
     setSelectedDepartment(e.target.value)
+    setPage(0);
   }
 
   const handleRating = (id, name) => {
@@ -227,7 +234,7 @@ const Subject = ({ semesterId }) => {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10]}
+            rowsPerPageOptions={[5, 10, subjects.length]}
             component='div'
             count={subjects.length}
             rowsPerPage={rowsPerPage}

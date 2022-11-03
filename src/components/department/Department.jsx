@@ -5,19 +5,23 @@ import {
 import { Beenhere } from '@mui/icons-material';
 import React, { useState, useEffect } from 'react';
 import { green, grey } from '@mui/material/colors';
+import {HashLoader} from 'react-spinners';
 import request from '../../utils/request'
 
 const Department = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [selectedDepartment, setSelectedDepartment] = useState('')
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [departments, setDepartments] = useState([]);
   const [subjects, setSubjects] = useState([]);
   const [manager, setManager] = useState({});
+  const [loadSubject, setLoadSubject] = useState(false);
+  const [loadDepart, setLoadDepart] = useState(false);
 
   //get Department Group List
   useEffect(() => {
+    setLoadSubject(true);
     const getDepartments = async () => {
       try {
         const response = await request.get(`Department/${account.DepartmentId}`);
@@ -25,14 +29,18 @@ const Department = () => {
           params: {
             DepartmentGroupId: response.data.DepartmentGroupId,
             pageIndex: 1,
-            pageSize: 9999
+            pageSize: 1000
           }
         })
-        setDepartments(departmentList.data)
-        setSelectedDepartment(account.DepartmentId)
+        if(departmentList.data){
+          setDepartments(departmentList.data)
+          setSelectedDepartment(account.DepartmentId)
+          setLoadSubject(false);
+        }
       }
       catch (error) {
         alert('Fail to get Department!')
+        setLoadSubject(false)
       }
     }
 
@@ -41,21 +49,24 @@ const Department = () => {
 
   //get subject list by department
   useEffect(() => {
+    setLoadDepart(true)
     const getSubjects = async () => {
       try {
         const response = await request.get('Subject', {
           params: {
             DepartmentId: selectedDepartment,
             pageIndex: 1,
-            pageSize: 9999
+            pageSize: 1000
           }
         })
         if (response.data) {
           setSubjects(response.data)
+          setLoadDepart(false)
         }
       }
       catch (error) {
         alert('Fail to load subjects!');
+        setLoadDepart(false)
       }
     }
 
@@ -65,10 +76,19 @@ const Department = () => {
   //get Manager by department
   useEffect(() => {
     if(selectedDepartment){
-      request.get(`DepartmentManager/departmentID/${selectedDepartment}`)
+      request.get('User', {
+        params: {
+          DepartmentId: selectedDepartment,
+          RoleIDs: 'DMA',
+          pageIndex: 1,
+          pageSize: 1
+        }
+      })
       .then(res => {
         if(res.status === 200){
-          setManager(res.data[0])
+          if(res.data){
+            setManager(res.data[0])
+          }
         }
       })
       .catch(err => {
@@ -76,6 +96,12 @@ const Department = () => {
       })
     }
   }, [selectedDepartment])
+
+  useEffect(() => {
+    if(subjects.length > 0){
+      setRowsPerPage(subjects.length);
+    }
+  }, [subjects])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -88,6 +114,7 @@ const Department = () => {
 
   const handleSelect = (e) => {
     setSelectedDepartment(e.target.value)
+    setPage(0);
   }
 
   return (
@@ -137,7 +164,7 @@ const Department = () => {
               Manager:
             </Typography>
             <Typography>
-              {manager && manager.Name + ' (' + manager.Email + ') '}
+              {manager && manager?.Name + ' (' + manager?.Email + ') '}
             </Typography>
           </Stack>
           <Stack direction='row' mb={1} gap={1}>
@@ -146,13 +173,15 @@ const Department = () => {
             </Typography>
           </Stack>
           <Stack>
-            <Paper sx={{ minWidth: 700, mb: 2 }}>
+            {(loadSubject || loadDepart) && <HashLoader size={40} color={green[600]}/>}
+            {!loadSubject && !loadDepart && <Paper sx={{ minWidth: 700, mb: 2 }}>
               <TableContainer component={Stack} overflow='auto'>
                 <Table size='small'>
                   <TableHead>
                     <TableRow>
                       <TableCell size='small' className='subject-header'>Code</TableCell>
                       <TableCell size='small' className='subject-header'>Name</TableCell>
+                      <TableCell size='small' className='subject-header'>Department</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -162,6 +191,7 @@ const Department = () => {
                           <TableRow key={subject.Id} hover>
                             <TableCell size='small'>{subject.Id}</TableCell>
                             <TableCell size='small'>{subject.SubjectName}</TableCell>
+                            <TableCell size='small'>{subject.DepartmentId}</TableCell>
                           </TableRow>
                         ))
                     }
@@ -169,7 +199,7 @@ const Department = () => {
                 </Table>
               </TableContainer>
               <TablePagination
-                rowsPerPageOptions={[5, 10]}
+                rowsPerPageOptions={[5, 10, subjects.length]}
                 component='div'
                 count={subjects.length}
                 rowsPerPage={rowsPerPage}
@@ -183,7 +213,7 @@ const Department = () => {
                   bgcolor: 'ghostwhite'
                 }}
               />
-            </Paper>
+            </Paper>}
           </Stack>
         </Box>
       </Box>
