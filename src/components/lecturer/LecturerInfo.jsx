@@ -1,14 +1,31 @@
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { ArrowBackIosNew} from '@mui/icons-material';
-import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { lecturers } from '../../utils/sampleData';
 import { green } from '@mui/material/colors';
+import { useState, useEffect } from 'react';
+import { HashLoader } from 'react-spinners';
+import request from '../../utils/request';
 
 const LecturerInfo = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-  const lecturer = lecturers.find(each => each.id === id);
+  const [lecturer, setLecturer] = useState({});
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(true)
+    request.get(`User/${id}`)
+    .then(res => {
+      if(res.data){
+        setLecturer(res.data);
+        setLoading(false);
+      }
+    })
+    .catch(err => {
+      alert('Fail to load information of lecturer')
+      setLoading(false);
+    })
+  }, [id])
 
   const backToList = () => {
     navigate('/manager/lecturer')
@@ -24,55 +41,57 @@ const LecturerInfo = () => {
           </IconButton>
         </Tooltip>
         <Typography variant='h5' fontWeight={500}>
-          Lecturer Information: <span style={{ color: green[600] }}>{lecturer.name} - {lecturer.id}</span>
+          Lecturer Information: <span style={{ color: green[600] }}>{lecturer.Name} - {lecturer.Id}</span>
         </Typography>
       </Stack>
+      {loading && <Stack px={9}><HashLoader size={30} color={green[600]}/></Stack>}
+      {!loading &&
       <Stack px={9} width='100%' mb={2}>
         <Stack direction='row' gap={4} mb={2}>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Name: </span>
-            <span>{lecturer.name}</span>
+            <span>{lecturer.Name}</span>
           </Typography>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Email: </span>
-            <span>{lecturer.email}</span>
+            <span>{lecturer.Email}</span>
           </Typography>
         </Stack>
         <Stack direction='row' gap={4} mb={2}>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Department: </span>
-            <span>Software Engineering</span>
+            <span>{lecturer.DepartmentName}</span>
           </Typography>
           <Typography width='300px'>
-            <span style={{ fontWeight: 500 }}>Type: </span>
-            <span>{lecturer.isFullTime === 1 ? 'Full time' : 'Contract'}</span>
+            <span style={{ fontWeight: 500 }}>Type Lecturer: </span>
+            <span>{lecturer.IsFullTime === 1 ? 'Full time' : 'Contract'}</span>
           </Typography>
         </Stack>
         <Stack direction='row' gap={4} mb={2}>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Birthday: </span>
-            <span>{lecturer.dob}</span>
+            <span>{lecturer.DateOfBirthFormatted}</span>
           </Typography>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Gender: </span>
-            <span>{lecturer.gender}</span>
+            <span>{lecturer.Gender === 1 ? 'Male' : 'Female'}</span>
           </Typography>
         </Stack>
         <Stack direction='row' gap={4} mb={2}>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Phone: </span>
-            <span>{lecturer.phone}</span>
+            <span>{lecturer.Phone}</span>
           </Typography>
           <Typography width='300px'>
             <span style={{ fontWeight: 500 }}>Card ID: </span>
-            <span>{lecturer.idCard}</span>
+            <span>{lecturer.Idcard}</span>
           </Typography>
         </Stack>
         <Typography width='600px'>
           <span style={{ fontWeight: 500 }}>Address: </span>
-          <span>{lecturer.address}</span>
+          <span>{lecturer.Address}</span>
         </Typography>
-      </Stack>
+      </Stack>}
     </Stack>
   )
 }

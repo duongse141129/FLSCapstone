@@ -82,8 +82,11 @@ const Department = () => {
       })
         .then(res => {
           if (res.status === 200) {
-            if (res.data) {
+            if (res.data.length > 0) {
               setManager(res.data[0])
+            }
+            else{
+              setManager({})
             }
           }
         })
@@ -160,7 +163,7 @@ const Department = () => {
               Manager:
             </Typography>
             <Typography>
-              {manager && manager?.Name + ' (' + manager?.Email + ') '}
+              {Object.values(manager).length > 0 && manager?.Name + ' (' + manager?.Email + ') '}
             </Typography>
           </Stack>
           <Stack direction='row' mb={1} gap={1}>
@@ -196,7 +199,7 @@ const Department = () => {
                   </Table>
                 </TableContainer>
                 <TablePagination
-                  rowsPerPageOptions={[5, 10, subjects.length]}
+                  rowsPerPageOptions={[10, subjects.length]}
                   component='div'
                   count={subjects.length}
                   rowsPerPage={rowsPerPage}
