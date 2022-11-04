@@ -1,15 +1,18 @@
 import { Stack, Typography } from '@mui/material'
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import './Semester.css'
-import { useEffect } from 'react';
+import {HashLoader} from 'react-spinners';
 import request from '../../utils/request';
 import SemesterCard from './SemesterCard';
+import { green } from '@mui/material/colors';
 
 const Semester = () => {
   const [semesters, setSemesters] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   //get semester list
   useEffect(() => {
+    setLoading(true)
     request.get('Semester', {
       params: {
         sortBy: 'DateEnd',
@@ -21,10 +24,12 @@ const Semester = () => {
       .then(res => {
         if (res.status === 200) {
           setSemesters(res.data)
+          setLoading(false);
         }
       })
       .catch(err => {
         alert('Fail to load semesters!')
+        setLoading(false)
       })
   }, [])
 
@@ -38,7 +43,10 @@ const Semester = () => {
       </Typography>
       <Stack px={9} gap={4} direction='row' flexWrap='wrap' justifyContent='center'>
         {
-          semesters &&
+          loading && <HashLoader size={30} color={green[600]}/>
+        }
+        {
+          !loading &&
           semesters.map(semester => (
             <SemesterCard key={semester.Id} semester={semester} />
           ))

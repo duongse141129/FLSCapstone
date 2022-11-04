@@ -1,6 +1,6 @@
 import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, 
   TableHead, TableRow } from '@mui/material'
-import React, { useState } from 'react'
+import React from 'react'
 import Title from '../title/Title'
 
 const Slot = () => {

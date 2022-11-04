@@ -8,7 +8,9 @@ import RequestModal from '../department/RequestModal';
 import RatingModal from '../department/RatingModal';
 import './Subject.css';
 import { green, grey } from '@mui/material/colors';
-import request from '../../utils/request'
+import {HashLoader} from 'react-spinners';
+import request from '../../utils/request';
+import configData from  '../../utils/configData.json';
 
 const Subject = ({ semesterId }) => {
   const [page, setPage] = useState(0);
@@ -25,10 +27,12 @@ const Subject = ({ semesterId }) => {
   const [loadPoint, setLoadPoint] = useState(false);
   const [pointFive, setPointFive] = useState(0);
   const [pointOne, setPointOne] = useState(0);
+  const [loadSubject, setLoadSubject] = useState(false);
 
   //get Department to get Department Group --> list department in group
   useEffect(() => {
     const getDepartments = async () => {
+      setLoadSubject(true)
       try {
         const response = await request.get(`Department/${account.DepartmentId}`);
         const departmentList = await request.get('Department', {
@@ -40,9 +44,11 @@ const Subject = ({ semesterId }) => {
         })
         setDepartments(departmentList.data)
         setSelectedDepartment(account.DepartmentId)
+        setLoadSubject(false);
       }
       catch (error) {
         alert('Fail to get Department!')
+        setLoadSubject(false)
       }
     }
 
@@ -105,7 +111,7 @@ const Subject = ({ semesterId }) => {
   }, [favoriteSubjects])
 
   useEffect(() => {
-    if(subjects.length > 0){
+    if (subjects.length > 0) {
       setRowsPerPage(subjects.length)
     }
   }, [subjects])
@@ -167,16 +173,22 @@ const Subject = ({ semesterId }) => {
           </Tooltip>
         </Stack>
         <Stack>
-          <Typography color='red' fontSize='14px'>
-            Subjects at point 1: {pointOne}/3
-          </Typography>
-          <Typography color='red' fontSize='14px'>
-            Subjects at point 5: {pointFive}/3
-          </Typography>
+          {
+            selectedDepartment === account.DepartmentId &&
+            <>
+              <Typography color='red' fontSize='14px'>
+                Subjects at point 1: {pointOne}/{configData.POINT_ONE_NUMBER}
+              </Typography>
+              <Typography color='red' fontSize='14px'>
+                Subjects at point 5: {pointFive}/{configData.POINT_FIVE_NUMBER}
+              </Typography>
+            </>
+          }
         </Stack>
       </Stack>
       <Stack px={9}>
-        <Paper sx={{ minWidth: 700, mb: 2 }}>
+        {loadSubject && <HashLoader size={30} color={green[600]}/>}
+        {!loadSubject && <Paper sx={{ minWidth: 700, mb: 2 }}>
           <TableContainer component={Box}
             sx={{ overflow: 'auto' }}>
             <Table>
@@ -247,7 +259,7 @@ const Subject = ({ semesterId }) => {
               bgcolor: 'ghostwhite'
             }}
           />
-        </Paper>
+        </Paper>}
       </Stack>
       <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} />
       <RatingModal isRating={isRating} setIsRating={setIsRating}

@@ -2,6 +2,7 @@ import { Stack, Typography } from '@mui/material'
 import React from 'react'
 import {ThumbDown, ThumbUp} from '@mui/icons-material';
 import { blue, red } from '@mui/material/colors';
+import configData from '../../utils/configData.json';
 
 const SlotTime = ({slot, handlePick, likes, dislikes}) => {
   
@@ -26,7 +27,7 @@ const SlotTime = ({slot, handlePick, likes, dislikes}) => {
       <Stack flex={1} justifyContent='center' alignItems='center' borderRight='1px solid grey'
         className={
           (likes.find(like => like === slot.Id) || dislikes.find(dislike => dislike === slot.Id)) ? '' : 
-          (likes.length === 4 && dislikes.length === 2) ? 'picked-full' : ''
+          (likes.length === configData.LIKE_SLOT_NUMBER && dislikes.length === configData.DISLIKE_SLOT_NUMBER) ? 'picked-full' : ''
         }
       >
         {likes.find(like => like === slot.Id) && <ThumbUp sx={{fontSize: '20px', color: blue[600]}}/>}

@@ -8,6 +8,7 @@ import React, { useState, useEffect } from 'react'
 import { blue, red } from '@mui/material/colors'
 import { ClipLoader } from 'react-spinners'
 import request from '../../utils/request';
+import configData from '../../utils/configData.json';
 
 const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadPoint, subjectName, manager, semesterId }) => {
   const subjectFavorite = favoriteSubjects?.length > 0 &&
@@ -33,13 +34,13 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
     if (subjectFavorite) {
       if (value === 5) {
         const pointfive = favoriteSubjects.filter(item => item.FavoritePoint === 5)
-        if (pointfive.length === 3) {
+        if (pointfive.length === configData.POINT_FIVE_NUMBER) {
           return;
         }
       }
       if (value === 1) {
         const pointone = favoriteSubjects.filter(item => item.FavoritePoint === 1)
-        if (pointone.length === 3) {
+        if (pointone.length === configData.POINT_ONE_NUMBER) {
           return;
         }
       }
@@ -101,16 +102,16 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
     if (point === 5) {
       const pointfive = favoriteSubjects.filter(item => item.FavoritePoint === 5)
       const pointfiveExpect = pointfive.filter(item => item.SubjectId !== subjectId)
-      if (pointfiveExpect.length === 3) {
-        setError('You already have 3 subjects at point 5');
+      if (pointfiveExpect.length === configData.POINT_FIVE_NUMBER) {
+        setError(`You already have ${configData.POINT_FIVE_NUMBER} subjects at point 5`);
         return;
       }
     }
     if (point === 1) {
       const pointone = favoriteSubjects.filter(item => item.FavoritePoint === 1)
       const pointoneExpect = pointone.filter(item => item.SubjectId !== subjectId)
-      if (pointoneExpect.length === 3) {
-        setError('You already have 3 subjects at point 1');
+      if (pointoneExpect.length === configData.POINT_ONE_NUMBER) {
+        setError(`You already have ${configData.POINT_ONE_NUMBER} subjects at point 1`);
         return;
       }
     }
@@ -121,8 +122,8 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
     setValue(5);
     const pointfive = favoriteSubjects.filter(item => item.FavoritePoint === 5)
     const pointfiveExpect = pointfive.filter(item => item.SubjectId !== subjectId)
-    if (pointfiveExpect.length === 3) {
-      setError('You already have 3 subjects at point 5');
+    if (pointfiveExpect.length === configData.POINT_FIVE_NUMBER) {
+      setError(`You already have ${configData.POINT_FIVE_NUMBER} subjects at point 5`);
     }
   }
 
@@ -131,8 +132,8 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
     setValue(1);
     const pointone = favoriteSubjects.filter(item => item.FavoritePoint === 1)
     const pointoneExpect = pointone.filter(item => item.SubjectId !== subjectId)
-    if (pointoneExpect.length === 3) {
-      setError('You already have 3 subjects at point 1');
+    if (pointoneExpect.length === configData.POINT_ONE_NUMBER) {
+      setError(`You already have ${configData.POINT_ONE_NUMBER} subjects at point 1`);
     }
   }
 

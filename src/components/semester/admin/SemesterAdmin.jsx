@@ -1,11 +1,11 @@
 import { Button, Stack } from '@mui/material'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Title from '../../title/Title'
 import SemesterCardAdmin from './SemesterCardAdmin';
 import SemesterCreate from './SemesterCreate';
 
 const SemesterAdmin = () => {
-  const [semesters, setSemesters] = useState(test);
+  //const [semesters, setSemesters] = useState(test);
   const [isCreate, setIsCreate] = useState(false);
 
   const addSemester = () => {
@@ -21,8 +21,8 @@ const SemesterAdmin = () => {
       </Stack>
       <Stack px={9} gap={4} direction='row' flexWrap='wrap' justifyContent='center'>
         {
-          semesters &&
-          semesters.map(semester => (
+          test &&
+          test.map(semester => (
             <SemesterCardAdmin key={semester.Id} semester={semester} />
           ))
         }

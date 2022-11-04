@@ -5,7 +5,6 @@ import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import Title from '../../title/Title'
 import LecturerContainer from '../manager/LecturerContainer'
-import Schedule from '../Schedule'
 import CourseList from './CourseList'
 import SlotType from './SlotType'
 

@@ -5,7 +5,7 @@ import {
 import { Beenhere } from '@mui/icons-material';
 import React, { useState, useEffect } from 'react';
 import { green, grey } from '@mui/material/colors';
-import {HashLoader} from 'react-spinners';
+import { HashLoader } from 'react-spinners';
 import request from '../../utils/request'
 
 const Department = () => {
@@ -17,7 +17,6 @@ const Department = () => {
   const [subjects, setSubjects] = useState([]);
   const [manager, setManager] = useState({});
   const [loadSubject, setLoadSubject] = useState(false);
-  const [loadDepart, setLoadDepart] = useState(false);
 
   //get Department Group List
   useEffect(() => {
@@ -32,7 +31,7 @@ const Department = () => {
             pageSize: 1000
           }
         })
-        if(departmentList.data){
+        if (departmentList.data) {
           setDepartments(departmentList.data)
           setSelectedDepartment(account.DepartmentId)
           setLoadSubject(false);
@@ -49,7 +48,6 @@ const Department = () => {
 
   //get subject list by department
   useEffect(() => {
-    setLoadDepart(true)
     const getSubjects = async () => {
       try {
         const response = await request.get('Subject', {
@@ -61,12 +59,10 @@ const Department = () => {
         })
         if (response.data) {
           setSubjects(response.data)
-          setLoadDepart(false)
         }
       }
       catch (error) {
         alert('Fail to load subjects!');
-        setLoadDepart(false)
       }
     }
 
@@ -75,7 +71,7 @@ const Department = () => {
 
   //get Manager by department
   useEffect(() => {
-    if(selectedDepartment){
+    if (selectedDepartment) {
       request.get('User', {
         params: {
           DepartmentId: selectedDepartment,
@@ -84,21 +80,21 @@ const Department = () => {
           pageSize: 1
         }
       })
-      .then(res => {
-        if(res.status === 200){
-          if(res.data){
-            setManager(res.data[0])
+        .then(res => {
+          if (res.status === 200) {
+            if (res.data) {
+              setManager(res.data[0])
+            }
           }
-        }
-      })
-      .catch(err => {
-        alert('Fail to get manger!')
-      })
+        })
+        .catch(err => {
+          alert('Fail to get manger!')
+        })
     }
   }, [selectedDepartment])
 
   useEffect(() => {
-    if(subjects.length > 0){
+    if (subjects.length > 0) {
       setRowsPerPage(subjects.length);
     }
   }, [subjects])
@@ -173,47 +169,48 @@ const Department = () => {
             </Typography>
           </Stack>
           <Stack>
-            {(loadSubject || loadDepart) && <HashLoader size={40} color={green[600]}/>}
-            {!loadSubject && !loadDepart && <Paper sx={{ minWidth: 700, mb: 2 }}>
-              <TableContainer component={Stack} overflow='auto'>
-                <Table size='small'>
-                  <TableHead>
-                    <TableRow>
-                      <TableCell size='small' className='subject-header'>Code</TableCell>
-                      <TableCell size='small' className='subject-header'>Name</TableCell>
-                      <TableCell size='small' className='subject-header'>Department</TableCell>
-                    </TableRow>
-                  </TableHead>
-                  <TableBody>
-                    {
-                      subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                        .map((subject) => (
-                          <TableRow key={subject.Id} hover>
-                            <TableCell size='small'>{subject.Id}</TableCell>
-                            <TableCell size='small'>{subject.SubjectName}</TableCell>
-                            <TableCell size='small'>{subject.DepartmentId}</TableCell>
-                          </TableRow>
-                        ))
-                    }
-                  </TableBody>
-                </Table>
-              </TableContainer>
-              <TablePagination
-                rowsPerPageOptions={[5, 10, subjects.length]}
-                component='div'
-                count={subjects.length}
-                rowsPerPage={rowsPerPage}
-                page={page}
-                onPageChange={handleChangePage}
-                onRowsPerPageChange={handleChangeRowsPerPage}
-                labelRowsPerPage={<span>Rows:</span>}
-                showFirstButton
-                showLastButton
-                sx={{
-                  bgcolor: 'ghostwhite'
-                }}
-              />
-            </Paper>}
+            {loadSubject && <HashLoader size={40} color={green[600]} />}
+            {!loadSubject &&
+              <Paper sx={{ minWidth: 700, mb: 2 }}>
+                <TableContainer component={Stack} overflow='auto'>
+                  <Table size='small'>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell size='small' className='subject-header'>Code</TableCell>
+                        <TableCell size='small' className='subject-header'>Name</TableCell>
+                        <TableCell size='small' className='subject-header'>Department</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      {
+                        subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                          .map((subject) => (
+                            <TableRow key={subject.Id} hover>
+                              <TableCell size='small'>{subject.Id}</TableCell>
+                              <TableCell size='small'>{subject.SubjectName}</TableCell>
+                              <TableCell size='small'>{subject.DepartmentId}</TableCell>
+                            </TableRow>
+                          ))
+                      }
+                    </TableBody>
+                  </Table>
+                </TableContainer>
+                <TablePagination
+                  rowsPerPageOptions={[5, 10, subjects.length]}
+                  component='div'
+                  count={subjects.length}
+                  rowsPerPage={rowsPerPage}
+                  page={page}
+                  onPageChange={handleChangePage}
+                  onRowsPerPageChange={handleChangeRowsPerPage}
+                  labelRowsPerPage={<span>Rows:</span>}
+                  showFirstButton
+                  showLastButton
+                  sx={{
+                    bgcolor: 'ghostwhite'
+                  }}
+                />
+              </Paper>}
           </Stack>
         </Box>
       </Box>

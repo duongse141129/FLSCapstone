@@ -1,7 +1,8 @@
-import { Box, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from '@mui/material'
+import { Box, Button, FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography } from '@mui/material'
 import React, { useState, useEffect } from 'react'
 import SlotTime from './SlotTime';
 import request from '../../utils/request'
+import configData from '../../utils/configData.json';
 import { green, red } from '@mui/material/colors'
 import { HashLoader } from 'react-spinners';
 import { ToastContainer, toast } from 'react-toastify';
@@ -14,6 +15,7 @@ const SlotType = ({ semesterId }) => {
   const [dislikes, setDislikes] = useState([]);
   const [isLoadingSave, setIsLoadingSave] = useState(false);
   const [mode, setMode] = useState('like')
+  const [isEdit, setIsEdit] = useState(false);
 
   //get slottype list
   useEffect(() => {
@@ -80,12 +82,16 @@ const SlotType = ({ semesterId }) => {
   }
 
   const handlePick = (id) => {
+    if(!isEdit){
+      return;
+    }
+
     let obj = {}
     if (mode === 'like') {
       if (likes.find(like => like === id) || dislikes.find(dislike => dislike === id)) {
         return;
       }
-      if (likes.length === 4) {
+      if (likes.length === configData.LIKE_SLOT_NUMBER) {
         return;
       }
       for (let i in favoriteSlots) {
@@ -128,7 +134,7 @@ const SlotType = ({ semesterId }) => {
       if (likes.find(like => like === id) || dislikes.find(dislike => dislike === id)) {
         return;
       }
-      if (dislikes.length === 2) {
+      if (dislikes.length === configData.DISLIKE_SLOT_NUMBER) {
         return;
       }
       for (let i in favoriteSlots) {
@@ -149,6 +155,16 @@ const SlotType = ({ semesterId }) => {
           .then(res => {
             if (res.status === 200) {
               setIsLoadingSave(false)
+              toast.success('Save Successfully!', {
+                position: "top-right",
+                autoClose: 1000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+                theme: "colored",
+              });
             }
           })
           .catch(err => {
@@ -177,6 +193,16 @@ const SlotType = ({ semesterId }) => {
             .then(res => {
               if (res.status === 200) {
                 setIsLoadingSave(false)
+                toast.success('Save Successfully!', {
+                  position: "top-right",
+                  autoClose: 1000,
+                  hideProgressBar: false,
+                  closeOnClick: true,
+                  pauseOnHover: true,
+                  draggable: true,
+                  progress: undefined,
+                  theme: "colored",
+                });
               }
             })
             .catch(err => {
@@ -190,6 +216,10 @@ const SlotType = ({ semesterId }) => {
 
   return (
     <Box px={9} mb={2}>
+      <Stack color={red[600]} direction='row' gap={4}>
+        <Typography>Like: {likes.length}/{configData.LIKE_SLOT_NUMBER}</Typography>
+        <Typography>Dislike: {dislikes.length}/{configData.DISLIKE_SLOT_NUMBER}</Typography>
+      </Stack>
       <Stack direction='row' alignItems='center' width='70%' justifyContent='space-between'>
         <Stack direction='row' alignItems='center' gap={2}>
           <Typography fontWeight={500}>Mode</Typography>
@@ -206,10 +236,10 @@ const SlotType = ({ semesterId }) => {
             </RadioGroup>
           </FormControl>
         </Stack>
-        <Stack color={red[600]}>
-          <Typography>Like: {likes.length}/4</Typography>
-          <Typography>Dislike: {dislikes.length}/2</Typography>
-        </Stack>
+        <Button size='small' variant='contained' color={isEdit ? 'info' : 'primary'}
+          onClick={() => setIsEdit(!isEdit)}>
+          {isEdit ?  'Disable Edit' : 'Enable Edit'}
+        </Button>
       </Stack>
       {isLoadingSave && <HashLoader size={30} color={green[600]} />}
       {!isLoadingSave &&
