@@ -1,17 +1,37 @@
 import { Stack, Typography } from '@mui/material'
 import { green, grey, indigo} from '@mui/material/colors';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import AssignmentList from '../../assignment/AssignmentList';
 import PriorityList from '../../priority/PriorityList';
 import FeedbackSelection from '../../feedback/FeedbackSelection'
 import LecturerList from './LecturerList';
-import {lecturers} from '../../../utils/sampleData'
 import ScheduleAdmin from '../admin/ScheduleAdmin';
 import SlotManage from '../SlotManage';
+import request from '../../../utils/request';
 
-const LecturerContainer = ({admin}) => {
+const LecturerContainer = ({admin, semester}) => {
+  const account = JSON.parse(localStorage.getItem('web-user'));
   const [selected, setSelected] = useState('view');
-  const [lecturerId, setLecturerId] = useState(lecturers[0].id);
+  const [lecturerId, setLecturerId] = useState('');
+
+  useEffect(() => {
+    request.get('User', {
+      params: {
+        DepartmentId: account.DepartmentId,
+        RoleIDs: 'LC',
+        pageIndex: 1,
+        pageSize: 500
+      }
+    })
+    .then(res => {
+      if(res.data){
+        setLecturerId(res.data[0].Id)
+      }
+    })
+    .catch(err => {
+      alert('Fail to load lecturers');
+    })
+  }, [account.DepartmentId])
 
   const handleSelect = (id) => {
     setSelected('schedule')
@@ -61,8 +81,8 @@ const LecturerContainer = ({admin}) => {
       }
       {selected === 'assign' && <AssignmentList id={lecturerId} admin={admin}/>}
       {selected === 'priority' && <PriorityList id={lecturerId} admin={admin}/>}
-      {selected === 'feedback' && <FeedbackSelection id={lecturerId} admin={admin}/>}
-      {selected === 'schedule' && <ScheduleAdmin id={lecturerId}/>}
+      {selected === 'feedback' && <FeedbackSelection id={lecturerId} semester={semester} admin={admin}/>}
+      {selected === 'schedule' && <ScheduleAdmin id={lecturerId} semester={semester}/>}
       {selected === 'slot' &&  <SlotManage/>}
     </>
   )

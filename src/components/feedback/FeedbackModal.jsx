@@ -1,21 +1,117 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  Rating, Stack, styled, Typography } 
-from '@mui/material';
-import {Chat, Favorite, FavoriteBorder} from '@mui/icons-material';
-import React, { useState } from 'react'
-import { blue } from '@mui/material/colors';
+import {
+  Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle,
+  FormControl, FormControlLabel, IconButton, Radio, RadioGroup, Stack, Tooltip, Typography
+}
+  from '@mui/material';
+import { Chat, Check, SentimentVerySatisfiedOutlined, SentimentDissatisfiedOutlined } from '@mui/icons-material';
+import React, { useState, useEffect } from 'react'
+import { blue, red } from '@mui/material/colors';
+import { useMemo } from 'react';
+import request from '../../utils/request';
+import configData from '../../utils/configData.json';
+import { ClipLoader } from 'react-spinners';
 
-const StyledRating = styled(Rating)({
-  '& .MuiRating-iconFilled': {
-    color: '#ff6d75',
-  },
-  '& .MuiRating-iconHover': {
-    color: '#ff3d47',
-  },
-});
-
-const FeedbackModal = ({ isFeedback, setIsFeedback }) => {
+const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points, loadPoint }) => {
   const [value, setValue] = useState(3);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [error, setError] = useState('');
+  const account = JSON.parse(localStorage.getItem('web-user'));
+  const subject = useMemo(() => {
+    const result = points.length > 0 && points.find(item => item.SubjectId === subjectId);
+    return result;
+  }, [subjectId, points])
+
+  useEffect(() => {
+    if (subject) {
+      setValue(subject.FeedbackPoint)
+    }
+    setIsSuccess(false);
+    setError('');
+    setIsLoading(false);
+  }, [subject, loadPoint])
+
+  const handleChangeValue = (e) => {
+    setError('');
+    const point = Number(e.target.value);
+    setValue(point);
+    if (point === 5) {
+      const pointfive = points.filter(item => item.FeedbackPoint === 5)
+      const pointfiveExpect = pointfive.filter(item => item.SubjectId !== subjectId)
+      if (pointfiveExpect.length >= configData.POINT_FIVE_NUMBER) {
+        setError(`You already have ${configData.POINT_FIVE_NUMBER} subjects at point 5`);
+        return;
+      }
+    }
+    if (point === 1) {
+      const pointone = points.filter(item => item.FeedbackPoint === 1)
+      const pointoneExpect = pointone.filter(item => item.SubjectId !== subjectId)
+      if (pointoneExpect.length >= configData.POINT_ONE_NUMBER) {
+        setError(`You already have ${configData.POINT_ONE_NUMBER} subjects at point 1`);
+        return;
+      }
+    }
+  }
+
+  const handleLike = () => {
+    setError('');
+    setValue(5);
+    const pointfive = points.filter(item => item.FeedbackPoint === 5)
+    const pointfiveExpect = pointfive.filter(item => item.SubjectId !== subjectId)
+    if (pointfiveExpect.length >= configData.POINT_FIVE_NUMBER) {
+      setError(`You already have ${configData.POINT_FIVE_NUMBER} subjects at point 5`);
+    }
+  }
+
+  const handleDislike = () => {
+    setError('');
+    setValue(1);
+    const pointone = points.filter(item => item.FeedbackPoint === 1)
+    const pointoneExpect = pointone.filter(item => item.SubjectId !== subjectId)
+    if (pointoneExpect.length >= configData.POINT_ONE_NUMBER) {
+      setError(`You already have ${configData.POINT_ONE_NUMBER} subjects at point 1`);
+    }
+  }
+
+  const handleSave = () => {
+    if (subject) {
+      setIsLoading(true)
+      if (value === 5) {
+        const pointfive = points.filter(item => item.FeedbackPoint === 5)
+        if (pointfive.length >= configData.POINT_FIVE_NUMBER) {
+          return;
+        }
+      }
+      if (value === 1) {
+        const pointone = points.filter(item => item.FeedbackPoint === 1)
+        if (pointone.length >= configData.POINT_ONE_NUMBER) {
+          return;
+        }
+      }
+      request.put(`SubjectOfLecturer/${subject.Id}`, {
+        DepartmentManagerId: account.Id,
+        SemesterId: subject.SemesterId,
+        SubjectId: subject.SubjectId,
+        LecturerId: subject.LecturerId,
+        FavoritePoint: subject.FavoritePoint,
+        FeedbackPoint: value,
+        MaxCourseSubject: subject.MaxCourseSubject,
+        isEnable: subject.isEnable
+      })
+        .then(res => {
+          if (res.status === 200) {
+            setTimeout(() => {
+              setIsFeedback(false)
+            }, 500)
+            setIsLoading(false)
+            setIsSuccess(true)
+          }
+        })
+        .catch(err => {
+          alert('Fail to save feedback')
+        })
+    }
+  }
 
   return (
     <Dialog
@@ -24,38 +120,72 @@ const FeedbackModal = ({ isFeedback, setIsFeedback }) => {
     >
       <DialogTitle color={blue[700]} mb={1}>
         <Stack direction='row' alignItems='center' gap={1}>
-          <Chat/>
+          <Chat />
           <Typography variant='h5'>Feedback to Lecturer with Subject</Typography>
         </Stack>
       </DialogTitle>
       <DialogContent>
         <Stack direction='row' mb={1}>
           <Typography width='100px' fontWeight={500}>Lecturer: </Typography>
-          <Typography>Lam Huu Khanh Phuong (phuonglhk@fpt.edu.vn)</Typography>
-        </Stack>
-        <Stack direction='row' mb={1}>
-          <Typography width='100px' fontWeight={500}>Subject: </Typography>
-          <Typography>SWE101 - Introduce to Software Engineering</Typography>
+          <Typography>{lecturer?.Name} ({lecturer?.Email})</Typography>
         </Stack>
         <Stack direction='row' mb={2}>
           <Typography width='100px' fontWeight={500}>Department: </Typography>
-          <Typography>Software Engineering</Typography>
+          <Typography>{lecturer?.DepartmentName}</Typography>
+        </Stack>
+        <Stack direction='row' mb={1}>
+          <Typography width='100px' fontWeight={500}>Subject: </Typography>
+          <Typography>{subjectId} - {subject?.SubjectName}</Typography>
         </Stack>
         <Stack alignItems='center' gap={1}>
-          <StyledRating size='large'
-            icon={<Favorite fontSize="inherit" />}
-            emptyIcon={<FavoriteBorder fontSize="inherit" />}
-            value={value}
-            onChange={(e, newValue) => {if(newValue) setValue(newValue)}}
-          />
+          <FormControl margin='normal'>
+            <RadioGroup
+              value={value}
+              onChange={handleChangeValue}
+            >
+              <Stack direction='row' alignItems='center'>
+                <Tooltip title='Dislike' placement='bottom'>
+                  <IconButton onClick={handleDislike}>
+                    <SentimentDissatisfiedOutlined sx={{ color: red[500], fontSize: '30px' }} />
+                  </IconButton>
+                </Tooltip>
+                <FormControlLabel value='1' control={<Radio color='error' />} label="1" labelPlacement='bottom' />
+                <FormControlLabel value='2' control={<Radio color='error' />} label="2" labelPlacement='bottom' />
+                <FormControlLabel value='3' control={<Radio color='success' />} label="3" labelPlacement='bottom' />
+                <FormControlLabel value='4' control={<Radio />} label="4" labelPlacement='bottom' />
+                <FormControlLabel value='5' control={<Radio />} label="5" labelPlacement='bottom' />
+                <Tooltip title='Like' placement='bottom'>
+                  <IconButton onClick={handleLike}>
+                    <SentimentVerySatisfiedOutlined sx={{ color: blue[600], fontSize: '30px' }} />
+                  </IconButton>
+                </Tooltip>
+              </Stack>
+            </RadioGroup>
+          </FormControl>
           <Typography>{value} point</Typography>
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button onClick={() => setIsFeedback(false)} color='info'>Cancel</Button>
-        <Button variant='contained' onClick={() => setIsFeedback(false)} autoFocus>
-          Save
-        </Button>
+      {isLoading &&
+          <ClipLoader size={30} color={blue[600]} />
+        }
+        {!isLoading && !isSuccess &&
+          <>
+            {error &&
+              <Alert severity="error" sx={{mr: 2}}>{error}</Alert>
+            }
+            <Button onClick={() => setIsFeedback(false)} color='info' variant='outlined'>Cancel</Button>
+            <Button variant='contained' onClick={handleSave} autoFocus
+              disabled={value === subject?.FeedbackPoint || error.length > 0}>
+              Save
+            </Button>
+          </>
+        }
+        {!isLoading && isSuccess &&
+          <Alert icon={<Check fontSize="inherit" />} severity="success">
+            Save Successfully!
+          </Alert>
+        }
       </DialogActions>
     </Dialog>
   )

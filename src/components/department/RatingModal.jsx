@@ -34,13 +34,13 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
     if (subjectFavorite) {
       if (value === 5) {
         const pointfive = favoriteSubjects.filter(item => item.FavoritePoint === 5)
-        if (pointfive.length === configData.POINT_FIVE_NUMBER) {
+        if (pointfive.length >= configData.POINT_FIVE_NUMBER) {
           return;
         }
       }
       if (value === 1) {
         const pointone = favoriteSubjects.filter(item => item.FavoritePoint === 1)
-        if (pointone.length === configData.POINT_ONE_NUMBER) {
+        if (pointone.length >= configData.POINT_ONE_NUMBER) {
           return;
         }
       }
@@ -102,7 +102,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
     if (point === 5) {
       const pointfive = favoriteSubjects.filter(item => item.FavoritePoint === 5)
       const pointfiveExpect = pointfive.filter(item => item.SubjectId !== subjectId)
-      if (pointfiveExpect.length === configData.POINT_FIVE_NUMBER) {
+      if (pointfiveExpect.length >= configData.POINT_FIVE_NUMBER) {
         setError(`You already have ${configData.POINT_FIVE_NUMBER} subjects at point 5`);
         return;
       }
@@ -110,7 +110,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
     if (point === 1) {
       const pointone = favoriteSubjects.filter(item => item.FavoritePoint === 1)
       const pointoneExpect = pointone.filter(item => item.SubjectId !== subjectId)
-      if (pointoneExpect.length === configData.POINT_ONE_NUMBER) {
+      if (pointoneExpect.length >= configData.POINT_ONE_NUMBER) {
         setError(`You already have ${configData.POINT_ONE_NUMBER} subjects at point 1`);
         return;
       }
@@ -122,7 +122,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
     setValue(5);
     const pointfive = favoriteSubjects.filter(item => item.FavoritePoint === 5)
     const pointfiveExpect = pointfive.filter(item => item.SubjectId !== subjectId)
-    if (pointfiveExpect.length === configData.POINT_FIVE_NUMBER) {
+    if (pointfiveExpect.length >= configData.POINT_FIVE_NUMBER) {
       setError(`You already have ${configData.POINT_FIVE_NUMBER} subjects at point 5`);
     }
   }
@@ -132,7 +132,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
     setValue(1);
     const pointone = favoriteSubjects.filter(item => item.FavoritePoint === 1)
     const pointoneExpect = pointone.filter(item => item.SubjectId !== subjectId)
-    if (pointoneExpect.length === configData.POINT_ONE_NUMBER) {
+    if (pointoneExpect.length >= configData.POINT_ONE_NUMBER) {
       setError(`You already have ${configData.POINT_ONE_NUMBER} subjects at point 1`);
     }
   }

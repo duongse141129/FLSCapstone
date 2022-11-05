@@ -1,14 +1,29 @@
 import { ArrowBackIosNew } from '@mui/icons-material'
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { green, grey } from '@mui/material/colors';
-import React, { useState } from 'react'
+import React, { useState, useEffect  } from 'react'
 import LecturerContainer from './LecturerContainer';
 import CourseList from './CourseList';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+import request from '../../../utils/request';
 
 const SemesterDetailManager = () => {
-  const [selected, setSelected] = useState('lecturers');
+  const {id} = useParams();
   const navigate = useNavigate();
+  const [selected, setSelected] = useState('lecturers');
+  const [semester, setSemester] = useState({});
+
+  useEffect(() => {
+    request.get(`Semester/${id}`)
+    .then(res => {
+      if(res.data){
+        setSemester(res.data);
+      }
+    })
+    .catch(err => {
+      alert('Fail to load semester')
+    })
+  }, [id])
 
   const backToSemesters = () => {
     navigate('/manager/semester')
@@ -24,12 +39,12 @@ const SemesterDetailManager = () => {
             <ArrowBackIosNew />
           </IconButton>
         </Tooltip>
-        <Typography variant='h5' fontWeight={500}>Semester: </Typography>
+        <Typography variant='h5' fontWeight={500}>Semester: {semester.Term}</Typography>
       </Stack>
       <Stack direction='row' gap={2} px={9} mb={1}>
-        <Typography>Start: </Typography>
-        <Typography>End: </Typography>
-        <Typography>Status: </Typography>
+        <Typography>Start: {semester.DateStartFormat}</Typography>
+        <Typography>End: {semester.DateEndFormat}</Typography>
+        <Typography>Status: {semester.DateStatus}</Typography>
       </Stack>
       <Stack px={9} >
         <Stack direction='row' gap={4} borderBottom='1px solid #e3e3e3'>
@@ -46,7 +61,7 @@ const SemesterDetailManager = () => {
           </Typography>
         </Stack>
       </Stack>
-      {selected === 'lecturers' && <LecturerContainer />}
+      {selected === 'lecturers' && <LecturerContainer semester={semester}/>}
       {selected === 'courses' && <CourseList />}
     </Stack>
   )
