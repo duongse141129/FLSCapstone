@@ -40,11 +40,11 @@ const LecturerContainer = ({admin, semester}) => {
 
   return (
     <>
-      <Stack px={9} direction='row' mb={5} mt={2}>
+      <Stack px={9} direction='row' mb={4} mt={2}>
         <Typography width={120} border='1px solid gray' textAlign='center' bgcolor={selected === 'view' &&'#e3e3e3'}
           color={selected === 'view' ? green[600] : grey[600]} onClick={() => setSelected('view')} 
           sx={{'&:hover': {cursor: 'pointer', bgcolor: '#e3e3e3'}}}>
-          List All
+          Select Lecturer
         </Typography>
         <Typography width={120} border='1px solid gray' borderLeft='none' textAlign='center'
           color={selected === 'schedule' ? 'white' : grey[600]} bgcolor={selected === 'schedule' && 'success.main'}
@@ -79,11 +79,11 @@ const LecturerContainer = ({admin, semester}) => {
       {selected === 'view' && 
         <LecturerList handleSelect={handleSelect} selectedId={lecturerId} admin={admin}/>
       }
-      {selected === 'assign' && <AssignmentList id={lecturerId} admin={admin}/>}
-      {selected === 'priority' && <PriorityList id={lecturerId} admin={admin}/>}
+      {selected === 'assign' && <AssignmentList lecturerId={lecturerId} semester={semester} admin={admin}/>}
+      {selected === 'priority' && <PriorityList id={lecturerId} semester={semester} admin={admin}/>}
       {selected === 'feedback' && <FeedbackSelection id={lecturerId} semester={semester} admin={admin}/>}
       {selected === 'schedule' && <ScheduleAdmin id={lecturerId} semester={semester}/>}
-      {selected === 'slot' &&  <SlotManage/>}
+      {selected === 'slot' &&  <SlotManage lecturerId={lecturerId} semester={semester}/>}
     </>
   )
 }

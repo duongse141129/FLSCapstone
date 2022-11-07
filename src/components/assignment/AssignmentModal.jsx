@@ -1,28 +1,116 @@
 import {
   Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
   Stack, TextField, Typography
-}
-  from '@mui/material';
+} from '@mui/material';
 import { Assignment } from '@mui/icons-material';
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { green, grey, blueGrey, red } from '@mui/material/colors';
-import { subjects, courses } from '../../utils/sampleData';
-import { slotTime } from '../../utils/favoriteSlot';
+import request from '../../utils/request';
 
-const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
+const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, fixCourses, allFixCourses, scheduleId }) => {
+  const account = JSON.parse(localStorage.getItem('web-user'));
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedSlot, setSelectedSlot] = useState({});
-  const [listSubject, setListSubject] = useState(subjects);
+  const [listSubject, setListSubject] = useState([]);
+  const [assignCourses, setAssignCourses] = useState([]);
+  const [slots, setSlots] = useState([]);
   const [searchValue, setSearchValue] = useState('');
+  const [reload, setReload] = useState(false);
+  const [courseTime, setCourseTime] = useState([]);
+
+  useEffect(() => {
+    const getSubjects = async () => {
+      try {
+        const response = await request.get('Subject', {
+          params: {
+            DepartmentId: account.DepartmentId,
+            pageIndex: 1,
+            pageSize: 1000
+          }
+        })
+        if (response.data) {
+          setListSubject(response.data)
+        }
+      }
+      catch (error) {
+        alert('Fail to load subjects!');
+      }
+    }
+    getSubjects();
+  }, [account.DepartmentId, reload])
+
+  useEffect(() => {
+    if (selectedSubject) {
+      request.get('Course', {
+        params: {
+          SubjectId: selectedSubject,
+          SemesterId: semesterId,
+          pageIndex: 1,
+          pageSize: 500
+        }
+      })
+        .then(res => {
+          if (res.data) {
+            let dataCourse = res.data
+            let time = [];
+            for (let i in allFixCourses) {
+              const obj = allFixCourses[i]
+              dataCourse = dataCourse.filter(data => data.Id !== obj.CourseId)
+
+              const classId = allFixCourses[i]?.CourseId?.split('_')[1];
+              if(classId === selectedCourse.split('_')[1]){
+                time.push(obj.SlotTypeId);
+              }
+            }
+            setAssignCourses(dataCourse)
+            setCourseTime(time)
+          }
+        })
+        .catch(err => {
+          alert('Fail to load course by subject')
+        })
+    }
+  }, [selectedSubject, semesterId, allFixCourses, selectedCourse])
+
+  useEffect(() => {
+    request.get('SlotType', {
+      params: {
+        SemesterId: semesterId,
+        sortBy: 'Id',
+        order: 'Asc',
+        pageIndex: 1,
+        pageSize: 100,
+      }
+    })
+      .then(res => {
+        if (res.status === 200) {
+          let dataSlot = res.data;
+          for (let i in fixCourses) {
+            dataSlot = dataSlot.filter(data => data.Id !== fixCourses[i].SlotTypeId)
+          }
+          if(courseTime.length > 0){
+            for(let i in courseTime){
+              dataSlot = dataSlot.filter(data => data.Id !== courseTime[i])
+            }
+          }
+          setSlots(dataSlot)
+        }
+      })
+      .catch(err => {
+        alert('Fail to load slot!')
+      })
+  }, [semesterId, fixCourses, allFixCourses, courseTime])
 
   const selectSubject = (subjectID) => {
     setSelectedSubject(subjectID);
     setSelectedCourse('');
+    setSelectedSlot({})
   }
 
   const selectCourse = (course) => {
     setSelectedCourse(course);
+    setSelectedSlot({});
   }
 
   const selectSlot = (slot) => {
@@ -32,12 +120,33 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
   const handleSearch = (value) => {
     setSearchValue(value);
     if (value) {
-      setListSubject(subjects.filter(subject => subject.id.toLowerCase().includes(value.toLowerCase()) ||
-        subject.name.toLowerCase().includes(value.toLowerCase())))
+      setListSubject(listSubject.filter(subject => subject.Id.toLowerCase().includes(value.toLowerCase()) ||
+        subject.SubjectName.toLowerCase().includes(value.toLowerCase())))
     }
     else {
-      setListSubject(subjects)
+      setReload(!reload)
     }
+  }
+
+  const handleSave = () => {
+    request.post('CourseAssign', {
+      LecturerId: lecturer.Id,
+      CourseId: selectedCourse,
+      SlotTypeId: selectedSlot.Id,
+      ScheduleId: scheduleId,
+      isAssign: 1
+    })
+    .then(res => {
+      if(res.status === 201){
+        setIsAssign(false);
+        setSelectedSubject('');
+        setSelectedCourse('');
+        setSelectedSlot({});
+      }
+    })
+    .catch(err => {
+      alert('Fail to save!')
+    })
   }
 
   return (
@@ -55,16 +164,16 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
       </DialogTitle>
       <DialogContent>
         {
-          selectedSubject && selectedCourse &&
+          selectedSubject && selectedCourse && Object.values(selectedSlot).length > 0 &&
           <Typography variant='subtitle1' color={green[500]}>*Ready to save</Typography>
         }
         {
-          (!selectedSubject || !selectedCourse) &&
+          (!selectedSubject || !selectedCourse || Object.values(selectedSlot).length === 0) &&
           <Typography variant='subtitle1' color={grey[500]}>*Choose subject then choose course and slot type</Typography>
         }
         <Stack direction='row' mb={1} gap={1}>
           <Typography fontWeight={500}>Lecturer: </Typography>
-          <Typography>{lecturer.name}</Typography>
+          <Typography>{lecturer.Name} - {lecturer.Email}</Typography>
         </Stack>
         <Stack direction='row' gap={4} mb={1}>
           <Stack direction='row' gap={1}>
@@ -76,10 +185,10 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
             <Typography>{selectedCourse || <span style={{ color: red[600] }}>required</span>}</Typography>
           </Stack>
           <Stack direction='row' gap={1}>
-            <Typography fontWeight={500}>Slot:</Typography>
+            <Typography fontWeight={500}>Slot<span style={{ color: red[500] }}>*</span>:</Typography>
             <Typography>
-              {selectedSlot?.id ? `${selectedSlot.range} (${selectedSlot.day})` :
-                <span style={{ color: grey[500] }}>optional</span>}
+              {selectedSlot?.Id ? `${selectedSlot.Duration} (${selectedSlot.ConvertDateOfWeek})` :
+                <span style={{ color: red[600] }}>required</span>}
             </Typography>
           </Stack>
         </Stack>
@@ -93,8 +202,8 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
             <Box flex={9} border='1px solid gray' overflow='auto'>
               {
                 listSubject.map(subject => (
-                  <Typography key={subject.id} p={1} fontSize='15px'
-                    borderBottom='1px solid #e3e3e3' bgcolor={subject.id === selectedSubject && blueGrey[200]}
+                  <Typography key={subject.Id} p={1} fontSize='15px'
+                    borderBottom='1px solid #e3e3e3' bgcolor={subject.Id === selectedSubject && blueGrey[200]}
                     sx={{
                       transition: 'all 0.1s linear',
                       '&:hover': {
@@ -102,9 +211,9 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
                         bgcolor: blueGrey[200]
                       }
                     }}
-                    onClick={() => selectSubject(subject.id)}
+                    onClick={() => selectSubject(subject.Id)}
                   >
-                    <span style={{ fontWeight: 500 }}>{subject.id}</span> - {subject.name}
+                    <span style={{ fontWeight: 500 }}>{subject.Id}</span> - {subject.SubjectName}
                   </Typography>
                 ))
               }
@@ -115,9 +224,9 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
             <Box flex={9} border='1px solid gray' overflow='auto'>
               {
                 selectedSubject &&
-                courses.map(course => (
-                  <Typography key={course} p={1} fontSize='15px'
-                    borderBottom='1px solid #e3e3e3' bgcolor={selectedCourse === course && blueGrey[200]}
+                assignCourses.map(course => (
+                  <Typography key={course.Id} p={1} fontSize='15px'
+                    borderBottom='1px solid #e3e3e3' bgcolor={selectedCourse === course.Id && blueGrey[200]}
                     sx={{
                       transition: 'all 0.1s linear',
                       '&:hover': {
@@ -125,9 +234,9 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
                         bgcolor: blueGrey[200]
                       }
                     }}
-                    onClick={() => selectCourse(course)}
+                    onClick={() => selectCourse(course.Id)}
                   >
-                    {course}
+                    {course.Id}
                   </Typography>
                 ))
               }
@@ -136,9 +245,10 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
           <Stack flex={1} >
             <Stack flex={1} mb={1} fontWeight={500} justifyContent='center'>Slot Type</Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
-              {
-                slotTime.map(slot => (
-                  <Typography key={slot.id} p={1} fontSize='15px' bgcolor={selectedSlot === slot && blueGrey[200]}
+              {selectedSubject && selectedCourse &&
+                slots.map(slot => (
+                  <Typography key={slot.Id} p={1} fontSize='15px'
+                    bgcolor={JSON.stringify(selectedSlot) === JSON.stringify(slot) && blueGrey[200]}
                     borderBottom='1px solid #e3e3e3'
                     sx={{
                       transition: 'all 0.1s linear',
@@ -149,7 +259,7 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
                     }}
                     onClick={() => selectSlot(slot)}
                   >
-                    {slot.range} ({slot.day})
+                    {slot.Duration} ({slot.ConvertDateOfWeek})
                   </Typography>
                 ))
               }
@@ -159,8 +269,8 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setIsAssign(false)} color='info'>Cancel</Button>
-        <Button variant='contained' onClick={() => setIsAssign(false)} autoFocus
-          color='secondary' disabled={(!selectedSubject || !selectedCourse) && true}>
+        <Button variant='contained' onClick={handleSave} autoFocus color='secondary'
+          disabled={(!selectedSubject || !selectedCourse || Object.values(selectedSlot).length === 0) && true}>
           Save
         </Button>
       </DialogActions>

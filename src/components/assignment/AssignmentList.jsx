@@ -3,19 +3,103 @@ import {
   Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
   Tooltip, Typography
 } from '@mui/material'
-import { blueGrey } from '@mui/material/colors';
-import React from 'react';
-import { useState } from 'react';
-import { lecturers, priorityCourses } from '../../utils/sampleData';
+import { blueGrey, red } from '@mui/material/colors';
+import { useEffect, useState } from 'react';
+import request from '../../utils/request';
 import DeleteModal from '../priority/DeleteModal';
 import AssignmentModal from './AssignmentModal';
 
-const AssignmentList = ({ id, admin }) => {
-  const lecturer = id ? lecturers.find(each => each.id === id) : lecturers[0];
+const AssignmentList = ({ lecturerId, semester, admin }) => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isAssign, setIsAssign] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
+  const [lecturer, setLecturer] = useState({});
+  const [scheduleId, setScheduleId] = useState('');
+  const [fixCourses, setFixCourses] = useState([]);
+  const [allFixCourses, setAllFixCourses] = useState([]);
+
+  useEffect(() => {
+    request.get(`User/${lecturerId}`)
+      .then(res => {
+        if (res.data) {
+          setLecturer(res.data)
+        }
+      })
+      .catch(err => {
+        alert('Fail to load lecturer in assignment!')
+      })
+  }, [lecturerId])
+
+  useEffect(() => {
+    const getAssignCourse = async() => {
+      if(lecturerId && semester.Id){
+        try{
+          const resSchedule = await request.get('Schedule', {
+            params: {
+              SemesterId: semester.Id,
+              pageIndex: 1,
+              pageSize: 1
+            }
+          })
+          if(resSchedule.data.length > 0){
+            const scheduleId = resSchedule.data[0].Id;
+            setScheduleId(scheduleId);
+            const resAssignCourse =  await request.get('CourseAssign', {
+              params: {
+                LecturerId: lecturerId,
+                ScheduleId: scheduleId,
+                isAssign: 1,
+                pageIndex: 1,
+                pageSize: 50
+              }
+            })
+            if(resAssignCourse.data){
+              setFixCourses(resAssignCourse.data)
+            }
+          }
+        }
+        catch(err){
+          alert('Fail to load courseAssign!')
+        }
+      }
+    }
+    getAssignCourse();
+  }, [semester.Id, lecturerId, isAssign])
+
+  useEffect(() => {
+    const getAssignCourse = async() => {
+      if(semester.Id){
+        try{
+          const resSchedule = await request.get('Schedule', {
+            params: {
+              SemesterId: semester.Id,
+              pageIndex: 1,
+              pageSize: 1
+            }
+          })
+          if(resSchedule.data.length > 0){
+            const scheduleId = resSchedule.data[0].Id;
+            const resAssignCourse =  await request.get('CourseAssign', {
+              params: {
+                ScheduleId: scheduleId,
+                isAssign: 1,
+                pageIndex: 1,
+                pageSize: 50
+              }
+            })
+            if(resAssignCourse.data){
+              setAllFixCourses(resAssignCourse.data)
+            }
+          }
+        }
+        catch(err){
+          alert('Fail to load courseAssign!')
+        }
+      }
+    }
+    getAssignCourse();
+  }, [semester.Id, isAssign])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -31,18 +115,18 @@ const AssignmentList = ({ id, admin }) => {
       <Typography color='gray' px={9} variant='subtitle1' mb={2}>
         *Courses which lecturer is assigned
       </Typography>
-      <Stack direction='row' alignItems='center' px={9} mb={2} gap={1}>
-        <Typography width='300px'>
+      <Stack direction='row' alignItems='center' px={9} mb={2} gap={4}>
+        <Typography>
           <span style={{ fontWeight: 500 }}>Lecturer: </span>
-          <span>{lecturer.name}</span>
+          <span>{lecturer.Name}</span>
         </Typography>
-        <Typography width='300px'>
+        <Typography>
           <span style={{ fontWeight: 500 }}>Department: </span>
-          <span>Software Engineering</span>
+          <span>{lecturer.DepartmentName}</span>
         </Typography>
-        <Typography width='300px'>
+        <Typography>
           <span style={{ fontWeight: 500 }}>Email: </span>
-          <span>{lecturer.email}</span>
+          <span>{lecturer.Email}</span>
         </Typography>
       </Stack>
       <Stack direction='row' alignItems='center' px={9} mb={1} justifyContent='space-between'>
@@ -52,6 +136,8 @@ const AssignmentList = ({ id, admin }) => {
           Assign
         </Button>}
       </Stack>
+      {fixCourses.length === 0 && 
+        <Typography color={red[600]} px={9}>No courses have been assigned</Typography>}
       <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}
@@ -60,13 +146,13 @@ const AssignmentList = ({ id, admin }) => {
               <TableHead>
                 <TableRow sx={{ bgcolor: blueGrey[600] }}>
                   <TableCell size='small'>
-                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Subject</Typography>
-                  </TableCell>
-                  <TableCell size='small'>
                     <Typography sx={{ fontWeight: 500, color: 'white' }}>Course</Typography>
                   </TableCell>
                   <TableCell size='small'>
-                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Slot Type</Typography>
+                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Subject</Typography>
+                  </TableCell>
+                  <TableCell size='small'>
+                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Slot</Typography>
                   </TableCell>
                   {!admin && <TableCell size='small'>
                     <Typography sx={{ fontWeight: 500, color: 'white' }}>Option</Typography>
@@ -75,12 +161,11 @@ const AssignmentList = ({ id, admin }) => {
               </TableHead>
               <TableBody>
                 {
-                  priorityCourses.map(course => (
-                    <TableRow hover key={course.course}>
-                      <TableCell size='small'>
-                        <span style={{ fontWeight: 500 }}>{course.subjectCode}</span> - {course.subjectName}</TableCell>
-                      <TableCell size='small'>{course.course}</TableCell>
-                      <TableCell size='small'>{course.slot}</TableCell>
+                  fixCourses.map(course => (
+                    <TableRow hover key={course.CourseId}>
+                      <TableCell size='small'>{course.CourseId}</TableCell>
+                      <TableCell size='small'></TableCell>
+                      <TableCell size='small'>{course.SlotTypeId}</TableCell>
                       {!admin && <TableCell size='small'>
                         <Tooltip title='Delete' placement='right' arrow>
                           <IconButton size='small' color='error'
@@ -98,7 +183,7 @@ const AssignmentList = ({ id, admin }) => {
           <TablePagination
             rowsPerPageOptions={[5, 10]}
             component='div'
-            count={100}
+            count={fixCourses.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -111,7 +196,8 @@ const AssignmentList = ({ id, admin }) => {
           />
         </Paper>
       </Stack>
-      <AssignmentModal isAssign={isAssign} setIsAssign={setIsAssign} lecturer={lecturer} />
+      <AssignmentModal isAssign={isAssign} setIsAssign={setIsAssign} lecturer={lecturer} 
+        semesterId={semester.Id} fixCourses={fixCourses} allFixCourses={allFixCourses} scheduleId={scheduleId}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} />
     </Stack>
   )

@@ -1,7 +1,19 @@
-import React from 'react';
 import { Button, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
+import { ClipLoader } from 'react-spinners';
+import { useState, useEffect } from 'react';
 
-const DeleteModal = ({isDelete, setIsDelete}) => {
+const DeleteModal = ({isDelete, setIsDelete, saveDelete}) => {
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    setLoading(false);
+  }, [isDelete])
+
+  const clickDelete = () => {
+    setLoading(true);
+    saveDelete();
+  }
+
   return (
     <Dialog
       open={isDelete}
@@ -14,9 +26,12 @@ const DeleteModal = ({isDelete, setIsDelete}) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setIsDelete(false)} color='info' variant='outlined'>Cancel</Button>
-        <Button color='error' variant='contained' onClick={() => setIsDelete(false)} autoFocus>
+        {loading && <Button color='error' variant='contained'>
+          <ClipLoader size={24} color='white'/>  
+        </Button>}
+        {!loading && <Button color='error' variant='contained' onClick={clickDelete} autoFocus>
           Delete
-        </Button>
+        </Button>}
       </DialogActions>
     </Dialog>
   )
