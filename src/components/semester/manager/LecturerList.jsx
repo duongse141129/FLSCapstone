@@ -1,7 +1,7 @@
 import { RadioButtonUnchecked, Beenhere, CheckCircleOutline, ManageAccountsOutlined, Check } from '@mui/icons-material'
 import { Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
 import { green, grey } from '@mui/material/colors';
-import React, { useState,useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import request from '../../../utils/request';
 
 const LecturerList = ({ handleSelect, selectedId, admin }) => {
@@ -15,16 +15,28 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
   useEffect(() => {
     const getDepartments = async () => {
       try {
-        const response = await request.get(`Department/${account.DepartmentId}`);
-        const departmentList = await request.get('Department', {
-          params: {
-            DepartmentGroupId: response.data.DepartmentGroupId,
-            pageIndex: 1,
-            pageSize: 1000
+        if (admin) {
+          const departmentList = await request.get('Department', {
+            params: {
+              sortBy: 'Id', order: 'Asc', pageIndex: 1, pageSize: 1000
+            }
+          })
+          if (departmentList.data) {
+            setDepartments(departmentList.data)
+            setSelectedDepartment(departmentList.data[0]?.Id)
           }
-        })
-        if (departmentList.data) {
-          setDepartments(departmentList.data)
+        }
+        else {
+          const response = await request.get(`Department/${account.DepartmentId}`);
+          const departmentList = await request.get('Department', {
+            params: {
+              DepartmentGroupId: response.data.DepartmentGroupId,
+              sortBy: 'Id', order: 'Asc', pageIndex: 1, pageSize: 1000
+            }
+          })
+          if (departmentList.data) {
+            setDepartments(departmentList.data)
+          }
         }
       }
       catch (error) {
@@ -32,7 +44,7 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
       }
     }
     getDepartments();
-  }, [account.DepartmentId])
+  }, [account.DepartmentId, admin])
 
   useEffect(() => {
     request.get('User', {
@@ -45,18 +57,18 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
         pageSize: 500
       }
     })
-    .then(res => {
-      if(res.data){
-        setlecturers(res.data)
-      }
-    })
-    .catch(err => {
-      alert('Fail to load lecturers');
-    })
+      .then(res => {
+        if (res.data) {
+          setlecturers(res.data)
+        }
+      })
+      .catch(err => {
+        alert('Fail to load lecturers');
+      })
   }, [selectedDepartment])
 
   useEffect(() => {
-    if(lecturers.length > 0){
+    if (lecturers.length > 0) {
       setRowsPerPage(lecturers.length)
     }
   }, [lecturers])
@@ -79,7 +91,7 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
   }
 
   const myDepartment = () => {
-    if (selectedDepartment !== account.DepartmentId){
+    if (selectedDepartment !== account.DepartmentId) {
       setSelectedDepartment(account.DepartmentId)
       setPage(0);
     }
@@ -142,7 +154,7 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
                             <Typography fontSize='14px'>{lecturer.Name}</Typography>
                             {lecturer.RoleIDs && lecturer.RoleIDs.includes('DMA') &&
                               <Tooltip title='Department Manager'>
-                                <ManageAccountsOutlined/>
+                                <ManageAccountsOutlined />
                               </Tooltip>
                             }
                           </Stack>
@@ -150,16 +162,16 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
                         <TableCell size='small'>{lecturer.Email}</TableCell>
                         <TableCell size='small'>{lecturer.DepartmentName}</TableCell>
                         <TableCell size='small'>
-                          {lecturer.IsFullTime === 1 && 
-                            <Check/>}
+                          {lecturer.IsFullTime === 1 &&
+                            <Check />}
                         </TableCell>
                         <TableCell size='small'>
                           <Tooltip title='Select' placement='right'>
-                            <IconButton color={selectedId === lecturer.Id ? 'success' : 'info'} 
+                            <IconButton color={selectedId === lecturer.Id ? 'success' : 'info'}
                               onClick={() => handlePick(lecturer.Id)}>
                               {
                                 selectedId === lecturer.Id ? <CheckCircleOutline /> :
-                                <RadioButtonUnchecked/>
+                                  <RadioButtonUnchecked />
                               }
                             </IconButton>
                           </Tooltip>

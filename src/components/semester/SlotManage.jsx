@@ -6,7 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import request from '../../utils/request'
 import configData from '../../utils/configData.json';
 
-const SlotManage = ({ lecturerId, semester }) => {
+const SlotManage = ({ lecturerId, semester, admin }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [lecturer, setLecturer] = useState({});
   const [slots, setSlots] = useState([]);
@@ -173,23 +173,23 @@ const SlotManage = ({ lecturerId, semester }) => {
         <Typography><span style={{fontWeight: 500}}>Department:</span> {lecturer.DepartmentName}</Typography>
         <Typography><span style={{fontWeight: 500}}>Email:</span> {lecturer.Email}</Typography>
       </Stack>
-      {lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
+      {!admin && lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
         <Stack px={9}>
           <Alert severity="error">Can not ban slot to lecturer outside my department</Alert>
         </Stack>
       }
-      { lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId &&
+      { ((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) &&
         <><Stack direction='row' justifyContent='space-between' px={9} mb={1} alignItems='center'>
           <Stack direction='row' alignItems='center' gap={2}>
             <Typography color={red[600]}>Ban turn: {bans.length}/{configData.BAN_TURN}</Typography>
             <Typography color={grey[500]} variant='subtitle1'>(*Re-ban to ban new one)</Typography>
           </Stack>
-          <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
+          {!admin && <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
             <Switch checked={edit} onChange={() => setEdit(!edit)} />
             <Typography pr={2}>
               {edit ? <span style={{ color: blue[600] }}>Ban On</span> : 'Ban Off'}
             </Typography>
-          </Stack>
+          </Stack>}
         </Stack>
           <Stack px={9} mb={2}>
             <Paper sx={{ minWidth: 700, mb: 2 }}>

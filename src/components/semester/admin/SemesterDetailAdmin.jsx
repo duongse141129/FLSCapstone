@@ -1,8 +1,9 @@
 import { ArrowBackIosNew } from '@mui/icons-material'
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { green, grey } from '@mui/material/colors'
-import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { useNavigate, useParams } from 'react-router-dom'
+import request from '../../../utils/request'
 import Title from '../../title/Title'
 import LecturerContainer from '../manager/LecturerContainer'
 import CourseList from './CourseList'
@@ -10,7 +11,21 @@ import SlotType from './SlotType'
 
 const SemesterDetailAdmin = () => {
   const navigate = useNavigate();
+  const {id} = useParams();
   const [selected, setSelected] = useState('courses')
+  const [semester, setSemester] = useState({});
+
+  useEffect(() => {
+    request.get(`Semester/${id}`)
+    .then(res => {
+      if(res.data){
+        setSemester(res.data);
+      }
+    })
+    .catch(err => {
+      alert('Fail to load semester')
+    })
+  }, [id])
 
   const backToSemester = () => {
     navigate('/admin/semester')
@@ -24,12 +39,12 @@ const SemesterDetailAdmin = () => {
             <ArrowBackIosNew />
           </IconButton>
         </Tooltip>
-        <Title title='Semester Detail: Fall 2022' />
+        <Title title={`Semester: ${semester.Term}`} />
       </Stack>
-      <Stack px={9} direction='row' gap={8} mb={4}>
-        <Typography>Start: </Typography>
-        <Typography>End: </Typography>
-        <Typography>Status: </Typography>
+      <Stack px={9} direction='row' gap={4} mb={4}>
+        <Typography>Start: {semester.DateStartFormat}</Typography>
+        <Typography>End: {semester.DateEndFormat}</Typography>
+        <Typography>Status: {semester.DateStatus}</Typography>
       </Stack>
       <Stack px={9} >
         <Stack direction='row' gap={6} borderBottom='1px solid #e3e3e3'>
@@ -53,8 +68,8 @@ const SemesterDetailAdmin = () => {
         </Stack>
       </Stack>
       {selected === 'courses' && <CourseList/>}
-      {selected === 'slot' && <SlotType/>}
-      {selected === 'lecturers' && <LecturerContainer admin={true}/>}
+      {selected === 'slot' && <SlotType semesterId={id}/>}
+      {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true}/>}
     </Stack>
   )
 }

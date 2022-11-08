@@ -127,12 +127,12 @@ const FeedbackSelection = ({ id, semester, admin }) => {
           <span>{lecturer.Email}</span>
         </Typography>
       </Stack>
-      {lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
+      {!admin && lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
         <Stack px={9}>
           <Alert severity="error">Can not give feedback point to lecturer outside my department</Alert>
         </Stack>
       }
-      {lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId &&
+      {((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) &&
         <><Stack px={9} mb={1} direction='row' gap={4}>
           <Typography color={red[700]}>
             Subjects at point 1: {pointOne}/{configData.POINT_ONE_NUMBER}

@@ -17,21 +17,21 @@ const LecturerContainer = ({admin, semester}) => {
   useEffect(() => {
     request.get('User', {
       params: {
-        DepartmentId: account.DepartmentId,
-        RoleIDs: 'LC',
+        DepartmentId: admin ? '' : account.DepartmentId,
+        RoleIDs: 'LC', sortBy: 'DepartmentId', order: 'Asc',
         pageIndex: 1,
         pageSize: 500
       }
     })
     .then(res => {
       if(res.data){
-        setLecturerId(res.data[0].Id)
+        setLecturerId(res.data[0]?.Id)
       }
     })
     .catch(err => {
       alert('Fail to load lecturers');
     })
-  }, [account.DepartmentId])
+  }, [account.DepartmentId, admin])
 
   const handleSelect = (id) => {
     setSelected('schedule')
@@ -83,7 +83,7 @@ const LecturerContainer = ({admin, semester}) => {
       {selected === 'priority' && <PriorityList id={lecturerId} semester={semester} admin={admin}/>}
       {selected === 'feedback' && <FeedbackSelection id={lecturerId} semester={semester} admin={admin}/>}
       {selected === 'schedule' && <ScheduleAdmin id={lecturerId} semester={semester}/>}
-      {selected === 'slot' &&  <SlotManage lecturerId={lecturerId} semester={semester}/>}
+      {selected === 'slot' &&  <SlotManage lecturerId={lecturerId} semester={semester} admin={admin}/>}
     </>
   )
 }

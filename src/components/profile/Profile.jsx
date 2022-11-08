@@ -101,11 +101,12 @@ const Profile = () => {
             defaultValue={email}
             InputProps={{ readOnly: true }} />
         </Tooltip>
-        <Tooltip title='Can not modify' placement='right' arrow>
-          <TextField label='Department' variant='outlined' color='success' margin='normal' size='small'
-            defaultValue={department}
-            InputProps={{ readOnly: true }} />
-        </Tooltip>
+        {account.RoleIDs.includes('LC') && account.RoleIDs.includes('DMA') &&
+          <Tooltip title='Can not modify' placement='right' arrow>
+            <TextField label='Department' variant='outlined' color='success' margin='normal' size='small'
+              defaultValue={department}
+              InputProps={{ readOnly: true }} />
+          </Tooltip>}
         {account.RoleIDs.includes('LC') &&
           <Tooltip title='Can not modify' placement='right' arrow>
             <TextField label='Lecturer Type' variant='outlined' color='success' margin='normal' size='small'

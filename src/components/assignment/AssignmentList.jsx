@@ -147,7 +147,7 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
       <Typography color='gray' px={9} variant='subtitle1'>
         *Courses which lecturer is assigned
       </Typography>
-      {lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId && 
+      {!admin && lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId && 
       <Stack px={9} mb={2}>
         <Alert severity="warning">This lecturer outside my department</Alert>
       </Stack>}

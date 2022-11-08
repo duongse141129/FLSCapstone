@@ -58,6 +58,7 @@ function App() {
           <Route path="semester/:id" element={<SemesterDetailAdmin/>}/>
           <Route path="schedule" element={<ScheduleManager admin={true}/>}/>
           <Route path='schedule/:id' element={<ScheduleDetail admin={true}/>} />
+          <Route path='profile' element={<Profile/>} />
         </Route>
       </Routes>
     </>
