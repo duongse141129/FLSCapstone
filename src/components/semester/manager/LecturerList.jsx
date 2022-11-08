@@ -8,7 +8,7 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
-  const [selectedDepartment, setSelectedDepartment] = useState('all');
+  const [selectedDepartment, setSelectedDepartment] = useState(account.DepartmentId);
   const [departments, setDepartments] = useState([]);
   const [lecturers, setlecturers] = useState([]);
 
@@ -37,7 +37,7 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
   useEffect(() => {
     request.get('User', {
       params: {
-        DepartmentId: selectedDepartment === 'all' ? '' : selectedDepartment,
+        DepartmentId: selectedDepartment,
         RoleIDs: 'LC',
         sortBy: 'DepartmentId',
         order: 'Asc',
@@ -96,7 +96,6 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
           value={selectedDepartment}
           onChange={handleSelectDepartment}
         >
-          <MenuItem value='all'>All</MenuItem>
           {
             departments.map(department => (
               <MenuItem key={department.Id} value={department.Id}>

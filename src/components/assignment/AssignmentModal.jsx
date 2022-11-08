@@ -53,25 +53,32 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, fixCours
         .then(res => {
           if (res.data) {
             let dataCourse = res.data
-            let time = [];
             for (let i in allFixCourses) {
               const obj = allFixCourses[i]
               dataCourse = dataCourse.filter(data => data.Id !== obj.CourseId)
-
-              const classId = allFixCourses[i]?.CourseId?.split('_')[1];
-              if(classId === selectedCourse.split('_')[1]){
-                time.push(obj.SlotTypeId);
-              }
             }
             setAssignCourses(dataCourse)
-            setCourseTime(time)
           }
         })
         .catch(err => {
           alert('Fail to load course by subject')
         })
     }
-  }, [selectedSubject, semesterId, allFixCourses, selectedCourse])
+  }, [selectedSubject, semesterId, allFixCourses])
+
+  useEffect(() => {
+    if (selectedCourse && allFixCourses.length > 0) {
+      let time = [];
+      for (let i in allFixCourses) {
+        const obj = allFixCourses[i];
+        const classId = obj?.CourseId?.split('_')[1];
+        if (classId === selectedCourse.split('_')[1]) {
+          time.push(obj.SlotTypeId);
+        }
+      }
+      setCourseTime(time)
+    }
+  }, [selectedCourse, allFixCourses])
 
   useEffect(() => {
     request.get('SlotType', {
@@ -89,8 +96,8 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, fixCours
           for (let i in fixCourses) {
             dataSlot = dataSlot.filter(data => data.Id !== fixCourses[i].SlotTypeId)
           }
-          if(courseTime.length > 0){
-            for(let i in courseTime){
+          if (courseTime.length > 0) {
+            for (let i in courseTime) {
               dataSlot = dataSlot.filter(data => data.Id !== courseTime[i])
             }
           }
@@ -136,17 +143,17 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, fixCours
       ScheduleId: scheduleId,
       isAssign: 1
     })
-    .then(res => {
-      if(res.status === 201){
-        setIsAssign(false);
-        setSelectedSubject('');
-        setSelectedCourse('');
-        setSelectedSlot({});
-      }
-    })
-    .catch(err => {
-      alert('Fail to save!')
-    })
+      .then(res => {
+        if (res.status === 201) {
+          setIsAssign(false);
+          setSelectedSubject('');
+          setSelectedCourse('');
+          setSelectedSlot({});
+        }
+      })
+      .catch(err => {
+        alert('Fail to save!')
+      })
   }
 
   return (

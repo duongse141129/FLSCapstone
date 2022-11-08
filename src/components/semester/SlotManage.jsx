@@ -1,5 +1,5 @@
 import { CancelOutlined, ThumbDown, ThumbUp } from '@mui/icons-material'
-import { Box, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Alert, Box, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { blue, grey, indigo, red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
@@ -7,6 +7,7 @@ import request from '../../utils/request'
 import configData from '../../utils/configData.json';
 
 const SlotManage = ({ lecturerId, semester }) => {
+  const account = JSON.parse(localStorage.getItem('web-user'));
   const [lecturer, setLecturer] = useState({});
   const [slots, setSlots] = useState([]);
   const [configSlots, setConfigSlots] = useState([]);
@@ -164,82 +165,88 @@ const SlotManage = ({ lecturerId, semester }) => {
 
   return (
     <Stack height='90vh'>
-      <Stack direction='row' gap={8} px={9} mb={2}>
-        <Typography>Lecturer: {lecturer.Name}</Typography>
-        <Typography>Department: {lecturer.DepartmentName}</Typography>
-        <Typography>Email: {lecturer.Email}</Typography>
+      <Typography color='gray' px={9} variant='subtitle1' mb={1}>
+        *Ban slot to disable teaching that time
+      </Typography>
+      <Stack direction='row' gap={5} px={9} mb={2}>
+        <Typography><span style={{fontWeight: 500}}>Lecturer:</span> {lecturer.Name}</Typography>
+        <Typography><span style={{fontWeight: 500}}>Department:</span> {lecturer.DepartmentName}</Typography>
+        <Typography><span style={{fontWeight: 500}}>Email:</span> {lecturer.Email}</Typography>
       </Stack>
-      <Stack direction='row' justifyContent='space-between' px={9} mb={1} alignItems='center'>
-        <Stack direction='row' alignItems='center' gap={2}>
-          <Typography color={red[600]}>Ban turn: {bans.length}/{configData.BAN_TURN}</Typography>
-          <Typography color={grey[500]} variant='subtitle1'>(*Re-ban to ban new one)</Typography>
+      {lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
+        <Stack px={9}>
+          <Alert severity="error">Can not ban slot to lecturer outside my department</Alert>
         </Stack>
-        <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
-          <Switch
-            checked={edit}
-            onChange={() => setEdit(!edit)}
-          />
-          <Typography pr={2}>
-            {edit ? <span style={{color: blue[600]}}>Ban On</span> : 'Ban Off'}
-          </Typography>
+      }
+      { lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId &&
+        <><Stack direction='row' justifyContent='space-between' px={9} mb={1} alignItems='center'>
+          <Stack direction='row' alignItems='center' gap={2}>
+            <Typography color={red[600]}>Ban turn: {bans.length}/{configData.BAN_TURN}</Typography>
+            <Typography color={grey[500]} variant='subtitle1'>(*Re-ban to ban new one)</Typography>
+          </Stack>
+          <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
+            <Switch checked={edit} onChange={() => setEdit(!edit)} />
+            <Typography pr={2}>
+              {edit ? <span style={{ color: blue[600] }}>Ban On</span> : 'Ban Off'}
+            </Typography>
+          </Stack>
         </Stack>
-      </Stack>
-      <Stack px={9} mb={2}>
-        <Paper sx={{ minWidth: 700, mb: 2 }}>
-          <TableContainer component={Box}>
-            <Table>
-              <TableHead>
-                <TableRow sx={{ bgcolor: indigo[600] }}>
-                  <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                    <Typography>ID</Typography>
-                  </TableCell>
-                  <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                    <Typography>Duration</Typography>
-                  </TableCell>
-                  <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                    <Typography>Day of Week</Typography>
-                  </TableCell>
-                  <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                    <Typography>Rating</Typography>
-                  </TableCell>
-                  <TableCell size='small' align='center' sx={{ color: 'white' }}>
-                    <Typography>Ban Option</Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {slots.map(slot => (
-                  <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: 'pointer' } }} onClick={() => handleBan(slot.Id)}>
-                    <TableCell size='small' align='center' className='manage-slot'>{slot.Id}</TableCell>
-                    <TableCell size='small' align='center' className='manage-slot'>{slot.Duration}</TableCell>
-                    <TableCell size='small' align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>
-                    <TableCell size='small' align='center' className='manage-slot'
-                      sx={{
-                        bgcolor: (likes.find(like => like === slot.Id) || dislikes.find(dislike => dislike === slot.Id))
-                          ? '' : grey[100]
-                      }}
-                    >
-                      {likes.find(like => like === slot.Id) &&
-                        <ThumbUp sx={{ color: blue[600] }} />}
-                      {dislikes.find(dislike => dislike === slot.Id) &&
-                        <ThumbDown sx={{ color: red[600] }} />}
-                    </TableCell>
-                    <TableCell size='small' align='center'
-                      sx={{
-                        bgcolor: disables.find(disable => disable === slot.Id) ? '' :
-                          (disables.length >= configData.BAN_TURN ? grey[100] : '')
-                      }}
-                    >
-                      {disables.find(disable => disable === slot.Id) &&
-                        <CancelOutlined sx={{ color: red[600] }} />}
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-        </Paper>
-      </Stack>
+          <Stack px={9} mb={2}>
+            <Paper sx={{ minWidth: 700, mb: 2 }}>
+              <TableContainer component={Box}>
+                <Table>
+                  <TableHead>
+                    <TableRow sx={{ bgcolor: indigo[600] }}>
+                      <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
+                        <Typography>ID</Typography>
+                      </TableCell>
+                      <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
+                        <Typography>Duration</Typography>
+                      </TableCell>
+                      <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
+                        <Typography>Day of Week</Typography>
+                      </TableCell>
+                      <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
+                        <Typography>Rating</Typography>
+                      </TableCell>
+                      <TableCell size='small' align='center' sx={{ color: 'white' }}>
+                        <Typography>Ban Option</Typography>
+                      </TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {slots.map(slot => (
+                      <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: 'pointer' } }} onClick={() => handleBan(slot.Id)}>
+                        <TableCell size='small' align='center' className='manage-slot'>{slot.Id}</TableCell>
+                        <TableCell size='small' align='center' className='manage-slot'>{slot.Duration}</TableCell>
+                        <TableCell size='small' align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>
+                        <TableCell size='small' align='center' className='manage-slot'
+                          sx={{
+                            bgcolor: (likes.find(like => like === slot.Id) || dislikes.find(dislike => dislike === slot.Id))
+                              ? '' : grey[100]
+                          }}
+                        >
+                          {likes.find(like => like === slot.Id) &&
+                            <ThumbUp sx={{ color: blue[600] }} />}
+                          {dislikes.find(dislike => dislike === slot.Id) &&
+                            <ThumbDown sx={{ color: red[600] }} />}
+                        </TableCell>
+                        <TableCell size='small' align='center'
+                          sx={{
+                            bgcolor: disables.find(disable => disable === slot.Id) ? '' :
+                              (disables.length >= configData.BAN_TURN ? grey[100] : '')
+                          }}
+                        >
+                          {disables.find(disable => disable === slot.Id) &&
+                            <CancelOutlined sx={{ color: red[600] }} />}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Paper>
+          </Stack></>}
       <ToastContainer />
     </Stack>
   )

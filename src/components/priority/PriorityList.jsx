@@ -1,5 +1,6 @@
 import { TryOutlined, DeleteOutline } from '@mui/icons-material';
 import {
+  Alert,
   Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
   Tooltip, Typography
 } from '@mui/material'
@@ -11,6 +12,7 @@ import PriorityModal from './PriorityModal';
 import { ToastContainer, toast } from 'react-toastify';
 
 const PriorityList = ({id, semester, admin}) => {
+  const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isPriority, setIsPriority] = useState(false);
@@ -114,9 +116,13 @@ const PriorityList = ({id, semester, admin}) => {
 
   return (
     <Stack flex={5} height='90vh'>
-      <Typography color='gray' px={9} variant='subtitle1' mb={2}>
+      <Typography color='gray' px={9} variant='subtitle1'>
         *Courses which lecturer is given priority
       </Typography>
+      {lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId && 
+      <Stack px={9} mb={2}>
+        <Alert severity="warning">This lecturer outside my department</Alert>
+      </Stack>}
       <Stack direction='row' alignItems='center' px={9} mb={2} gap={4}>
         <Typography>
           <span style={{ fontWeight: 500 }}>Lecturer: </span>

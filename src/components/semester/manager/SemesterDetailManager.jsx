@@ -62,7 +62,7 @@ const SemesterDetailManager = () => {
         </Stack>
       </Stack>
       {selected === 'lecturers' && <LecturerContainer semester={semester}/>}
-      {selected === 'courses' && <CourseList />}
+      {selected === 'courses' && <CourseList semesterId={id}/>}
     </Stack>
   )
 }

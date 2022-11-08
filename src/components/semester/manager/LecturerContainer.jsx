@@ -40,7 +40,7 @@ const LecturerContainer = ({admin, semester}) => {
 
   return (
     <>
-      <Stack px={9} direction='row' mb={4} mt={2}>
+      <Stack px={9} direction='row' mb={4} mt={2} minWidth={950}>
         <Typography width={120} border='1px solid gray' textAlign='center' bgcolor={selected === 'view' &&'#e3e3e3'}
           color={selected === 'view' ? green[600] : grey[600]} onClick={() => setSelected('view')} 
           sx={{'&:hover': {cursor: 'pointer', bgcolor: '#e3e3e3'}}}>
@@ -68,13 +68,13 @@ const LecturerContainer = ({admin, semester}) => {
           color={selected === 'feedback' ? 'white' : grey[600]} bgcolor={selected === 'feedback' && 'primary.main'}
           sx={{'&:hover': {cursor: 'pointer', color:'white', bgcolor: 'primary.main'}}}
           onClick={() => setSelected('feedback')}>
-          Feedback</Typography>
+          Feedback Point</Typography>
         <Typography width={120} border='1px solid gray' borderLeft='none' textAlign='center'
           color={selected === 'slot' ? 'white' : grey[600]} bgcolor={selected === 'slot' && indigo[600]}
           sx={{'&:hover': {cursor: 'pointer', color:'white', bgcolor: indigo[600]}}}
           onClick={() => setSelected('slot')}  
         >
-          Slot</Typography>
+          Ban Slot</Typography>
       </Stack>
       {selected === 'view' && 
         <LecturerList handleSelect={handleSelect} selectedId={lecturerId} admin={admin}/>

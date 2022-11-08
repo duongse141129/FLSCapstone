@@ -1,5 +1,6 @@
 import { ChatOutlined } from '@mui/icons-material';
 import {
+  Alert,
   Box, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
   Tooltip, Typography
 } from '@mui/material'
@@ -127,7 +128,9 @@ const FeedbackSelection = ({ id, semester, admin }) => {
         </Typography>
       </Stack>
       {lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
-        <Typography px={9} color={red[700]}>Can not give feedback point to lecturer out side my department</Typography>
+        <Stack px={9}>
+          <Alert severity="error">Can not give feedback point to lecturer outside my department</Alert>
+        </Stack>
       }
       {lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId &&
         <><Stack px={9} mb={1} direction='row' gap={4}>
