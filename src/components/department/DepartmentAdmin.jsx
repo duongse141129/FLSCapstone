@@ -2,12 +2,48 @@ import {
   Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead,
   TablePagination, TableRow
 } from '@mui/material';
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import request from '../../utils/request';
 import Title from '../title/Title'
 
 const DepartmentAdmin = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [departments, setDepartments] = useState([]);
+  const [managers, setManagers] = useState([]);
+
+  useEffect(() => {
+    request.get('Department', {
+      params: {
+        sortBy: 'Id',
+        order: 'Asc',
+        pageIndex: 1,
+        pageSize: 1000
+      }
+    })
+      .then(res => {
+        if (res.data) {
+          setDepartments(res.data);
+        }
+      })
+      .catch(err => {
+        alert('Fail to load departments')
+      })
+  }, [])
+
+  useEffect(() => {
+    request.get('User', {
+      params:{RoleIDs: 'DMA',pageIndex: 1, pageSize: 100}
+    })
+    .then(res => {
+      if(res.data){
+        setManagers(res.data)
+      }
+    })
+    .catch(err => {
+      alert('Fail to load managers')
+    })
+  }, [])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -36,25 +72,24 @@ const DepartmentAdmin = () => {
                 </TableRow>
               </TableHead>
               <TableBody>
-                <TableRow>
-                  <TableCell size='small'>SWE</TableCell>
-                  <TableCell size='small'>Software Engineering</TableCell>
-                  <TableCell size='small'>Nguyen Thi Cam Huong (huongntc2)</TableCell>
-                  <TableCell size='small'>SE</TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell size='small'>ITS</TableCell>
-                  <TableCell size='small'>Information Techonology Specialization</TableCell>
-                  <TableCell size='small'>Kieu Trong Khanh (khanhkt)</TableCell>
-                  <TableCell size='small'>SE</TableCell>
-                </TableRow>
+                {departments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(department => (
+                    <TableRow key={department.Id} hover>
+                      <TableCell size='small'>{department.Id}</TableCell>
+                      <TableCell size='small'>{department.DepartmentName}</TableCell>
+                      <TableCell size='small'>
+                        {managers.find(manager => manager.DepartmentId === department.Id)?.Name}
+                      </TableCell>
+                      <TableCell size='small'>{department.DepartmentGroupId}</TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10]}
+            rowsPerPageOptions={[10, 20]}
             component='div'
-            count={100}
+            count={departments.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}

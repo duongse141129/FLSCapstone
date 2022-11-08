@@ -1,13 +1,55 @@
 import { Box, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, 
   TableHead, TablePagination, TableRow, Typography } from '@mui/material'
-import { useState } from 'react';
-import { subjects } from '../../utils/sampleData';
+import { useEffect, useState } from 'react';
+import request from '../../utils/request';
 import Title from '../title/Title'
 
 const SubjectAdmin = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [selectedDepartment, setSelectedDepartment] = useState('swe');
+  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [selectedDepartment, setSelectedDepartment] = useState('');
+  const [departments, setDepartments] = useState([]);
+  const [subjects, setSubjects] = useState([]);
+
+  useEffect(() => {
+    request.get('Department', {
+      params: {
+        sortBy: 'Id',
+        order:'Asc',
+        pageIndex: 1,
+        pageSize: 1000
+      }
+    })
+    .then(res => {
+      if(res.data.length > 0){
+        setDepartments(res.data);
+        setSelectedDepartment(res.data[0].Id)
+      }
+    })
+    .catch(err => {
+      alert('Fail to load departments')
+    })
+  }, [])
+
+  useEffect(() => {
+    if(selectedDepartment){
+      request.get('Subject', {
+        params: {
+          DepartmentId: selectedDepartment,
+          pageIndex: 1,
+          pageSize: 1000
+        }
+      })
+      .then(res => {
+        if(res.data){
+          setSubjects(res.data);
+        }
+      })
+      .catch(err => {
+        alert('Fail to load subjects')
+      })
+    }
+  }, [selectedDepartment])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -36,9 +78,11 @@ const SubjectAdmin = () => {
           value={selectedDepartment}
           onChange={handleSelectDepartment}
         >
-          <MenuItem value='swe'>Software Engineering</MenuItem>
-          <MenuItem value='its'>Information Techonology Specialization</MenuItem>
-          <MenuItem value='cfl'>Computing Fundamental</MenuItem>
+          {departments.map(department => (
+            <MenuItem key={department.Id} value={department.Id}>
+              {department.DepartmentName}
+            </MenuItem>
+          ))}
         </Select>
       </Stack>
       <Stack px={9} mb={2}>
@@ -60,16 +104,16 @@ const SubjectAdmin = () => {
               <TableBody>
                 {
                   subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((subject, index) => (
-                      <TableRow key={index} hover>
+                    .map((subject) => (
+                      <TableRow key={subject.Id} hover>
                         <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
-                          <Typography>{subject.id}</Typography>
+                          <Typography>{subject.Id}</Typography>
                         </TableCell>
                         <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
-                          <Typography>{subject.name}</Typography>
+                          <Typography>{subject.SubjectName}</Typography>
                         </TableCell>
                         <TableCell size='small'>
-                          <Typography>Department</Typography>
+                          <Typography>{subject.DepartmentName}</Typography>
                         </TableCell>
                       </TableRow>
                     ))
@@ -78,7 +122,7 @@ const SubjectAdmin = () => {
             </Table>
           </TableContainer>
           <TablePagination
-            rowsPerPageOptions={[5, 10]}
+            rowsPerPageOptions={[10,20]}
             component='div'
             count={subjects.length}
             rowsPerPage={rowsPerPage}

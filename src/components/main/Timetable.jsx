@@ -95,25 +95,25 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId }) => {
       for (let i in courseAssign) {
         const time = slotType.find(slot => slot.Id === courseAssign[i].SlotTypeId);
         const { Id, Status, ...rest } = time;
-        const day = time.ConvertDateOfWeek.split(';')
+        const day = time.ConvertDateOfWeek.split(' - ')
         for (let j in day) {
           switch (day[j]) {
-            case 'T2':
+            case 'Monday':
               setMon(prev => [...prev, { ...courseAssign[i], ...rest }])
               break;
-            case 'T3':
+            case 'Tuesday':
               setTue(prev => [...prev, { ...courseAssign[i], ...rest }])
               break;
-            case 'T4':
+            case 'Wednesday':
               setWed(prev => [...prev, { ...courseAssign[i], ...rest }])
               break;
-            case 'T5':
+            case 'Thursday':
               setThu(prev => [...prev, { ...courseAssign[i], ...rest }])
               break;
-            case 'T6':
+            case 'Friday':
               setFri(prev => [...prev, { ...courseAssign[i], ...rest }])
               break;
-            case 'T7':
+            case 'Saturday':
               setSat(prev => [...prev, { ...courseAssign[i], ...rest }])
               break;
             default:

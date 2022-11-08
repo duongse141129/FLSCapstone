@@ -63,7 +63,7 @@ const LecturerInfo = () => {
             <span>{lecturer.DepartmentName}</span>
           </Typography>
           <Typography width='300px'>
-            <span style={{ fontWeight: 500 }}>Type Lecturer: </span>
+            <span style={{ fontWeight: 500 }}>Lecturer Type: </span>
             <span>{lecturer.IsFullTime === 1 ? 'Full time' : 'Contract'}</span>
           </Typography>
         </Stack>
