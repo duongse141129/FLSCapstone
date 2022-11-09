@@ -18,7 +18,9 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, fixCours
   const [searchValue, setSearchValue] = useState('');
   const [reload, setReload] = useState(false);
   const [courseTime, setCourseTime] = useState([]);
+  const [disableSlots, setDisableSlots] = useState([]);
 
+  //get subject by manager Id
   useEffect(() => {
     const getSubjects = async () => {
       try {
@@ -40,6 +42,7 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, fixCours
     getSubjects();
   }, [account.DepartmentId, reload])
 
+  //get course by selected subject and filter all already course
   useEffect(() => {
     if (selectedSubject) {
       request.get('Course', {
@@ -66,6 +69,7 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, fixCours
     }
   }, [selectedSubject, semesterId, allFixCourses])
 
+  //filter slot by class
   useEffect(() => {
     if (selectedCourse && allFixCourses.length > 0) {
       let time = [];
@@ -80,6 +84,25 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, fixCours
     }
   }, [selectedCourse, allFixCourses])
 
+  //get slots are disable
+  useEffect(() => {
+    request.get('LecturerSlotConfig', {
+      params: {
+        LecturerId: lecturer.Id, SemesterId: semesterId, 
+        IsEnable: 0, pageIndex: 1, pageSize:100
+      }
+    })
+    .then(res => {
+      if(res.data){
+        setDisableSlots(res.data)
+      }
+    })
+    .catch(err => {
+      alert('Fail to load disable slots')
+    }) 
+  }, [lecturer.Id, semesterId])
+
+  //get slot and filter
   useEffect(() => {
     request.get('SlotType', {
       params: {
@@ -101,13 +124,18 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, fixCours
               dataSlot = dataSlot.filter(data => data.Id !== courseTime[i])
             }
           }
+          if(disableSlots.length > 0){
+            for(let i in disableSlots){
+              dataSlot = dataSlot.filter(data => data.Id !== disableSlots[i].SlotTypeId)
+            }
+          }
           setSlots(dataSlot)
         }
       })
       .catch(err => {
         alert('Fail to load slot!')
       })
-  }, [semesterId, fixCourses, allFixCourses, courseTime])
+  }, [semesterId, fixCourses, courseTime, disableSlots])
 
   const selectSubject = (subjectID) => {
     setSelectedSubject(subjectID);
