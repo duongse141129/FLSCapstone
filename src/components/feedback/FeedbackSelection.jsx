@@ -1,14 +1,11 @@
 import { ChatOutlined } from '@mui/icons-material';
-import {
-  Alert,
-  Box, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow,
-  Tooltip, Typography
+import {Alert, Box, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, 
+  TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
-import { blue, red } from '@mui/material/colors';
+import { blue } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react';
 import request from '../../utils/request';
 import FeedbackModal from './FeedbackModal';
-import configData from '../../utils/configData.json';
 
 const FeedbackSelection = ({ id, semester, admin }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
@@ -20,8 +17,6 @@ const FeedbackSelection = ({ id, semester, admin }) => {
   const [points, setPoints] = useState([]);
   const [selectedId, setSelectedId] = useState('');
   const [loadPoint, setLoadPoint] = useState(false);
-  const [pointOne, setPointOne] = useState(0);
-  const [pointFive, setPointFive] = useState(0);
 
   useEffect(() => {
     request.get(`User/${id}`)
@@ -86,13 +81,6 @@ const FeedbackSelection = ({ id, semester, admin }) => {
     }
   }, [subjects])
 
-  useEffect(() => {
-    if (points.length > 0) {
-      setPointOne(points.filter(item => item.FeedbackPoint === 1).length)
-      setPointFive(points.filter(item => item.FeedbackPoint === 5).length)
-    }
-  }, [points])
-
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -133,14 +121,6 @@ const FeedbackSelection = ({ id, semester, admin }) => {
         </Stack>
       }
       {((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) &&
-        <><Stack px={9} mb={1} direction='row' gap={4}>
-          <Typography color={red[700]}>
-            Subjects at point 1: {pointOne}/{configData.POINT_ONE_NUMBER}
-          </Typography>
-          <Typography color={red[700]}>
-            Subjects at point 5: {pointFive}/{configData.POINT_FIVE_NUMBER}
-          </Typography>
-        </Stack>
           <Stack px={9} mb={2}>
             <Paper sx={{ minWidth: 700, mb: 2 }}>
               <TableContainer component={Box}
@@ -212,7 +192,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                 }}
               />
             </Paper>
-          </Stack></>}
+          </Stack>}
       <FeedbackModal isFeedback={isFeedback} setIsFeedback={setIsFeedback}
         lecturer={lecturer} subjectId={selectedId} points={points} loadPoint={loadPoint} />
     </Stack>

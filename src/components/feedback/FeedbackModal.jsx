@@ -8,14 +8,12 @@ import React, { useState, useEffect } from 'react'
 import { blue, red } from '@mui/material/colors';
 import { useMemo } from 'react';
 import request from '../../utils/request';
-import configData from '../../utils/configData.json';
 import { ClipLoader } from 'react-spinners';
 
 const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points, loadPoint }) => {
   const [value, setValue] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
-  const [error, setError] = useState('');
   const account = JSON.parse(localStorage.getItem('web-user'));
   const subject = useMemo(() => {
     const result = points.length > 0 && points.find(item => item.SubjectId === subjectId);
@@ -27,67 +25,24 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
       setValue(subject.FeedbackPoint)
     }
     setIsSuccess(false);
-    setError('');
     setIsLoading(false);
   }, [subject, loadPoint])
 
   const handleChangeValue = (e) => {
-    setError('');
-    const point = Number(e.target.value);
-    setValue(point);
-    if (point === 5) {
-      const pointfive = points.filter(item => item.FeedbackPoint === 5)
-      const pointfiveExpect = pointfive.filter(item => item.SubjectId !== subjectId)
-      if (pointfiveExpect.length >= configData.POINT_FIVE_NUMBER) {
-        setError(`You already have ${configData.POINT_FIVE_NUMBER} subjects at point 5`);
-        return;
-      }
-    }
-    if (point === 1) {
-      const pointone = points.filter(item => item.FeedbackPoint === 1)
-      const pointoneExpect = pointone.filter(item => item.SubjectId !== subjectId)
-      if (pointoneExpect.length >= configData.POINT_ONE_NUMBER) {
-        setError(`You already have ${configData.POINT_ONE_NUMBER} subjects at point 1`);
-        return;
-      }
-    }
+    setValue(Number(e.target.value));
   }
 
   const handleLike = () => {
-    setError('');
     setValue(5);
-    const pointfive = points.filter(item => item.FeedbackPoint === 5)
-    const pointfiveExpect = pointfive.filter(item => item.SubjectId !== subjectId)
-    if (pointfiveExpect.length >= configData.POINT_FIVE_NUMBER) {
-      setError(`You already have ${configData.POINT_FIVE_NUMBER} subjects at point 5`);
-    }
   }
 
   const handleDislike = () => {
-    setError('');
     setValue(1);
-    const pointone = points.filter(item => item.FeedbackPoint === 1)
-    const pointoneExpect = pointone.filter(item => item.SubjectId !== subjectId)
-    if (pointoneExpect.length >= configData.POINT_ONE_NUMBER) {
-      setError(`You already have ${configData.POINT_ONE_NUMBER} subjects at point 1`);
-    }
   }
 
   const handleSave = () => {
     if (subject) {
       setIsLoading(true)
-      if (value === 5) {
-        const pointfive = points.filter(item => item.FeedbackPoint === 5)
-        if (pointfive.length >= configData.POINT_FIVE_NUMBER) {
-          return;
-        }
-      }
-      if (value === 1) {
-        const pointone = points.filter(item => item.FeedbackPoint === 1)
-        if (pointone.length >= configData.POINT_ONE_NUMBER) {
-          return;
-        }
-      }
       request.put(`SubjectOfLecturer/${subject.Id}`, {
         DepartmentManagerId: account.Id,
         SemesterId: subject.SemesterId,
@@ -166,17 +121,14 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
         </Stack>
       </DialogContent>
       <DialogActions>
-      {isLoading &&
+        {isLoading &&
           <ClipLoader size={30} color={blue[600]} />
         }
         {!isLoading && !isSuccess &&
           <>
-            {error &&
-              <Alert severity="error" sx={{mr: 2}}>{error}</Alert>
-            }
             <Button onClick={() => setIsFeedback(false)} color='info' variant='outlined'>Cancel</Button>
             <Button variant='contained' onClick={handleSave} autoFocus
-              disabled={value === subject?.FeedbackPoint || error.length > 0}>
+              disabled={value === subject?.FeedbackPoint}>
               Save
             </Button>
           </>
