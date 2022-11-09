@@ -9,20 +9,22 @@ namespace FPTULecturerScheduler.Entity
 {
     public class SubjectOfLecturer
     {
-        [JsonProperty("SubjectOfLecturerID")]
+        [JsonProperty("Id")]
         public string ID { get; set; }
-        [JsonProperty("SemesterID")]
+        [JsonProperty("SemesterId")]
         public string SemesterID { get; set; }
-        [JsonProperty("SubjectID")]
+        [JsonProperty("SubjectId")]
         public string SubjectID { get; set; }
-        [JsonProperty("LecturerID")]
+        [JsonProperty("LecturerId")]
         public string LecturerID { get; set; }
-        [JsonProperty("Favorite point")]
+        [JsonProperty("FavoritePoint")]
         public int FavoritePoint { get; set; }
-        [JsonProperty("Feedback point")]
+        [JsonProperty("FeedbackPoint")]
         public int FeedbackPoint { get; set; }
         [JsonProperty("MaxCourseSubject")]
         public int MaxCourseSubject { get; set; }
+        [JsonProperty("isEnable")]
+        public int isEnable { get; set; }   
         [JsonProperty("Status")]
         public int status { get; set; }
 

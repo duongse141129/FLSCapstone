@@ -9,14 +9,18 @@ namespace FPTULecturerScheduler.Entity
 {
     public class LecturerSlotConfig
     {
-        [JsonProperty("LecturerSlotConfigID")]
+        [JsonProperty("Id")]
         public string ID { get; set; }
-        [JsonProperty("SesmeterID")]
+        [JsonProperty("SemesterId")]
         public string SemesterID { get; set; }
-        [JsonProperty("LecturerID")]
+        [JsonProperty("LecturerId")]
         public string LecturerID { get; set; }
-        [JsonProperty("SlotTypeID")]
+        [JsonProperty("SlotTypeId")]
         public string SlotTypeID { get; set; }
+        [JsonProperty("PreferenceLevel")]
+        public int PreferenceLevel { get; set; }
+        [JsonProperty("IsEnable")]
+        public int IsEnable { get; set; }
         [JsonProperty("Status")]
         public int status { get; set; }
 
@@ -24,12 +28,14 @@ namespace FPTULecturerScheduler.Entity
         {
         }
 
-        public LecturerSlotConfig(string Id, string semesterID, string lecturerID, string slotTypeID, int status)
+        public LecturerSlotConfig(string Id, string semesterID, string lecturerID, string slotTypeID, int preferenceLevel, int isEnable, int status)
         {
             ID = Id;
             SemesterID = semesterID;
             LecturerID = lecturerID;
             SlotTypeID = slotTypeID;
+            PreferenceLevel = preferenceLevel;
+            IsEnable = isEnable;
             this.status = status;
         }
     }

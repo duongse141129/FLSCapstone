@@ -9,14 +9,18 @@ namespace FPTULecturerScheduler.Entity
 {
     public class CourseAssign
     {
-        [JsonProperty("ID")]
+        [JsonProperty("Id")]
         public string ID { get; set; }
-        [JsonProperty("LecturerID")]
+        [JsonProperty("LecturerId")]
         public string LecturerID { get; set; }
-        [JsonProperty("CourseID")]
+        [JsonProperty("CourseId")]
         public string CourseID { get; set; }
-        [JsonProperty("SlotTypeID")]
+        [JsonProperty("SlotTypeId")]
         public string SlotTypeID { get; set; }
+        [JsonProperty("isAssign")]
+        public int isAssign { get; set; }
+        [JsonProperty("ScheduleId")]
+        public string ScheduleId { get; set; }
         [JsonProperty("Status")]
         public int status { get; set; }
 
@@ -24,13 +28,16 @@ namespace FPTULecturerScheduler.Entity
         {
         }
 
-        public CourseAssign(string Id, string lecturerID, string courseID, string slotTypeID, int status)
+        public CourseAssign(string Id, string lecturerID, string courseID, string slotTypeID, string scheduleId, int status)
         {
             ID = Id;
             LecturerID = lecturerID;
             CourseID = courseID;
             SlotTypeID = slotTypeID;
+            isAssign = 0;
+            ScheduleId = scheduleId;
             this.status = status;
+
         }
 
         public override string ToString()

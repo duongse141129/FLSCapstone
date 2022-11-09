@@ -7,23 +7,26 @@ using System.Threading.Tasks;
 
 namespace FPTULecturerScheduler.Entity
 {
-    public class Department
+    public class UserAndRole
     {
         [JsonProperty("Id")]
         public string ID { set; get; }
-        [JsonProperty("DepartmentName")]
-        public string DepartmentName { set; get; }
+        [JsonProperty("UserId")]
+        public string UserID{ set; get; }
+        [JsonProperty("RoleId")]
+        public string RoleID { set; get; }
         [JsonProperty("Status")]
         public int status { set; get; }
 
-        public Department()
+        public UserAndRole()
         {
         }
 
-        public Department(string Id, string departmentName, int status)
+        public UserAndRole(string iD, string userID, string roleID, int status)
         {
-            ID = Id;
-            DepartmentName = departmentName;
+            ID = iD;
+            UserID = userID;
+            RoleID = roleID;
             this.status = status;
         }
     }

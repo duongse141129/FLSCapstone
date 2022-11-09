@@ -9,7 +9,7 @@ namespace FPTULecturerScheduler.Entity
 {
     public class SlotType
     {
-        [JsonProperty("SlotTypeID")]
+        [JsonProperty("Id")]
         public string ID { get; set; }
         [JsonProperty("TimeStart")]
         public string TimeStart { get; set; }
@@ -17,6 +17,10 @@ namespace FPTULecturerScheduler.Entity
         public string TimeEnd { get; set; }
         [JsonProperty("SlotNumber")]
         public int SlotNumber { get; set; }
+        [JsonProperty("ConvertDateOfWeek")]
+        public string DateOfWeek { get; set; }
+        [JsonProperty("SemesterId")]
+        public string SemesterId { get; set; }
         [JsonProperty("Status")]
         public int status { get; set; }
 
@@ -24,12 +28,13 @@ namespace FPTULecturerScheduler.Entity
         {
         }
 
-        public SlotType(string Id, string timeStart, string timeEnd, int slotNumber, int status)
+        public SlotType(string Id, string timeStart, string timeEnd, int slotNumber, string dateOfWeek, int status)
         {
             ID = Id;
             TimeStart = timeStart;
             TimeEnd = timeEnd;
             SlotNumber = slotNumber;
+            DateOfWeek = dateOfWeek;
             this.status = status;
         }
     }

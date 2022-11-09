@@ -37,6 +37,8 @@ namespace WindowsFormsApp.DAO
                         string lecturerSlotConfigID = workSheet.Cells[i, j++].Value.ToString();
                         string slotTypeID = workSheet.Cells[i, j++].Value.ToString();
                         string lecturerID = workSheet.Cells[i, j++].Value.ToString();
+                        string PreferenceLevel = workSheet.Cells[i, j++].Value.ToString();
+                        string IsEnable = workSheet.Cells[i, j++].Value.ToString();
                         string semesterID = workSheet.Cells[i, j++].Value.ToString();
                         string status = workSheet.Cells[i, j++].Value.ToString();
                         // lấy ra cột ngày sinh tương ứng giá trị tại vị trí [i, 2]. i lần đầu là 2
@@ -44,9 +46,9 @@ namespace WindowsFormsApp.DAO
                         // lấy ra giá trị ngày tháng và ép kiểu thành DateTime                      
                         //var birthdayTemp = workSheet.Cells[i, j++].Value;
 
-                        LecturerSlotConfig slotConfig = new LecturerSlotConfig(lecturerSlotConfigID, semesterID, lecturerID, slotTypeID, Int32.Parse(status));
+                        LecturerSlotConfig slotConfig = new LecturerSlotConfig(lecturerSlotConfigID, semesterID, lecturerID, slotTypeID, Int32.Parse(PreferenceLevel), Int32.Parse(IsEnable), Int32.Parse(status));
                         /*                         
-
+                        LecturerSlotConfig(string Id, string semesterID, string lecturerID, string slotTypeID, int preferenceLevel, int isEnable, int status)
                         Đừng lười biến mà dùng đoạn code này sẽ gây ra lỗi nếu giá trị value không thỏa kiểu DateTime
 
                         DateTime birthday = (DateTime)workSheet.Cells[i, j++].Value;

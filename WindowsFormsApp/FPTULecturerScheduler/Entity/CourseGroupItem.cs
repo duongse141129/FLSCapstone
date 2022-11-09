@@ -9,13 +9,13 @@ namespace FPTULecturerScheduler.Entity
 {
     public class CourseGroupItem
     {
-        [JsonProperty("CourseGroupItemID")]
+        [JsonProperty("Id")]
         public string ID { get; set; }
-        [JsonProperty("LecturerCourseGroupID")]
+        [JsonProperty("LecturerCourseGroupId")]
         public string LecturerCourseGroupID { get; set; }
-        [JsonProperty("CourseID")]
+        [JsonProperty("CourseId")]
         public string CourseID { get; set; }
-        [JsonProperty("Prioriry")]
+        [JsonProperty("PriorityCourse")]
         public int Priority { get; set; }
         [JsonProperty("Status")]
         public int status { get; set; }

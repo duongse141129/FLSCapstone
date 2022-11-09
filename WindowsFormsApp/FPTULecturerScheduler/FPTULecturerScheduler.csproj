@@ -51,10 +51,13 @@
     <Compile Include="Entity\Lecturer.cs" />
     <Compile Include="Entity\LecturerCourseGroup.cs" />
     <Compile Include="Entity\LecturerSlotConfig.cs" />
+    <Compile Include="Entity\RoomSemester.cs" />
+    <Compile Include="Entity\Schedule.cs" />
     <Compile Include="Entity\Semester.cs" />
     <Compile Include="Entity\SlotType.cs" />
     <Compile Include="Entity\Subject.cs" />
     <Compile Include="Entity\SubjectOfLecturer.cs" />
+    <Compile Include="Entity\UserAndRole.cs" />
     <Compile Include="LecturerScheduler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

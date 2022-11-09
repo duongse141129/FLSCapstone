@@ -9,7 +9,7 @@ namespace FPTULecturerScheduler.Entity
 {
     public class Subject
     {
-        [JsonProperty("SubjectID")]
+        [JsonProperty("Id")]
         public string ID { get; set; }
         [JsonProperty("SubjectName")]
         public string SubjectName { get; set; }
@@ -17,7 +17,7 @@ namespace FPTULecturerScheduler.Entity
         public string Description { get; set; }
         [JsonProperty("Status")]
         public int status { get; set; }
-        [JsonProperty("DepartmentID")]
+        [JsonProperty("DepartmentId")]
         public string DepartmentID { set; get; }
 
         public Subject()

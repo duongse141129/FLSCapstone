@@ -9,13 +9,13 @@ namespace FPTULecturerScheduler.Entity
 {
     public class Course
     {
-        [JsonProperty("CourseID")]
+        [JsonProperty("Id")]
         public string ID { get; set; }
-        [JsonProperty("SubjectID")]
+        [JsonProperty("SubjectId")]
         public string SubjectID { get; set; }
-        [JsonProperty("SesmeterID")]
+        [JsonProperty("SemesterId")]
         public string SemesterID { get; set; }
-        [JsonProperty("SlotTypeID")]
+        [JsonProperty("SlotTypeId")]
         public string SlotTypeID { get; set; }
         [JsonProperty("Description")]
         public string Description { get; set; }
@@ -41,7 +41,7 @@ namespace FPTULecturerScheduler.Entity
 
         public override string ToString()
         {
-            return ID+"-------"+SubjectID;
+            return ID+"-------"+SubjectID+"--------------"+ SemesterID + "--------------" + SlotTypeID + "--------------" + Description + "--------------" + SlotAmount;
         }
     }
 }

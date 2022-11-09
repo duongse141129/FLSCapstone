@@ -10,11 +10,11 @@ namespace FPTULecturerScheduler
 
     public class LecturerScheduler
     {
-        public static double HESO_PRIORITYCOURSE = 95;
-        public static double HESO_PRIORITYLECTURER = 16;
-        public static double HESO_FEEDBACKPOINT = 2;
-        public static double HESO_FAVORITEPOINT = 1;
-        public static double SLOTPOINT = 2;
+        public static double HESO_PRIORITYCOURSE ;
+        
+        public static double HESO_FEEDBACKPOINT ;
+        public static double HESO_PRIORITYLECTURER = 6;
+        public static double HESO_FAVORITEPOINT ;
         public static int MaxCourseSubjectDiff = 3;
 
 
@@ -85,9 +85,22 @@ namespace FPTULecturerScheduler
         public static CourseAssign FillSlot(List<CourseAssign> courseAssignsTemp, List<LecturerSlotConfig> lecturerSlotConfigs, CourseAssign courseAssignFillSlot, List<Course> courses, string semesterID, List<SlotType> slotTypes, int Max)
         {
 
-            //cac slot giang vien do ua thich
+            //cac slot giang vien do ua thich, is enable = 1
             var favoriteSlot = from lecturerSlotConfig in lecturerSlotConfigs
-                               where lecturerSlotConfig.LecturerID == courseAssignFillSlot.LecturerID && lecturerSlotConfig.SemesterID == semesterID
+                               where lecturerSlotConfig.LecturerID == courseAssignFillSlot.LecturerID && lecturerSlotConfig.SemesterID == semesterID 
+                               && lecturerSlotConfig.PreferenceLevel == 1 && lecturerSlotConfig.IsEnable == 1
+                               select lecturerSlotConfig.SlotTypeID;
+
+            //cac slot giang vien do trung tinh, is enable = 1
+            var normalSlot = from lecturerSlotConfig in lecturerSlotConfigs
+                               where lecturerSlotConfig.LecturerID == courseAssignFillSlot.LecturerID && lecturerSlotConfig.SemesterID == semesterID 
+                               && lecturerSlotConfig.PreferenceLevel == 0 && lecturerSlotConfig.IsEnable == 1
+                             select lecturerSlotConfig.SlotTypeID;
+
+            //cac slot giang vien do khong thich, is enable = 1
+            var dislikeSlot = from lecturerSlotConfig in lecturerSlotConfigs
+                               where lecturerSlotConfig.LecturerID == courseAssignFillSlot.LecturerID && lecturerSlotConfig.SemesterID == semesterID 
+                               && lecturerSlotConfig.PreferenceLevel == -1 && lecturerSlotConfig.IsEnable == 1
                                select lecturerSlotConfig.SlotTypeID;
 
             //cac slotType group student da duoc xep
@@ -152,72 +165,116 @@ namespace FPTULecturerScheduler
                     }
 
                 }
-                if (stop == 0) //fill cac slot khac 
+                if (stop == 0) //fill cac slot normal 
                 {
-                    foreach (var slotType in slotTypes)
+                    foreach (var normalSlotType in normalSlot)
                     {
                         //kiem tra so luong course 1 slot co the day toi da (so luong phong hoc)
                         var slotMaxCourse = from courseAssign in courseAssignsTemp
-                                            where courseAssign.SlotTypeID == slotType.ID
+                                            where courseAssign.SlotTypeID == normalSlotType
                                             group courseAssign by courseAssign.SlotTypeID into gr
                                             let count = gr.Count()
                                             select count;
 
+
                         int check = 0;
-                        foreach (var favoriteSlotType in favoriteSlot)
+
+                        //kiem tra course cua 1 group student khong the duoc day cung 1 thoi diem
+                        foreach (var conflict in conflictSlotCourse)
                         {
-                            if (slotType.ID == favoriteSlotType)
+                            if (normalSlotType == conflict.SlotTypeID)
                             {
                                 check = 1;
                                 break;
                             }
                         }
 
-                        if (check == 0)
+                        //kiem tra so luong course 1 slot co the day toi da (so luong phong hoc)
+                        if (Convert.ToInt32(slotMaxCourse.ElementAtOrDefault(0)) >= Max)
                         {
+                            check = 1;
+                        }
 
-                            int check1 = 0;
-
-                            //kiem tra course cua 1 group student khong the duoc day cung 1 thoi diem
-                            foreach (var conflict in conflictSlotCourse)
+                        //kiem tra 1 giang vien chi day 1 course tai 1 thoi diem
+                        foreach (var conflict in conflictSlotLecturer)
+                        {
+                            if (normalSlotType == conflict.SlotTypeID)
                             {
-                                if (slotType.ID == conflict.SlotTypeID)
-                                {
-                                    check1 = 1;
-                                    break;
-                                }
-                            }
-
-                            //kiem tra so luong course 1 slot co the day toi da (so luong phong hoc)
-                            if (Convert.ToInt32(slotMaxCourse.ElementAtOrDefault(0)) >= Max)
-                            {
-                                check1 = 1;
-                            }
-
-                            //kiem tra 1 giang vien chi day 1 course tai 1 thoi diem
-                            foreach (var conflict in conflictSlotLecturer)
-                            {
-                                if (slotType.ID == conflict.SlotTypeID)
-                                {
-                                    check1 = 1;
-                                    break;
-                                }
-                            }
-
-
-                            if (check1 == 0)
-                            {
-                                courseAssignFillSlot.SlotTypeID = slotType.ID;// fill slot
+                                check = 1;
                                 break;
                             }
+                        }
 
+
+                        if (check == 0)
+                        {
+                            courseAssignFillSlot.SlotTypeID = normalSlotType;// fill slot
+                            stop = 1;
+                            break;
+                        }
+
+                    }
+                }
+                if (stop == 0) //fill cac slot khong thich 
+                {
+                    foreach (var dislikeSlotType in dislikeSlot)
+                    {
+                        //kiem tra so luong course 1 slot co the day toi da (so luong phong hoc)
+                        var slotMaxCourse = from courseAssign in courseAssignsTemp
+                                            where courseAssign.SlotTypeID == dislikeSlotType
+                                            group courseAssign by courseAssign.SlotTypeID into gr
+                                            let count = gr.Count()
+                                            select count;
+
+
+                        int check = 0;
+
+                        //kiem tra course cua 1 group student khong the duoc day cung 1 thoi diem
+                        foreach (var conflict in conflictSlotCourse)
+                        {
+                            if (dislikeSlotType == conflict.SlotTypeID)
+                            {
+                                check = 1;
+                                break;
+                            }
+                        }
+
+                        //kiem tra so luong course 1 slot co the day toi da (so luong phong hoc)
+                        if (Convert.ToInt32(slotMaxCourse.ElementAtOrDefault(0)) >= Max)
+                        {
+                            check = 1;
+                        }
+
+                        //kiem tra 1 giang vien chi day 1 course tai 1 thoi diem
+                        foreach (var conflict in conflictSlotLecturer)
+                        {
+                            if (dislikeSlotType == conflict.SlotTypeID)
+                            {
+                                check = 1;
+                                break;
+                            }
+                        }
+
+
+                        if (check == 0)
+                        {
+                            courseAssignFillSlot.SlotTypeID = dislikeSlotType;// fill slot
+                            stop = 1;
+                            break;
                         }
                     }
                 }
             }
             else
             {
-                courseAssignFillSlot.SlotTypeID = favoriteSlot.ElementAtOrDefault(0);
+                if (favoriteSlot.Count() > 0)
+                {
+                    courseAssignFillSlot.SlotTypeID = favoriteSlot.ElementAtOrDefault(0);
+                }
+                else
+                {
+                    courseAssignFillSlot.SlotTypeID = normalSlot.ElementAtOrDefault(0);
+                }              
             }
             return courseAssignFillSlot;
         }
@@ -305,7 +362,12 @@ namespace FPTULecturerScheduler
             List<Subject> subjects, List<SubjectOfLecturer> subjectOfLecturers, int Max, List<CourseAssign> courseAssigns)
         {
             int schedulerPoint_Max = 0;
-            List<CourseAssign> scheduler = courseAssigns; //add cac course da duoc assign vao scheduler 
+
+            List<CourseAssign> scheduler = new List<CourseAssign>(); //add cac course da duoc assign vao scheduler 
+            foreach(var courseAssign in courseAssigns)
+            {
+                scheduler.Add(courseAssign);
+            }
             int schedulerPoint_Temp = 0;
             int courseAssignID = 0;
 
@@ -315,18 +377,28 @@ namespace FPTULecturerScheduler
                 LecturerCoursePoint lecturerCoursePoint = GetCourseLecturer(courses, subjects, lecturerCourseGroups, courseGroupItems, subjectOfLecturers, lecturers, semester.ID, courseAssigns, scheduler);
                 if (lecturerCoursePoint.Score > 0)
                 {
-                    CourseAssign courseAssign = new CourseAssign("CA" + courseAssignID++, lecturerCoursePoint.Lecturer.ID, lecturerCoursePoint.Course.ID, "", 1);
+                    CourseAssign courseAssign = new CourseAssign("CA" + courseAssignID++, lecturerCoursePoint.Lecturer.ID, lecturerCoursePoint.Course.ID, "","", 1);
                     //fill slot 
                     courseAssign = FillSlot(scheduler, lecturerSlotConfigs, courseAssign, courses, semester.ID, slotTypes, Max);
-
+                  
                     scheduler.Add(courseAssign);
+
                 }
                 else
                 {
                     break;
                 }
             }
-            return scheduler;
+
+            List<CourseAssign> scheduler1 = new List<CourseAssign>();
+            foreach (CourseAssign courseAssign in scheduler)
+            {
+                if (courseAssign.SlotTypeID != "")
+                {
+                    scheduler1.Add(courseAssign);
+                }
+            }
+            return scheduler1;
         }
 
         public static List<Lecturer> GetLecturerPickCourse(List<Course> courses, Course course, List<Subject> subjects, List<LecturerCourseGroup> lecturerCourseGroups, List<CourseGroupItem> courseGroupItems, List<SubjectOfLecturer> subjectOfLecturers, List<Lecturer> lecturers, string semesterID, List<CourseAssign> courseAssignsTemp)// lay  giang vien co the pick course
@@ -340,26 +412,27 @@ namespace FPTULecturerScheduler
                           select new Subject(subject.ID, subject.SubjectName, subject.Description, subject.status, subject.DepartmentID);
 
 
-            //cac lecturer co the day course trong department, neu status subjecLecturer = 0 thi khong duoc day
+            //cac lecturer co the day course trong department, neu isEnable subjecLecturer = 0 thi khong duoc day
             var departmentLecturers = from lecturer in lecturers
                                       join subjectLecturer in subjectOfLecturers on lecturer.ID equals subjectLecturer.LecturerID
                                       where lecturer.status == 1 && subjectLecturer.LecturerID == lecturer.ID && subjectLecturer.SubjectID == subjectOfCourse.ElementAtOrDefault(0).ID
-                                          && subjectLecturer.status == 1
-                                      select new Lecturer(lecturer.ID, lecturer.LecturerName, lecturer.Email, lecturer.DOB, lecturer.Gender, lecturer.IDCard, lecturer.Address, lecturer.Phone, lecturer.status, lecturer.PriorityLecturer, lecturer.DepartmentID);
+                                          && subjectLecturer.isEnable == 1
+                                      select new Lecturer(lecturer.ID, lecturer.LecturerName, lecturer.Email, lecturer.DOB, lecturer.Gender, lecturer.IDCard, lecturer.Address, lecturer.Phone, lecturer.status, lecturer.PriorityLecturer, lecturer.IsFullTime, lecturer.DepartmentID);
            
             //cac lecturer co the day course trong danh sach uu tien 
             var priorityLecturers = from lecturer in lecturers
                                     join lecturerCourseGroup in lecturerCourseGroups on lecturer.ID equals lecturerCourseGroup.LecturerID
                                     join courseGroupItem in courseGroupItems on lecturerCourseGroup.ID equals courseGroupItem.LecturerCourseGroupID
                                     where courseGroupItem.CourseID == course.ID
-                                    select new Lecturer(lecturer.ID, lecturer.LecturerName, lecturer.Email, lecturer.DOB, lecturer.Gender, lecturer.IDCard, lecturer.Address, lecturer.Phone, lecturer.status, lecturer.PriorityLecturer, lecturer.DepartmentID);
+                                    select new Lecturer(lecturer.ID, lecturer.LecturerName, lecturer.Email, lecturer.DOB, lecturer.Gender, lecturer.IDCard, lecturer.Address, lecturer.Phone, lecturer.status, lecturer.PriorityLecturer, lecturer.IsFullTime, lecturer.DepartmentID);
 
             //them lecturer vao danh sach
             foreach(Lecturer departmentLecturer in departmentLecturers)
             {
                 Boolean checkMaxCourseSubject = CheckMaxCourseSubject(subjectOfLecturers, courseAssignsTemp, departmentLecturer, subjects, courses, subjectOfCourse.ElementAtOrDefault(0), semesterID);
                 Boolean checkMaxCourseSemester = CheckMaxCourseSemester(lecturerCourseGroups, courseAssignsTemp, departmentLecturer, courses, semesterID);
-                if (checkMaxCourseSubject == true && checkMaxCourseSemester==true)
+                Boolean checkMaxCourseWithSlot = CheckMaxCourseWithSlot(SlotTypes, LecturerSlotConfigs, courseAssignsTemp, departmentLecturer, courses, semesterID);
+                if (checkMaxCourseSubject == true && checkMaxCourseSemester==true && checkMaxCourseWithSlot==true)
                 {
                     lecturersPickCourse.Add(departmentLecturer);
                 }
@@ -380,7 +453,8 @@ namespace FPTULecturerScheduler
                 {
                     Boolean checkMaxCourseSubject = CheckMaxCourseSubject(subjectOfLecturers, courseAssignsTemp, priorityLecturer, subjects, courses, subjectOfCourse.ElementAtOrDefault(0), semesterID);
                     Boolean checkMaxCourseSemester = CheckMaxCourseSemester(lecturerCourseGroups, courseAssignsTemp, priorityLecturer, courses, semesterID);
-                    if (checkMaxCourseSubject == true && checkMaxCourseSemester == true)
+                    Boolean checkMaxCourseWithSlot = CheckMaxCourseWithSlot(SlotTypes, LecturerSlotConfigs, courseAssignsTemp, priorityLecturer, courses, semesterID);
+                    if (checkMaxCourseSubject == true && checkMaxCourseSemester == true && checkMaxCourseWithSlot ==true)
                     {
                         lecturersPickCourse.Add(priorityLecturer);
                     }                
@@ -480,6 +554,48 @@ namespace FPTULecturerScheduler
                 return true;
             }
         }
+
+        public static Boolean CheckMaxCourseWithSlot(List<SlotType> slotTypes, List<LecturerSlotConfig> LecturerSlotConfigs, List<CourseAssign> CourseAssignsTemp, Lecturer lecturer, List<Course> courses, string semesterID)//ham nay de check subject da co so luong maxCourse 
+        {
+            if (CourseAssignsTemp.Count > 0)
+            {
+                //so luong cac coursema lecturer da duox xep
+                var amountCoursePresent = from courseAssign in CourseAssignsTemp
+                                          join course in courses on courseAssign.CourseID equals course.ID
+                                          where course.SemesterID == semesterID && courseAssign.LecturerID == lecturer.ID
+                                          select courseAssign.ID;
+
+                //so luong toi da duoc quy dinh cho lecturer theo slot
+                var slotIsDisable = from lecturerSlotConfig in LecturerSlotConfigs
+                                    where lecturerSlotConfig.SemesterID == semesterID && lecturerSlotConfig.LecturerID == lecturer.ID
+                                    && lecturerSlotConfig.IsEnable == 0
+                                    select lecturerSlotConfig;
+
+
+                if (amountCoursePresent.Count() > 0)
+                {
+                    int count = amountCoursePresent.Count();
+                    int maxCourseWithSlot = slotTypes.Count() - slotIsDisable.Count();
+
+                    if (count >= maxCourseWithSlot)
+                    {
+                        return false;
+                    }
+                    else
+                    {
+                        return true;
+                    }
+                }
+                else
+                {
+                    return true;
+                }
+            }
+            else
+            {
+                return true;
+            }
+        }
         public static double TinhDiemLecturer_Course(List<LecturerCourseGroup> lecturerCourseGroups, List<CourseGroupItem> courseGroupItems, List<SubjectOfLecturer> subjectOfLecturers, Lecturer lecturer, string semesterID, Course course)// ham dung de tinh diem toi uu cua lecturer voi course
         {
             double priorityCoursePoint = 0;
@@ -493,9 +609,10 @@ namespace FPTULecturerScheduler
                                 select courseGroupItem.Priority;
             if(priorityCoursePoint_temp.Count() >0)//course co trong danh sach uu tien
             {
-                priorityCoursePoint = Convert.ToDouble(priorityCoursePoint_temp.ElementAtOrDefault(0));
-                priorityLecturerPoint = lecturer.PriorityLecturer;
+                priorityCoursePoint = Convert.ToDouble(priorityCoursePoint_temp.ElementAtOrDefault(0));             
             }
+
+            priorityLecturerPoint = lecturer.PriorityLecturer;
 
             var favoriteFeedbackPoint_temp = from subjectOfLecturerDTO in subjectOfLecturers
                                              where subjectOfLecturerDTO.LecturerID == lecturer.ID

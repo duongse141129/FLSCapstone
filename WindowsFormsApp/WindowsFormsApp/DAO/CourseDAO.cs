@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using FPTULecturerScheduler.Entity;
 using Newtonsoft.Json;
+using System.Net.Http;
 
 namespace WindowsFormsApp.DAO
 {
@@ -111,6 +112,67 @@ namespace WindowsFormsApp.DAO
         //        Console.WriteLine(e.ToString());
         //    }
         //}
+
+        public static async Task<bool> UpdateCourseAsync(Course course)
+        {
+            try
+            {
+          
+                var client = new HttpClient();
+                var endpoint = new Uri("http://20.214.249.72/api/Course/" + course.ID);
+                var newDepartmentJson = JsonConvert.SerializeObject(course);
+                var payload = new StringContent(newDepartmentJson, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PutAsync(endpoint, payload);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    //Console.WriteLine("PUT success ");
+                    //Console.WriteLine("Status Code: " + response.StatusCode);
+                    //Console.WriteLine("Header: " + response.Headers);
+                    //Console.WriteLine("Respone: " + response.Content);
+
+                    //Console.WriteLine("Content Respone: " + responseContent);
+                    return true;
+                }
+                //Console.WriteLine("PUT fail");
+                return false;
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine("Error at PUT: " + ex.Message);
+                return false;
+            }
+        }
+
+        public static async Task<List<Course>> GetCourseAsync(string semesterId)
+        {
+            List<Course> courses;
+            try
+            {
+                var client = new HttpClient();
+                var endpoint = new Uri("http://20.214.249.72/api/Course?SemesterId=" + semesterId + "&Status=1&pageIndex=1&pageSize=10000");
+                HttpResponseMessage response = await client.GetAsync(endpoint);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    Console.WriteLine("Get success ");
+                    Console.WriteLine("Status Code: " + response.StatusCode);
+                    Console.WriteLine("Header: " + response.Headers);
+                    Console.WriteLine("Respone: " + response.Content);
+
+                    Console.WriteLine("Content Respone: " + responseContent);
+                    courses = JsonConvert.DeserializeObject<List<Course>>(responseContent);
+                    return courses;
+                }
+                Console.WriteLine("Get fail");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error at Get: " + ex.Message);
+                return null;
+            }
+        }
 
     }
 
