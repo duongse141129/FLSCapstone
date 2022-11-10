@@ -15,7 +15,6 @@ import SemesterDetail from './components/semester/SemesterDetail'
 import ManagerHome from "./components/home/ManagerHome";
 import SemesterDetailManager from "./components/semester/manager/SemesterDetailManager";
 import AdminPage from "./pages/AdminPage";
-import AdminHome from "./components/home/AdminHome";
 import LecturerAdmin from "./components/lecturer/LecturerAdmin";
 import LecturerInfoAdmin from "./components/lecturer/LecturerInfoAdmin";
 import DepartmentAdmin from "./components/department/DepartmentAdmin";
@@ -23,6 +22,7 @@ import SubjectAdmin from "./components/subject/SubjectAdmin";
 import Slot from "./components/slot/Slot";
 import SemesterAdmin from "./components/semester/admin/SemesterAdmin";
 import SemesterDetailAdmin from "./components/semester/admin/SemesterDetailAdmin";
+import DepartmentManager from "./components/department/DepartmentManager";
 
 function App() {
   return (
@@ -34,13 +34,15 @@ function App() {
           <Route path='profile' element={<Profile />} />
           <Route path='semester' element={<Semester />} />
           <Route path='semester/:id' element={<SemesterDetail />} />
-          <Route path='department' element={<Department />} />
+          <Route path='department' element={<DepartmentManager />} />
+          <Route path='subject' element={<Department />} />
         </Route>
         <Route path="manager" element={<ManagerPage />}>
           <Route index element={<ManagerHome />} />
           <Route path='lecturer' element={<Lecturer />}/>
           <Route path='lecturer/:id' element={<LecturerInfo />} />
           <Route path='subject' element={<SubjectOfManager />} />
+          <Route path='department' element={<DepartmentManager />} />
           <Route path='profile' element={<Profile />} />
           <Route path='schedule' element={<ScheduleManager />} />
           <Route path='schedule/:id' element={<ScheduleDetail />} />
@@ -48,7 +50,7 @@ function App() {
           <Route path='semester/:id' element={<SemesterDetailManager/>}/>
         </Route>
         <Route path="admin" element={<AdminPage/>}>
-          <Route index element={<AdminHome/>}/>
+          <Route index element={<ManagerHome admin={true}/>}/>
           <Route path="lecturer" element={<LecturerAdmin/>}/>
           <Route path="lecturer/:id" element={<LecturerInfoAdmin/>}/>
           <Route path="department" element={<DepartmentAdmin/>}/>

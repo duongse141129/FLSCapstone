@@ -160,7 +160,7 @@ const PriorityList = ({ id, semester, admin }) => {
       </Stack>
       <Stack direction='row' alignItems='center' px={9} mb={1} justifyContent='space-between'>
         <Typography fontWeight={500}>Priority Courses</Typography>
-        {!admin && <Button variant='contained' color='warning' size='small' endIcon={<TryOutlined />}
+        {semester.State === 2 && !admin && <Button variant='contained' color='warning' size='small' endIcon={<TryOutlined />}
           onClick={() => setIsPriority(true)}>
           More
         </Button>}
@@ -199,7 +199,7 @@ const PriorityList = ({ id, semester, admin }) => {
                           {item.PriorityCourse === 1 &&
                             <span style={{ color: red[800] }}>External</span>}
                         </TableCell>
-                        {!admin && <TableCell size='small'>
+                        {semester.State === 2 && !admin && <TableCell size='small'>
                           {outSide ? <>
                             {(outSide && insideSubjects.find(inside => inside.Id === item.CourseId.split('_')[0])) ? (
                               <Tooltip title='delete' placement='right' arrow>

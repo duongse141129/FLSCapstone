@@ -1,28 +1,29 @@
 import { ArrowBackIosNew } from '@mui/icons-material'
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material'
-import { green, grey } from '@mui/material/colors';
-import React, { useState, useEffect  } from 'react'
+import { blue, green, grey, red } from '@mui/material/colors';
+import React, { useState, useEffect } from 'react'
 import LecturerContainer from './LecturerContainer';
 import CourseList from './CourseList';
 import { useNavigate, useParams } from 'react-router-dom';
 import request from '../../../utils/request';
+import Title from '../../title/Title';
 
 const SemesterDetailManager = () => {
-  const {id} = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [selected, setSelected] = useState('lecturers');
   const [semester, setSemester] = useState({});
 
   useEffect(() => {
     request.get(`Semester/${id}`)
-    .then(res => {
-      if(res.data){
-        setSemester(res.data);
-      }
-    })
-    .catch(err => {
-      alert('Fail to load semester')
-    })
+      .then(res => {
+        if (res.data) {
+          setSemester(res.data);
+        }
+      })
+      .catch(err => {
+        alert('Fail to load semester')
+      })
   }, [id])
 
   const backToSemesters = () => {
@@ -31,15 +32,29 @@ const SemesterDetailManager = () => {
 
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
-      <Stack color='#778899' direction='row' mt={1}
-        alignItems='center' gap={4}
-      >
-        <Tooltip title='Back to Semester' arrow>
-          <IconButton onClick={backToSemesters}>
-            <ArrowBackIosNew />
-          </IconButton>
-        </Tooltip>
-        <Typography variant='h5' fontWeight={500}>Semester: {semester.Term}</Typography>
+      <Stack mt={1} direction='row' alignItems='center' justifyContent='space-between'>
+        <Stack direction='row' alignItems='center' gap={4}>
+          <Tooltip title='Back to Semester' arrow>
+            <IconButton onClick={backToSemesters}>
+              <ArrowBackIosNew />
+            </IconButton>
+          </Tooltip>
+          <Title title={`Semester: ${semester.Term}`} />
+        </Stack>
+        <Stack pr={9} alignItems='center'>
+          {semester.State === 1 &&
+            <Typography color={red[700]}>Voting is not opened yet</Typography>}
+          {semester.State === 2 &&
+            <>
+              <Typography color={green[700]}>Voting is opened</Typography>
+              <Typography color={green[700]}>Assign course and Feedback now!</Typography>
+            </>}
+          {semester.State === 3 &&
+            <>
+              <Typography color={blue[700]}>Semester has blocked</Typography>
+              <Typography color={blue[700]}>Can not edit already Ratings</Typography>
+            </>}
+        </Stack>
       </Stack>
       <Stack direction='row' gap={2} px={9} mb={1}>
         <Typography>Start: {semester.DateStartFormat}</Typography>
@@ -61,8 +76,8 @@ const SemesterDetailManager = () => {
           </Typography>
         </Stack>
       </Stack>
-      {selected === 'lecturers' && <LecturerContainer semester={semester}/>}
-      {selected === 'courses' && <CourseList semesterId={id}/>}
+      {selected === 'lecturers' && <LecturerContainer semester={semester} />}
+      {selected === 'courses' && <CourseList semesterId={id} />}
     </Stack>
   )
 }

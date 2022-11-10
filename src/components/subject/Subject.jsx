@@ -12,7 +12,7 @@ import {HashLoader} from 'react-spinners';
 import request from '../../utils/request';
 import configData from  '../../utils/configData.json';
 
-const Subject = ({ semesterId }) => {
+const Subject = ({ semesterId, semesterState }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [isRequest, setIsRequest] = useState(false);
@@ -214,30 +214,32 @@ const Subject = ({ semesterId }) => {
                           selectedDepartment === account.DepartmentId &&
                           <TableCell size='small'>
                             <Stack direction='row' alignItems='center' gap={1}>
-                              <Typography borderRight='1px solid gray' pr={2}>
+                              <Typography borderRight={semesterState === 2 && '1px solid gray'} pr={2}>
                                 {
                                   favoriteSubjects.length > 0 &&
                                   favoriteSubjects.find(item => item.SubjectId === subject.Id)?.FavoritePoint
                                 }
                               </Typography>
+                              {semesterState === 2 && 
                               <Tooltip title='Rating' placement='right' arrow>
                                 <IconButton color='primary' size='small'
                                   onClick={() => handleRating(subject.Id, subject.SubjectName)}
                                 >
                                   <StarBorder />
                                 </IconButton>
-                              </Tooltip>
+                              </Tooltip>}
                             </Stack>
                           </TableCell>
                         }
                         <TableCell size='small'>
+                          {semesterState === 2 && 
                           <Tooltip title='Request' placement='left'>
                             <IconButton color='warning' size='small'
                               onClick={() => setIsRequest(true)}
                             >
                               <Send />
                             </IconButton>
-                          </Tooltip>
+                          </Tooltip>}
                         </TableCell>
                       </TableRow>
                     ))

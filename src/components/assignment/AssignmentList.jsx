@@ -223,7 +223,8 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
       </Stack>
       <Stack direction='row' alignItems='center' px={9} mb={1} justifyContent='space-between'>
         <Typography fontWeight={500}>Assigned Courses</Typography>
-        {!admin && <Button variant='contained' color='secondary' size='small' endIcon={<AssignmentOutlined />}
+        {semester.State === 2 && !admin && 
+        <Button variant='contained' color='secondary' size='small' endIcon={<AssignmentOutlined />}
           onClick={() => setIsAssign(true)}>
           Assign
         </Button>}
@@ -257,7 +258,7 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
                         {slots.find(slot => slot.Id === course.SlotTypeId)?.Duration} {' '}
                         ({slots.find(slot => slot.Id === course.SlotTypeId)?.ConvertDateOfWeek})
                       </TableCell>
-                      {!admin && <TableCell size='small'>
+                      {semester.State === 2 && !admin && <TableCell size='small'>
                         {outSide ? <>
                           {(outSide && insideSubjects.find(inside => inside.Id === course.CourseId.split('_')[0])) ? (
                             <Tooltip title='delete' placement='right' arrow>

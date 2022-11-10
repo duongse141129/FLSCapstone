@@ -184,7 +184,8 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
             <Typography color={red[600]}>Ban turn: {bans.length}/{configData.BAN_TURN}</Typography>
             <Typography color={grey[500]} variant='subtitle1'>(*Re-ban to ban new one)</Typography>
           </Stack>
-          {!admin && <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
+          {semester.State === 2 && !admin && 
+          <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
             <Switch checked={edit} onChange={() => setEdit(!edit)} />
             <Typography pr={2}>
               {edit ? <span style={{ color: blue[600] }}>Ban On</span> : 'Ban Off'}
@@ -198,13 +199,13 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
                   <TableHead>
                     <TableRow sx={{ bgcolor: indigo[600] }}>
                       <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                        <Typography>ID</Typography>
+                        <Typography>Day of Week</Typography>
                       </TableCell>
                       <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
                         <Typography>Duration</Typography>
                       </TableCell>
                       <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                        <Typography>Day of Week</Typography>
+                        <Typography>Slot Number</Typography>
                       </TableCell>
                       <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
                         <Typography>Rating</Typography>
@@ -217,9 +218,9 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
                   <TableBody>
                     {slots.map(slot => (
                       <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: 'pointer' } }} onClick={() => handleBan(slot.Id)}>
-                        <TableCell size='small' align='center' className='manage-slot'>{slot.Id}</TableCell>
-                        <TableCell size='small' align='center' className='manage-slot'>{slot.Duration}</TableCell>
                         <TableCell size='small' align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>
+                        <TableCell size='small' align='center' className='manage-slot'>{slot.Duration}</TableCell>
+                        <TableCell size='small' align='center' className='manage-slot'>{slot.SlotNumber}</TableCell>
                         <TableCell size='small' align='center' className='manage-slot'
                           sx={{
                             bgcolor: (likes.find(like => like === slot.Id) || dislikes.find(dislike => dislike === slot.Id))
@@ -238,7 +239,7 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
                           }}
                         >
                           {disables.find(disable => disable === slot.Id) &&
-                            <CancelOutlined sx={{ color: red[600] }} />}
+                            <CancelOutlined sx={{ color: red[600]}} />}
                         </TableCell>
                       </TableRow>
                     ))}

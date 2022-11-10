@@ -1,5 +1,5 @@
 import {Group, LocalLibraryOutlined, AccountBox, 
-   CalendarMonth, Home, AccessTime} from '@mui/icons-material';
+   CalendarMonth, Home, AccessTime, Business} from '@mui/icons-material';
 
 export const managerTabs = [
   {
@@ -7,16 +7,20 @@ export const managerTabs = [
     icon: <Home/>
   },
   {
-    name: 'schedule',
-    icon: <CalendarMonth/>
-  },
-  {
     name: 'semester',
     icon: <AccessTime/>
   },
   {
+    name: 'schedule',
+    icon: <CalendarMonth/>
+  },
+  {
     name: 'lecturer',
     icon: <Group/>
+  },
+  {
+    name: 'department',
+    icon: <Business/>
   },
   {
     name: 'subject',

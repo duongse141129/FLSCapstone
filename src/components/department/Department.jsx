@@ -7,6 +7,7 @@ import React, { useState, useEffect } from 'react';
 import { green, grey } from '@mui/material/colors';
 import { HashLoader } from 'react-spinners';
 import request from '../../utils/request'
+import Title from '../title/Title';
 
 const Department = () => {
   const [page, setPage] = useState(0);
@@ -118,13 +119,9 @@ const Department = () => {
 
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
-      <Typography variant='h5' color='#778899' fontWeight={500} px={9}
-        mt={1}>
-        Department
-      </Typography>
-      <Typography color='gray' px={9} variant='subtitle1'>
-        My department and relative departments
-      </Typography>
+      <Stack px={9} mt={1}>
+        <Title title='Subject' subTitle='All subjects in my department and relative departments'/>
+      </Stack>
       <Box mt={4} px={9}>
         <Stack direction='row' mb={2} alignItems='center' gap={1}>
           <Typography fontWeight={500}>
@@ -164,11 +161,6 @@ const Department = () => {
             </Typography>
             <Typography>
               {Object.values(manager).length > 0 && manager?.Name + ' (' + manager?.Email + ') '}
-            </Typography>
-          </Stack>
-          <Stack direction='row' mb={1} gap={1}>
-            <Typography fontWeight={500}>
-              Subjects
             </Typography>
           </Stack>
           <Stack>

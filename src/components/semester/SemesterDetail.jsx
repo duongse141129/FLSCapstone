@@ -7,24 +7,26 @@ import Subject from '../subject/Subject';
 import { useNavigate, useParams } from 'react-router-dom';
 import Schedule from './Schedule';
 import request from '../../utils/request';
+import Title from '../title/Title';
+import { blue, green, grey, red } from '@mui/material/colors';
 
 const SemesterDetail = () => {
   const [isSelected, setIsSelected] = useState(1)
-  const {id} = useParams();
+  const { id } = useParams();
   const navigate = useNavigate();
   const [semester, setSemester] = useState({});
 
   //get semester by id
   useEffect(() => {
     request.get(`Semester/${id}`)
-    .then(res => {
-      if(res.status === 200){
-        setSemester(res.data)
-      }
-    })
-    .catch(err => {
-      alert('Fail to load Semester Detail!')
-    })
+      .then(res => {
+        if (res.status === 200) {
+          setSemester(res.data)
+        }
+      })
+      .catch(err => {
+        alert('Fail to load Semester Detail!')
+      })
   }, [id])
 
   const backToSemester = () => {
@@ -33,46 +35,60 @@ const SemesterDetail = () => {
 
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
-      <Stack color='#778899' mb={1} direction='row' mt={1}
-        alignItems='center' gap={4}
-      >
-        <Tooltip title='Back to Semester' arrow>
-          <IconButton onClick={backToSemester}>
-            <ArrowBackIosNew />
-          </IconButton>
-        </Tooltip>
-        {Object.values(semester).length > 0 && 
-        <Typography variant='h5' fontWeight={500}>
-          Semester: {semester?.Term} {'('}
-          {semester?.DateStartFormat.split('-').reverse().join('/')} to {' '}
-          {semester?.DateEndFormat.split('-').reverse().join('/')} - {' '}
-          {semester?.DateStatus}{')'}
-        </Typography>}
+      <Stack direction='row' alignItems='center' justifyContent='space-between' mt={1}>
+        <Stack direction='row' alignItems='center' gap={4}>
+          <Tooltip title='Back to Semester' arrow>
+            <IconButton onClick={backToSemester}>
+              <ArrowBackIosNew />
+            </IconButton>
+          </Tooltip>
+          <Title title={`Semester: ${semester.Term}`} />
+        </Stack>
+        <Stack pr={9} alignItems='center'>
+          {semester.State === 1 &&
+            <Typography color={red[700]}>Rating is not opened yet</Typography>}
+          {semester.State === 2 &&
+            <>
+              <Typography color={green[700]}>Rating is opened</Typography>
+              <Typography color={green[700]}>Rating subjects and slots now!</Typography>
+            </>}
+          {semester.State === 3 &&
+            <>
+              <Typography color={blue[700]}>Semester has blocked</Typography>
+              <Typography color={blue[700]}>Can not edit already Ratings</Typography>
+            </>}
+        </Stack>
       </Stack>
-      <Stack direction='row' px={9} gap={8} mb={3}>
-        {
-          tabs.map(tab => (
-            <Typography key={tab.id} fontSize='18px' onClick={() => setIsSelected(tab.id)}
-              className={isSelected === tab.id ? 'selected-tab' : 'detail-tab'}
-              borderRight='1px solid gray' pr={8}
-              sx={{ '&:last-child': { borderRight: 'none' } }}
-            >
-              {tab.name}
-            </Typography>
-          ))
-        }
+      <Stack px={9} direction='row' gap={4} mb={4}>
+        <Typography>Start: {semester.DateStartFormat}</Typography>
+        <Typography>End: {semester.DateEndFormat}</Typography>
+        <Typography>Status: {semester.DateStatus}</Typography>
+      </Stack>
+      <Stack px={9} mb={2}>
+        <Stack direction='row' gap={8} borderBottom='1px solid #e3e3e3'>
+          {
+            tabs.map(tab => (
+              <Typography key={tab.id} fontSize='20px' py={0.5} onClick={() => setIsSelected(tab.id)}
+                color={isSelected === tab.id ? green[700] : grey[500]}
+                borderBottom={isSelected === tab.id && `4px solid ${green[700]}`}
+                sx={{ '&:hover': { cursor: 'pointer', color: green[700] } }}>
+                {tab.name}
+              </Typography>
+            ))
+          }
+        </Stack>
       </Stack>
       {
         isSelected === 1 &&
-        <Schedule semester={semester}/>
+        <Schedule semester={semester} />
       }
       {
         isSelected === 2 &&
-        <Subject semesterId={id}/>
+        <Subject semesterId={id} semesterState={semester.State}/>
       }
       {
         isSelected === 3 &&
-        <SlotType semesterId={id}/>
+        <SlotType semesterId={id} semesterState={semester.State}/>
       }
     </Stack>
   )

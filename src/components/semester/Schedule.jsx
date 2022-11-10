@@ -80,6 +80,8 @@ const Schedule = ({ semester, selectedId }) => {
       </Stack>
       <Timetable selectedSemester={semester?.Id} selectedWeekObj={selectedWeekObj}
         lecturerId={selectedId ? selectedId : account.Id}/>
+      <Box height='16px'>
+      </Box>
     </Box>
   )
 }

@@ -163,7 +163,8 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                                 <Typography borderRight={!admin && '1px solid gray'} pr={2}>
                                   {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint}
                                 </Typography>
-                                {!admin && <Tooltip title='Give point' placement='right'>
+                                {semester.State === 2 && !admin && 
+                                <Tooltip title='Give point' placement='right'>
                                   <IconButton color='primary' onClick={() => handleFeedback(subject.Id)}
                                     size='small'>
                                     <ChatOutlined />

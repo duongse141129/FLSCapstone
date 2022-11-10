@@ -1,4 +1,4 @@
-import {CalendarMonth, AccountBox, AccessTime, Business} 
+import {CalendarMonth, AccountBox, AccessTime, Business, LocalLibraryOutlined} 
 from '@mui/icons-material';
 
 export const lecturerTabs = [
@@ -13,6 +13,10 @@ export const lecturerTabs = [
   {
     name: 'department',
     icon: <Business/>
+  },
+  {
+    name: 'subject',
+    icon: <LocalLibraryOutlined/>
   },
   {
     name: 'profile',
