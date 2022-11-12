@@ -41,7 +41,7 @@ const Semester = () => {
       <Typography color='gray' px={9} variant='subtitle1' mb={4}>
         List of all semesters
       </Typography>
-      <Stack px={9} gap={4} direction='row' flexWrap='wrap' justifyContent='center'>
+      <Stack px={9} gap={4} direction='row' flexWrap='wrap' justifyContent='space-between'>
         {
           loading && <HashLoader size={30} color={green[600]}/>
         }

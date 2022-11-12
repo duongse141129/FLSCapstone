@@ -39,7 +39,6 @@ const SemesterAdmin = () => {
     setIsCreate(true);
   }
 
-
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
       <Stack px={9} mt={1} mb={6} direction='row' justifyContent='space-between' alignItems='flex-start'>

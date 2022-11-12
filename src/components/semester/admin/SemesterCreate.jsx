@@ -1,7 +1,6 @@
 import {
   Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  TextField,
-  Typography
+  TextField, Typography
 } from '@mui/material';
 import { Stack } from '@mui/system';
 

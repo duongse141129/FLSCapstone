@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import Day from './Day';
 import request from '../../utils/request'
 
-const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId }) => {
+const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp }) => {
   const [courseAssign, setCourseAssign] = useState([]);
   const [slotType, setSlotType] = useState([]);
   const [loadingCourseAssign, setLoadingCourseAssign] = useState(false);
@@ -165,9 +165,9 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId }) => {
           <>
           {
             courseAssign.length === 0 &&
-            <Typography color='red' px={9}>No courses in this time</Typography>
+            <Typography color='red' px={popUp ? '' : 9}>No courses in this time</Typography>
           }
-          <Stack height='100%' direction='row' px={9} mb={1} minWidth='920px' minHeight='445px'>
+          <Stack height='100%' direction='row' px={popUp ? '' : 9} mb={1} minWidth='920px' minHeight='445px'>
             <Stack flex={0.6} bgcolor='white'>
               <Stack flex={0.8} color='white' bgcolor={green[600]}
                 borderRight='1px solid #e3e3e3' borderBottom='1px solid #e3e3e3'

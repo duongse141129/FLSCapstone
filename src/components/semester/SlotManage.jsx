@@ -165,39 +165,37 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
 
   return (
     <Stack height='90vh'>
-      <Typography color='gray' px={9} variant='subtitle1' mb={1}>
-        *Ban slot to disable teaching that time
+      <Typography color='gray' variant='subtitle1' mb={1}>
+        *View favorite point and Disable teaching slot
       </Typography>
-      <Stack direction='row' gap={5} px={9} mb={2}>
-        <Typography><span style={{fontWeight: 500}}>Lecturer:</span> {lecturer.Name}</Typography>
-        <Typography><span style={{fontWeight: 500}}>Department:</span> {lecturer.DepartmentName}</Typography>
-        <Typography><span style={{fontWeight: 500}}>Email:</span> {lecturer.Email}</Typography>
-      </Stack>
       {!admin && lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
-        <Stack px={9}>
+        <Stack>
           <Alert severity="error">Can not ban slot to lecturer outside my department</Alert>
         </Stack>
       }
       { ((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) &&
-        <><Stack direction='row' justifyContent='space-between' px={9} mb={1} alignItems='center'>
+        <><Stack direction='row' justifyContent='space-between' mb={1} alignItems='center'>
           <Stack direction='row' alignItems='center' gap={2}>
-            <Typography color={red[600]}>Ban turn: {bans.length}/{configData.BAN_TURN}</Typography>
-            <Typography color={grey[500]} variant='subtitle1'>(*Re-ban to ban new one)</Typography>
+            <Typography color={red[600]}>Disable turn: {bans.length}/{configData.BAN_TURN}</Typography>
+            <Typography color={grey[500]} variant='subtitle1'>(*Re-select to disable new one)</Typography>
           </Stack>
           {semester.State === 2 && !admin && 
           <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
             <Switch checked={edit} onChange={() => setEdit(!edit)} />
             <Typography pr={2}>
-              {edit ? <span style={{ color: blue[600] }}>Ban On</span> : 'Ban Off'}
+              {edit ? <span style={{ color: blue[600] }}>Disable On</span> : 'Disable Off'}
             </Typography>
           </Stack>}
         </Stack>
-          <Stack px={9} mb={2}>
-            <Paper sx={{ minWidth: 700, mb: 2 }}>
+          <Stack>
+            <Paper sx={{ minWidth: 700}}>
               <TableContainer component={Box}>
                 <Table>
                   <TableHead>
                     <TableRow sx={{ bgcolor: indigo[600] }}>
+                      <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
+                        <Typography>Code</Typography>
+                      </TableCell>
                       <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
                         <Typography>Day of Week</Typography>
                       </TableCell>
@@ -211,13 +209,14 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
                         <Typography>Rating</Typography>
                       </TableCell>
                       <TableCell size='small' align='center' sx={{ color: 'white' }}>
-                        <Typography>Ban Option</Typography>
+                        <Typography>Disable Option</Typography>
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {slots.map(slot => (
                       <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: 'pointer' } }} onClick={() => handleBan(slot.Id)}>
+                        <TableCell size='small' align='center' className='manage-slot'>{slot.SlotTypeCode}</TableCell>
                         <TableCell size='small' align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>
                         <TableCell size='small' align='center' className='manage-slot'>{slot.Duration}</TableCell>
                         <TableCell size='small' align='center' className='manage-slot'>{slot.SlotNumber}</TableCell>

@@ -161,14 +161,17 @@ const SemesterDetailAdmin = () => {
         </Stack>
         <Stack pr={9} direction='row' gap={1}>
           {semester.State === 1 && 
-            <Button variant='outlined' onClick={openVoting}>Open Voting</Button>}
+            <Button variant='outlined' size='small' onClick={openVoting}>Open Voting</Button>}
           {semester.State === 2 && 
             <>
-              <Button variant='outlined' onClick={closeVoting}>Close Voting</Button>
-              <Button variant='outlined' onClick={block}>Block</Button>
+              <Button variant='outlined' color='info' size='small' onClick={closeVoting}>
+                Close Voting</Button>
+              <Button variant='contained' color='success' size='small' onClick={block}>
+                Block</Button>
             </>}
           {semester.State === 3 && 
-            <Button variant='outlined' onClick={unBlock}>Unblock</Button>}  
+            <Button variant='outlined' color='info' size='small' onClick={unBlock}>
+              Unblock</Button>}  
         </Stack>
       </Stack>
 

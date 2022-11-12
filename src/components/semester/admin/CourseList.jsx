@@ -1,9 +1,10 @@
 import { Add, FileUploadOutlined } from '@mui/icons-material';
 import { Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material'
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import * as XLSX from "xlsx";
 
 const CourseList = () => {
+  const fileInput = useRef(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
   const [courses, setCourses] = useState([]);
@@ -16,6 +17,10 @@ const CourseList = () => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const clickImport = () => {
+    fileInput.current.click();
+  }
 
   const checkFileName = (name) => {
     const acceptableName = ['xlsx', 'xls'];
@@ -67,11 +72,12 @@ const CourseList = () => {
   return (
     <Stack height='90vh' px={9} mt={4}>
       <Stack direction='row' mb={2} gap={2}>
-        <input id="btn-upload" name="btn-upload" style={{ display: 'none' }} type="file" 
+        <input ref={fileInput} style={{ display: 'none' }} type="file" 
           onChange={(e) => changeFile(e)}
         />
-        <Button variant='contained' size='small' endIcon={<FileUploadOutlined />}>
-          <label htmlFor="btn-upload">Import</label>
+        <Button variant='contained' size='small' endIcon={<FileUploadOutlined />}
+          onClick={clickImport}>
+          Import
         </Button>
         <Button variant='contained' size='small' endIcon={<Add />}>
           Add

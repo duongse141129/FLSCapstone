@@ -1,10 +1,10 @@
-import { RadioButtonUnchecked, Beenhere, CheckCircleOutline, ManageAccountsOutlined, Check } from '@mui/icons-material'
+import { Beenhere, ManageAccountsOutlined, Check, MoreHoriz } from '@mui/icons-material'
 import { Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
 import { green, grey } from '@mui/material/colors';
 import React, { useState, useEffect } from 'react';
 import request from '../../../utils/request';
 
-const LecturerList = ({ handleSelect, selectedId, admin }) => {
+const LecturerList = ({ handleSelect, admin }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -86,10 +86,6 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
     setSelectedDepartment(e.target.value);
   }
 
-  const handlePick = (id) => {
-    handleSelect(id);
-  }
-
   const myDepartment = () => {
     if (selectedDepartment !== account.DepartmentId) {
       setSelectedDepartment(account.DepartmentId)
@@ -140,14 +136,14 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
                   <TableCell size='small' className='subject-header'>Email</TableCell>
                   <TableCell size='small' className='subject-header'>Department</TableCell>
                   <TableCell size='small' className='subject-header'>FullTime</TableCell>
-                  <TableCell size='small' className='subject-header'>Selected</TableCell>
+                  <TableCell size='small' className='subject-header'>More</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {
                   lecturers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((lecturer) => (
-                      <TableRow key={lecturer.Id} hover>
+                      <TableRow key={lecturer.Id} hover onClick={() => handleSelect(lecturer.Id, lecturer.Name, lecturer.Email)}>
                         <TableCell size='small'>{lecturer.Id}</TableCell>
                         <TableCell size='small'>
                           <Stack direction='row' alignItems='center' gap={1}>
@@ -166,14 +162,8 @@ const LecturerList = ({ handleSelect, selectedId, admin }) => {
                             <Check />}
                         </TableCell>
                         <TableCell size='small'>
-                          <Tooltip title='Select' placement='right'>
-                            <IconButton color={selectedId === lecturer.Id ? 'success' : 'info'}
-                              onClick={() => handlePick(lecturer.Id)}>
-                              {
-                                selectedId === lecturer.Id ? <CheckCircleOutline /> :
-                                  <RadioButtonUnchecked />
-                              }
-                            </IconButton>
+                          <Tooltip title='More' placement='right'>
+                            <IconButton><MoreHoriz/></IconButton>
                           </Tooltip>
                         </TableCell>
                       </TableRow>

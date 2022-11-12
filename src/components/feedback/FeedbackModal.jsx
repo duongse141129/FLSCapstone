@@ -99,7 +99,7 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
               onChange={handleChangeValue}
             >
               <Stack direction='row' alignItems='center'>
-                <Tooltip title='Dislike' placement='bottom'>
+                <Tooltip title='Dissatisfied' placement='bottom'>
                   <IconButton onClick={handleDislike}>
                     <SentimentDissatisfiedOutlined sx={{ color: red[500], fontSize: '30px' }} />
                   </IconButton>
@@ -109,7 +109,7 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
                 <FormControlLabel value='3' control={<Radio color='success' />} label="3" labelPlacement='bottom' />
                 <FormControlLabel value='4' control={<Radio />} label="4" labelPlacement='bottom' />
                 <FormControlLabel value='5' control={<Radio />} label="5" labelPlacement='bottom' />
-                <Tooltip title='Like' placement='bottom'>
+                <Tooltip title='Satisfied' placement='bottom'>
                   <IconButton onClick={handleLike}>
                     <SentimentVerySatisfiedOutlined sx={{ color: blue[600], fontSize: '30px' }} />
                   </IconButton>

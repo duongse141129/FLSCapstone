@@ -3,7 +3,7 @@ import { useState, useEffect } from 'react'
 import { getWeeksInYear, getSemesterWeeks } from '../../utils/weeksInYear';
 import Timetable from '../main/Timetable'
 
-const Schedule = ({ semester, selectedId }) => {
+const Schedule = ({ semester, selectedId, popUp }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [weeksInYear, setWeeksInYear] = useState([]);
   const [weeksInSemester, setWeeksInSemester] = useState([]);
@@ -57,7 +57,7 @@ const Schedule = ({ semester, selectedId }) => {
 
   return (
     <Box height='100%' mb={1}>
-      <Stack direction='row' gap={1} alignItems='center' px={9} mb={2}>
+      <Stack direction='row' gap={1} alignItems='center' px={popUp ? '' : 9} mb={2}>
         <Typography fontWeight={500}>Week</Typography>
         <Select color='success'
           size='small'
@@ -79,7 +79,7 @@ const Schedule = ({ semester, selectedId }) => {
         </Select>
       </Stack>
       <Timetable selectedSemester={semester?.Id} selectedWeekObj={selectedWeekObj}
-        lecturerId={selectedId ? selectedId : account.Id}/>
+        lecturerId={selectedId ? selectedId : account.Id} popUp={popUp}/>
       <Box height='16px'>
       </Box>
     </Box>

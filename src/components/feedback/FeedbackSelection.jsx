@@ -18,6 +18,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
   const [selectedId, setSelectedId] = useState('');
   const [loadPoint, setLoadPoint] = useState(false);
 
+  //get lecturer by id
   useEffect(() => {
     request.get(`User/${id}`)
       .then(res => {
@@ -30,51 +31,47 @@ const FeedbackSelection = ({ id, semester, admin }) => {
       })
   }, [id])
 
+  //get subject by department of manager
   useEffect(() => {
     const getSubjects = async () => {
       try {
         const response = await request.get('Subject', {
           params: {
             DepartmentId: lecturer.DepartmentId,
-            pageIndex: 1,
-            pageSize: 1000
+            pageIndex: 1, pageSize: 1000
           }
         })
         if (response.data) {
           setSubjects(response.data)
         }
       }
-      catch (error) {
-        alert('Fail to load subjects!');
-      }
+      catch (error) {alert('Fail to load subjects!')}
     }
 
     getSubjects();
   }, [lecturer.DepartmentId])
 
+  //get list subject of lecturer to get favorite and feedback point
   useEffect(() => {
     const getFavoriteSubjects = async () => {
       try {
         const response = await request.get('SubjectOfLecturer', {
           params: {
-            SemesterId: semester.Id,
-            LecturerId: id,
-            pageIndex: 1,
-            pageSize: 1000
+            SemesterId: semester.Id, LecturerId: id,
+            pageIndex: 1, pageSize: 1000
           }
         })
         if (response.data) {
           setPoints(response.data)
         }
       }
-      catch (error) {
-        alert('Fail to load favortite points')
-      }
+      catch (error) {alert('Fail to load favortite points')}
     }
 
     getFavoriteSubjects();
   }, [id, semester.Id, isFeedback])
 
+  // set row per page
   useEffect(() => {
     if (subjects.length > 0) {
       setRowsPerPage(subjects.length)
@@ -98,30 +95,16 @@ const FeedbackSelection = ({ id, semester, admin }) => {
 
   return (
     <Stack flex={5} height='90vh'>
-      <Typography color='gray' px={9} variant='subtitle1' mb={1}>
+      <Typography color='gray' variant='subtitle1' mb={1}>
         *Give feedback point to a lecturer with each subject
       </Typography>
-      <Stack direction='row' alignItems='center' px={9} mb={2} gap={5}>
-        <Typography>
-          <span style={{ fontWeight: 500 }}>Lecturer: </span>
-          <span>{lecturer.Name}</span>
-        </Typography>
-        <Typography>
-          <span style={{ fontWeight: 500 }}>Department: </span>
-          <span>{lecturer.DepartmentName}</span>
-        </Typography>
-        <Typography>
-          <span style={{ fontWeight: 500 }}>Email: </span>
-          <span>{lecturer.Email}</span>
-        </Typography>
-      </Stack>
       {!admin && lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
-        <Stack px={9}>
+        <Stack>
           <Alert severity="error">Can not give feedback point to lecturer outside my department</Alert>
         </Stack>
       }
       {((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) &&
-          <Stack px={9} mb={2}>
+          <Stack mb={2}>
             <Paper sx={{ minWidth: 700, mb: 2 }}>
               <TableContainer component={Box}
                 sx={{ overflow: 'auto' }}>
@@ -147,12 +130,8 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                       subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                         .map((subject) => (
                           <TableRow key={subject.Id} hover>
-                            <TableCell size='small'>
-                              {subject.Id}
-                            </TableCell>
-                            <TableCell size='small'>
-                              {subject.SubjectName}
-                            </TableCell>
+                            <TableCell size='small'>{subject.Id}</TableCell>
+                            <TableCell size='small'>{subject.SubjectName}</TableCell>
                             <TableCell size='small'>
                               <Typography>
                                 {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.FavoritePoint}
