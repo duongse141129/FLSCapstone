@@ -13,6 +13,7 @@ const SemesterDetailManager = () => {
   const navigate = useNavigate();
   const [selected, setSelected] = useState(tabs[0].name);
   const [semester, setSemester] = useState({});
+  const [schedule, setSchedule] = useState({});
 
   useEffect(() => {
     request.get(`Semester/${id}`)
@@ -24,6 +25,16 @@ const SemesterDetailManager = () => {
       .catch(err => {
         alert('Fail to load semester')
       })
+  }, [id])
+
+  useEffect(() => {
+    request.get('Schedule', {
+      params: {SemesterId: id, pageIndex: 1, pageSize: 10}
+    })
+    .then(res => {
+      if(res.data.length > 0) setSchedule(res.data[0])
+    })
+    .catch(err => alert('Fail to get schedule'))
   }, [id])
 
   const backToSemesters = () => {
@@ -103,7 +114,7 @@ const SemesterDetailManager = () => {
         </Stack>
       </Stack>
       {selected === 'Lecturers' && <LecturerContainer semester={semester} />}
-      {selected === 'Courses' && <CourseList semesterId={id} />}
+      {selected === 'Courses' && <CourseList semesterId={id} scheduleId={schedule.Id}/>}
     </Stack>
   )
 }
