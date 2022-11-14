@@ -64,8 +64,7 @@ const PriorityModal = ({ isPriority, setIsPriority, lecturer, semesterId, course
             const scheduleId = resSchedule.data[0].Id;
             const resAssignCourse = await request.get('CourseAssign', {
               params: {
-                LecturerId: lecturer.Id, ScheduleId: scheduleId,
-                isAssign: 1, pageIndex: 1, pageSize: 1000
+                ScheduleId: scheduleId, isAssign: 1, pageIndex: 1, pageSize: 1000
               }
             })
             if (resAssignCourse.data) {

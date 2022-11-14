@@ -198,7 +198,7 @@ const SlotType = ({ semesterId, semesterState }) => {
       </Stack>
       <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
         <Stack direction='row' alignItems='center' gap={2}>
-          <Typography fontWeight={500}>Mode</Typography>
+          <Typography fontWeight={500}>Mode: </Typography>
           <FormControl>
             <RadioGroup
               value={mode}

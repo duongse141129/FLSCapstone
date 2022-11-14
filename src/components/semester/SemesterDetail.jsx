@@ -1,5 +1,5 @@
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
-import { ArrowBackIosNew } from '@mui/icons-material';
+import { ArrowBackIosNew, Check, HorizontalRule } from '@mui/icons-material';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import SlotType from './SlotType';
@@ -59,10 +59,38 @@ const SemesterDetail = () => {
             </>}
         </Stack>
       </Stack>
-      <Stack px={9} direction='row' gap={4} mb={4}>
+      <Stack px={11} gap={1} mb={0.5}>
         <Typography>Start: {semester.DateStartFormat}</Typography>
         <Typography>End: {semester.DateEndFormat}</Typography>
         <Typography>Status: {semester.DateStatus}</Typography>
+      </Stack>
+      <Stack px={9} mb={2}>
+        <Stack direction='row' gap={1} border='1px solid #e3e3e3' py={0.5} borderRadius={2}
+          justifyContent='center'>
+          <Stack direction='row' alignItems='center' gap={1}>
+            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
+              bgcolor={semester.State === 1 ? blue[600] : grey[400]}>
+              {semester.State === 1 && <Check sx={{ color: 'white' }} />}
+            </Stack>
+            <Typography>New</Typography>
+            <HorizontalRule />
+          </Stack>
+          <Stack direction='row' alignItems='center' gap={1}>
+            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
+              bgcolor={semester.State === 2 ? blue[600] : grey[400]}>
+              {semester.State === 2 && <Check sx={{ color: 'white' }} />}
+            </Stack>
+            <Typography>Voting</Typography>
+            <HorizontalRule />
+          </Stack>
+          <Stack direction='row' alignItems='center' gap={1}>
+            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
+              bgcolor={semester.State === 3 ? blue[600] : grey[400]}>
+              {semester.State === 3 && <Check sx={{ color: 'white' }} />}
+            </Stack>
+            <Typography>Blocked</Typography>
+          </Stack>
+        </Stack>
       </Stack>
       <Stack px={9} mb={2}>
         <Stack direction='row' gap={8} borderBottom='1px solid #e3e3e3'>
@@ -84,11 +112,11 @@ const SemesterDetail = () => {
       }
       {
         isSelected === 2 &&
-        <Subject semesterId={id} semesterState={semester.State}/>
+        <Subject semesterId={id} semesterState={semester.State} />
       }
       {
         isSelected === 3 &&
-        <SlotType semesterId={id} semesterState={semester.State}/>
+        <SlotType semesterId={id} semesterState={semester.State} />
       }
     </Stack>
   )
@@ -103,7 +131,7 @@ const tabs = [
   },
   {
     id: 2,
-    name: 'Teachable Subject'
+    name: 'Subject Rating'
   },
   {
     id: 3,

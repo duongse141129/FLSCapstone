@@ -189,9 +189,9 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
         {!isLoading && !isSuccess &&
           <>
             {error &&
-              <Alert severity="error">{error}</Alert>
+              <Alert severity="error" sx={{mr: 2}}>{error}</Alert>
             }
-            <Button onClick={() => setIsRating(false)} color='info'>Cancel</Button>
+            <Button onClick={() => setIsRating(false)} color='info' variant='outlined'>Cancel</Button>
             <Button variant='contained' onClick={handleSave} autoFocus
               disabled={value === subjectFavorite?.FavoritePoint || error.length > 0}>
               Save
