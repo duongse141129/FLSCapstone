@@ -200,38 +200,22 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
 
   return (
     <Stack flex={5} height='90vh'>
-      <Typography color='gray' px={9} variant='subtitle1'>
+      <Typography color='gray' variant='subtitle1'>
         *Courses which lecturer is assigned
       </Typography>
       {!admin && outSide &&
-        <Stack px={9} mb={2}>
+        <Stack mb={2}>
           <Alert severity="warning">This lecturer outside my department</Alert>
         </Stack>}
-      <Stack direction='row' alignItems='center' px={9} mb={2} gap={4}>
-        <Typography>
-          <span style={{ fontWeight: 500 }}>Lecturer: </span>
-          <span>{lecturer.Name}</span>
-        </Typography>
-        <Typography>
-          <span style={{ fontWeight: 500 }}>Department: </span>
-          <span>{lecturer.DepartmentName}</span>
-        </Typography>
-        <Typography>
-          <span style={{ fontWeight: 500 }}>Email: </span>
-          <span>{lecturer.Email}</span>
-        </Typography>
-      </Stack>
-      <Stack direction='row' alignItems='center' px={9} mb={1} justifyContent='space-between'>
-        <Typography fontWeight={500}>Assigned Courses</Typography>
+      <Stack direction='row' alignItems='center' mb={1} justifyContent='space-between'>
+        <Typography fontWeight={500}>Assigned Courses: {fixCourses.length}</Typography>
         {semester.State === 2 && !admin && 
         <Button variant='contained' color='secondary' size='small' endIcon={<AssignmentOutlined />}
           onClick={() => setIsAssign(true)}>
           Assign
         </Button>}
       </Stack>
-      {fixCourses.length === 0 &&
-        <Typography color={red[600]} px={9}>No courses have been assigned</Typography>}
-      <Stack px={9} mb={2}>
+      <Stack mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}
             sx={{ overflow: 'auto' }}>
@@ -251,7 +235,8 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
               </TableHead>
               <TableBody>
                 {
-                  fixCourses.map(course => (
+                  fixCourses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map(course => (
                     <TableRow hover key={course.Id}>
                       <TableCell size='small'>{course.CourseId}</TableCell>
                       <TableCell size='small'>

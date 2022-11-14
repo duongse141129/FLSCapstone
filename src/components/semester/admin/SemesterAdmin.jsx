@@ -43,7 +43,7 @@ const SemesterAdmin = () => {
     <Stack flex={5} height='90vh' overflow='auto'>
       <Stack px={9} mt={1} mb={6} direction='row' justifyContent='space-between' alignItems='flex-start'>
         <Title title='Semester' subTitle='List of all semesters' />
-        <Button variant='contained' size='small' onClick={addSemester} endIcon={<Add/>}>
+        <Button variant='contained' color='success' onClick={addSemester} endIcon={<Add/>}>
           Create</Button>
       </Stack>
       <Stack px={9} gap={4} direction='row' flexWrap='wrap' justifyContent='center'>

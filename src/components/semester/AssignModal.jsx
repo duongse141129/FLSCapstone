@@ -1,9 +1,10 @@
-import { Beenhere } from '@mui/icons-material';
+import { Assignment, Beenhere } from '@mui/icons-material';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
   MenuItem, Select, Stack, Tooltip, Typography
 } from '@mui/material';
-import { blueGrey, green, grey } from '@mui/material/colors';
+import { blueGrey, green, grey, red } from '@mui/material/colors';
 import { useEffect, useState, useMemo } from 'react';
+import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
 const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, scheduleId, assignedCourses }) => {
@@ -16,6 +17,8 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
   const [selectedSlot, setSelectedSlot] = useState({});
   const [disableSlots, setDisableSlots] = useState([]);
   const [myCourses, setMyCourses] = useState([]);
+  const [loadSlot, setLoadSlot] = useState(false);
+  const [loadLecturer, setLoadLecturer] = useState(false);
   const courseTime = useMemo(() => {
     if(selectedCourse && assignedCourses.length > 0){
       let time = [];
@@ -52,6 +55,7 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
 
   //get lecturers by selected department
   useEffect(() => {
+    setLoadLecturer(true)
     request.get('User', {
       params: {
         DepartmentId: selectedDepartment, RoleIDs: 'LC', sortBy: 'Id', order: 'Asc',
@@ -60,6 +64,7 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
     }).then(res => {
       if (res.data) {
         setLecturers(res.data)
+        setLoadLecturer(false)
       }
     }).catch(err => alert('Fail to load lecturers'))
   }, [selectedDepartment])
@@ -82,7 +87,7 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
         alert('Fail to load disable slots')
       }) 
     }
-  }, [selectedLecturer.Id, semesterId])
+  }, [selectedLecturer.Id, semesterId, isAssign])
 
   //get my assigned courses
   useEffect(() => {
@@ -98,10 +103,11 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
         };
       }).catch(err => alert('Fail to get my assigned courses'))
     }
-  }, [selectedLecturer.Id, scheduleId])
+  }, [selectedLecturer.Id, scheduleId, isAssign])
 
   //get slots type by semesterId
   useEffect(() => {
+    setLoadSlot(true);
     request.get('SlotType', {
       params: {
         SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc',
@@ -119,18 +125,23 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
         for(let i in disableSlots){
           dataSlot = dataSlot.filter(data => data.Id !== disableSlots[i].SlotTypeId)
         }
-        setSlots(dataSlot) 
+        setSlots(dataSlot)
+        setLoadSlot(false); 
       }
     }).catch(err => alert('Fail to load slots'))
   }, [semesterId, myCourses, courseTime, disableSlots])
 
   const handleSelectDepartment = (e) => {
     setSelectedDepartment(e.target.value);
+    setSelectedLecturer({});
+    setSelectedSlot({});
   }
 
   const myDepartment = () => {
     if (selectedDepartment !== account.DepartmentId) {
       setSelectedDepartment(account.DepartmentId)
+      setSelectedLecturer({});
+      setSelectedSlot({});
     }
   }
 
@@ -171,19 +182,27 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
       open={isAssign} onClose={() => setIsAssign(false)}
     >
       <DialogTitle>
-        <Stack direction='row' alignItems='center' gap={1}>
-          <Typography variant='h5'>Assign Course: {selectedCourse}</Typography>
+        <Stack direction='row' alignItems='center' gap={1} mb={2} color={blueGrey[500]}>
+          <Assignment />
+          <Typography variant='h5' fontWeight={500}>Assign Course: </Typography>
+          <Typography variant='h5'>{selectedCourse}</Typography>
+        </Stack>
+        <Stack direction='row' mb={1} gap={1}>
+          <Typography fontWeight={500}>Lecturer<span style={{ color: red[500] }}>*</span>:</Typography>
+          <Typography>
+            {selectedLecturer.Id ? `${selectedLecturer.Name} (${selectedLecturer.Email} - ${selectedLecturer.DepartmentName})` 
+              : <span style={{ color: red[600] }}>required</span>}
+          </Typography>
+        </Stack>
+        <Stack direction='row' gap={1}>
+          <Typography fontWeight={500}>Slot<span style={{ color: red[500] }}>*</span>: </Typography>
+          <Typography>
+            {selectedSlot.Id ? `${selectedSlot.SlotTypeCode} (${selectedSlot.Duration}, ${selectedSlot.ConvertDateOfWeek})`
+              :<span style={{ color: red[600] }}>required</span>}
+          </Typography>
         </Stack>
       </DialogTitle>
       <DialogContent>
-        <Stack direction='row' mb={1} gap={1}>
-          <Typography fontWeight={500}>Lecturer:</Typography>
-          <Typography>{selectedLecturer.Id}</Typography>
-        </Stack>
-        <Stack direction='row' gap={1} mb={1}>
-          <Typography fontWeight={500}>Slot: </Typography>
-          <Typography>{selectedSlot.Id}</Typography>
-        </Stack>
         <Stack direction='row' height='400px' gap={2}>
           <Stack flex={1}>
             <Stack flex={1} mb={1} direction='row' alignItems='center'>
@@ -207,12 +226,13 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
               </Tooltip>
             </Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
-              {lecturers.map(lecturer => (
+              {loadLecturer && <Stack px={2} py={1}><ClipLoader size={30}/></Stack>}
+              {!loadLecturer && lecturers.map(lecturer => (
                 <Typography key={lecturer.Id} px={2} py={1} borderBottom='1px solid #e3e3e3'
-                  bgcolor={JSON.stringify(selectedLecturer) === JSON.stringify(lecturer) && blueGrey[200]}
+                  bgcolor={JSON.stringify(selectedLecturer) === JSON.stringify(lecturer) && blueGrey[100]}
                   sx={{
                     transition: 'all 0.1s linear',
-                    '&:hover': { cursor: 'pointer', bgcolor: blueGrey[200] }
+                    '&:hover': { cursor: 'pointer', bgcolor: blueGrey[100] }
                   }}
                   onClick={() => handleSelectLecturer(lecturer)}
                 >
@@ -225,12 +245,17 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
               Available Slots
             </Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
-              {Object.values(selectedLecturer).length > 0 && slots.map(slot => (
+              {selectedLecturer.Id && loadSlot && 
+                <Stack px={2} py={1}><ClipLoader size={30}/></Stack>
+              }
+              {slots.length === 0 && <Typography px={2} py={1} color={red[600]}>
+                No available slots</Typography>}
+              {selectedLecturer.Id && !loadSlot && slots.map(slot => (
                 <Typography key={slot.Id} px={2} py={1} borderBottom='1px solid #e3e3e3'
-                  bgcolor={JSON.stringify(selectedSlot) === JSON.stringify(slot) && blueGrey[200]}
+                  bgcolor={JSON.stringify(selectedSlot) === JSON.stringify(slot) && blueGrey[100]}
                   sx={{
                     transition: 'all 0.1s linear',
-                    '&:hover': { cursor: 'pointer', bgcolor: blueGrey[200] }
+                    '&:hover': { cursor: 'pointer', bgcolor: blueGrey[100] }
                   }}
                   onClick={() => handleSelectSlot(slot)}
                 >
@@ -241,8 +266,19 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
         </Stack>
       </DialogContent>
       <DialogActions>
-        <Button color='info' variant='outlined'>Cancel</Button>
-        <Button variant='contained' onClick={handleSave}>
+      <Stack mr={4}>
+        {
+          selectedLecturer.Id && selectedSlot.Id  &&
+          <Typography variant='subtitle1' color={green[600]}>*Ready to save</Typography>
+        }
+        {
+          (!selectedLecturer.Id || !selectedSlot.Id ) &&
+          <Typography variant='subtitle1' color={red[500]}>*Choose lecturer then choose slot</Typography>
+        }
+        </Stack>
+        <Button color='info' variant='outlined' onClick={() => setIsAssign(false)}>Cancel</Button>
+        <Button variant='contained' color='secondary' onClick={handleSave}
+          disabled={(selectedLecturer.Id && selectedSlot.Id) ? false : true}>
           Save
         </Button>
       </DialogActions>

@@ -6,12 +6,10 @@ const LecturerContainer = ({admin, semester}) => {
   const [isSelected, setIsSelected] = useState(false);
   const [selectedLecturer, setSelectedLecturer] = useState({});
 
-  const handleSelect = (id, name, email) => {
-    setSelectedLecturer({id, name, email})
+  const handleSelect = (lecturer) => {
+    setSelectedLecturer(lecturer)
     setIsSelected(true);
   }
-
-  console.log(selectedLecturer)
 
   return (
     <>

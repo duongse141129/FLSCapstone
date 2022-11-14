@@ -67,7 +67,7 @@ const SemesterDetailManager = () => {
             </>}
         </Stack>
       </Stack>
-      <Stack px={9} mb={1} >
+      <Stack px={9}>
         <Stack gap={1} px={1}>
           <Typography>Start: {semester.DateStartFormat}</Typography>
           <Typography>End: {semester.DateEndFormat}</Typography>

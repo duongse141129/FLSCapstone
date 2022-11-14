@@ -31,7 +31,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
       })
   }, [id])
 
-  //get subject by department of manager
+  //get subject by department of lecturer
   useEffect(() => {
     const getSubjects = async () => {
       try {

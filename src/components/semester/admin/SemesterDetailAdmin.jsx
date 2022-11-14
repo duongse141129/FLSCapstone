@@ -1,6 +1,6 @@
-import { ArrowBackIosNew } from '@mui/icons-material'
+import { ArrowBackIosNew, Check, HorizontalRule } from '@mui/icons-material'
 import { Button, IconButton, Stack, Tooltip, Typography } from '@mui/material'
-import { green, grey } from '@mui/material/colors'
+import { blue, green, grey } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
 import request from '../../../utils/request'
@@ -61,90 +61,90 @@ const SemesterDetailAdmin = () => {
   }
 
   const saveOpenVoting = () => {
-    if(semester){
+    if (semester) {
       request.put(`Semester/${id}`, {
         Term: semester.Term, DateStart: semester.DateStart,
         DateEnd: semester.DateEnd, State: 2
       })
-      .then(res => {
-        if(res.status === 200){
+        .then(res => {
+          if (res.status === 200) {
+            setIsConfirm(false)
+            toast.success('Open Successfully!', {
+              position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
+              pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
+            });
+          }
+        })
+        .catch(err => {
+          alert('Fail to open voting')
           setIsConfirm(false)
-          toast.success('Open Successfully!', {
-            position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
-            pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
-          });
-        }
-      })
-      .catch(err => {
-        alert('Fail to open voting')
-        setIsConfirm(false)
-      })
+        })
     }
   }
 
   const saveCloseVoting = () => {
-    if(semester){
+    if (semester) {
       request.put(`Semester/${id}`, {
         Term: semester.Term, DateStart: semester.DateStart,
         DateEnd: semester.DateEnd, State: 1
       })
-      .then(res => {
-        if(res.status === 200){
+        .then(res => {
+          if (res.status === 200) {
+            setIsConfirm(false)
+            toast.success('Close Successfully!', {
+              position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
+              pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
+            });
+          }
+        })
+        .catch(err => {
+          alert('Fail to close voting')
           setIsConfirm(false)
-          toast.success('Close Successfully!', {
-            position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
-            pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
-          });
-        }
-      })
-      .catch(err => {
-        alert('Fail to close voting')
-        setIsConfirm(false)
-      })
+        })
     }
   }
 
   const saveBlock = () => {
-    if(semester){
+    if (semester) {
       request.put(`Semester/${id}`, {
         Term: semester.Term, DateStart: semester.DateStart,
         DateEnd: semester.DateEnd, State: 3
       })
-      .then(res => {
-        if(res.status === 200){
+        .then(res => {
+          if (res.status === 200) {
+            setIsConfirm(false)
+            toast.success('Block Successfully!', {
+              position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
+              pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
+            });
+          }
+        })
+        .catch(err => {
+          alert('Fail to block')
           setIsConfirm(false)
-          toast.success('Block Successfully!', {
-            position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
-            pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
-          });
-        }
-      })
-      .catch(err => {
-        alert('Fail to block')
-        setIsConfirm(false)
-      })
+        })
     }
   }
 
   const saveUnBlock = () => {
-    if(semester){
+    if (semester) {
       request.put(`Semester/${id}`, {
         Term: semester.Term, DateStart: semester.DateStart,
         DateEnd: semester.DateEnd, State: 2
       })
-      .then(res => {
-        if(res.status === 200){
+        .then(res => {
+          if (res.status === 200) {
+            setIsConfirm(false)
+            toast.success('Unblock Successfully!', {
+              position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
+              pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
+            });
+          }
+        })
+        .catch(err => {
+          alert('Fail to unblock')
           setIsConfirm(false)
-          toast.success('Unblock Successfully!', {
-            position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
-            pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
-          });
-        }
-      })
-      .catch(err => {
-        alert('Fail to unblock')
-        setIsConfirm(false)
-      })
+        })
     }
   }
 
@@ -160,28 +160,54 @@ const SemesterDetailAdmin = () => {
           <Title title={`Semester: ${semester.Term}`} />
         </Stack>
         <Stack pr={9} direction='row' gap={1}>
-          {semester.State === 1 && 
+          {semester.State === 1 &&
             <Button variant='outlined' size='small' onClick={openVoting}>Open Voting</Button>}
-          {semester.State === 2 && 
+          {semester.State === 2 &&
             <>
               <Button variant='outlined' color='info' size='small' onClick={closeVoting}>
                 Close Voting</Button>
               <Button variant='contained' color='success' size='small' onClick={block}>
                 Block</Button>
             </>}
-          {semester.State === 3 && 
+          {semester.State === 3 &&
             <Button variant='outlined' color='info' size='small' onClick={unBlock}>
-              Unblock</Button>}  
+              Unblock</Button>}
         </Stack>
       </Stack>
-
-      <Stack px={9} direction='row' gap={4} mb={4}>
+      <Stack px={11} gap={1}>
         <Typography>Start: {semester.DateStartFormat}</Typography>
         <Typography>End: {semester.DateEndFormat}</Typography>
         <Typography>Status: {semester.DateStatus}</Typography>
-        <Typography>State: {semester.State === 1 ? 'New' : (semester.State === 2 ? 'Voting' : 'Blocked')}</Typography>
       </Stack>
-      <Stack px={9} >
+      <Stack px={9} mb={2}>
+        <Stack direction='row' gap={1} border='1px solid #e3e3e3' py={0.5} borderRadius={2}
+          justifyContent='center'>
+          <Stack direction='row' alignItems='center' gap={1}>
+            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
+              bgcolor={semester.State === 1 ? blue[600] : grey[400]}>
+              {semester.State === 1 && <Check sx={{ color: 'white' }} />}
+            </Stack>
+            <Typography>New</Typography>
+            <HorizontalRule />
+          </Stack>
+          <Stack direction='row' alignItems='center' gap={1}>
+            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
+              bgcolor={semester.State === 2 ? blue[600] : grey[400]}>
+              {semester.State === 2 && <Check sx={{ color: 'white' }} />}
+            </Stack>
+            <Typography>Voting</Typography>
+            <HorizontalRule />
+          </Stack>
+          <Stack direction='row' alignItems='center' gap={1}>
+            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
+              bgcolor={semester.State === 3 ? blue[600] : grey[400]}>
+              {semester.State === 3 && <Check sx={{ color: 'white' }} />}
+            </Stack>
+            <Typography>Blocked</Typography>
+          </Stack>
+        </Stack>
+      </Stack>
+      <Stack px={9} mb={2}>
         <Stack direction='row' gap={6} borderBottom='1px solid #e3e3e3'>
           <Typography color={selected === 'courses' ? green[600] : grey[500]} py={0.5}
             borderBottom={selected === 'courses' && `4px solid ${green[600]}`}
@@ -205,9 +231,9 @@ const SemesterDetailAdmin = () => {
       {selected === 'courses' && <CourseList />}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} />}
-      <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} 
-        content={content} openVoting={saveOpenVoting} closeVoting={saveCloseVoting} 
-        block={saveBlock} unBlock={saveUnBlock} mode={mode}/>
+      <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm}
+        content={content} openVoting={saveOpenVoting} closeVoting={saveCloseVoting}
+        block={saveBlock} unBlock={saveUnBlock} mode={mode} />
       <ToastContainer />
     </Stack>
   )

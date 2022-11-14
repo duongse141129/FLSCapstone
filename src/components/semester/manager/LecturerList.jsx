@@ -49,12 +49,8 @@ const LecturerList = ({ handleSelect, admin }) => {
   useEffect(() => {
     request.get('User', {
       params: {
-        DepartmentId: selectedDepartment,
-        RoleIDs: 'LC',
-        sortBy: 'DepartmentId',
-        order: 'Asc',
-        pageIndex: 1,
-        pageSize: 500
+        DepartmentId: selectedDepartment, RoleIDs: 'LC', sortBy: 'DepartmentId', order: 'Asc',
+        pageIndex: 1, pageSize: 500
       }
     })
       .then(res => {
@@ -91,6 +87,18 @@ const LecturerList = ({ handleSelect, admin }) => {
       setSelectedDepartment(account.DepartmentId)
       setPage(0);
     }
+  }
+
+  const selectLecturer = (lecturerId) => {
+    let obj = {};
+    for(let i in lecturers){
+      if(lecturers[i].Id === lecturerId){
+        obj = lecturers[i]
+        break;
+      }
+    }
+
+    handleSelect(obj)
   }
 
   return (
@@ -143,7 +151,7 @@ const LecturerList = ({ handleSelect, admin }) => {
                 {
                   lecturers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((lecturer) => (
-                      <TableRow key={lecturer.Id} hover onClick={() => handleSelect(lecturer.Id, lecturer.Name, lecturer.Email)}>
+                      <TableRow key={lecturer.Id} hover onClick={() => selectLecturer(lecturer.Id)}>
                         <TableCell size='small'>{lecturer.Id}</TableCell>
                         <TableCell size='small'>
                           <Stack direction='row' alignItems='center' gap={1}>

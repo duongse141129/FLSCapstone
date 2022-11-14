@@ -1,14 +1,13 @@
-import { Assignment, Beenhere } from '@mui/icons-material';
-import {
-  Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer,
+import { Assignment, Beenhere, Clear } from '@mui/icons-material';
+import { Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
 import { green, grey } from '@mui/material/colors';
-import React from 'react'
-import { useEffect } from 'react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { HashLoader } from 'react-spinners';
 import request from '../../../utils/request';
 import AssignModal from '../AssignModal';
+import ClearConfirm from '../ClearConfirm';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -33,6 +32,8 @@ const CourseList = ({ semesterId, scheduleId }) => {
   const [slotTypes, setSlotTypes] = useState([]);
   const [isAssign, setIsAssign] = useState(false);
   const [selectedCourse, setSelectedCourse] = useState('');
+  const [isClear, setIsClear] = useState(false);
+  const [loadCourse, setLoadCourse] = useState(false);
 
   //get departments by group
   useEffect(() => {
@@ -66,13 +67,14 @@ const CourseList = ({ semesterId, scheduleId }) => {
           setSubjects(res.data);
           setSelectedSubject(res.data[0]?.Id)
         }
-      }).catch(err => alert('Fail to load subjects'))
+      }).catch(err => {alert('Fail to load subjects');})
     }
   }, [selectedDepartment])
 
   //get courses by selected subject
   useEffect(() => {
     if (selectedSubject) {
+      setLoadCourse(true)
       request.get('Course', {
         params: {
           SubjectId: selectedSubject, SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
@@ -82,30 +84,33 @@ const CourseList = ({ semesterId, scheduleId }) => {
         .then(res => {
           if (res.data) {
             setCourses(res.data)
+            setLoadCourse(false);
           }
         })
-        .catch(err => { alert('Fail to load courses'); })
+        .catch(err => { alert('Fail to load courses'); setLoadCourse(false)})
     }
   }, [semesterId, selectedSubject])
 
   //get assign courses
   useEffect(() => {
     request.get('CourseAssign', {
-      params: {ScheduleId: scheduleId, order: 'Asc', pageIndex: 1, pageSize: 1000}
+      params: { ScheduleId: scheduleId, order: 'Asc', pageIndex: 1, pageSize: 1000 }
     }).then(res => {
-      if(res.data){
+      if (res.data) {
         setAssignedCourses(res.data)
       }
     }).catch(err => alert('Fail to load course assign'))
-  }, [scheduleId, isAssign])
+  }, [scheduleId, isAssign, isClear])
 
   //get slot types
   useEffect(() => {
     request.get('SlotType', {
-      params: {SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc', 
-      pageIndex:1, pageSize: 100}
+      params: {
+        SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc',
+        pageIndex: 1, pageSize: 100
+      }
     }).then(res => {
-      if(res.data) setSlotTypes(res.data);
+      if (res.data) setSlotTypes(res.data);
     }).catch(err => alert('Fail to load slottype'))
   }, [semesterId])
 
@@ -136,9 +141,9 @@ const CourseList = ({ semesterId, scheduleId }) => {
   }
 
   const getInforSlot = (slotId) => {
-    if(slotTypes.length > 0){
-      for(let i in slotTypes){
-        if(slotTypes[i].Id === slotId){
+    if (slotTypes.length > 0) {
+      for (let i in slotTypes) {
+        if (slotTypes[i].Id === slotId) {
           const obj = slotTypes[i];
           return `${obj.Duration} (${obj.ConvertDateOfWeek})`
         }
@@ -148,17 +153,63 @@ const CourseList = ({ semesterId, scheduleId }) => {
     return {}
   }
 
-  const handleAssign =(courseId) => {
-    setSelectedCourse(courseId)
-    setIsAssign(true);
+  const handleAssign = (courseId) => {
+    let already = false;
+    for (let i in assignedCourses) {
+      if (assignedCourses[i].CourseId === courseId) {
+        already = true;
+        break;
+      }
+    }
+    if (!already) {
+      setSelectedCourse(courseId)
+      setIsAssign(true);
+    }
+  }
+
+  const confirmClear = (courseId) => {
+    let already = false;
+    for (let i in assignedCourses) {
+      if (assignedCourses[i].CourseId === courseId) {
+        already = true;
+        break;
+      }
+    }
+    if (already) {
+      setSelectedCourse(courseId)
+      setIsClear(true);
+    }
+  }
+
+  const saveClear = () => {
+    if (selectedCourse) {
+      let assignId = ''
+      for (let i in assignedCourses) {
+        if (assignedCourses[i].CourseId === selectedCourse) {
+          assignId = assignedCourses[i].Id
+          break;
+        }
+      }
+      if (assignId) {
+        request.delete(`CourseAssign/${assignId}`)
+          .then(res => {
+            if (res.status === 200) {
+              setIsClear(false);
+            }
+          })
+          .catch(err => {
+            alert('Fail to Clear Assignment')
+          })
+      }
+    }
   }
 
   return (
     <Stack px={9} mt={2}>
-      <Stack direction='row' alignItems='center' mb={2} gap={4} flexWrap='wrap'>
-        <Stack direction='row' alignItems='center'>
+      <Stack mb={2} gap={1} flexWrap='wrap'>
+        <Stack direction='row' alignItems='center' gap={1}>
           <Typography fontWeight={500}> Department: </Typography>
-          <Select color='success' size='small' sx={{ ml: 1 }}
+          <Select color='success' size='small'
             value={selectedDepartment} onChange={handleSelectDepartment}>
             {
               departments.map(department => (
@@ -190,44 +241,53 @@ const CourseList = ({ semesterId, scheduleId }) => {
           <Typography>{courses.length}</Typography>
         </Stack>
       </Stack>
-      <Paper sx={{ minWidth: 700, mb: 2 }}>
+      {loadCourse && <HashLoader color={green[600]} size={30}/>}
+      {!loadCourse && <Paper sx={{ minWidth: 700, mb: 2 }}>
         <TableContainer component={Box}>
           <Table>
             <TableHead>
               <TableRow>
                 <TableCell size='small' className='subject-header'>Course</TableCell>
-                {/* <TableCell size='small' className='subject-header'>Slot Amount</TableCell> */}
                 <TableCell size='small' className='subject-header'>Assigned To</TableCell>
                 <TableCell size='small' className='subject-header'>Teaching Slot</TableCell>
-                <TableCell size='small' className='subject-header'>Assign Option</TableCell>
+                {selectedDepartment === account.DepartmentId &&
+                  <><TableCell size='small' className='subject-header'>Assign</TableCell>
+                    <TableCell size='small' className='subject-header'>Clear</TableCell></>}
               </TableRow>
             </TableHead>
             <TableBody>
               {courses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(course => (
-                  <TableRow key={course.Id} hover onClick={() => handleAssign(course.Id)}>
+                  <TableRow key={course.Id} hover>
                     <TableCell size='small'>{course.Id}</TableCell>
-                    {/* <TableCell size='small'>{course.SlotAmount}</TableCell> */}
                     <TableCell size='small'>
-                      {assignedCourses.find(item => item.CourseId === course.Id)?.LecturerId || 
-                        <span style={{color: 'red'}}>Not Yet</span>
+                      {assignedCourses.find(item => item.CourseId === course.Id)?.LecturerId ||
+                        <span style={{ color: 'red' }}>Not Yet</span>
                       }
                     </TableCell>
                     <TableCell size='small'>
-                      {assignedCourses.find(item => item.CourseId === course.Id)? 
+                      {assignedCourses.find(item => item.CourseId === course.Id) ?
                         getInforSlot(assignedCourses.find(item => item.CourseId === course.Id).SlotTypeId)
-                        : <span style={{color: 'red'}}>Not Yet</span>
+                        : <span style={{ color: 'red' }}>Not Yet</span>
                       }
                     </TableCell>
-                    <TableCell size='small'>
-                      {selectedDepartment === account.DepartmentId ? (
-                        <Tooltip title='Assign' placement='right'>
-                        <IconButton size='small'><Assignment/></IconButton>
-                      </Tooltip>
-                      ) : (
-                        <span>Outside your department</span>
-                      )}
-                    </TableCell>
+                    {selectedDepartment === account.DepartmentId && <>
+                      <TableCell size='small'>
+                        <IconButton color='success' size='small'
+                          disabled={assignedCourses.find(item => item.CourseId === course.Id) && true}
+                          onClick={() => handleAssign(course.Id)}>
+                          <Assignment />
+                        </IconButton>
+                      </TableCell>
+                      <TableCell size='small'>
+                        <IconButton color='error' size='small'
+                          disabled={assignedCourses.find(item => item.CourseId === course.Id) ? false : true}
+                          onClick={() => confirmClear(course.Id)}
+                        >
+                          <Clear />
+                        </IconButton>
+                      </TableCell>
+                    </>}
                   </TableRow>
                 ))}
             </TableBody>
@@ -247,9 +307,11 @@ const CourseList = ({ semesterId, scheduleId }) => {
             bgcolor: 'ghostwhite'
           }}
         />
-      </Paper>
+      </Paper>}
       <AssignModal isAssign={isAssign} setIsAssign={setIsAssign} selectedCourse={selectedCourse}
-        semesterId={semesterId} scheduleId={scheduleId} assignedCourses={assignedCourses}/>
+        semesterId={semesterId} scheduleId={scheduleId} assignedCourses={assignedCourses} />
+      <ClearConfirm isClear={isClear} setIsClear={setIsClear} selectedCourse={selectedCourse}
+        saveClear={saveClear} />
     </Stack>
   )
 }

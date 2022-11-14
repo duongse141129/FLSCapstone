@@ -137,35 +137,21 @@ const PriorityList = ({ id, semester, admin }) => {
 
   return (
     <Stack flex={5} height='90vh'>
-      <Typography color='gray' px={9} variant='subtitle1'>
+      <Typography color='gray' variant='subtitle1'>
         *Courses which lecturer is given priority
       </Typography>
       {!admin && outSide &&
-        <Stack px={9} mb={2}>
+        <Stack mb={2}>
           <Alert severity="warning">This lecturer outside my department</Alert>
         </Stack>}
-      <Stack direction='row' alignItems='center' px={9} mb={2} gap={4}>
-        <Typography>
-          <span style={{ fontWeight: 500 }}>Lecturer: </span>
-          <span>{lecturer.Name}</span>
-        </Typography>
-        <Typography>
-          <span style={{ fontWeight: 500 }}>Department: </span>
-          <span>{lecturer.DepartmentName}</span>
-        </Typography>
-        <Typography>
-          <span style={{ fontWeight: 500 }}>Email: </span>
-          <span>{lecturer.Email}</span>
-        </Typography>
-      </Stack>
-      <Stack direction='row' alignItems='center' px={9} mb={1} justifyContent='space-between'>
-        <Typography fontWeight={500}>Priority Courses</Typography>
+      <Stack direction='row' alignItems='center' mb={1} justifyContent='space-between'>
+        <Typography fontWeight={500}>Priority Courses: {items.length}</Typography>
         {semester.State === 2 && !admin && <Button variant='contained' color='warning' size='small' endIcon={<TryOutlined />}
           onClick={() => setIsPriority(true)}>
           More
         </Button>}
       </Stack>
-      <Stack px={9} mb={2}>
+      <Stack mb={2}>
         <Paper sx={{ minWidth: 700, mb: 2 }}>
           <TableContainer component={Box}
             sx={{ overflow: 'auto' }}>
