@@ -1,8 +1,8 @@
-import { Assignment, Beenhere } from '@mui/icons-material';
+import { AssignmentOutlined, Beenhere } from '@mui/icons-material';
 import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
   MenuItem, Select, Stack, Tooltip, Typography
 } from '@mui/material';
-import { blueGrey, green, grey, red } from '@mui/material/colors';
+import { green, grey, red } from '@mui/material/colors';
 import { useEffect, useState, useMemo } from 'react';
 import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
@@ -182,8 +182,8 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
       open={isAssign} onClose={() => setIsAssign(false)}
     >
       <DialogTitle>
-        <Stack direction='row' alignItems='center' gap={1} mb={2} color={blueGrey[500]}>
-          <Assignment />
+        <Stack direction='row' alignItems='center' gap={1} mb={2}>
+          <AssignmentOutlined />
           <Typography variant='h5' fontWeight={500}>Assign Course: </Typography>
           <Typography variant='h5'>{selectedCourse}</Typography>
         </Stack>
@@ -226,13 +226,13 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
               </Tooltip>
             </Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
-              {loadLecturer && <Stack px={2} py={1}><ClipLoader size={30}/></Stack>}
+              {loadLecturer && <Stack px={2} py={1}><ClipLoader size={30} color={green[700]}/></Stack>}
               {!loadLecturer && lecturers.map(lecturer => (
                 <Typography key={lecturer.Id} px={2} py={1} borderBottom='1px solid #e3e3e3'
-                  bgcolor={JSON.stringify(selectedLecturer) === JSON.stringify(lecturer) && blueGrey[100]}
+                  bgcolor={JSON.stringify(selectedLecturer) === JSON.stringify(lecturer) && green[300]}
                   sx={{
                     transition: 'all 0.1s linear',
-                    '&:hover': { cursor: 'pointer', bgcolor: blueGrey[100] }
+                    '&:hover': { cursor: 'pointer', bgcolor: green[300] }
                   }}
                   onClick={() => handleSelectLecturer(lecturer)}
                 >
@@ -246,16 +246,16 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
             </Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
               {selectedLecturer.Id && loadSlot && 
-                <Stack px={2} py={1}><ClipLoader size={30}/></Stack>
+                <Stack px={2} py={1}><ClipLoader size={30} color={green[700]}/></Stack>
               }
               {slots.length === 0 && <Typography px={2} py={1} color={red[600]}>
                 No available slots</Typography>}
               {selectedLecturer.Id && !loadSlot && slots.map(slot => (
                 <Typography key={slot.Id} px={2} py={1} borderBottom='1px solid #e3e3e3'
-                  bgcolor={JSON.stringify(selectedSlot) === JSON.stringify(slot) && blueGrey[100]}
+                  bgcolor={JSON.stringify(selectedSlot) === JSON.stringify(slot) && green[300]}
                   sx={{
                     transition: 'all 0.1s linear',
-                    '&:hover': { cursor: 'pointer', bgcolor: blueGrey[100] }
+                    '&:hover': { cursor: 'pointer', bgcolor: green[300] }
                   }}
                   onClick={() => handleSelectSlot(slot)}
                 >
@@ -277,7 +277,7 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
         }
         </Stack>
         <Button color='info' variant='outlined' onClick={() => setIsAssign(false)}>Cancel</Button>
-        <Button variant='contained' color='secondary' onClick={handleSave}
+        <Button variant='contained' color='success' onClick={handleSave}
           disabled={(selectedLecturer.Id && selectedSlot.Id) ? false : true}>
           Save
         </Button>

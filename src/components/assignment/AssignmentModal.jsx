@@ -4,16 +4,14 @@ import {
 } from '@mui/material';
 import { Assignment } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react'
-import { green, grey, blueGrey, red } from '@mui/material/colors';
+import { green, red } from '@mui/material/colors';
 import request from '../../utils/request';
 import { ClipLoader } from 'react-spinners';
 
-const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCourses, scheduleId, scheduleCourses }) => {
-  const account = JSON.parse(localStorage.getItem('web-user'));
+const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCourses, scheduleId, scheduleCourses, listSubject}) => {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedSlot, setSelectedSlot] = useState({});
-  const [listSubject, setListSubject] = useState([]);
   const [assignCourses, setAssignCourses] = useState([]);
   const [slots, setSlots] = useState([]);
   const [searchValue, setSearchValue] = useState('');
@@ -22,38 +20,14 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
   const [loadCourse, setLoadCourse] = useState(false);
   const [loadSlot, setLoadSlot] = useState(false);
 
-  //get subject by manager Id
-  useEffect(() => {
-    const getSubjects = async () => {
-      try {
-        const response = await request.get('Subject', {
-          params: {
-            DepartmentId: account.DepartmentId,
-            pageIndex: 1,
-            pageSize: 1000
-          }
-        })
-        if (response.data) {
-          setListSubject(response.data)
-        }
-      }
-      catch (error) {
-        alert('Fail to load subjects!');
-      }
-    }
-    getSubjects();
-  }, [account.DepartmentId])
-
   //get course by selected subject and filter all already assigned courses
   useEffect(() => {
     if (selectedSubject) {
       setLoadCourse(true)
       request.get('Course', {
         params: {
-          SubjectId: selectedSubject,
-          SemesterId: semesterId,
-          pageIndex: 1,
-          pageSize: 500
+          SubjectId: selectedSubject, SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
+          pageIndex: 1, pageSize: 500
         }
       })
         .then(res => {
@@ -112,11 +86,8 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
     setLoadSlot(true)
     request.get('SlotType', {
       params: {
-        SemesterId: semesterId,
-        sortBy: 'Id',
-        order: 'Asc',
-        pageIndex: 1,
-        pageSize: 100,
+        SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc',
+        pageIndex: 1, pageSize: 100,
       }
     })
       .then(res => {
@@ -192,10 +163,10 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
       open={isAssign}
       onClose={() => setIsAssign(false)}
     >
-      <DialogTitle color={blueGrey[600]}>
+      <DialogTitle>
         <Stack direction='row' alignItems='center' gap={1}>
           <Assignment />
-          <Typography variant='h5'>Assign course to lecturer</Typography>
+          <Typography variant='h5' fontWeight={500}>Assign course to lecturer</Typography>
         </Stack>
       </DialogTitle>
       <DialogContent>
@@ -224,7 +195,7 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
           <Stack flex={1}>
             <Stack flex={1} mb={1}>
               <TextField label='Subject' variant='outlined' size='small'
-                placeholder='Search by id or name' color='secondary'
+                placeholder='Search by id or name' color='success'
                 value={searchValue} onChange={(e) => handleSearch(e.target.value)} />
             </Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
@@ -233,12 +204,12 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
                         subject.SubjectName.toLowerCase().includes(searchValue))
                 .map(subject => (
                   <Typography key={subject.Id} p={1} fontSize='15px'
-                    borderBottom='1px solid #e3e3e3' bgcolor={subject.Id === selectedSubject && blueGrey[200]}
+                    borderBottom='1px solid #e3e3e3' bgcolor={subject.Id === selectedSubject && green[300]}
                     sx={{
                       transition: 'all 0.1s linear',
                       '&:hover': {
                         cursor: 'pointer',
-                        bgcolor: blueGrey[200]
+                        bgcolor: green[300]
                       }
                     }}
                     onClick={() => selectSubject(subject.Id)}
@@ -250,22 +221,22 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
             </Box>
           </Stack>
           <Stack flex={1}>
-            <Stack flex={1} mb={1} fontWeight={500} justifyContent='center'>Course</Stack>
+            <Stack flex={1} mb={1} fontWeight={500} justifyContent='center'>Available Courses</Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
-              {loadCourse && <Stack p={1}><ClipLoader size={20}/></Stack>}
+              {loadCourse && <Stack p={1}><ClipLoader size={30} color={green[700]}/></Stack>}
               {!loadCourse && selectedSubject && assignCourses.length === 0 &&
-                <Typography p={1}>No available courses</Typography>
+                <Typography p={1} color={red[600]}>No available courses</Typography>
               }
               {
                 !loadCourse && selectedSubject &&
                 assignCourses.map(course => (
                   <Typography key={course.Id} p={1} fontSize='15px'
-                    borderBottom='1px solid #e3e3e3' bgcolor={selectedCourse === course.Id && blueGrey[200]}
+                    borderBottom='1px solid #e3e3e3' bgcolor={selectedCourse === course.Id && green[300]}
                     sx={{
                       transition: 'all 0.1s linear',
                       '&:hover': {
                         cursor: 'pointer',
-                        bgcolor: blueGrey[200]
+                        bgcolor: green[300]
                       }
                     }}
                     onClick={() => selectCourse(course.Id)}
@@ -277,22 +248,22 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
             </Box>
           </Stack>
           <Stack flex={1} >
-            <Stack flex={1} mb={1} fontWeight={500} justifyContent='center'>Slot Type</Stack>
+            <Stack flex={1} mb={1} fontWeight={500} justifyContent='center'>Available Slots</Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
-              {loadSlot && <Stack p={1}><ClipLoader size={20}/></Stack>}
+              {loadSlot && <Stack p={1}><ClipLoader size={30} color={green[700]}/></Stack>}
               {!loadSlot && selectedSubject && selectedCourse && slots.length === 0 &&
-                <Typography p={1}>No available slots</Typography>
+                <Typography p={1} color={red[600]}>No available slots</Typography>
               }
               {selectedSubject && selectedCourse && !loadSlot &&
                 slots.map(slot => (
                   <Typography key={slot.Id} p={1} fontSize='15px'
-                    bgcolor={JSON.stringify(selectedSlot) === JSON.stringify(slot) && blueGrey[200]}
+                    bgcolor={JSON.stringify(selectedSlot) === JSON.stringify(slot) && green[300]}
                     borderBottom='1px solid #e3e3e3'
                     sx={{
                       transition: 'all 0.1s linear',
                       '&:hover': {
                         cursor: 'pointer',
-                        bgcolor: blueGrey[200]
+                        bgcolor: green[300]
                       }
                     }}
                     onClick={() => selectSlot(slot)}
@@ -313,11 +284,11 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
         }
         {
           (!selectedSubject || !selectedCourse || Object.values(selectedSlot).length === 0) &&
-          <Typography variant='subtitle1' color={grey[500]}>*Choose subject then choose course and slot type</Typography>
+          <Typography variant='subtitle1' color={red[600]}>*Choose subject then choose course and slot type</Typography>
         }
         </Stack>
         <Button onClick={() => setIsAssign(false)} color='info' variant='outlined'>Cancel</Button>
-        <Button variant='contained' onClick={handleSave} autoFocus color='secondary'
+        <Button variant='contained' onClick={handleSave} color='success'
           disabled={(!selectedSubject || !selectedCourse || Object.values(selectedSlot).length === 0) && true}>
           Save
         </Button>

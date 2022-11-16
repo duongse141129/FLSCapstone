@@ -1,6 +1,6 @@
 import { CancelOutlined, ThumbDown, ThumbUp } from '@mui/icons-material'
 import { Alert, Box, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import { blue, grey, indigo, red } from '@mui/material/colors'
+import { blue, green, grey, red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import request from '../../utils/request'
@@ -34,9 +34,8 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
     if (semester.Id) {
       request.get('SlotType', {
         params: {
-          SemesterId: semester.Id,
-          pageIndex: 1,
-          pageSize: 100,
+          SemesterId: semester.Id, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc',
+          pageIndex: 1, pageSize: 100,
         }
       })
         .then(res => {
@@ -192,7 +191,7 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
               <TableContainer component={Box}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ bgcolor: indigo[600] }}>
+                    <TableRow sx={{bgcolor: green[600]}}>
                       <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
                         <Typography>Code</Typography>
                       </TableCell>

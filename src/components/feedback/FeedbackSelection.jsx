@@ -2,7 +2,6 @@ import { ChatOutlined } from '@mui/icons-material';
 import {Alert, Box, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, 
   TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
-import { blue } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react';
 import request from '../../utils/request';
 import FeedbackModal from './FeedbackModal';
@@ -37,7 +36,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
       try {
         const response = await request.get('Subject', {
           params: {
-            DepartmentId: lecturer.DepartmentId,
+            DepartmentId: lecturer.DepartmentId, sortBy: 'Id', order: 'Asc',
             pageIndex: 1, pageSize: 1000
           }
         })
@@ -96,11 +95,11 @@ const FeedbackSelection = ({ id, semester, admin }) => {
   return (
     <Stack flex={5} height='90vh'>
       <Typography color='gray' variant='subtitle1' mb={1}>
-        *Give feedback point to a lecturer with each subject
+        *Give reply point to a lecturer with each subject
       </Typography>
       {!admin && lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
         <Stack>
-          <Alert severity="error">Can not give feedback point to lecturer outside my department</Alert>
+          <Alert severity="error">Can not give reply point to lecturer outside my department</Alert>
         </Stack>
       }
       {((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) &&
@@ -110,19 +109,11 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                 sx={{ overflow: 'auto' }}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{ bgcolor: blue[700] }}>
-                      <TableCell size='small'>
-                        <Typography sx={{ fontWeight: 500, color: 'white' }}>Code</Typography>
-                      </TableCell>
-                      <TableCell size='small'>
-                        <Typography sx={{ fontWeight: 500, color: 'white' }}>Name</Typography>
-                      </TableCell>
-                      <TableCell size='small'>
-                        <Typography sx={{ fontWeight: 500, color: 'white' }}>Favorite</Typography>
-                      </TableCell>
-                      <TableCell size='small'>
-                        <Typography sx={{ fontWeight: 500, color: 'white' }}>Feedback</Typography>
-                      </TableCell>
+                    <TableRow>
+                      <TableCell size='small' className='subject-header'>Code</TableCell>
+                      <TableCell size='small' className='subject-header'>Name</TableCell>
+                      <TableCell size='small' className='subject-header'>Favorite</TableCell>
+                      <TableCell size='small' className='subject-header'>Reply</TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

@@ -1,15 +1,27 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
+import { Button, Dialog, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
 import { green, grey } from '@mui/material/colors'
-import { useState } from 'react'
+import { useState, useEffect  } from 'react'
 import ScheduleAdmin from './admin/ScheduleAdmin'
 import FeedbackSelection from '../feedback/FeedbackSelection'
 import SlotManage from './SlotManage';
 import AssignmentList from '../assignment/AssignmentList'
 import PriorityList from '../priority/PriorityList'
 import { Close } from '@mui/icons-material'
+import request from '../../utils/request'
 
 const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, admin }) => {
   const [selected, setSelected] = useState(tabs[0].name)
+  const [allSubjects, setAllSubjects] = useState([]);
+
+  useEffect(() => {
+    request.get('Subject', {
+      params: {sortBy: 'Id', order:'Asc', pageIndex:1, pageSize:1000}
+    }).then(res => {
+      if(res.data){
+        setAllSubjects(res.data)
+      }
+    }).catch(err => alert('Fail to get all subjects'))
+  }, [])
 
   return (
     <Dialog maxWidth='lg' fullWidth={true}
@@ -40,8 +52,10 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
           ))}
         </Stack>
         {selected === 'Schedule' && <ScheduleAdmin lecturerId={selectedLecturer.Id} semester={semester}/>}
-        {selected === 'Assignment' && <AssignmentList lecturerId={selectedLecturer.Id} semester={semester} admin={admin}/>}
-        {selected === 'Priority Course' && <PriorityList id={selectedLecturer.Id} semester={semester} admin={admin}/>}
+        {selected === 'Assignment' && <AssignmentList lecturerId={selectedLecturer.Id} semester={semester} 
+          allSubjects={allSubjects} admin={admin}/>}
+        {selected === 'Priority Course' && <PriorityList id={selectedLecturer.Id} semester={semester} 
+          allSubjects={allSubjects} admin={admin}/>}
         {selected === 'Reply Point' && <FeedbackSelection id={selectedLecturer.Id} semester={semester} admin={admin}/>}
         {selected === 'Preference Slot' && <SlotManage lecturerId={selectedLecturer.Id} semester={semester} admin={admin}/>}
       </DialogContent>

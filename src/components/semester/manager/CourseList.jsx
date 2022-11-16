@@ -1,4 +1,4 @@
-import { Assignment, Beenhere, Clear } from '@mui/icons-material';
+import { AssignmentOutlined, Beenhere, Clear } from '@mui/icons-material';
 import { Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
@@ -273,10 +273,10 @@ const CourseList = ({ semesterId, scheduleId }) => {
                     </TableCell>
                     {selectedDepartment === account.DepartmentId && <>
                       <TableCell size='small'>
-                        <IconButton color='success' size='small'
+                        <IconButton size='small' color='primary'
                           disabled={assignedCourses.find(item => item.CourseId === course.Id) && true}
                           onClick={() => handleAssign(course.Id)}>
-                          <Assignment />
+                          <AssignmentOutlined/>
                         </IconButton>
                       </TableCell>
                       <TableCell size='small'>

@@ -3,14 +3,14 @@ import {
   Alert, Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
-import { blueGrey, red } from '@mui/material/colors';
+import { red } from '@mui/material/colors';
 import { useEffect, useState, useMemo } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import request from '../../utils/request';
 import DeleteModal from '../priority/DeleteModal';
 import AssignmentModal from './AssignmentModal';
 
-const AssignmentList = ({ lecturerId, semester, admin }) => {
+const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -69,7 +69,8 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
   useEffect(() => {
     if (semester.Id) {
       request.get('SlotType', {
-        params: { SemesterId: semester.Id, order: 'Asc', pageIndex: 1, pageSize: 100 }
+        params: { SemesterId: semester.Id, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc', 
+          pageIndex: 1, pageSize: 100 }
       })
         .then(res => {
           if (res.data) {
@@ -89,8 +90,8 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
         try {
           const resAssignCourse = await request.get('CourseAssign', {
             params: {
-              LecturerId: lecturerId, ScheduleId: scheduleId,
-              isAssign: 1, pageIndex: 1, pageSize: 1000
+              LecturerId: lecturerId, ScheduleId: scheduleId, isAssign: 1, 
+              sortBy: 'CourseId', order: 'Asc', pageIndex: 1, pageSize: 1000
             }
           })
           if (resAssignCourse.data) {
@@ -155,7 +156,8 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
   //get subjects by department of manager
   useEffect(() => {
     request.get('Subject', {
-      params: { DepartmentId: account.DepartmentId, pageIndex: 1, pageSize: 1000 }
+      params: { DepartmentId: account.DepartmentId, sortBy: 'Id', order: 'Asc', 
+        pageIndex: 1, pageSize: 1000 }
     })
       .then(res => {
         if (res.data) {
@@ -210,7 +212,7 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
       <Stack direction='row' alignItems='center' mb={1} justifyContent='space-between'>
         <Typography fontWeight={500}>Assigned Courses: {fixCourses.length}</Typography>
         {semester.State === 2 && !admin && 
-        <Button variant='contained' color='secondary' size='small' endIcon={<AssignmentOutlined />}
+        <Button variant='contained' color='success' size='small' endIcon={<AssignmentOutlined />}
           onClick={() => setIsAssign(true)}>
           Assign
         </Button>}
@@ -221,16 +223,12 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
             sx={{ overflow: 'auto' }}>
             <Table>
               <TableHead>
-                <TableRow sx={{ bgcolor: blueGrey[600] }}>
-                  <TableCell size='small'>
-                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Course</Typography>
-                  </TableCell>
-                  <TableCell size='small'>
-                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Slot</Typography>
-                  </TableCell>
-                  {!admin && <TableCell size='small'>
-                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Delete</Typography>
-                  </TableCell>}
+                <TableRow>
+                  <TableCell size='small' className='subject-header'>Course</TableCell>
+                  <TableCell size='small' className='subject-header'>Subject</TableCell>
+                  <TableCell size='small' className='subject-header'>Slot</TableCell>
+                  {!admin && <TableCell size='small' className='subject-header'>
+                    Delete</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -239,6 +237,9 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
                   .map(course => (
                     <TableRow hover key={course.Id}>
                       <TableCell size='small'>{course.CourseId}</TableCell>
+                      <TableCell size='small'>
+                        {allSubjects.find(subject => subject.Id === course.CourseId.split('_')[0])?.SubjectName}
+                      </TableCell>
                       <TableCell size='small'>
                         {slots.find(slot => slot.Id === course.SlotTypeId)?.Duration} {' '}
                         ({slots.find(slot => slot.Id === course.SlotTypeId)?.ConvertDateOfWeek})
@@ -286,7 +287,7 @@ const AssignmentList = ({ lecturerId, semester, admin }) => {
       </Stack>
       <AssignmentModal isAssign={isAssign} setIsAssign={setIsAssign} lecturer={lecturer}
         semesterId={semester.Id} allFixCourses={allFixCourses} scheduleId={scheduleId}
-        scheduleCourses={scheduleCourses} />
+        scheduleCourses={scheduleCourses} listSubject={insideSubjects}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} saveDelete={saveDelete} />
       <ToastContainer />
     </Stack>

@@ -6,7 +6,7 @@ import DeleteModal from '../../priority/DeleteModal';
 import PriorityGroupAdd from './PriorityGroupAdd';
 import PriorityGroupList from './PriorityGroupList';
 import { ToastContainer, toast } from 'react-toastify';
-import { Close } from '@mui/icons-material';
+import { Close, TryOutlined } from '@mui/icons-material';
 
 const PriorityGroupModal = ({ isGroup, setIsGroup, level, semesterId, scheduleId, insideSubjects }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
@@ -116,7 +116,7 @@ const PriorityGroupModal = ({ isGroup, setIsGroup, level, semesterId, scheduleId
             setLoadCourse(false);
           }
         }
-      }).catch(err => {alert('Fail to get added priority courses'); setLoadCourse(false)})
+      }).catch(err => { alert('Fail to get added priority courses'); setLoadCourse(false) })
     }
   }, [groupId, level, selected, afterDelete, insideSubjects])
 
@@ -159,13 +159,16 @@ const PriorityGroupModal = ({ isGroup, setIsGroup, level, semesterId, scheduleId
       open={isGroup} onClose={() => setIsGroup(false)}>
       <DialogTitle>
         <Stack direction='row' alignItems='center' justifyContent='space-between'>
-          <Typography variant='h5' fontWeight={500}>Priority Course Group: {' '}
-            {level === 4 && <span style={{color: blue[600]}}>High</span>}
-            {level === 3 && <span style={{color: lightGreen[600]}}>Medium</span>}
-            {level === 2 && <span style={{color: yellow[700]}}>Low</span>}
-            {level === 1 && <span style={{color: orange[600]}}>External</span>}
-          </Typography>
-          <Button variant='outlined' endIcon={<Close/>} size='small' color='error'
+          <Stack direction='row' alignItems='center' gap={1}>
+            <TryOutlined/>
+            <Typography variant='h5' fontWeight={500}>Priority Course Group: {' '}
+              {level === 4 && <span style={{ color: blue[600] }}>High</span>}
+              {level === 3 && <span style={{ color: lightGreen[600] }}>Medium</span>}
+              {level === 2 && <span style={{ color: yellow[700] }}>Low</span>}
+              {level === 1 && <span style={{ color: orange[600] }}>External</span>}
+            </Typography>
+          </Stack>
+          <Button variant='outlined' endIcon={<Close />} size='small' color='error'
             onClick={() => setIsGroup(false)}>Close</Button>
         </Stack>
       </DialogTitle>
@@ -200,8 +203,8 @@ const PriorityGroupModal = ({ isGroup, setIsGroup, level, semesterId, scheduleId
               {tab.name}</Typography>
           ))}
         </Stack>
-        {selected === tabs[0].name && <PriorityGroupList loadCourse={loadCourse} courseItems={courseItems} 
-          selectDelete={selectDelete} subjects={insideSubjects}/>}
+        {selected === tabs[0].name && <PriorityGroupList loadCourse={loadCourse} courseItems={courseItems}
+          selectDelete={selectDelete} subjects={insideSubjects} />}
         {selected === tabs[1].name && <PriorityGroupAdd semesterId={semesterId} scheduleId={scheduleId} groupId={groupId}
           level={level} subjects={insideSubjects} />}
       </DialogContent>

@@ -2,14 +2,14 @@ import { TryOutlined, DeleteOutline } from '@mui/icons-material';
 import {Alert, Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, 
   TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
-import { blue, green, orange, red, yellow } from '@mui/material/colors';
+import { blue, lightGreen, orange, red, yellow } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react';
 import request from '../../utils/request';
 import DeleteModal from './DeleteModal';
 import PriorityModal from './PriorityModal';
 import { ToastContainer, toast } from 'react-toastify';
 
-const PriorityList = ({ id, semester, admin }) => {
+const PriorityList = ({ id, semester, allSubjects, admin }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -84,7 +84,8 @@ const PriorityList = ({ id, semester, admin }) => {
   //get subjects by department of manager
   useEffect(() => {
     request.get('Subject', {
-      params: { DepartmentId: account.DepartmentId, pageIndex: 1, pageSize: 1000 }
+      params: { DepartmentId: account.DepartmentId, sortBy: 'Id', order: 'Asc',
+        pageIndex: 1, pageSize: 1000 }
     })
       .then(res => {
         if (res.data) {
@@ -144,7 +145,7 @@ const PriorityList = ({ id, semester, admin }) => {
         </Stack>}
       <Stack direction='row' alignItems='center' mb={1} justifyContent='space-between'>
         <Typography fontWeight={500}>Priority Courses: {items.length}</Typography>
-        {semester.State === 2 && !admin && <Button variant='contained' color='warning' size='small' endIcon={<TryOutlined />}
+        {semester.State === 2 && !admin && <Button variant='contained' color='success' size='small' endIcon={<TryOutlined />}
           onClick={() => setIsPriority(true)}>
           More
         </Button>}
@@ -155,16 +156,11 @@ const PriorityList = ({ id, semester, admin }) => {
             sx={{ overflow: 'auto' }}>
             <Table>
               <TableHead>
-                <TableRow sx={{ bgcolor: orange[700] }}>
-                  <TableCell size='small'>
-                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Course</Typography>
-                  </TableCell>
-                  <TableCell size='small'>
-                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Priority Level</Typography>
-                  </TableCell>
-                  {!admin && <TableCell size='small'>
-                    <Typography sx={{ fontWeight: 500, color: 'white' }}>Option</Typography>
-                  </TableCell>}
+                <TableRow>
+                  <TableCell size='small' className='subject-header'>Course</TableCell>
+                  <TableCell size='small' className='subject-header'>Subject</TableCell>
+                  <TableCell size='small' className='subject-header'>Priority Level</TableCell>
+                  {!admin && <TableCell size='small' className='subject-header'>Option</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -174,14 +170,17 @@ const PriorityList = ({ id, semester, admin }) => {
                       <TableRow hover key={item.Id}>
                         <TableCell size='small'>{item.CourseId}</TableCell>
                         <TableCell size='small'>
+                          {allSubjects.find(subject => subject.Id === item.CourseId.split('_')[0])?.SubjectName}
+                        </TableCell>
+                        <TableCell size='small'>
                           {item.PriorityCourse === 4 &&
-                            <span style={{ color: blue[800] }}>High</span>}
+                            <span style={{ color: blue[600]}}>High</span>}
                           {item.PriorityCourse === 3 &&
-                            <span style={{ color: green[800] }}>Medium</span>}
+                            <span style={{ color: lightGreen[600]}}>Medium</span>}
                           {item.PriorityCourse === 2 &&
-                            <span style={{ color: yellow[800] }}>Low</span>}
+                            <span style={{ color: yellow[700]}}>Low</span>}
                           {item.PriorityCourse === 1 &&
-                            <span style={{ color: red[800] }}>External</span>}
+                            <span style={{ color: orange[600]}}>External</span>}
                         </TableCell>
                         {semester.State === 2 && !admin && <TableCell size='small'>
                           {outSide ? <>
@@ -225,7 +224,8 @@ const PriorityList = ({ id, semester, admin }) => {
         </Paper>
       </Stack>
       <PriorityModal isPriority={isPriority} setIsPriority={setIsPriority}
-        lecturer={lecturer} semesterId={semester.Id} courseItems={items} groupId={groupId} />
+        lecturer={lecturer} semesterId={semester.Id} courseItems={items} groupId={groupId} 
+        listSubject={insideSubjects}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} saveDelete={saveDelete} />
       <ToastContainer />
     </Stack>

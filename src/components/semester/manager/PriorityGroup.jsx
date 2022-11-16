@@ -1,6 +1,5 @@
-import { ModeEditOutlined } from '@mui/icons-material'
+import { TryOutlined } from '@mui/icons-material'
 import { Box, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material'
-import { blue } from '@mui/material/colors';
 import { useEffect, useState } from 'react';
 import request from '../../../utils/request';
 import PriorityGroupModal from './PriorityGroupModal';
@@ -43,7 +42,7 @@ const PriorityGroup = ({semesterId, scheduleId}) => {
             </TableHead>
             <TableBody>
               {groups.map(group => (
-                <TableRow key={group.id} onClick={() => handleSelect(group.level)}>
+                <TableRow key={group.id} hover onClick={() => handleSelect(group.level)}>
                   <TableCell size='small'>{group.id}</TableCell>
                   <TableCell size='small'>{group.name}</TableCell>
                   <TableCell size='small'>
@@ -54,7 +53,7 @@ const PriorityGroup = ({semesterId, scheduleId}) => {
                   </TableCell>
                   <TableCell size='small'>{group.department}</TableCell>
                   <TableCell size='small'>
-                    <IconButton><ModeEditOutlined sx={{color: blue[700]}}/></IconButton>
+                    <IconButton color='primary'><TryOutlined/></IconButton>
                   </TableCell>
                 </TableRow>
               ))}
