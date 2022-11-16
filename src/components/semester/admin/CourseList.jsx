@@ -3,6 +3,7 @@ import { Box, Button, MenuItem, Paper, Select, Stack, Table, TableBody, TableCel
 import React, { useState, useRef, useEffect } from 'react';
 import * as XLSX from "xlsx";
 import request from '../../../utils/request';
+import AddModal from './AddModal';
 import ImportModal from './ImportModal';
 
 const ITEM_HEIGHT = 48;
@@ -28,8 +29,9 @@ const CourseList = ({ semesterId, scheduleId }) => {
   const [isImport, setIsImport] = useState(false);
   const [importCourses, setImportCourses] = useState([]);
   const [assignedCourses, setAssignedCourses] = useState([]);
+  const [isAdd, setIsAdd] = useState(false);
 
-  //get departments by group
+  //get all departments 
   useEffect(() => {
     const getDepartments = async () => {
       try {
@@ -217,7 +219,8 @@ const CourseList = ({ semesterId, scheduleId }) => {
             onClick={clickImport}>
             Import
           </Button>
-          <Button variant='contained' size='small' endIcon={<Add />}>
+          <Button variant='contained' size='small' endIcon={<Add />}
+            onClick={() => setIsAdd(true)}>
             Add
           </Button>
         </Stack>
@@ -270,6 +273,7 @@ const CourseList = ({ semesterId, scheduleId }) => {
         />
       </Paper>
       <ImportModal isImport={isImport} setIsImport={setIsImport} importCourses={importCourses} />
+      <AddModal isAdd={isAdd} setIsAdd={setIsAdd} departments={departments} subjects={subjects}/>
     </Stack>
   )
 }
