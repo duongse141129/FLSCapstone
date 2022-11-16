@@ -205,7 +205,7 @@ const CourseList = ({ semesterId, scheduleId }) => {
   }
 
   return (
-    <Stack px={9} mt={2}>
+    <Stack px={9} mb={2}>
       <Stack mb={2} gap={1} flexWrap='wrap'>
         <Stack direction='row' alignItems='center' gap={1}>
           <Typography fontWeight={500}> Department: </Typography>

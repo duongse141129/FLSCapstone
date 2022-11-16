@@ -7,6 +7,7 @@ import CourseList from './CourseList';
 import { useNavigate, useParams } from 'react-router-dom';
 import request from '../../../utils/request';
 import Title from '../../title/Title';
+import PriorityGroup from './PriorityGroup';
 
 const SemesterDetailManager = () => {
   const { id } = useParams();
@@ -115,6 +116,7 @@ const SemesterDetailManager = () => {
       </Stack>
       {selected === 'Lecturers' && <LecturerContainer semester={semester} />}
       {selected === 'Courses' && <CourseList semesterId={id} scheduleId={schedule.Id}/>}
+      {selected === 'Priority Group' && <PriorityGroup semesterId={id} scheduleId={schedule.Id}/>}
     </Stack>
   )
 }
@@ -123,6 +125,6 @@ export default SemesterDetailManager
 
 const tabs = [
   {id:1, name: 'Courses'},
-  {id:2, name: 'Lecturers'},
-  {id:3, name: 'Priority Group'}
+  {id:2, name: 'Priority Group'},
+  {id:3, name: 'Lecturers'},
 ]

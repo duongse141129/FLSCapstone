@@ -45,7 +45,6 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
         {selected === 'Reply Point' && <FeedbackSelection id={selectedLecturer.Id} semester={semester} admin={admin}/>}
         {selected === 'Preference Slot' && <SlotManage lecturerId={selectedLecturer.Id} semester={semester} admin={admin}/>}
       </DialogContent>
-      <DialogActions></DialogActions>
     </Dialog>
   )
 }
