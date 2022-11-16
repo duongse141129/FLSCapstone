@@ -130,7 +130,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                             </TableCell>
                             <TableCell size='small'>
                               <Stack direction='row' alignItems='center' gap={1}>
-                                <Typography borderRight={!admin && '1px solid gray'} pr={2}>
+                                <Typography borderRight={semester.State === 2 && !admin && '1px solid gray'} pr={2}>
                                   {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint}
                                 </Typography>
                                 {semester.State === 2 && !admin && 

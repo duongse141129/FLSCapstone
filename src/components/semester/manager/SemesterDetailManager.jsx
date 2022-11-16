@@ -114,9 +114,9 @@ const SemesterDetailManager = () => {
           ))}
         </Stack>
       </Stack>
+      {selected === 'Courses' && <CourseList semesterId={id} semesterState={semester.State} scheduleId={schedule.Id}/>}
+      {selected === 'Priority Group' && <PriorityGroup semesterId={id} semesterState={semester.State} scheduleId={schedule.Id}/>}
       {selected === 'Lecturers' && <LecturerContainer semester={semester} />}
-      {selected === 'Courses' && <CourseList semesterId={id} scheduleId={schedule.Id}/>}
-      {selected === 'Priority Group' && <PriorityGroup semesterId={id} scheduleId={schedule.Id}/>}
     </Stack>
   )
 }

@@ -192,10 +192,11 @@ const SlotType = ({ semesterId, semesterState }) => {
 
   return (
     <Box px={9} mb={2}>
-      <Stack color={red[600]} direction='row' gap={4}>
-        <Typography>Like: {likes.length}/{configData.LIKE_SLOT_NUMBER}</Typography>
-        <Typography>Dislike: {dislikes.length}/{configData.DISLIKE_SLOT_NUMBER}</Typography>
+      <Stack direction='row' gap={4}>
+        <Typography color={blue[600]}>Like: {likes.length}/{configData.LIKE_SLOT_NUMBER}</Typography>
+        <Typography color={red[600]}>Dislike: {dislikes.length}/{configData.DISLIKE_SLOT_NUMBER}</Typography>
       </Stack>
+      {semesterState === 2 &&
       <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
         <Stack direction='row' alignItems='center' gap={2}>
           <Typography fontWeight={500}>Mode: </Typography>
@@ -213,13 +214,12 @@ const SlotType = ({ semesterId, semesterState }) => {
           </FormControl>
         </Stack>
         <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
-          {semesterState === 2 && 
-          <><Switch checked={isEdit} onChange={() => setIsEdit(!isEdit)} />
+          <Switch checked={isEdit} onChange={() => setIsEdit(!isEdit)} />
           <Typography pr={2}>
             {isEdit ? <span style={{ color: blue[600] }}>Rating On</span> : 'Rating Off'}
-          </Typography></>}
+          </Typography>
         </Stack>
-      </Stack>
+      </Stack>}
       <Stack mb={2}>
         <Paper sx={{ minWidth: 700, mb: 2 }}>
           <TableContainer component={Box}>

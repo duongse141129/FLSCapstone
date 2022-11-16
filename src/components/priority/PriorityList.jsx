@@ -160,7 +160,7 @@ const PriorityList = ({ id, semester, allSubjects, admin }) => {
                   <TableCell size='small' className='subject-header'>Course</TableCell>
                   <TableCell size='small' className='subject-header'>Subject</TableCell>
                   <TableCell size='small' className='subject-header'>Priority Level</TableCell>
-                  {!admin && <TableCell size='small' className='subject-header'>Option</TableCell>}
+                  {semester.State === 2 && !admin && <TableCell size='small' className='subject-header'>Option</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>

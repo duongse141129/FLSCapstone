@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import request from '../../../utils/request';
 import PriorityGroupModal from './PriorityGroupModal';
 
-const PriorityGroup = ({semesterId, scheduleId}) => {
+const PriorityGroup = ({semesterId, scheduleId, semesterState}) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [isGroup, setIsGroup] = useState(false);
   const [level, setLevel] = useState(4);
@@ -61,7 +61,7 @@ const PriorityGroup = ({semesterId, scheduleId}) => {
           </Table>
         </TableContainer>
       </Paper>
-      <PriorityGroupModal isGroup={isGroup} setIsGroup={setIsGroup} level={level} 
+      <PriorityGroupModal isGroup={isGroup} setIsGroup={setIsGroup} level={level} semesterState={semesterState}
         semesterId={semesterId} scheduleId={scheduleId} insideSubjects={insideSubjects}/>
     </Stack>
   )

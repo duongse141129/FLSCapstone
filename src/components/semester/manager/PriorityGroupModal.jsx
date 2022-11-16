@@ -8,7 +8,7 @@ import PriorityGroupList from './PriorityGroupList';
 import { ToastContainer, toast } from 'react-toastify';
 import { Close, TryOutlined } from '@mui/icons-material';
 
-const PriorityGroupModal = ({ isGroup, setIsGroup, level, semesterId, scheduleId, insideSubjects }) => {
+const PriorityGroupModal = ({ isGroup, setIsGroup, level, semesterState, semesterId, scheduleId, insideSubjects }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [selected, setSelected] = useState(tabs[0].name)
   const [selectedDepartment, setSelectedDepartment] = useState(account.DepartmentId)
@@ -160,7 +160,7 @@ const PriorityGroupModal = ({ isGroup, setIsGroup, level, semesterId, scheduleId
       <DialogTitle>
         <Stack direction='row' alignItems='center' justifyContent='space-between'>
           <Stack direction='row' alignItems='center' gap={1}>
-            <TryOutlined/>
+            <TryOutlined />
             <Typography variant='h5' fontWeight={500}>Priority Course Group: {' '}
               {level === 4 && <span style={{ color: blue[600] }}>High</span>}
               {level === 3 && <span style={{ color: lightGreen[600] }}>Medium</span>}
@@ -195,13 +195,16 @@ const PriorityGroupModal = ({ isGroup, setIsGroup, level, semesterId, scheduleId
           </Select>
         </Stack>
         <Stack direction='row' gap={4} borderBottom='1px solid #e3e3e3' mb={2}>
-          {tabs.map(tab => (
-            <Typography key={tab.id} color={selected === tab.name ? green[600] : grey[500]} py={0.5}
-              borderBottom={selected === tab.name && `4px solid ${green[600]}`}
-              fontSize='20px' onClick={() => setSelected(tab.name)}
-              sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
-              {tab.name}</Typography>
-          ))}
+          <Typography color={selected === tabs[0].name ? green[600] : grey[500]} py={0.5}
+            borderBottom={selected === tabs[0].name && `4px solid ${green[600]}`}
+            fontSize='20px' onClick={() => setSelected(tabs[0].name)}
+            sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
+            {tabs[0].name}</Typography>
+          {semesterState===2 && <Typography color={selected === tabs[1].name ? green[600] : grey[500]} py={0.5}
+            borderBottom={selected === tabs[1].name && `4px solid ${green[600]}`}
+            fontSize='20px' onClick={() => setSelected(tabs[1].name)}
+            sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
+            {tabs[1].name}</Typography>}
         </Stack>
         {selected === tabs[0].name && <PriorityGroupList loadCourse={loadCourse} courseItems={courseItems}
           selectDelete={selectDelete} subjects={insideSubjects} />}

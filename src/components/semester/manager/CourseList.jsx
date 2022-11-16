@@ -19,7 +19,7 @@ const MenuProps = {
   },
 };
 
-const CourseList = ({ semesterId, scheduleId }) => {
+const CourseList = ({ semesterId, semesterState, scheduleId }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -250,7 +250,7 @@ const CourseList = ({ semesterId, scheduleId }) => {
                 <TableCell size='small' className='subject-header'>Course</TableCell>
                 <TableCell size='small' className='subject-header'>Assigned To</TableCell>
                 <TableCell size='small' className='subject-header'>Teaching Slot</TableCell>
-                {selectedDepartment === account.DepartmentId &&
+                {semesterState === 2 && selectedDepartment === account.DepartmentId &&
                   <><TableCell size='small' className='subject-header'>Assign</TableCell>
                     <TableCell size='small' className='subject-header'>Clear</TableCell></>}
               </TableRow>
@@ -271,7 +271,7 @@ const CourseList = ({ semesterId, scheduleId }) => {
                         : <span style={{ color: 'red' }}>Not Yet</span>
                       }
                     </TableCell>
-                    {selectedDepartment === account.DepartmentId && <>
+                    {semesterState === 2 && selectedDepartment === account.DepartmentId && <>
                       <TableCell size='small'>
                         <IconButton size='small' color='primary'
                           disabled={assignedCourses.find(item => item.CourseId === course.Id) && true}

@@ -1,6 +1,5 @@
 import { AssignmentOutlined, DeleteOutline } from '@mui/icons-material';
-import {
-  Alert, Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer,
+import {Alert, Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
 import { red } from '@mui/material/colors';
@@ -227,7 +226,8 @@ const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
                   <TableCell size='small' className='subject-header'>Course</TableCell>
                   <TableCell size='small' className='subject-header'>Subject</TableCell>
                   <TableCell size='small' className='subject-header'>Slot</TableCell>
-                  {!admin && <TableCell size='small' className='subject-header'>
+                  {semester.State === 2 && !admin && 
+                  <TableCell size='small' className='subject-header'>
                     Delete</TableCell>}
                 </TableRow>
               </TableHead>
@@ -244,7 +244,8 @@ const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
                         {slots.find(slot => slot.Id === course.SlotTypeId)?.Duration} {' '}
                         ({slots.find(slot => slot.Id === course.SlotTypeId)?.ConvertDateOfWeek})
                       </TableCell>
-                      {semester.State === 2 && !admin && <TableCell size='small'>
+                      {semester.State === 2 && !admin && 
+                      <TableCell size='small'>
                         {outSide ? <>
                           {(outSide && insideSubjects.find(inside => inside.Id === course.CourseId.split('_')[0])) ? (
                             <Tooltip title='delete' placement='right' arrow>

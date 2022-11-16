@@ -1,7 +1,17 @@
 import { Box, MenuItem, Select, Stack, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
 import { getWeeksInYear, getSemesterWeeks } from '../../utils/weeksInYear';
-import Timetable from '../main/Timetable'
+import Timetable from '../main/Timetable';
+
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+    },
+  },
+};
 
 const Schedule = ({ semester, selectedId, popUp }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
@@ -59,7 +69,7 @@ const Schedule = ({ semester, selectedId, popUp }) => {
     <Box height='100%' mb={1}>
       <Stack direction='row' gap={1} alignItems='center' px={popUp ? '' : 9} mb={2}>
         <Typography fontWeight={500}>Week</Typography>
-        <Select color='success'
+        <Select color='success' MenuProps={MenuProps}
           size='small'
           value={selectedWeek}
           onChange={handleSelectWeek}

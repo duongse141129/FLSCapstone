@@ -135,6 +135,6 @@ const tabs = [
   },
   {
     id: 3,
-    name: 'Favorite Slot'
+    name: 'Preference Slot'
   },
 ]
