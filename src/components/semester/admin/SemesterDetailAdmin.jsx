@@ -19,6 +19,7 @@ const SemesterDetailAdmin = () => {
   const [isConfirm, setIsConfirm] = useState(false);
   const [content, setContent] = useState('');
   const [mode, setMode] = useState('');
+  const [schedule, setSchedule] = useState({});
 
   useEffect(() => {
     request.get(`Semester/${id}`)
@@ -31,6 +32,16 @@ const SemesterDetailAdmin = () => {
         alert('Fail to load semester')
       })
   }, [id, isConfirm])
+
+  useEffect(() => {
+    request.get('Schedule', {
+      params: {SemesterId: id, pageIndex: 1, pageSize: 10}
+    })
+    .then(res => {
+      if(res.data.length > 0) setSchedule(res.data[0])
+    })
+    .catch(err => alert('Fail to get schedule'))
+  }, [id])
 
   const backToSemester = () => {
     navigate('/admin/semester')
@@ -228,7 +239,7 @@ const SemesterDetailAdmin = () => {
             Lecturers</Typography>
         </Stack>
       </Stack>
-      {selected === 'courses' && <CourseList />}
+      {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} />}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm}

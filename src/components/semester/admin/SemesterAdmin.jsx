@@ -46,7 +46,7 @@ const SemesterAdmin = () => {
         <Button variant='contained' color='success' onClick={addSemester} endIcon={<Add/>}>
           Create</Button>
       </Stack>
-      <Stack px={9} gap={4} direction='row' flexWrap='wrap' justifyContent='center'>
+      <Stack px={9} gap={4} direction='row' flexWrap='wrap' justifyContent='space-between'>
         {
           loading && <HashLoader size={30} color={green[600]} />
         }
