@@ -2,7 +2,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, 
   TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material';
 import { useState } from 'react';
 
-const ImportModal = ({ isImport, setIsImport, importCourses }) => {
+const ImportModal = ({ isImport, setIsImport, importCourses, saveImportCourse }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
 
@@ -29,7 +29,9 @@ const ImportModal = ({ isImport, setIsImport, importCourses }) => {
                 <TableRow>
                   <TableCell size='small' className='subject-header'>Course</TableCell>
                   <TableCell size='small' className='subject-header'>Subject</TableCell>
-                  <TableCell size='small' className='subject-header'>Slot</TableCell>
+                  <TableCell size='small' className='subject-header'>Department</TableCell>
+                  <TableCell size='small' className='subject-header'>Description</TableCell>
+                  <TableCell size='small' className='subject-header'>Slot Amount</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -39,6 +41,8 @@ const ImportModal = ({ isImport, setIsImport, importCourses }) => {
                       <TableRow key={course.CourseID} hover>
                         <TableCell size='small'>{course.CourseID}</TableCell>
                         <TableCell size='small'>{course.SubjectID}</TableCell>
+                        <TableCell size='small'>{course.DepartmentID}</TableCell>
+                        <TableCell size='small'>{course.Description}</TableCell>
                         <TableCell size='small'>{course.SlotAmount}</TableCell>
                       </TableRow>
                     ))
@@ -58,7 +62,7 @@ const ImportModal = ({ isImport, setIsImport, importCourses }) => {
       </DialogContent>
       <DialogActions>
         <Button variant='outlined' color='info' onClick={() => setIsImport(false)}>Cancel</Button>
-        <Button variant='contained' onClick={() => setIsImport(false)}>Add</Button>
+        <Button variant='contained' onClick={saveImportCourse}>Add</Button>
       </DialogActions>
     </Dialog>
   )

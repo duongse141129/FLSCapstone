@@ -30,12 +30,12 @@ const SemesterDetailManager = () => {
 
   useEffect(() => {
     request.get('Schedule', {
-      params: {SemesterId: id, pageIndex: 1, pageSize: 10}
+      params: { SemesterId: id, pageIndex: 1, pageSize: 10 }
     })
-    .then(res => {
-      if(res.data.length > 0) setSchedule(res.data[0])
-    })
-    .catch(err => alert('Fail to get schedule'))
+      .then(res => {
+        if (res.data.length > 0) setSchedule(res.data[0])
+      })
+      .catch(err => alert('Fail to get schedule'))
   }, [id])
 
   const backToSemesters = () => {
@@ -68,20 +68,18 @@ const SemesterDetailManager = () => {
             </>}
         </Stack>
       </Stack>
-      <Stack px={9}>
-        <Stack gap={1} px={1}>
-          <Typography>Start: {semester.DateStartFormat}</Typography>
-          <Typography>End: {semester.DateEndFormat}</Typography>
-          <Typography>Status: {semester.DateStatus}</Typography>
-        </Stack>
+      <Stack px={11} gap={1} mb={1}>
+        <Typography><span style={{fontWeight: 500}}>Start:</span> {semester.DateStartFormat}</Typography>
+        <Typography><span style={{fontWeight: 500}}>End:</span> {semester.DateEndFormat}</Typography>
+        <Typography><span style={{fontWeight: 500}}>Status:</span> {semester.DateStatus}</Typography>
       </Stack>
       <Stack px={9} mb={2}>
         <Stack direction='row' gap={1} border='1px solid #e3e3e3' py={0.5} borderRadius={2}
           justifyContent='center'>
           <Stack direction='row' alignItems='center' gap={1}>
             <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
-               bgcolor={semester.State === 1 ? blue[600] : grey[400]}>
-              {semester.State === 1 && <Check sx={{color: 'white'}}/>}
+              bgcolor={semester.State === 1 ? blue[600] : grey[400]}>
+              {semester.State === 1 && <Check sx={{ color: 'white' }} />}
             </Stack>
             <Typography>New</Typography>
             <HorizontalRule />
@@ -89,7 +87,7 @@ const SemesterDetailManager = () => {
           <Stack direction='row' alignItems='center' gap={1}>
             <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
               bgcolor={semester.State === 2 ? blue[600] : grey[400]}>
-              {semester.State === 2 && <Check sx={{color: 'white'}}/>}
+              {semester.State === 2 && <Check sx={{ color: 'white' }} />}
             </Stack>
             <Typography>Voting</Typography>
             <HorizontalRule />
@@ -97,7 +95,7 @@ const SemesterDetailManager = () => {
           <Stack direction='row' alignItems='center' gap={1}>
             <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
               bgcolor={semester.State === 3 ? blue[600] : grey[400]}>
-              {semester.State === 3 && <Check sx={{color: 'white'}}/>}
+              {semester.State === 3 && <Check sx={{ color: 'white' }} />}
             </Stack>
             <Typography>Blocked</Typography>
           </Stack>
@@ -107,15 +105,15 @@ const SemesterDetailManager = () => {
         <Stack direction='row' gap={4} borderBottom='1px solid #e3e3e3'>
           {tabs.map(tab => (
             <Typography key={tab.id} color={selected === tab.name ? green[600] : grey[500]} py={0.5}
-            borderBottom={selected === tab.name && `4px solid ${green[600]}`}
-            fontSize='20px' onClick={() => setSelected(tab.name)}
-            sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
-            {tab.name}</Typography>
+              borderBottom={selected === tab.name && `4px solid ${green[600]}`}
+              fontSize='20px' onClick={() => setSelected(tab.name)}
+              sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
+              {tab.name}</Typography>
           ))}
         </Stack>
       </Stack>
-      {selected === 'Courses' && <CourseList semesterId={id} semesterState={semester.State} scheduleId={schedule.Id}/>}
-      {selected === 'Priority Group' && <PriorityGroup semesterId={id} semesterState={semester.State} scheduleId={schedule.Id}/>}
+      {selected === 'Courses' && <CourseList semesterId={id} semesterState={semester.State} scheduleId={schedule.Id} />}
+      {selected === 'Priority Group' && <PriorityGroup semesterId={id} semesterState={semester.State} scheduleId={schedule.Id} />}
       {selected === 'Lecturers' && <LecturerContainer semester={semester} />}
     </Stack>
   )
@@ -124,7 +122,7 @@ const SemesterDetailManager = () => {
 export default SemesterDetailManager
 
 const tabs = [
-  {id:1, name: 'Courses'},
-  {id:2, name: 'Priority Group'},
-  {id:3, name: 'Lecturers'},
+  { id: 1, name: 'Courses' },
+  { id: 2, name: 'Priority Group' },
+  { id: 3, name: 'Lecturers' },
 ]

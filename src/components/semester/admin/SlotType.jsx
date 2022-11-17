@@ -12,8 +12,8 @@ const SlotType = ({ semesterId }) => {
     if (semesterId) {
       request.get('SlotType', {
         params: {
-          SemesterId: semesterId,
-          order: 'Asc', pageIndex: 1, pageSize: 100,
+          SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc',
+          pageIndex: 1, pageSize: 100,
         }
       })
         .then(res => {
@@ -36,14 +36,16 @@ const SlotType = ({ semesterId }) => {
             <Table>
               <TableHead>
                 <TableRow>
+                  <TableCell size='small' className='subject-header'>Code</TableCell>
                   <TableCell size='small' className='subject-header'>Day of Week</TableCell>
                   <TableCell size='small' className='subject-header'>Duration</TableCell>
-                  <TableCell size='small' className='subject-header'>Slot Number</TableCell>
+                  <TableCell size='small' className='subject-header'>Number</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {slots.map(slot => (
                   <TableRow key={slot.Id}>
+                    <TableCell size='small'>{slot.SlotTypeCode}</TableCell>
                     <TableCell size='small'>{slot.ConvertDateOfWeek}</TableCell>
                     <TableCell size='small'>{slot.Duration}</TableCell>
                     <TableCell size='small'>{slot.SlotNumber}</TableCell>

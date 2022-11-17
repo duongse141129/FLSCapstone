@@ -59,10 +59,10 @@ const SemesterDetail = () => {
             </>}
         </Stack>
       </Stack>
-      <Stack px={11} gap={1} mb={0.5}>
-        <Typography>Start: {semester.DateStartFormat}</Typography>
-        <Typography>End: {semester.DateEndFormat}</Typography>
-        <Typography>Status: {semester.DateStatus}</Typography>
+      <Stack px={11} gap={1} mb={1}>
+        <Typography><span style={{fontWeight: 500}}>Start:</span> {semester.DateStartFormat}</Typography>
+        <Typography><span style={{fontWeight: 500}}>End:</span> {semester.DateEndFormat}</Typography>
+        <Typography><span style={{fontWeight: 500}}>Status:</span> {semester.DateStatus}</Typography>
       </Stack>
       <Stack px={9} mb={2}>
         <Stack direction='row' gap={1} border='1px solid #e3e3e3' py={0.5} borderRadius={2}

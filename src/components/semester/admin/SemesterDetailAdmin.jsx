@@ -20,6 +20,7 @@ const SemesterDetailAdmin = () => {
   const [content, setContent] = useState('');
   const [mode, setMode] = useState('');
   const [schedule, setSchedule] = useState({});
+  const [slotTypes, setSlotTypes] = useState([]);
 
   useEffect(() => {
     request.get(`Semester/${id}`)
@@ -41,6 +42,17 @@ const SemesterDetailAdmin = () => {
       if(res.data.length > 0) setSchedule(res.data[0])
     })
     .catch(err => alert('Fail to get schedule'))
+  }, [id])
+
+  useEffect(() => {
+    request.get('SlotType', {
+      params: {
+        SemesterId: id, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc',
+        pageIndex: 1, pageSize: 100
+      }
+    }).then(res => {
+      if (res.data) setSlotTypes(res.data);
+    }).catch(err => alert('Fail to load slottype'))
   }, [id])
 
   const backToSemester = () => {
@@ -186,9 +198,9 @@ const SemesterDetailAdmin = () => {
         </Stack>
       </Stack>
       <Stack px={11} gap={1}>
-        <Typography>Start: {semester.DateStartFormat}</Typography>
-        <Typography>End: {semester.DateEndFormat}</Typography>
-        <Typography>Status: {semester.DateStatus}</Typography>
+        <Typography><span style={{fontWeight: 500}}>Start:</span> {semester.DateStartFormat}</Typography>
+        <Typography><span style={{fontWeight: 500}}>End:</span> {semester.DateEndFormat}</Typography>
+        <Typography><span style={{fontWeight: 500}}>Status:</span> {semester.DateStatus}</Typography>
       </Stack>
       <Stack px={9} mb={2}>
         <Stack direction='row' gap={1} border='1px solid #e3e3e3' py={0.5} borderRadius={2}
@@ -239,7 +251,7 @@ const SemesterDetailAdmin = () => {
             Lecturers</Typography>
         </Stack>
       </Stack>
-      {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id}/>}
+      {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id} slotTypes={slotTypes}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} />}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm}

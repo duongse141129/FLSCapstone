@@ -16,7 +16,7 @@ const MenuProps = {
   },
 };
 
-const CourseList = ({ semesterId, scheduleId }) => {
+const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
   const fileInput = useRef(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -183,6 +183,31 @@ const CourseList = ({ semesterId, scheduleId }) => {
     setSelectedSubject(e.target.value)
   }
 
+  const getInforSlot = (slotId) => {
+    if (slotTypes.length > 0) {
+      for (let i in slotTypes) {
+        if (slotTypes[i].Id === slotId) {
+          const obj = slotTypes[i];
+          return `${obj.Duration} (${obj.ConvertDateOfWeek})`
+        }
+      }
+      return ''
+    }
+    return ''
+  }
+
+  const saveImportCourse = () => {
+    if (importCourses.length > 0) {
+      request.post(`Course/AddListCourse/${semesterId}`, importCourses)
+        .then(res => {
+          if (res.status === 201) {
+            setIsImport(false);
+          }
+        })
+        .catch(err => alert('Fail to import course'))
+    }
+  }
+
   return (
     <Stack height='90vh' px={9}>
       <Stack direction='row' alignItems='center' gap={1} mb={1}>
@@ -247,8 +272,9 @@ const CourseList = ({ semesterId, scheduleId }) => {
                         }
                       </TableCell>
                       <TableCell size='small'>
-                        {assignedCourses.find(item => item.CourseId === course.Id)?.SlotTypeId ||
-                          <span style={{ color: 'red' }}>Not Yet</span>
+                        {assignedCourses.find(item => item.CourseId === course.Id) ?
+                          getInforSlot(assignedCourses.find(item => item.CourseId === course.Id).SlotTypeId)
+                          : <span style={{ color: 'red' }}>Not Yet</span>
                         }
                       </TableCell>
                     </TableRow>
@@ -272,8 +298,9 @@ const CourseList = ({ semesterId, scheduleId }) => {
           }}
         />
       </Paper>
-      <ImportModal isImport={isImport} setIsImport={setIsImport} importCourses={importCourses} />
-      <AddModal isAdd={isAdd} setIsAdd={setIsAdd} departments={departments} subjects={subjects}/>
+      <ImportModal isImport={isImport} setIsImport={setIsImport} importCourses={importCourses}
+        saveImportCourse={saveImportCourse} />
+      <AddModal isAdd={isAdd} setIsAdd={setIsAdd} departments={departments} subjects={subjects} />
     </Stack>
   )
 }
