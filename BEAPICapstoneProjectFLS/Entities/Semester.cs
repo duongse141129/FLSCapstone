@@ -12,6 +12,7 @@ namespace BEAPICapstoneProjectFLS.Entities
             Courses = new HashSet<Course>();
             LecturerCourseGroups = new HashSet<LecturerCourseGroup>();
             LecturerSlotConfigs = new HashSet<LecturerSlotConfig>();
+            Requests = new HashSet<Request>();
             RoomSemesters = new HashSet<RoomSemester>();
             Schedules = new HashSet<Schedule>();
             SlotTypes = new HashSet<SlotType>();
@@ -28,6 +29,7 @@ namespace BEAPICapstoneProjectFLS.Entities
         public virtual ICollection<Course> Courses { get; set; }
         public virtual ICollection<LecturerCourseGroup> LecturerCourseGroups { get; set; }
         public virtual ICollection<LecturerSlotConfig> LecturerSlotConfigs { get; set; }
+        public virtual ICollection<Request> Requests { get; set; }
         public virtual ICollection<RoomSemester> RoomSemesters { get; set; }
         public virtual ICollection<Schedule> Schedules { get; set; }
         public virtual ICollection<SlotType> SlotTypes { get; set; }

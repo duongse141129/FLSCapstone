@@ -298,6 +298,16 @@ namespace BEAPICapstoneProjectFLS.Entities
                     .IsUnicode(false)
                     .HasColumnName("LecturerID");
 
+                entity.Property(e => e.SemesterId)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("SemesterID");
+
+                entity.Property(e => e.SubjectId)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("SubjectID");
+
                 entity.Property(e => e.Title).HasMaxLength(100);
 
                 entity.HasOne(d => d.DepartmentManager)
@@ -309,6 +319,16 @@ namespace BEAPICapstoneProjectFLS.Entities
                     .WithMany(p => p.RequestLecturers)
                     .HasForeignKey(d => d.LecturerId)
                     .HasConstraintName("FK__Request__Lecture__5441852A");
+
+                entity.HasOne(d => d.Semester)
+                    .WithMany(p => p.Requests)
+                    .HasForeignKey(d => d.SemesterId)
+                    .HasConstraintName("FK__Request__Semeste__151B244E");
+
+                entity.HasOne(d => d.Subject)
+                    .WithMany(p => p.Requests)
+                    .HasForeignKey(d => d.SubjectId)
+                    .HasConstraintName("FK__Request__Subject__14270015");
             });
 
             modelBuilder.Entity<Role>(entity =>

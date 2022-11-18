@@ -15,6 +15,7 @@ using BEAPICapstoneProjectFLS.Enum;
 using BEAPICapstoneProjectFLS.Requests;
 using BEAPICapstoneProjectFLS.RandomKey;
 using BEAPICapstoneProjectFLS.Requests.Request;
+using System;
 
 namespace BEAPICapstoneProjectFLS.Services
 {
@@ -35,6 +36,7 @@ namespace BEAPICapstoneProjectFLS.Services
             {
                 var re = _mapper.Map<Request>(request);
                 re.Id = RandomPKKey.NewRamDomPKKey();
+                re.DateCreate = DateTime.Now;
                 await _res.InsertAsync(re);
                 await _res.SaveAsync();
 
@@ -107,15 +109,29 @@ namespace BEAPICapstoneProjectFLS.Services
         public async Task<RequestViewModel> GetRequestById(string id)
         {
 
-            var re = await _res.GetAllByIQueryable()
+
+            var listRequest = _res.FindBy(x => x.Status == (int)FLSStatus.Active);
+
+            var listRequestViewModel = (listRequest.ProjectTo<RequestViewModel>
+                (_mapper.ConfigurationProvider)).DynamicFilter(new RequestViewModel { Id = id});
+
+            var re= await listRequestViewModel.FirstOrDefaultAsync();
+            if (re == null)
+                return null;
+            return re;
+
+
+            /*var re = await _res.GetAllByIQueryable()
                 .Where(x => x.Id == id && x.Status == (int)RequestStatus.Active)
-                .Include(x => x.Lecturer)
                 .Include(x => x.DepartmentManager)
+                .Include(x => x.Lecturer)
+                .Include(x => x.Semester)
+                .Include(x => x.Subject)
                 .FirstOrDefaultAsync();
             if (re == null)
                 return null;
             var RequestVM = _mapper.Map<RequestViewModel>(re);
-            return RequestVM;
+            return RequestVM;*/
         }
 
         public async Task<RequestViewModel> UpdateRequest(string id, UpdateRequest request)

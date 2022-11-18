@@ -14,6 +14,8 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public string? Description { get; set; }
         [JsonProperty("DateCreate")]
         public DateTime? DateCreate { get; set; }
+        [JsonProperty("DateCreateFormat")]
+        public string? DateCreateFormat { get; set; }
         [JsonProperty("LecturerId")]
         public string? LecturerId { get; set; }
         [JsonProperty("LecturerName")]
@@ -22,6 +24,14 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public string? DepartmentManagerId { get; set; }
         [JsonProperty("DepartmentManagerName")]
         public string? DepartmentManagerName { get; set; }
+        [JsonProperty("SubjectId")]
+        public string? SubjectId { get; set; }
+        [JsonProperty("SubjectName")]
+        public string SubjectName { get; set; }
+        [JsonProperty("SemesterId")]
+        public string? SemesterId { get; set; }
+        [JsonProperty("Term")]
+        public string Term { get; set; }
         [JsonProperty("Status")]
         public int? Status { get; set; }
     }

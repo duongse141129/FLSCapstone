@@ -97,7 +97,17 @@ namespace BEAPICapstoneProjectFLS.Services
         public async Task<SubjectOfLecturerViewModel> GetSubjectOfLecturerById(string id)
         {
 
-            var sol = await _res.GetAllByIQueryable()
+            var listSOL = _res.FindBy(x => x.Status == (int)FLSStatus.Active);
+
+            var listSOLViewModel = (listSOL.ProjectTo<SubjectOfLecturerViewModel>
+                (_mapper.ConfigurationProvider)).DynamicFilter(new SubjectOfLecturerViewModel { Id = id });
+
+            var sol = await listSOLViewModel.FirstOrDefaultAsync();
+            if (sol == null)
+                return null;
+            return sol;
+
+            /*var sol = await _res.GetAllByIQueryable()
                 .Where(x => x.Id == id && x.Status == (int)SubjectOfLecturerStatus.Active)
                 .Include(x => x.Lecturer)
                 .Include(x => x.Semester)
@@ -107,7 +117,7 @@ namespace BEAPICapstoneProjectFLS.Services
             if (sol == null)
                 return null;
             var subjectOfLecturerVM = _mapper.Map<SubjectOfLecturerViewModel>(sol);
-            return subjectOfLecturerVM;
+            return subjectOfLecturerVM;*/
         }
 
         public async Task<SubjectOfLecturerViewModel> UpdateSubjectOfLecturer(string id, UpdateSubjectOfLecturerRequest request)
