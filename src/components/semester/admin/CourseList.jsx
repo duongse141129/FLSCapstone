@@ -256,6 +256,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
             <TableHead>
               <TableRow>
                 <TableCell size='small' className='subject-header'>Course</TableCell>
+                <TableCell size='small' className='subject-header'>Slot Amount</TableCell>
                 <TableCell size='small' className='subject-header'>Assigned To</TableCell>
                 <TableCell size='small' className='subject-header'>Teaching Slot</TableCell>
               </TableRow>
@@ -266,6 +267,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
                   .map(course => (
                     <TableRow key={course.Id} hover>
                       <TableCell size='small'>{course.Id}</TableCell>
+                      <TableCell size='small'>{course.SlotAmount}</TableCell>
                       <TableCell size='small'>
                         {assignedCourses.find(item => item.CourseId === course.Id)?.LecturerId ||
                           <span style={{ color: 'red' }}>Not Yet</span>

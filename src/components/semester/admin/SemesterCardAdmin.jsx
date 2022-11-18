@@ -37,7 +37,7 @@ const SemesterCardAdmin = ({ semester, clickDelete }) => {
             {semester.DateStatus}
           </Typography>
         </Stack>
-        <Stack alignItems='center' mt={2}>
+        <Stack alignItems='center' mt={2.5}>
          <Typography variant='h5' fontWeight={500} 
           color={semester.DateStatus === 'On Going' ? blue[700] : (semester.DateStatus === 'Close' ? grey[600] : red[600])}>
             {semester.Term}</Typography>

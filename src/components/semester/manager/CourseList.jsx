@@ -148,9 +148,9 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
           return `${obj.Duration} (${obj.ConvertDateOfWeek})`
         }
       }
-      return {}
+      return ''
     }
-    return {}
+    return ''
   }
 
   const handleAssign = (courseId) => {
@@ -248,6 +248,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
             <TableHead>
               <TableRow>
                 <TableCell size='small' className='subject-header'>Course</TableCell>
+                <TableCell size='small' className='subject-header'>Slot Amount</TableCell>
                 <TableCell size='small' className='subject-header'>Assigned To</TableCell>
                 <TableCell size='small' className='subject-header'>Teaching Slot</TableCell>
                 {semesterState === 2 && selectedDepartment === account.DepartmentId &&
@@ -260,6 +261,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
                 .map(course => (
                   <TableRow key={course.Id} hover>
                     <TableCell size='small'>{course.Id}</TableCell>
+                    <TableCell size='small'>{course.SlotAmount}</TableCell>
                     <TableCell size='small'>
                       {assignedCourses.find(item => item.CourseId === course.Id)?.LecturerId ||
                         <span style={{ color: 'red' }}>Not Yet</span>
