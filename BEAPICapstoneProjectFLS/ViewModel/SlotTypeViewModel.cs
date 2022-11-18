@@ -7,7 +7,9 @@ namespace BEAPICapstoneProjectFLS.ViewModel
     public class SlotTypeViewModel
     {
         [JsonProperty("Id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
+        [JsonProperty("SlotTypeCode")]
+        public string SlotTypeCode { get; set; }
         [JsonProperty("TimeStart")]
         public TimeSpan? TimeStart { get; set; }
         [JsonProperty("TimeEnd")]
@@ -18,6 +20,10 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public int? DateOfWeek { get; set; }
         [JsonProperty("Duration")]
         public string? Duration { get; set; }
+        [JsonProperty("SemesterId")]
+        public string? SemesterId { get; set; }
+        [JsonProperty("Term")]
+        public string? Term { get; set; }
         [JsonProperty("ConvertDateOfWeek")]
         public string? ConvertDateOfWeek { get; set; }
         [JsonProperty("Status")]

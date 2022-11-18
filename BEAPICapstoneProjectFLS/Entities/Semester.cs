@@ -13,6 +13,8 @@ namespace BEAPICapstoneProjectFLS.Entities
             LecturerCourseGroups = new HashSet<LecturerCourseGroup>();
             LecturerSlotConfigs = new HashSet<LecturerSlotConfig>();
             RoomSemesters = new HashSet<RoomSemester>();
+            Schedules = new HashSet<Schedule>();
+            SlotTypes = new HashSet<SlotType>();
             SubjectOfLecturers = new HashSet<SubjectOfLecturer>();
         }
 
@@ -20,12 +22,15 @@ namespace BEAPICapstoneProjectFLS.Entities
         public string Term { get; set; }
         public DateTime? DateStart { get; set; }
         public DateTime? DateEnd { get; set; }
+        public int? State { get; set; }
         public int Status { get; set; }
 
         public virtual ICollection<Course> Courses { get; set; }
         public virtual ICollection<LecturerCourseGroup> LecturerCourseGroups { get; set; }
         public virtual ICollection<LecturerSlotConfig> LecturerSlotConfigs { get; set; }
         public virtual ICollection<RoomSemester> RoomSemesters { get; set; }
+        public virtual ICollection<Schedule> Schedules { get; set; }
+        public virtual ICollection<SlotType> SlotTypes { get; set; }
         public virtual ICollection<SubjectOfLecturer> SubjectOfLecturers { get; set; }
     }
 }

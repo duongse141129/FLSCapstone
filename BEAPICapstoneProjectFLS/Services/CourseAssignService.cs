@@ -15,6 +15,7 @@ using BEAPICapstoneProjectFLS.Enum;
 using BEAPICapstoneProjectFLS.Requests;
 using BEAPICapstoneProjectFLS.RandomKey;
 using BEAPICapstoneProjectFLS.Requests.CourseAssignRequest;
+using System;
 
 namespace BEAPICapstoneProjectFLS.Services
 {
@@ -48,6 +49,43 @@ namespace BEAPICapstoneProjectFLS.Services
 
         }
 
+        public bool checkScheduleID(string ScheduleID, List<CreateCourseAssignRequest> requests)
+        {
+            foreach (var checkSchedule in requests)
+            {
+                if (checkSchedule.ScheduleId != ScheduleID)
+                {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public async Task<bool> CreateListCourseAssign(string ScheduleID, List<CreateCourseAssignRequest> requests)
+        {
+            try
+            {
+                var check = checkScheduleID(ScheduleID, requests);
+                if (check)
+                {
+                    foreach (var cr in requests)
+                    {
+                        var newCourseAssign = _mapper.Map<CourseAssign>(cr);
+                        newCourseAssign.Id = RandomPKKey.NewRamDomPKKey();
+                        await _res.InsertAsync(newCourseAssign);
+                        await _res.SaveAsync();
+                    }
+                    return true;
+                }
+                return false;
+
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         public async Task<bool> DeleteCourseAssign(string id)
         {
             var courseAssign = (await _res.FindByAsync(x => x.Id == id && x.Status == (int)CourseAssignStatus.Active)).FirstOrDefault();
@@ -59,6 +97,36 @@ namespace BEAPICapstoneProjectFLS.Services
             await _res.UpdateAsync(courseAssign);
             await _res.SaveAsync();
             return true;
+        }
+
+
+        public async Task<bool> DeleteListCourseAssignInSemester(string ScheduleID)
+        {
+            try
+            {
+                var listCourseAssign = await _res.GetAllByIQueryable().Where(x => x.Status == (int)CourseAssignStatus.Active)
+                    .Where(x => x.ScheduleId == ScheduleID)
+                    .Where(x => x.IsAssign == 0)
+                    .ToListAsync();
+                if(listCourseAssign.Count <= 0 )
+                {
+                    return false;
+                }
+                else
+                {
+                    foreach (var CourseAssign in listCourseAssign)
+                    {
+                        await _res.DeleteAsync(CourseAssign.Id);
+                    }
+                    return true;
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                var message = ex.Message;
+                return false;
+            }
         }
 
         public IPagedList<CourseAssignViewModel> GetAllCourseAssign(CourseAssignViewModel flitter, int pageIndex, int pageSize, CourseAssignSortBy sortBy, OrderBy order)

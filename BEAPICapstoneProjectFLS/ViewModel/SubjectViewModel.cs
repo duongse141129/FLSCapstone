@@ -6,15 +6,15 @@ namespace BEAPICapstoneProjectFLS.ViewModel
     public class SubjectViewModel
     {
         [JsonProperty("Id")]
-        public string Id { get; set; }
+        public string? Id { get; set; }
         [JsonProperty("SubjectName")]
-        public string SubjectName { get; set; }
+        public string? SubjectName { get; set; }
         [JsonProperty("Description")]
-        public string Description { get; set; }
+        public string? Description { get; set; }
         [JsonProperty("DepartmentId")]
-        public string DepartmentId { get; set; }
+        public string? DepartmentId { get; set; }
         [JsonProperty("DepartmentName")]
-        public string DepartmentName { get; set; }
+        public string? DepartmentName { get; set; }
         [JsonProperty("Status")]
         public int? Status { get; set; }
     }

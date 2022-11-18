@@ -2,6 +2,7 @@
 using BEAPICapstoneProjectFLS.Requests;
 using BEAPICapstoneProjectFLS.Requests.DepartmentGroupRequest;
 using BEAPICapstoneProjectFLS.ViewModel;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
 

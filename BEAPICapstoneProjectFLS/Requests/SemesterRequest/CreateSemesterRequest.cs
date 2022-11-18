@@ -12,5 +12,7 @@ namespace BEAPICapstoneProjectFLS.Requests.SemesterRequest
         public DateTime? DateStart { get; set; }
         [JsonProperty("DateEnd")]
         public DateTime? DateEnd { get; set; }
+        [JsonProperty("State")]
+        public int? State { get; set; }
     }
 }

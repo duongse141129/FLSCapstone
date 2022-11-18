@@ -14,8 +14,12 @@ namespace BEAPICapstoneProjectFLS.Entities
         public string LecturerId { get; set; }
         public string DepartmentManagerId { get; set; }
         public int Status { get; set; }
+        public string SubjectId { get; set; }
+        public string SemesterId { get; set; }
 
-        public virtual DepartmentManager DepartmentManager { get; set; }
-        public virtual Lecturer Lecturer { get; set; }
+        public virtual User DepartmentManager { get; set; }
+        public virtual User Lecturer { get; set; }
+        public virtual Semester Semester { get; set; }
+        public virtual Subject Subject { get; set; }
     }
 }

@@ -4,6 +4,7 @@ using BEAPICapstoneProjectFLS.Requests.CourseRequest;
 using BEAPICapstoneProjectFLS.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BEAPICapstoneProjectFLS.Controllers
@@ -13,10 +14,12 @@ namespace BEAPICapstoneProjectFLS.Controllers
     public class CourseController : ControllerBase
     {
         private readonly ICourseService _ICourseService;
+        private readonly ISemesterService _ISemesterService;
 
-        public CourseController(ICourseService CourseService)
+        public CourseController(ICourseService CourseService, ISemesterService SemesterService)
         {
             _ICourseService = CourseService;
+            _ISemesterService = SemesterService;
         }
 
         [HttpGet("{id}", Name = "GetCourseById")]
@@ -38,6 +41,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateCourse([FromBody] CreateCourseRequest request)
         {
+
             var CourseVM = await _ICourseService.CreateCourse(request);
             if (CourseVM == null)
             {
@@ -46,6 +50,28 @@ namespace BEAPICapstoneProjectFLS.Controllers
             else
             {
                 return CreatedAtRoute(nameof(GetCourseById), new { id = CourseVM.Id }, CourseVM);
+            }
+        }
+
+        [HttpPost("AddListCourse/{SemesterID}", Name = "AddListCourseInSemester")]
+        public async Task<IActionResult> CreateListCourse(string SemesterID, [FromBody] List<CreateCourseRequest> requests)
+        {
+            var checkSemesterID = await _ISemesterService.GetSemesterById(SemesterID);
+            if (checkSemesterID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var checkCourseVM = await _ICourseService.CreateListCourse(SemesterID, requests);
+                if (checkCourseVM.Success == false)
+                {
+                    return BadRequest(checkCourseVM);
+                }
+                else
+                {
+                    return Ok(checkCourseVM);
+                }
             }
         }
 
@@ -62,6 +88,15 @@ namespace BEAPICapstoneProjectFLS.Controllers
         public async Task<IActionResult> DeleteCourse(string id)
         {
             var rs = await _ICourseService.DeleteCourse(id);
+            if (rs == false)
+                return NotFound();
+            return Ok();
+        }
+
+        [HttpDelete("DeleteListCourse/{SemesterID}")]
+        public async Task<IActionResult> DeleteListCourseInSemester(string SemesterID)
+        {
+            var rs = await _ICourseService.DeleteListCourseInSemester(SemesterID);
             if (rs == false)
                 return NotFound();
             return Ok();

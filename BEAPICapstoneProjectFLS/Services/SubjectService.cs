@@ -15,6 +15,8 @@ using BEAPICapstoneProjectFLS.Enum;
 using BEAPICapstoneProjectFLS.Requests;
 using BEAPICapstoneProjectFLS.RandomKey;
 using BEAPICapstoneProjectFLS.Requests.SubjectRequest;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BEAPICapstoneProjectFLS.Services
 {
@@ -48,6 +50,35 @@ namespace BEAPICapstoneProjectFLS.Services
 
         }
 
+        /*public async Task<ApiResponse> CreateListSubject(List<CreateSubjectRequest> requests)
+        {
+            try
+            {
+                foreach (var request in requests)
+                {
+                    var su = _mapper.Map<Subject>(request);
+                    su.Id = RandomPKKey.NewRamDomPKKey();
+                    await _res.InsertAsync(su);
+                    await _res.SaveAsync();
+                }
+                return new ApiResponse
+                {
+                    Success = true,
+                    Message = "CreateListSubject success"
+                };
+            }
+            catch(Exception ex)
+            {
+                return new ApiResponse
+                {
+                    Success = true,
+                    Message = "CreateListSubject fail",
+                    Data = ex.Message
+                };
+            }
+        }*/
+
+
         public async Task<bool> DeleteSubject(string id)
         {
             var subject = (await _res.FindByAsync(x => x.Id == id && x.Status == (int)SubjectStatus.Active)).FirstOrDefault();
@@ -60,6 +91,7 @@ namespace BEAPICapstoneProjectFLS.Services
             await _res.SaveAsync();
             return true;
         }
+
 
         public IPagedList<SubjectViewModel> GetAllSubject(SubjectViewModel flitter, int pageIndex, int pageSize, SubjectSortBy sortBy, OrderBy order)
         {

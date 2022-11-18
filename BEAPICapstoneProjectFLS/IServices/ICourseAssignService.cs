@@ -3,6 +3,7 @@ using BEAPICapstoneProjectFLS.Requests.CourseAssignRequest;
 using BEAPICapstoneProjectFLS.Requests.DepartmentGroupRequest;
 using BEAPICapstoneProjectFLS.ViewModel;
 using PagedList;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 namespace BEAPICapstoneProjectFLS.IServices
 {
@@ -14,5 +15,9 @@ namespace BEAPICapstoneProjectFLS.IServices
         Task<CourseAssignViewModel> CreateCourseAssign(CreateCourseAssignRequest request);
         Task<CourseAssignViewModel> UpdateCourseAssign(string id, UpdateCourseAssignRequest request);
         Task<bool> DeleteCourseAssign(string id);
+
+        Task<bool> CreateListCourseAssign(string ScheduleID, List<CreateCourseAssignRequest> requests);
+
+        Task<bool> DeleteListCourseAssignInSemester(string ScheduleID);
     }
 }

@@ -1,9 +1,10 @@
-using BEAPICapstoneProjectFLS.AutoMapper;
+﻿using BEAPICapstoneProjectFLS.AutoMapper;
 using BEAPICapstoneProjectFLS.Entities;
 using BEAPICapstoneProjectFLS.IRepositories;
 using BEAPICapstoneProjectFLS.IServices;
 using BEAPICapstoneProjectFLS.Repositories;
 using BEAPICapstoneProjectFLS.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -14,12 +15,14 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BEAPICapstoneProjectFLS
@@ -53,9 +56,10 @@ namespace BEAPICapstoneProjectFLS
             });
             services.AddAutoMapper(typeof(DepartmentGroupMapper).Assembly);
             services.AddAutoMapper(typeof(DepartmentMapper).Assembly);
-            services.AddAutoMapper(typeof(LecturerMapper).Assembly);
-            services.AddAutoMapper(typeof(DepartmentManagerMapper).Assembly);
-            services.AddAutoMapper(typeof(AdminMapper).Assembly);
+            services.AddAutoMapper(typeof(ScheduleMapper).Assembly);
+            services.AddAutoMapper(typeof(RoleMapper).Assembly);
+            services.AddAutoMapper(typeof(UserAndRoleMapper).Assembly);
+            services.AddAutoMapper(typeof(UserMapper).Assembly);
             services.AddAutoMapper(typeof(SubjectMapper).Assembly);
             services.AddAutoMapper(typeof(SlotTypeMapper).Assembly);
             services.AddAutoMapper(typeof(SemesterMapper).Assembly);
@@ -73,9 +77,9 @@ namespace BEAPICapstoneProjectFLS
 
             services.AddScoped<IDepartmentGroupService, DepartmentGroupService>();
             services.AddScoped<IDepartmentService, DepartmentService>();
-            services.AddScoped<ILecturerService, LecturerService>();
-            services.AddScoped<IDepartmentManagerService, DepartmentManagerService>();
-            services.AddScoped<IAdminService, AdminService>();
+            services.AddScoped<IScheduleService, ScheduleService>();
+            services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IUserAndRoleService, UserAndRoleService>();
             services.AddScoped<ISubjectService, SubjectService>();
             services.AddScoped<ISlotTypeService, SlotTypeService>();
             services.AddScoped<ISemesterService, SemesterService>();
@@ -89,7 +93,7 @@ namespace BEAPICapstoneProjectFLS
             services.AddScoped<ICourseAssignService, CourseAssignService>();
             services.AddScoped<ILecturerSlotConfigService, LecturerSlotConfigService>();
             services.AddScoped<ICourseGroupItemService, CourseGroupItemService>();
-            services.AddScoped<IUserAccountService, UserAccountService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(option =>
@@ -106,6 +110,30 @@ namespace BEAPICapstoneProjectFLS
             services.AddScoped<FLSCapstoneDatabaseContext>();
 
             services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+
+
+            services.Configure<AppSetting>(Configuration.GetSection("AppSettings"));
+
+            var secretKey = Configuration["AppSettings:SecretKey"];
+            var secretKeyBytes = Encoding.UTF8.GetBytes(secretKey);
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(opt =>
+            {
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    //tự cấp token
+                    ValidateIssuer = false,
+                    ValidateAudience = false,
+
+                    //ký vào token
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+
+                    ClockSkew = TimeSpan.Zero
+                };
+            });
+
 
             services.AddSwaggerGen(c =>
             {
@@ -179,8 +207,10 @@ namespace BEAPICapstoneProjectFLS
 
             app.UseCors(_corsName);
 
-            app.UseAuthorization();
+            
             app.UseAuthentication();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
             {

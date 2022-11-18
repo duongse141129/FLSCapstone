@@ -3,6 +3,7 @@
     public enum SemesterSortBy
     {
         Id,
-        Term
+        Term,
+        DateEnd
     }
 }

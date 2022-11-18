@@ -4,6 +4,7 @@ using BEAPICapstoneProjectFLS.Requests.SlotTypeRequest;
 using BEAPICapstoneProjectFLS.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BEAPICapstoneProjectFLS.Controllers
@@ -13,10 +14,12 @@ namespace BEAPICapstoneProjectFLS.Controllers
     public class SlotTypeController : ControllerBase
     {
         private readonly ISlotTypeService _ISlotTypeService;
+        private readonly ISemesterService _ISemesterService;
 
-        public SlotTypeController(ISlotTypeService SlotTypeService)
+        public SlotTypeController(ISlotTypeService SlotTypeService, ISemesterService SemesterService)
         {
             _ISlotTypeService = SlotTypeService;
+            _ISemesterService = SemesterService;
         }
 
         [HttpGet("{id}", Name = "GetSlotTypeById")]
@@ -49,6 +52,28 @@ namespace BEAPICapstoneProjectFLS.Controllers
             }
         }
 
+        [HttpPost("AddListSlotType/{SemesterID}", Name = "AddListSlotTypeInSemester")]
+        public async Task<IActionResult> CreateListSlotType(string SemesterID, [FromBody] List<CreateSlotTypeRequest> requests)
+        {
+            var checkSemesterID = await _ISemesterService.GetSemesterById(SemesterID);
+            if (checkSemesterID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var checkSlotTypeVM = await _ISlotTypeService.CreateListSlotType(SemesterID, requests);
+                if (checkSlotTypeVM.Success == false)
+                {
+                    return BadRequest(checkSlotTypeVM);
+                }
+                else
+                {
+                    return Ok(checkSlotTypeVM);
+                }
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSlotType(string id, [FromBody] UpdateSlotTypeRequest request)
         {
@@ -62,6 +87,15 @@ namespace BEAPICapstoneProjectFLS.Controllers
         public async Task<IActionResult> DeleteSlotType(string id)
         {
             var rs = await _ISlotTypeService.DeleteSlotType(id);
+            if (rs == false)
+                return NotFound();
+            return Ok();
+        }
+
+        [HttpDelete("DeleteListSlotType/{SemesterID}")]
+        public async Task<IActionResult> DeleteListSlotTypeInSemester(string SemesterID)
+        {
+            var rs = await _ISlotTypeService.DeleteListSlotTypeInSemester(SemesterID);
             if (rs == false)
                 return NotFound();
             return Ok();

@@ -17,6 +17,10 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public string SemesterId { get; set; }
         [JsonProperty("Term")]
         public string Term { get; set; }
+        [JsonProperty("PreferenceLevel")]
+        public int? PreferenceLevel { get; set; }
+        [JsonProperty("IsEnable")]
+        public int? IsEnable { get; set; }
         [JsonProperty("Status")]
         public int? Status { get; set; }
     }

@@ -79,7 +79,7 @@ namespace BEAPICapstoneProjectFLS.Services
                         listSemesterViewModel = (IQueryable<SemesterViewModel>)listSemesterViewModel.OrderByDescending(x => x.Term);
                     }
                     break;
-                case "ID":
+                case "Id":
                     if (order.ToString() == "Asc")
                     {
                         listSemesterViewModel = (IQueryable<SemesterViewModel>)listSemesterViewModel.OrderBy(x => x.Id);
@@ -87,6 +87,16 @@ namespace BEAPICapstoneProjectFLS.Services
                     else
                     {
                         listSemesterViewModel = (IQueryable<SemesterViewModel>)listSemesterViewModel.OrderByDescending(x => x.Id);
+                    }
+                    break;
+                case "DateEnd":
+                    if (order.ToString() == "Asc")
+                    {
+                        listSemesterViewModel = (IQueryable<SemesterViewModel>)listSemesterViewModel.OrderBy(x => x.DateEnd);
+                    }
+                    else
+                    {
+                        listSemesterViewModel = (IQueryable<SemesterViewModel>)listSemesterViewModel.OrderByDescending(x => x.DateEnd);
                     }
                     break;
             }

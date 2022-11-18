@@ -78,6 +78,7 @@ namespace BEAPICapstoneProjectFLS.Repositories
         {
             T existing = await _dbSet.FindAsync(id);
             _dbSet.Remove(existing);
+            await _context.SaveChangesAsync();
         }
 
         public void Save()

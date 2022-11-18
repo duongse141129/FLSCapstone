@@ -4,6 +4,7 @@ using BEAPICapstoneProjectFLS.Requests.SubjectRequest;
 using BEAPICapstoneProjectFLS.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BEAPICapstoneProjectFLS.Controllers
@@ -49,6 +50,20 @@ namespace BEAPICapstoneProjectFLS.Controllers
             }
         }
 
+        /*[HttpPost("CreateListSubject/")]
+        public async Task<IActionResult> CreateListSubject([FromBody] List<CreateSubjectRequest> requests)
+        {
+            var SubjectVM = await _ISubjectService.CreateListSubject(requests);
+            if (SubjectVM.Success == true)
+            {
+                return Ok(SubjectVM);
+            }
+            else
+            {
+                return BadRequest(SubjectVM);
+            }
+        }*/
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateSubject(string id, [FromBody] UpdateSubjectRequest request)
         {
@@ -66,5 +81,6 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 return NotFound();
             return Ok();
         }
+
     }
 }

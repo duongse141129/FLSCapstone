@@ -2,7 +2,9 @@
 using BEAPICapstoneProjectFLS.Requests.DepartmentGroupRequest;
 using BEAPICapstoneProjectFLS.Requests.SubjectRequest;
 using BEAPICapstoneProjectFLS.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 using PagedList;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BEAPICapstoneProjectFLS.IServices

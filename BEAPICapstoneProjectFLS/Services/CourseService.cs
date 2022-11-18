@@ -15,6 +15,8 @@ using BEAPICapstoneProjectFLS.Enum;
 using BEAPICapstoneProjectFLS.Requests;
 using BEAPICapstoneProjectFLS.RandomKey;
 using BEAPICapstoneProjectFLS.Requests.CourseRequest;
+using Microsoft.AspNetCore.Mvc;
+using System;
 
 namespace BEAPICapstoneProjectFLS.Services
 {
@@ -47,6 +49,36 @@ namespace BEAPICapstoneProjectFLS.Services
 
         }
 
+ 
+
+        public async Task<ApiResponse> CreateListCourse(string semesterID, List<CreateCourseRequest> requests)
+        {
+            try
+            {
+                foreach (var cr in requests)
+                {
+                    cr.SemesterId = semesterID;
+                    var newCourse = _mapper.Map<Course>(cr);
+                    await _res.InsertAsync(newCourse);
+                    await _res.SaveAsync();
+                }
+                return new ApiResponse
+                {
+                    Success = true,
+                    Message = "CreateListCourse success"
+                };
+
+            }
+            catch(Exception e)
+            {
+                return new ApiResponse {
+                    Success= false,
+                    Message= "CreateListCourse fail",
+                    Data = e.Message
+                };
+            }
+        }
+
         public async Task<bool> DeleteCourse(string id)
         {
             var course = (await _res.FindByAsync(x => x.Id == id && x.Status == (int)CourseStatus.Active)).FirstOrDefault();
@@ -59,6 +91,35 @@ namespace BEAPICapstoneProjectFLS.Services
             await _res.SaveAsync();
             return true;
         }
+
+        public async Task<bool> DeleteListCourseInSemester(string SemesterID)
+        {
+            try
+            {
+                var listCourse = await _res.GetAllByIQueryable().Where(x => x.Status == (int)CourseStatus.Active)
+                    .Where(x => x.SemesterId == SemesterID)
+                    .ToListAsync();
+                if(listCourse.Count <= 0 )
+                {
+                    return false;
+                }
+                else
+                {
+                    foreach (var course in listCourse)
+                    {
+                        await _res.DeleteAsync(course.Id);
+                    }
+                    return true;
+                }
+                
+            }
+            catch (Exception ex)
+            {
+                var message = ex.Message;
+                return false;
+            }
+        }
+
 
         public IPagedList<CourseViewModel> GetAllCourse(CourseViewModel flitter, int pageIndex, int pageSize, CourseSortBy sortBy, OrderBy order)
         {
@@ -99,7 +160,6 @@ namespace BEAPICapstoneProjectFLS.Services
                 .Where(x => x.Id == id && x.Status == (int)CourseStatus.Active)
                 .Include(x => x.Subject)
                 .Include(x => x.Semester)
-                .Include(x => x.SlotType)
                 .FirstOrDefaultAsync();
             if (dg == null)
                 return null;

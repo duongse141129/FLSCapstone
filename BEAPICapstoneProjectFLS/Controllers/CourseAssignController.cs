@@ -4,6 +4,7 @@ using BEAPICapstoneProjectFLS.Requests.CourseAssignRequest;
 using BEAPICapstoneProjectFLS.ViewModel;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BEAPICapstoneProjectFLS.Controllers
@@ -49,6 +50,20 @@ namespace BEAPICapstoneProjectFLS.Controllers
             }
         }
 
+        [HttpPost("AddListCourseAssign/{ScheduleID}", Name = "AddListCourseAssignInSemester")]
+        public async Task<IActionResult> CreateListCourseAssign(string ScheduleID, [FromBody] List<CreateCourseAssignRequest> requests)
+        {
+            var checkCourseAssignVM = await _ICourseAssignService.CreateListCourseAssign(ScheduleID,requests);
+            if (checkCourseAssignVM == false)
+            {
+                return BadRequest();
+            }
+            else
+            {
+                return Ok();
+            }
+        }
+
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateCourseAssign(string id, [FromBody] UpdateCourseAssignRequest request)
         {
@@ -62,6 +77,16 @@ namespace BEAPICapstoneProjectFLS.Controllers
         public async Task<IActionResult> DeleteCourseAssign(string id)
         {
             var rs = await _ICourseAssignService.DeleteCourseAssign(id);
+            if (rs == false)
+                return NotFound();
+            return Ok();
+        }
+
+
+        [HttpDelete("DeleteListCourseAssign/{ScheduleID}")]
+        public async Task<IActionResult> DeleteListCourseAssignInSemester(string ScheduleID)
+        {
+            var rs = await _ICourseAssignService.DeleteListCourseAssignInSemester(ScheduleID);
             if (rs == false)
                 return NotFound();
             return Ok();

@@ -3,6 +3,7 @@
     public enum SlotTypeSortBy
     {
         Id,
-        SlotNumber
+        SlotNumber,
+        DayOfWeekAndTimeStart
     }
 }

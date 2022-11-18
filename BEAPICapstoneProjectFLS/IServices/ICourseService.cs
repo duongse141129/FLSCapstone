@@ -2,7 +2,9 @@
 using BEAPICapstoneProjectFLS.Requests.CourseRequest;
 using BEAPICapstoneProjectFLS.Requests.DepartmentGroupRequest;
 using BEAPICapstoneProjectFLS.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 using PagedList;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BEAPICapstoneProjectFLS.IServices
@@ -13,7 +15,10 @@ namespace BEAPICapstoneProjectFLS.IServices
         IPagedList<CourseViewModel> GetAllCourse(CourseViewModel flitter, int pageIndex,
            int pageSize, CourseSortBy sortBy, OrderBy order);
         Task<CourseViewModel> CreateCourse(CreateCourseRequest request);
+
+        Task<ApiResponse> CreateListCourse(string semesterID,List<CreateCourseRequest> requests);
         Task<CourseViewModel> UpdateCourse(string id, UpdateCourseRequest request);
         Task<bool> DeleteCourse(string id);
+        Task<bool> DeleteListCourseInSemester(string SemesterID);
     }
 }

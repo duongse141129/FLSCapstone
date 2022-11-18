@@ -10,11 +10,14 @@ namespace BEAPICapstoneProjectFLS.Entities
         public string Id { get; set; }
         public string LecturerId { get; set; }
         public string CourseId { get; set; }
-        public int? isAssign { get; set; }
-        public int? isPublic { get; set; }
+        public string SlotTypeId { get; set; }
+        public string ScheduleId { get; set; }
+        public int? IsAssign { get; set; }
         public int Status { get; set; }
 
         public virtual Course Course { get; set; }
-        public virtual Lecturer Lecturer { get; set; }
+        public virtual User Lecturer { get; set; }
+        public virtual Schedule Schedule { get; set; }
+        public virtual SlotType SlotType { get; set; }
     }
 }

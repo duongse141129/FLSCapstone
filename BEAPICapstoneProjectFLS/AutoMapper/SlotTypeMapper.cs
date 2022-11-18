@@ -14,7 +14,8 @@ namespace BEAPICapstoneProjectFLS.AutoMapper
             CreateMap<SlotType, SlotTypeViewModel>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)SlotTypeStatus.Active))
                 .ForMember(d => d.Duration, s => s.MapFrom(s => ConvertTimeToDuration(s.TimeStart, s.TimeEnd)))
-                .ForMember(d => d.ConvertDateOfWeek, s => s.MapFrom(s => ConvertDateOfWeek(s.DateOfWeek)));
+                .ForMember(d => d.ConvertDateOfWeek, s => s.MapFrom(s => ConvertDateOfWeek(s.DateOfWeek)))
+                .ForMember(d => d.Term, s => s.MapFrom(s => s.Semester.Term));
 
             CreateMap<SlotTypeViewModel, SlotType>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)SlotTypeStatus.Active));
@@ -44,11 +45,11 @@ namespace BEAPICapstoneProjectFLS.AutoMapper
                         countTwiceWeek++;
                         if(countTwiceWeek == 2)
                         {
-                            result += "T" + i;
+                            result += ConvertNumToDate(i);
                         }
                         else
                         {
-                            result += "T" + i + ";";
+                            result += ConvertNumToDate(i) + " - ";
                         }
                     }
 
@@ -73,6 +74,30 @@ namespace BEAPICapstoneProjectFLS.AutoMapper
             //    return result;
             //}          
             //return null;
+        }
+
+        private static string ConvertNumToDate(int num)
+        {
+            switch (num)
+            {
+                case 2:
+                    return "Monday";
+                case 3:
+                    return "Tuesday";
+                case 4:
+                    return "Wednesday";
+                case 5:
+                    return "Thursday";
+                case 6:
+                    return "Friday";
+                case 7:
+                    return "Saturday";
+                case 8:
+                    return "Sunday";
+                default:
+                    return "";
+
+            }
         }
 
         private static string ConvertTimeToDuration(TimeSpan? timeStart, TimeSpan? timeEnd)
