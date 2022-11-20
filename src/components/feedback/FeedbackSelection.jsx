@@ -1,6 +1,8 @@
 import { CancelOutlined, ChatOutlined, EditOutlined } from '@mui/icons-material';
-import {Alert, Box, IconButton, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer,
-  TableHead, TablePagination, TableRow, Tooltip, Typography} from '@mui/material'
+import {
+  Alert, Box, IconButton, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer,
+  TableHead, TablePagination, TableRow, Tooltip, Typography
+} from '@mui/material'
 import { blue, grey, red } from '@mui/material/colors';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
@@ -48,7 +50,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
   //get subject by department of lecturer
   useEffect(() => {
     const getSubjects = async () => {
-      if(lecturer.DepartmentId){
+      if (lecturer.DepartmentId) {
         try {
           const response = await request.get('Subject', {
             params: {
@@ -149,30 +151,30 @@ const FeedbackSelection = ({ id, semester, admin }) => {
 
   return (
     <Stack flex={5} height='90vh'>
-      <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
-        <Stack>
-          <Typography color='gray' variant='subtitle1'>
-            *Give reply point to a lecturer with each subject
-          </Typography>
-          <Typography>Total: {subjects.length}</Typography>
-        </Stack>
-        <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
-          <Switch checked={isDisable} onChange={() => setIsDisable(!isDisable)} />
-          <Typography pr={2}>
-            {isDisable ? <span style={{ color: blue[600] }}>Disable On</span> : 'Disable Off'}
-          </Typography>
-        </Stack>
-      </Stack>
       {!admin && lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
         <Stack>
           <Alert severity="error">Can not give reply point to lecturer outside my department</Alert>
         </Stack>
       }
-      {((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) &&
+      {((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) && <>
+        <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
+          <Stack>
+            <Typography color='gray' variant='subtitle1'>
+              *Give reply point to a lecturer with each subject
+            </Typography>
+            <Typography>Total: {subjects.length}</Typography>
+          </Stack>
+          {semester.State === 2 && !admin && 
+          <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
+            <Switch checked={isDisable} onChange={() => setIsDisable(!isDisable)} />
+            <Typography pr={2}>
+              {isDisable ? <span style={{ color: blue[600] }}>Disable On</span> : 'Disable Off'}
+            </Typography>
+          </Stack>}
+        </Stack>
         <Stack mb={2}>
           <Paper sx={{ minWidth: 700, mb: 2 }}>
-            <TableContainer component={Box}
-              sx={{ overflow: 'auto' }}>
+            <TableContainer component={Box} sx={{ overflow: 'auto' }}>
               <Table>
                 <TableHead>
                   <TableRow>
@@ -240,7 +242,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                           <TableCell size='small' align='center'
                             sx={{
                               bgcolor: points.find(item => item.SubjectId === subject.Id)?.isEnable === 0 ? '' : (disableNumber >= configData.DISABLE_SUBJECT ? grey[100] : ''),
-                              '&:hover': { cursor: 'pointer' }
+                              '&:hover': { cursor: isDisable ? 'pointer' : 'default' }
                             }}
                             onClick={() => handleDisable(subject.Id)}>
                             {points.find(item => item.SubjectId === subject.Id)?.isEnable === 0 &&
@@ -269,7 +271,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
               }}
             />
           </Paper>
-        </Stack>}
+        </Stack> </>}
       <FeedbackModal isFeedback={isFeedback} setIsFeedback={setIsFeedback}
         lecturer={lecturer} subjectId={selectedId} points={points} loadPoint={loadPoint} />
       <MaxCourseModal isMax={isMax} setIsMax={setIsMax} lecturer={lecturer} subjectId={selectedId}
