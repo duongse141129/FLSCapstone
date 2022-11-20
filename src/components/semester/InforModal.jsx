@@ -51,13 +51,13 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
             </Typography>
           ))}
         </Stack>
-        {selected === 'Schedule' && <ScheduleAdmin lecturerId={selectedLecturer.Id} semester={semester}/>}
-        {selected === 'Assignment' && <AssignmentList lecturerId={selectedLecturer.Id} semester={semester} 
+        {selected === tabs[0].name && <ScheduleAdmin lecturerId={selectedLecturer.Id} semester={semester}/>}
+        {selected === tabs[1].name && <AssignmentList lecturerId={selectedLecturer.Id} semester={semester} 
           allSubjects={allSubjects} admin={admin}/>}
-        {selected === 'Priority Course' && <PriorityList id={selectedLecturer.Id} semester={semester} 
+        {selected === tabs[2].name && <PriorityList id={selectedLecturer.Id} semester={semester} 
           allSubjects={allSubjects} admin={admin}/>}
-        {selected === 'Reply Point' && <FeedbackSelection id={selectedLecturer.Id} semester={semester} admin={admin}/>}
-        {selected === 'Preference Slot' && <SlotManage lecturerId={selectedLecturer.Id} semester={semester} admin={admin}/>}
+        {selected === tabs[3].name && <FeedbackSelection id={selectedLecturer.Id} semester={semester} admin={admin}/>}
+        {selected === tabs[4].name && <SlotManage lecturerId={selectedLecturer.Id} semester={semester} admin={admin}/>}
       </DialogContent>
     </Dialog>
   )
@@ -69,6 +69,6 @@ const tabs = [
   { id: 1, name: 'Schedule' },
   { id: 2, name: 'Assignment'},
   { id: 3, name: 'Priority Course'},
-  { id: 4, name: 'Reply Point' },
+  { id: 4, name: 'Subject Evaluation' },
   { id: 5, name: 'Preference Slot' },
 ]

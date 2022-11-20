@@ -1,8 +1,8 @@
-import { AssignmentOutlined, Beenhere, Clear } from '@mui/icons-material';
+import { AssignmentOutlined, Clear } from '@mui/icons-material';
 import { Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer,
-  TableHead, TablePagination, TableRow, Tooltip, Typography
+  TableHead, TablePagination, TableRow, Typography
 } from '@mui/material'
-import { green, grey } from '@mui/material/colors';
+import { green } from '@mui/material/colors';
 import { useEffect, useState } from 'react';
 import { HashLoader } from 'react-spinners';
 import request from '../../../utils/request';
@@ -23,9 +23,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
-  const [selectedDepartment, setSelectedDepartment] = useState(account.DepartmentId);
-  const [departments, setDepartments] = useState([]);
-  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('all');
   const [subjects, setSubjects] = useState([]);
   const [courses, setCourses] = useState([]);
   const [assignedCourses, setAssignedCourses] = useState([]);
@@ -35,41 +33,21 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
   const [isClear, setIsClear] = useState(false);
   const [loadCourse, setLoadCourse] = useState(false);
 
-  //get departments by group
-  useEffect(() => {
-    const getDepartments = async () => {
-      try {
-        const response = await request.get(`Department/${account.DepartmentId}`);
-        const departmentList = await request.get('Department', {
-          params: {
-            DepartmentGroupId: response.data.DepartmentGroupId,
-            pageIndex: 1, pageSize: 1000
-          }
-        })
-        if (departmentList.data) { setDepartments(departmentList.data) }
-      }
-      catch (error) { alert('Fail to get Department!') }
-    }
-
-    getDepartments();
-  }, [account.DepartmentId])
-
   //get subjects by selected department
   useEffect(() => {
-    if (selectedDepartment) {
+    if (account.DepartmentId) {
       request.get('Subject', {
         params: {
-          DepartmentId: selectedDepartment, sortBy: 'Id', order: 'Asc',
+          DepartmentId: account.DepartmentId, sortBy: 'Id', order: 'Asc',
           pageIndex: 1, pageSize: 100
         }
       }).then(res => {
         if (res.data) {
           setSubjects(res.data);
-          setSelectedSubject(res.data[0]?.Id)
         }
       }).catch(err => {alert('Fail to load subjects');})
     }
-  }, [selectedDepartment])
+  }, [account.DepartmentId])
 
   //get courses by selected subject
   useEffect(() => {
@@ -77,19 +55,28 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
       setLoadCourse(true)
       request.get('Course', {
         params: {
-          SubjectId: selectedSubject, SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
+          SubjectId: selectedSubject === 'all' ? '' : selectedSubject, 
+          SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
           pageIndex: 1, pageSize: 1000
         }
       })
         .then(res => {
           if (res.data) {
-            setCourses(res.data)
+            let internal = res.data
+            let external = res.data
+            for(let i in subjects){
+              external = external.filter(course => course.SubjectId !== subjects[i].Id)
+            }
+            for(let i in external){
+              internal = internal.filter(course => course.SubjectId !== external[i].SubjectId)
+            }
+            setCourses(internal)
             setLoadCourse(false);
           }
         })
         .catch(err => { alert('Fail to load courses'); setLoadCourse(false)})
     }
-  }, [semesterId, selectedSubject])
+  }, [semesterId, selectedSubject, subjects])
 
   //get assign courses
   useEffect(() => {
@@ -123,21 +110,9 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
     setPage(newPage);
   };
 
-  const handleSelectDepartment = (e) => {
-    setSelectedDepartment(e.target.value);
-    setPage(0);
-  }
-
   const handleSelectSubject = (e) => {
     setSelectedSubject(e.target.value);
     setPage(0);
-  }
-
-  const myDepartment = () => {
-    if (selectedDepartment !== account.DepartmentId) {
-      setSelectedDepartment(account.DepartmentId)
-      setPage(0);
-    }
   }
 
   const getInforSlot = (slotId) => {
@@ -209,28 +184,13 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
       <Stack mb={2} gap={1} flexWrap='wrap'>
         <Stack direction='row' alignItems='center' gap={1}>
           <Typography fontWeight={500}> Department: </Typography>
-          <Select color='success' size='small'
-            value={selectedDepartment} onChange={handleSelectDepartment}>
-            {
-              departments.map(department => (
-                <MenuItem key={department.Id} value={department.Id}>
-                  {department.DepartmentName}</MenuItem>
-              ))
-            }
-          </Select>
-          <Tooltip title='My Department' placement='top' arrow>
-            <Beenhere onClick={myDepartment}
-              sx={{
-                fontSize: '28px', color: selectedDepartment === account.DepartmentId ? green[600] : grey[400],
-                '&:hover': { cursor: 'pointer', color: green[600] }
-              }}
-            />
-          </Tooltip>
+          <Typography>{account.DepartmentName}</Typography>
         </Stack>
         <Stack direction='row' alignItems='center'>
           <Typography fontWeight={500}> Subject: </Typography>
           <Select color='success' size='small' sx={{ ml: 1 }}
             value={selectedSubject} onChange={handleSelectSubject} MenuProps={MenuProps}>
+            <MenuItem value='all'>All</MenuItem>
             {subjects.map(subject => (
               <MenuItem key={subject.Id} value={subject.Id}>{subject.Id} - {subject.SubjectName}</MenuItem>
             ))}
@@ -248,10 +208,11 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
             <TableHead>
               <TableRow>
                 <TableCell size='small' className='subject-header'>Course</TableCell>
+                <TableCell size='small' className='subject-header'>Subject</TableCell>
                 <TableCell size='small' className='subject-header'>Slot Amount</TableCell>
                 <TableCell size='small' className='subject-header'>Assigned To</TableCell>
                 <TableCell size='small' className='subject-header'>Teaching Slot</TableCell>
-                {semesterState === 2 && selectedDepartment === account.DepartmentId &&
+                {semesterState === 2 &&
                   <><TableCell size='small' className='subject-header'>Assign</TableCell>
                     <TableCell size='small' className='subject-header'>Clear</TableCell></>}
               </TableRow>
@@ -261,6 +222,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
                 .map(course => (
                   <TableRow key={course.Id} hover>
                     <TableCell size='small'>{course.Id}</TableCell>
+                    <TableCell size='small'>{course.SubjectId}</TableCell>
                     <TableCell size='small'>{course.SlotAmount}</TableCell>
                     <TableCell size='small'>
                       {assignedCourses.find(item => item.CourseId === course.Id)?.LecturerId ||
@@ -273,7 +235,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
                         : <span style={{ color: 'red' }}>Not Yet</span>
                       }
                     </TableCell>
-                    {semesterState === 2 && selectedDepartment === account.DepartmentId && <>
+                    {semesterState === 2 && <>
                       <TableCell size='small'>
                         <IconButton size='small' color='primary'
                           disabled={assignedCourses.find(item => item.CourseId === course.Id) && true}

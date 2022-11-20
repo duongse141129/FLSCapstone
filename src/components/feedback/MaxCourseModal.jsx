@@ -1,13 +1,11 @@
-import {Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle,
-  FormControl, FormControlLabel, Radio, RadioGroup, Stack, Typography
-}from '@mui/material';
-import { Chat, Check} from '@mui/icons-material';
-import React, { useState, useEffect, useMemo } from 'react'
-import { blue} from '@mui/material/colors';
-import request from '../../utils/request';
+import { Check, EditOutlined } from '@mui/icons-material';
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, Typography } from '@mui/material';
+import { blue } from '@mui/material/colors';
+import { useEffect, useMemo, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
+import request from '../../utils/request';
 
-const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points, loadPoint }) => {
+const MaxCourseModal = ({ isMax, setIsMax, lecturer, subjectId, points, loadPoint }) => {
   const [value, setValue] = useState(3);
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
@@ -19,15 +17,11 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
 
   useEffect(() => {
     if (subject) {
-      setValue(subject.FeedbackPoint)
+      setValue(subject.MaxCourseSubject)
     }
     setIsSuccess(false);
     setIsLoading(false);
   }, [subject, loadPoint])
-
-  const handleChangeValue = (e) => {
-    setValue(Number(e.target.value));
-  }
 
   const handleSave = () => {
     if (subject) {
@@ -38,34 +32,31 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
         SubjectId: subject.SubjectId,
         LecturerId: subject.LecturerId,
         FavoritePoint: subject.FavoritePoint,
-        FeedbackPoint: value,
-        MaxCourseSubject: subject.MaxCourseSubject,
+        FeedbackPoint: subject.FeedbackPoint,
+        MaxCourseSubject: value,
         isEnable: subject.isEnable
       })
         .then(res => {
           if (res.status === 200) {
             setTimeout(() => {
-              setIsFeedback(false)
+              setIsMax(false)
             }, 500)
             setIsLoading(false)
             setIsSuccess(true)
           }
         })
         .catch(err => {
-          alert('Fail to save feedback')
+          alert('Fail to edit max courses')
         })
     }
   }
 
   return (
-    <Dialog
-      open={isFeedback}
-      onClose={() => setIsFeedback(false)}
-    >
+    <Dialog open={isMax} onClose={() => setIsMax(false)}>
       <DialogTitle color={blue[700]} mb={1}>
         <Stack direction='row' alignItems='center' gap={1}>
-          <Chat />
-          <Typography variant='h5'>Evaluate to Lecturer with Subject</Typography>
+          <EditOutlined />
+          <Typography variant='h5'>Edit max courses number</Typography>
         </Stack>
       </DialogTitle>
       <DialogContent>
@@ -81,21 +72,14 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
           <Typography fontWeight={500}>Subject: </Typography>
           <Typography>{subjectId} - {subject?.SubjectName}</Typography>
         </Stack>
-        <Stack alignItems='center'>
-          <FormControl margin='normal'>
-            <RadioGroup
-              value={value}
-              onChange={handleChangeValue}
-            >
-              <Stack direction='row-reverse' alignItems='center'>
-                <FormControlLabel value='1' control={<Radio color='error' />} label="Weak" labelPlacement='bottom' />
-                <FormControlLabel value='2' control={<Radio color='error' />} label="Not Good" labelPlacement='bottom' />
-                <FormControlLabel value='3' control={<Radio color='success' />} label="Normal" labelPlacement='bottom' />
-                <FormControlLabel value='4' control={<Radio />} label="Good" labelPlacement='bottom' />
-                <FormControlLabel value='5' control={<Radio />} label="Excellent" labelPlacement='bottom' />
-              </Stack>
-            </RadioGroup>
-          </FormControl>
+        <Stack direction='row' alignItems='center' gap={1}>
+          <Typography fontWeight={500}>Max courses: </Typography>
+          <Select color='success' size='small'
+            value={value} onChange={(e) => setValue(Number(e.target.value))}>
+            <MenuItem value='3'>3 courses</MenuItem>
+            <MenuItem value='4'>4 courses</MenuItem>
+            <MenuItem value='5'>5 courses</MenuItem>
+          </Select>
         </Stack>
       </DialogContent>
       <DialogActions>
@@ -104,9 +88,9 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
         }
         {!isLoading && !isSuccess &&
           <>
-            <Button onClick={() => setIsFeedback(false)} color='info' variant='outlined'>Cancel</Button>
+            <Button onClick={() => setIsMax(false)} color='info' variant='outlined'>Cancel</Button>
             <Button variant='contained' onClick={handleSave} autoFocus
-              disabled={value === subject?.FeedbackPoint}>
+              disabled={value === subject?.MaxCourseSubject}>
               Save
             </Button>
           </>
@@ -121,4 +105,4 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
   )
 }
 
-export default FeedbackModal
+export default MaxCourseModal

@@ -7,7 +7,6 @@ import CourseList from './CourseList';
 import { useNavigate, useParams } from 'react-router-dom';
 import request from '../../../utils/request';
 import Title from '../../title/Title';
-import PriorityGroup from './PriorityGroup';
 
 const SemesterDetailManager = () => {
   const { id } = useParams();
@@ -102,7 +101,7 @@ const SemesterDetailManager = () => {
         </Stack>
       </Stack>
       <Stack px={9} mb={2}>
-        <Stack direction='row' gap={4} borderBottom='1px solid #e3e3e3'>
+        <Stack direction='row' gap={6} borderBottom='1px solid #e3e3e3'>
           {tabs.map(tab => (
             <Typography key={tab.id} color={selected === tab.name ? green[600] : grey[500]} py={0.5}
               borderBottom={selected === tab.name && `4px solid ${green[600]}`}
@@ -112,9 +111,9 @@ const SemesterDetailManager = () => {
           ))}
         </Stack>
       </Stack>
-      {selected === 'Courses' && <CourseList semesterId={id} semesterState={semester.State} scheduleId={schedule.Id} />}
-      {selected === 'Priority Group' && <PriorityGroup semesterId={id} semesterState={semester.State} scheduleId={schedule.Id} />}
-      {selected === 'Lecturers' && <LecturerContainer semester={semester} />}
+      {selected === tabs[0].name && <CourseList semesterId={id} semesterState={semester.State} scheduleId={schedule.Id} />}
+     
+      {selected === tabs[2].name && <LecturerContainer semester={semester} />}
     </Stack>
   )
 }
@@ -123,6 +122,6 @@ export default SemesterDetailManager
 
 const tabs = [
   { id: 1, name: 'Courses' },
-  { id: 2, name: 'Priority Group' },
+  { id: 2, name: 'Requests' },
   { id: 3, name: 'Lecturers' },
 ]
