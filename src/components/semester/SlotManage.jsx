@@ -1,14 +1,14 @@
 import { CancelOutlined, ThumbDown, ThumbUp } from '@mui/icons-material'
-import { Alert, Box, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
+import { Alert, Box, Button, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
 import { blue, green, grey, red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import request from '../../utils/request'
 import configData from '../../utils/configData.json';
+import { ClipLoader } from 'react-spinners';
 
-const SlotManage = ({ lecturerId, semester, admin }) => {
+const SlotManage = ({ lecturer, semester, admin }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
-  const [lecturer, setLecturer] = useState({});
   const [slots, setSlots] = useState([]);
   const [configSlots, setConfigSlots] = useState([]);
   const [likes, setLikes] = useState([]);
@@ -17,18 +17,8 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
   const [disables, setDisables] = useState([]);
   const [reload, setReload] = useState(false);
   const [edit, setEdit] = useState(false);
-
-  useEffect(() => {
-    request.get(`User/${lecturerId}`)
-      .then(res => {
-        if (res.data) {
-          setLecturer(res.data)
-        }
-      })
-      .catch(err => {
-        alert('Fail to load lecturer in slot!')
-      })
-  }, [lecturerId])
+  const [loadDisable, setLoadDisable] = useState(false);
+  const [selectedId, setSelectedId] = useState('');
 
   useEffect(() => {
     if (semester.Id) {
@@ -52,10 +42,8 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
   useEffect(() => {
     request.get('LecturerSlotConfig', {
       params: {
-        LecturerId: lecturerId,
-        SemesterId: semester.Id,
-        pageIndex: 1,
-        pageSize: 100
+        LecturerId: lecturer.Id, SemesterId: semester.Id,
+        pageIndex: 1, pageSize: 100
       }
     })
       .then(res => {
@@ -66,7 +54,7 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
       .catch(err => {
         alert('Fail to load favorite slots!');
       })
-  }, [lecturerId, semester.Id, reload])
+  }, [lecturer.Id, semester.Id, reload])
 
   useEffect(() => {
     if (configSlots.length > 0) {
@@ -96,69 +84,59 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
   const handleBan = (slotId) => {
     if (!edit) return;
 
-    let obj = {};
-    for (let i in configSlots) {
-      if (configSlots[i].SlotTypeId === slotId) {
-        obj = configSlots[i]
+    if (configSlots.length > 0) {
+      const obj = configSlots.find(slot => slot.SlotTypeId === slotId)
+      if (obj) {
+        if (obj.IsEnable === 1) {
+          if (disables.length >= configData.DISABLE_SLOT) return;
+        }
+        setSelectedId(slotId)
+        setLoadDisable(true)
+        request.put(`LecturerSlotConfig/${obj.Id}`, {
+          SlotTypeId: obj.SlotTypeId, LecturerId: obj.LecturerId,
+          SemesterId: obj.SemesterId, PreferenceLevel: obj.PreferenceLevel,
+          IsEnable: obj.IsEnable === 1 ? 0 : 1
+        })
+          .then(res => {
+            if (res.status === 200) {
+              setReload(!reload)
+              setLoadDisable(false)
+              toast.success('Save Successfully!', {
+                position: "top-right", autoClose: 3000, hideProgressBar: false,
+                closeOnClick: true, pauseOnHover: true, draggable: true,
+                progress: undefined, theme: "light",
+              });
+            }
+          })
+          .catch(err => {
+            alert('Fail to disable slot!')
+            setLoadDisable(false)
+          })
       }
     }
+  }
 
-    if (disables.find(disable => disable === slotId)) {
-      request.put(`LecturerSlotConfig/${obj.Id}`, {
-        SlotTypeId: obj.SlotTypeId,
-        LecturerId: obj.LecturerId,
-        SemesterId: obj.SemesterId,
-        PreferenceLevel: obj.PreferenceLevel,
-        IsEnable: 1
-      })
-        .then(res => {
+  const handleApply = () => {
+    if (dislikes.length > 0 && configSlots.length > 0 && disables.length === 0) {
+      for (let i in dislikes) {
+        const obj = configSlots.find(item => item.SlotTypeId === dislikes[i])
+        request.put(`LecturerSlotConfig/${obj.Id}`, {
+          SlotTypeId: obj.SlotTypeId, LecturerId: obj.LecturerId,
+          SemesterId: obj.SemesterId, PreferenceLevel: obj.PreferenceLevel,
+          IsEnable: 0
+        }).then(res => {
           if (res.status === 200) {
-            setReload(!reload)
-            toast.success('Update Successfully!', {
-              position: "top-right",
-              autoClose: 1000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
+            if (Number(i) === (dislikes.length - 1)) {
+              setReload(!reload)
+              toast.success('Apply Successfully!', {
+                position: "top-right", autoClose: 3000, hideProgressBar: false,
+                closeOnClick: true, pauseOnHover: true, draggable: true,
+                progress: undefined, theme: "light",
+              });
+            }
           }
-        })
-        .catch(err => {
-          alert('Fail to update disable!')
-        })
-    }
-    else {
-      if (disables.length >= configData.BAN_TURN) {
-        return;
+        }).catch(err => {alert('Fail to apply')})
       }
-      request.put(`LecturerSlotConfig/${obj.Id}`, {
-        SlotTypeId: obj.SlotTypeId,
-        LecturerId: obj.LecturerId,
-        SemesterId: obj.SemesterId,
-        PreferenceLevel: obj.PreferenceLevel,
-        IsEnable: 0
-      })
-        .then(res => {
-          if (res.status === 200) {
-            setReload(!reload)
-            toast.success('Update Successfully!', {
-              position: "top-right",
-              autoClose: 1000,
-              hideProgressBar: false,
-              closeOnClick: true,
-              pauseOnHover: true,
-              draggable: true,
-              progress: undefined,
-              theme: "colored",
-            });
-          }
-        })
-        .catch(err => {
-          alert('Fail to update disable!')
-        })
     }
   }
 
@@ -172,26 +150,31 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
           <Alert severity="error">Can not ban slot to lecturer outside my department</Alert>
         </Stack>
       }
-      { ((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) &&
+      {((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) &&
         <><Stack direction='row' justifyContent='space-between' mb={1} alignItems='center'>
           <Stack direction='row' alignItems='center' gap={2}>
-            <Typography color={red[600]}>Disable turn: {bans.length}/{configData.BAN_TURN}</Typography>
             <Typography color={grey[500]} variant='subtitle1'>(*Re-select to disable new one)</Typography>
           </Stack>
-          {semester.State === 2 && !admin && 
-          <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
-            <Switch checked={edit} onChange={() => setEdit(!edit)} />
-            <Typography pr={2}>
-              {edit ? <span style={{ color: blue[600] }}>Disable On</span> : 'Disable Off'}
-            </Typography>
-          </Stack>}
+          {semester.State === 2 && !admin &&
+            <Stack direction='row' alignItems='center' gap={2}>
+              <Button variant='contained' color='warning' size='small' sx={{ textTransform: 'none' }}
+                disabled={disables.length > 0 || dislikes.length === 0} onClick={handleApply}>
+                Apply Dislike for Disable
+              </Button>
+              <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
+                <Switch checked={edit} onChange={() => setEdit(!edit)} />
+                <Typography pr={2}>
+                  {edit ? <span style={{ color: blue[600] }}>Disable On</span> : 'Disable Off'}
+                </Typography>
+              </Stack>
+            </Stack>}
         </Stack>
           <Stack>
-            <Paper sx={{ minWidth: 700}}>
+            <Paper sx={{ minWidth: 700 }}>
               <TableContainer component={Box}>
                 <Table>
                   <TableHead>
-                    <TableRow sx={{bgcolor: green[600]}}>
+                    <TableRow sx={{ bgcolor: green[600] }}>
                       <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
                         <Typography>Code</Typography>
                       </TableCell>
@@ -208,13 +191,14 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
                         <Typography>Rating</Typography>
                       </TableCell>
                       <TableCell size='small' align='center' sx={{ color: 'white' }}>
-                        <Typography>Disable Option</Typography>
+                        <Typography>Disable ({bans.length}/{configData.DISABLE_SLOT})</Typography>
                       </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>
                     {slots.map(slot => (
-                      <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: 'pointer' } }} onClick={() => handleBan(slot.Id)}>
+                      <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: edit ? 'pointer' : 'default' } }}
+                        onClick={() => handleBan(slot.Id)}>
                         <TableCell size='small' align='center' className='manage-slot'>{slot.SlotTypeCode}</TableCell>
                         <TableCell size='small' align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>
                         <TableCell size='small' align='center' className='manage-slot'>{slot.Duration}</TableCell>
@@ -231,13 +215,11 @@ const SlotManage = ({ lecturerId, semester, admin }) => {
                             <ThumbDown sx={{ color: red[600] }} />}
                         </TableCell>
                         <TableCell size='small' align='center'
-                          sx={{
-                            bgcolor: disables.find(disable => disable === slot.Id) ? '' :
-                              (disables.length >= configData.BAN_TURN ? grey[100] : '')
-                          }}
+                          sx={{ bgcolor: disables.find(disable => disable === slot.Id) ? '' : (disables.length >= configData.DISABLE_SLOT ? grey[100] : '') }}
                         >
                           {disables.find(disable => disable === slot.Id) &&
-                            <CancelOutlined sx={{ color: red[600]}} />}
+                            <CancelOutlined sx={{ color: red[600] }} />}
+                          {loadDisable && selectedId === slot.Id && <ClipLoader size={20} color={grey[400]} />}
                         </TableCell>
                       </TableRow>
                     ))}

@@ -9,13 +9,12 @@ import request from '../../utils/request';
 import DeleteModal from '../priority/DeleteModal';
 import AssignmentModal from './AssignmentModal';
 
-const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
+const AssignmentList = ({ lecturer, semester, allSubjects, admin }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isAssign, setIsAssign] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [lecturer, setLecturer] = useState({});
   const [scheduleId, setScheduleId] = useState('');
   const [fixCourses, setFixCourses] = useState([]);
   const [allFixCourses, setAllFixCourses] = useState([]);
@@ -29,19 +28,6 @@ const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
     }
     return false
   }, [lecturer.DepartmentId, account.DepartmentId])
-
-  //get lecturer by Id
-  useEffect(() => {
-    request.get(`User/${lecturerId}`)
-      .then(res => {
-        if (res.data) {
-          setLecturer(res.data)
-        }
-      })
-      .catch(err => {
-        alert('Fail to load lecturer in assignment!')
-      })
-  }, [lecturerId])
 
   //get scheduleId by semesterId
   useEffect(() => {
@@ -85,11 +71,11 @@ const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
   //get assigned courses by current lecturer to view
   useEffect(() => {
     const getAssignCourse = async () => {
-      if (lecturerId && scheduleId) {
+      if (lecturer.Id && scheduleId) {
         try {
           const resAssignCourse = await request.get('CourseAssign', {
             params: {
-              LecturerId: lecturerId, ScheduleId: scheduleId, isAssign: 1, 
+              LecturerId: lecturer.Id, ScheduleId: scheduleId, isAssign: 1, 
               sortBy: 'CourseId', order: 'Asc', pageIndex: 1, pageSize: 1000
             }
           })
@@ -103,16 +89,16 @@ const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
       }
     }
     getAssignCourse();
-  }, [scheduleId, lecturerId, isAssign, isDelete])
+  }, [scheduleId, lecturer.Id, isAssign, isDelete])
 
   //get all courses whether assigned or not by current lecturer to filter slot
   useEffect(() => {
     const getAssignCourse = async () => {
-      if (lecturerId && scheduleId) {
+      if (lecturer.Id && scheduleId) {
         try {
           const resAssignCourse = await request.get('CourseAssign', {
             params: {
-              LecturerId: lecturerId, ScheduleId: scheduleId,
+              LecturerId: lecturer.Id, ScheduleId: scheduleId,
               pageIndex: 1, pageSize: 1000
             }
           })
@@ -126,7 +112,7 @@ const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
       }
     }
     getAssignCourse();
-  }, [scheduleId, lecturerId, isAssign, isDelete])
+  }, [scheduleId, lecturer.Id, isAssign, isDelete])
 
   //get all courses in CourseAssign table to filter course
   useEffect(() => {
@@ -135,9 +121,7 @@ const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
         try {
           const resAssignCourse = await request.get('CourseAssign', {
             params: {
-              ScheduleId: scheduleId,
-              pageIndex: 1,
-              pageSize: 1000
+              ScheduleId: scheduleId, pageIndex: 1, pageSize: 1000
             }
           })
           if (resAssignCourse.data) {
@@ -200,7 +184,7 @@ const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
   }
 
   return (
-    <Stack flex={5} height='90vh'>
+    <Stack height='90vh'>
       <Typography color='gray' variant='subtitle1'>
         *Courses which lecturer is assigned
       </Typography>
@@ -209,7 +193,7 @@ const AssignmentList = ({ lecturerId, semester, allSubjects, admin }) => {
           <Alert severity="warning">This lecturer outside my department</Alert>
         </Stack>}
       <Stack direction='row' alignItems='center' mb={1} justifyContent='space-between'>
-        <Typography fontWeight={500}>Assigned Courses: {fixCourses.length}</Typography>
+        <Typography fontWeight={500}>Fixed Courses: {fixCourses.length}</Typography>
         {semester.State === 2 && !admin && 
         <Button variant='contained' color='success' size='small' endIcon={<AssignmentOutlined />}
           onClick={() => setIsAssign(true)}>

@@ -4,10 +4,10 @@ import { useState, useEffect  } from 'react'
 import ScheduleAdmin from './admin/ScheduleAdmin'
 import FeedbackSelection from '../feedback/FeedbackSelection'
 import SlotManage from './SlotManage';
-import AssignmentList from '../assignment/AssignmentList'
-import PriorityList from '../priority/PriorityList'
 import { Close } from '@mui/icons-material'
 import request from '../../utils/request'
+import AssignmentContainer from './AssignmentContainer'
+import CourseNumber from './CourseNumber'
 
 const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, admin }) => {
   const [selected, setSelected] = useState(tabs[0].name)
@@ -52,12 +52,11 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
           ))}
         </Stack>
         {selected === tabs[0].name && <ScheduleAdmin lecturerId={selectedLecturer.Id} semester={semester}/>}
-        {selected === tabs[1].name && <AssignmentList lecturerId={selectedLecturer.Id} semester={semester} 
+        {selected === tabs[1].name && <AssignmentContainer lecturer={selectedLecturer} semester={semester} 
           allSubjects={allSubjects} admin={admin}/>}
-        {selected === tabs[2].name && <PriorityList id={selectedLecturer.Id} semester={semester} 
-          allSubjects={allSubjects} admin={admin}/>}
-        {selected === tabs[3].name && <FeedbackSelection id={selectedLecturer.Id} semester={semester} admin={admin}/>}
-        {selected === tabs[4].name && <SlotManage lecturerId={selectedLecturer.Id} semester={semester} admin={admin}/>}
+        {selected === tabs[2].name && <FeedbackSelection id={selectedLecturer.Id} semester={semester} admin={admin}/>}
+        {selected === tabs[3].name && <SlotManage lecturer={selectedLecturer} semester={semester} admin={admin}/>}
+        {selected === tabs[4].name && <CourseNumber lecturer={selectedLecturer} semesterId={semester.Id}/>}
       </DialogContent>
     </Dialog>
   )
@@ -68,7 +67,7 @@ export default InforModal
 const tabs = [
   { id: 1, name: 'Schedule' },
   { id: 2, name: 'Assignment'},
-  { id: 3, name: 'Priority Course'},
-  { id: 4, name: 'Subject Evaluation' },
-  { id: 5, name: 'Preference Slot' },
+  { id: 3, name: 'Subject Evaluation' },
+  { id: 4, name: 'Preference Slot' },
+  { id: 5, name: 'Course Number'}
 ]

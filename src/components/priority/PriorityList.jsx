@@ -3,52 +3,36 @@ import {Alert, Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCel
   TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
 import { blue, lightGreen, orange, red, yellow } from '@mui/material/colors';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import request from '../../utils/request';
 import DeleteModal from './DeleteModal';
 import PriorityModal from './PriorityModal';
 import { ToastContainer, toast } from 'react-toastify';
 
-const PriorityList = ({ id, semester, allSubjects, admin }) => {
+const PriorityList = ({ lecturer, semester, allSubjects, admin }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isPriority, setIsPriority] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [lecturer, setLecturer] = useState({});
   const [items, setItems] = useState([]);
   const [groupId, setGroupId] = useState('');
   const [selectedId, setSelectedId] = useState('');
-  const [outSide, setOutSide] = useState(false);
   const [insideSubjects, setInSideSubjects] = useState([]);
-
-  //get lecturer by id
-  useEffect(() => {
-    request.get(`User/${id}`)
-      .then(res => {
-        if (res.data) {
-          setLecturer(res.data)
-        }
-      })
-      .catch(err => {
-        alert('Fail to load lecturer in priority!')
-      })
-  }, [id])
-
-  //set outside department
-  useEffect(() => {
-    if (lecturer.DepartmentId) {
-      setOutSide(lecturer.DepartmentId !== account.DepartmentId);
+  const outSide = useMemo(() => {
+    if(lecturer.DepartmentId && account.DepartmentId){
+      return lecturer.DepartmentId !== account.DepartmentId
     }
+    return false
   }, [lecturer.DepartmentId, account.DepartmentId])
-
+  
   //get course items were added
   useEffect(() => {
     const getCourseGroupItem = async () => {
       try {
         const resGroup = await request.get('LecturerCourseGroup', {
           params: {
-            LecturerId: id, SemesterId: semester.Id,
+            LecturerId: lecturer.Id, SemesterId: semester.Id,
             pageIndex: 1, pageSize: 1
           }
         })
@@ -72,7 +56,7 @@ const PriorityList = ({ id, semester, allSubjects, admin }) => {
     }
 
     getCourseGroupItem();
-  }, [id, semester.Id, isPriority, isDelete])
+  }, [lecturer.Id, semester.Id, isPriority, isDelete])
 
   // set rows perpage by course items length
   useEffect(() => {
@@ -135,7 +119,7 @@ const PriorityList = ({ id, semester, allSubjects, admin }) => {
   }
 
   return (
-    <Stack flex={5} height='90vh'>
+    <Stack height='90vh'>
       <Typography color='gray' variant='subtitle1'>
         *Courses which lecturer is given priority
       </Typography>
