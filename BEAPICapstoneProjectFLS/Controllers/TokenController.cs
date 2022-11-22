@@ -84,7 +84,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
 
                     //roles
                 }),
-                Expires = DateTime.UtcNow.AddSeconds(50),
+                Expires = DateTime.UtcNow.AddHours(2),
                 SigningCredentials = new SigningCredentials(new SymmetricSecurityKey(secretKeyBytes), SecurityAlgorithms.HmacSha512Signature)
             };
 
@@ -102,7 +102,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 IsUsed = false,
                 IsRevoked = false,
                 IssuedAt = DateTime.UtcNow,
-                ExpiredAt = DateTime.UtcNow.AddHours(1)
+                ExpiredAt = DateTime.UtcNow.AddHours(2)
             };
 
             await _context.AddAsync(refreshTokenEntity);

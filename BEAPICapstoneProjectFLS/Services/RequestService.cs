@@ -28,6 +28,7 @@ namespace BEAPICapstoneProjectFLS.Services
         {
             _res = repository;
             _mapper = mapper;
+
         }
 
         public async Task<RequestViewModel> CreateRequest(CreateRequest request)
@@ -37,6 +38,7 @@ namespace BEAPICapstoneProjectFLS.Services
                 var re = _mapper.Map<Request>(request);
                 re.Id = RandomPKKey.NewRamDomPKKey();
                 re.DateCreate = DateTime.Now;
+                re.ResponseState = 0;
                 await _res.InsertAsync(re);
                 await _res.SaveAsync();
 
@@ -108,30 +110,36 @@ namespace BEAPICapstoneProjectFLS.Services
 
         public async Task<RequestViewModel> GetRequestById(string id)
         {
-
-
             var listRequest = _res.FindBy(x => x.Status == (int)FLSStatus.Active);
 
             var listRequestViewModel = (listRequest.ProjectTo<RequestViewModel>
-                (_mapper.ConfigurationProvider)).DynamicFilter(new RequestViewModel { Id = id});
+                (_mapper.ConfigurationProvider)).DynamicFilter(new RequestViewModel { Id = id });
 
-            var re= await listRequestViewModel.FirstOrDefaultAsync();
+            var re = await listRequestViewModel.FirstOrDefaultAsync();
             if (re == null)
                 return null;
             return re;
-
-
-            /*var re = await _res.GetAllByIQueryable()
+            /*try
+            {
+                 var re = await _res.GetAllByIQueryable()
                 .Where(x => x.Id == id && x.Status == (int)RequestStatus.Active)
-                .Include(x => x.DepartmentManager)
-                .Include(x => x.Lecturer)
+                .Include(l => l.Lecturer)
+                .Include(d => d.DepartmentManager)
                 .Include(x => x.Semester)
-                .Include(x => x.Subject)
-                .FirstOrDefaultAsync();
-            if (re == null)
+                .Include(x => x.Subject).FirstOrDefaultAsync();
+                re.DepartmentManager = await _resDepartmentManager.FindAsync(x => x.Id == re.DepartmentManagerId && x.Status == (int)UserStatus.Active);
+                if (re == null)
+                    return null;
+                var RequestVM = _mapper.Map<RequestViewModel>(re);
+                return RequestVM;
+
+            }
+            catch (Exception ex)
+            {
+                var error = ex.Message ;
                 return null;
-            var RequestVM = _mapper.Map<RequestViewModel>(re);
-            return RequestVM;*/
+            }*/
+
         }
 
         public async Task<RequestViewModel> UpdateRequest(string id, UpdateRequest request)
@@ -159,6 +167,8 @@ namespace BEAPICapstoneProjectFLS.Services
             {
                 return null;
             }
+
+
         }
     }
 }

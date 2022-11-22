@@ -1,4 +1,5 @@
-﻿using BEAPICapstoneProjectFLS.Requests;
+﻿using BEAPICapstoneProjectFLS.Entities;
+using BEAPICapstoneProjectFLS.Requests;
 using BEAPICapstoneProjectFLS.Requests.CourseAssignRequest;
 using BEAPICapstoneProjectFLS.Requests.DepartmentGroupRequest;
 using BEAPICapstoneProjectFLS.ViewModel;
@@ -10,6 +11,7 @@ namespace BEAPICapstoneProjectFLS.IServices
     public interface ICourseAssignService
     {
         Task<CourseAssignViewModel> GetCourseAssignById(string id);
+        Task<IEnumerable<CourseAssignViewModel>> GetCourseAssignByGroup(string GroupID);
         IPagedList<CourseAssignViewModel> GetAllCourseAssign(CourseAssignViewModel flitter, int pageIndex,
            int pageSize, CourseAssignSortBy sortBy, OrderBy order);
         Task<CourseAssignViewModel> CreateCourseAssign(CreateCourseAssignRequest request);

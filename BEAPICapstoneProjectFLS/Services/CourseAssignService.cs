@@ -187,6 +187,69 @@ namespace BEAPICapstoneProjectFLS.Services
             var courseAssignVM = _mapper.Map<CourseAssignViewModel>(dg);
             return courseAssignVM;
         }
+        public async Task<IEnumerable<CourseAssignViewModel>> GetCourseAssignByGroup(string GroupID)
+        {
+            #region
+
+            //var listCourseAssign = _res.FindBy(x => x.Status == (int)FLSStatus.Active);
+
+            //var listCourseAssignViewModel = await (listCourseAssign.ProjectTo<CourseAssignViewModel>
+            //    (_mapper.ConfigurationProvider)).DynamicFilter(new CourseAssignViewModel { }).ToListAsync();
+
+            //return listCourseAssignViewModel;
+
+
+
+            //List<CourseAssign> result = new List<CourseAssign>();
+            //try
+            //{
+            //    var courseAssigns = await _res.GetAllByIQueryable()
+            //                 .Where(x => x.CourseId.Contains(GroupID) && x.Status == (int)CourseAssignStatus.Active)
+            //                 .Include(x => x.Lecturer)
+            //                 .Include(x => x.Course)
+            //                 .ToListAsync();
+            //    if (courseAssigns == null)
+            //        return null;
+
+            //    var courseAssignVM = _mapper.Map<IEnumerable<CourseAssignViewModel>>(result);
+            //    return courseAssignVM;
+            //}
+            //catch (Exception ex)
+            //{
+            //    string error = ex.Message;
+            //    return null;
+            //}
+            #endregion
+
+            List<CourseAssign> result = new List<CourseAssign>();
+            try
+            {
+                var courseAssigns = await _res.GetAllByIQueryable()
+                             .Where(x=> x.Status == (int)CourseAssignStatus.Active)
+                             .Include(x => x.Lecturer)
+                             .Include(x => x.Course)
+                             .ToListAsync();
+                if (courseAssigns == null)
+                    return null;
+                foreach (var ca in courseAssigns)
+                {
+                    string s = ca.CourseId.Split('_')[1];
+                    if(s == GroupID)
+                    {
+                        result.Add(ca);
+                    }
+                }
+
+                var courseAssignVM =  _mapper.Map<IEnumerable<CourseAssignViewModel>>(result);
+                return courseAssignVM;
+            }
+            catch (Exception ex)
+            {
+                string error= ex.Message;
+                return null;
+            }
+
+        }
 
         public async Task<CourseAssignViewModel> UpdateCourseAssign(string id, UpdateCourseAssignRequest request)
         {

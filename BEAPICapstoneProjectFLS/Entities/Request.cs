@@ -16,6 +16,7 @@ namespace BEAPICapstoneProjectFLS.Entities
         public int Status { get; set; }
         public string SubjectId { get; set; }
         public string SemesterId { get; set; }
+        public int? ResponseState { get; set; }
 
         public virtual User DepartmentManager { get; set; }
         public virtual User Lecturer { get; set; }

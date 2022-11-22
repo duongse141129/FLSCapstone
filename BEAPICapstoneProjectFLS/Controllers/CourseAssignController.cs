@@ -28,6 +28,16 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 return NotFound();
             return Ok(CourseAssignModel);
         }
+        [HttpGet("CourseAssignByGroup/{GroupID}", Name = "GetCourseAssignByGroup")]
+        public async Task<IActionResult> GetAllCourseAssign(string GroupID)
+        {
+            var listCourseAssignModel = await _ICourseAssignService.GetCourseAssignByGroup(GroupID);
+            if (listCourseAssignModel == null)
+            {
+                return BadRequest();
+            }
+            return Ok(listCourseAssignModel);
+        }
 
         [HttpGet]
         public IActionResult GetAllCourseAssign([FromQuery] CourseAssignViewModel flitter, CourseAssignSortBy sortBy, OrderBy order, int pageIndex = 1, int pageSize = 10)

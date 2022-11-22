@@ -32,6 +32,8 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public string? SemesterId { get; set; }
         [JsonProperty("Term")]
         public string Term { get; set; }
+        [JsonProperty("ResponseState")]
+        public int? ResponseState { get; set; }
         [JsonProperty("Status")]
         public int? Status { get; set; }
     }

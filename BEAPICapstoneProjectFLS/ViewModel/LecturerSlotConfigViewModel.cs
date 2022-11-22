@@ -9,6 +9,8 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public string Id { get; set; }
         [JsonProperty("SlotTypeId")]
         public string SlotTypeId { get; set; }
+        [JsonProperty("SlotTypeCode")]
+        public string? SlotTypeCode { get; set; }
         [JsonProperty("LecturerId")]
         public string LecturerId { get; set; }
         [JsonProperty("LecturerName")]

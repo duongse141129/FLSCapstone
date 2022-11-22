@@ -11,6 +11,7 @@ namespace BEAPICapstoneProjectFLS.AutoMapper
         {
             CreateMap<CourseAssign, CourseAssignViewModel>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)CourseAssignStatus.Active))
+                .ForMember(des => des.SlotTypeCode, s => s.MapFrom(s => s.SlotType.SlotTypeCode))
                 .ForMember(des => des.LecturerName, s => s.MapFrom(s => s.Lecturer.Name));
 
             CreateMap<CourseAssignViewModel, CourseAssign>()

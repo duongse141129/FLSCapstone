@@ -172,10 +172,15 @@ namespace BEAPICapstoneProjectFLS.Services
         public async Task<SlotTypeViewModel> GetSlotTypeById(string id)
         {
 
+            //var st = await _res.GetAllByIQueryable()
+            //    .Where(x => x.Id == id && x.Status == (int)SlotTypeStatus.Active)
+            //    .Include(x => x.Semester)
+            //    .FirstOrDefaultAsync();
+
             var st = await _res.GetAllByIQueryable()
                 .Where(x => x.Id == id && x.Status == (int)SlotTypeStatus.Active)
                 .Include(x => x.Semester)
-                .FirstOrDefaultAsync();
+                .ToListAsync();
             if (st == null)
                 return null;
             var SlotTypeVM = _mapper.Map<SlotTypeViewModel>(st);

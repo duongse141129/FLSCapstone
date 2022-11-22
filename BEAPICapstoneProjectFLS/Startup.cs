@@ -94,6 +94,7 @@ namespace BEAPICapstoneProjectFLS
             services.AddScoped<ILecturerSlotConfigService, LecturerSlotConfigService>();
             services.AddScoped<ICourseGroupItemService, CourseGroupItemService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<ISwapService, SwapService>();
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(option =>

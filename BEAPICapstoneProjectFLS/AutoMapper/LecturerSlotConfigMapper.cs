@@ -13,6 +13,7 @@ namespace BEAPICapstoneProjectFLS.AutoMapper
             CreateMap<LecturerSlotConfig, LecturerSlotConfigViewModel>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)LecturerSlotConfigStatus.Active))
                 .ForMember(des => des.LecturerName, s => s.MapFrom(s => s.Lecturer.Name))
+                .ForMember(des => des.SlotTypeCode, s => s.MapFrom(s => s.SlotType.SlotTypeCode))
                 .ForMember(des => des.Term, s => s.MapFrom(s => s.Semester.Term));
 
             CreateMap<LecturerSlotConfigViewModel, LecturerSlotConfig>()
