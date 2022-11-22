@@ -100,7 +100,7 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
       }).then(res => {
         if(res.data) {
           setMyCourses(res.data)
-        };
+        }
       }).catch(err => alert('Fail to get my assigned courses'))
     }
   }, [selectedLecturer.Id, scheduleId, isAssign])

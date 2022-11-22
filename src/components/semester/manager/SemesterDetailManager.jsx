@@ -7,6 +7,7 @@ import CourseList from './CourseList';
 import { useNavigate, useParams } from 'react-router-dom';
 import request from '../../../utils/request';
 import Title from '../../title/Title';
+import ManagerRequest from '../../request/ManagerRequest';
 
 const SemesterDetailManager = () => {
   const { id } = useParams();
@@ -112,7 +113,7 @@ const SemesterDetailManager = () => {
         </Stack>
       </Stack>
       {selected === tabs[0].name && <CourseList semesterId={id} semesterState={semester.State} scheduleId={schedule.Id} />}
-     
+      {selected === tabs[1].name && <ManagerRequest semesterId={id} scheduleId={schedule.Id}/>}
       {selected === tabs[2].name && <LecturerContainer semester={semester} />}
     </Stack>
   )

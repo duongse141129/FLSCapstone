@@ -1,5 +1,4 @@
-import {
-  Box, Paper, Stack, Table, TableBody, TableCell, TableContainer,
+import {Box, Paper, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Typography, TablePagination, Tooltip, IconButton, Select, MenuItem
 } from '@mui/material';
 import { Send, StarBorder, Beenhere } from '@mui/icons-material';
@@ -9,6 +8,7 @@ import RatingModal from '../department/RatingModal';
 import './Subject.css';
 import { green, grey } from '@mui/material/colors';
 import {HashLoader} from 'react-spinners';
+import { ToastContainer, toast } from 'react-toastify';
 import request from '../../utils/request';
 import configData from  '../../utils/configData.json';
 
@@ -61,9 +61,7 @@ const Subject = ({ semesterId, semesterState }) => {
       try {
         const response = await request.get('Subject', {
           params: {
-            DepartmentId: selectedDepartment,
-            pageIndex: 1,
-            pageSize: 9999
+            DepartmentId: selectedDepartment, pageIndex: 1, pageSize: 1000
           }
         })
         if (response.data) {
@@ -135,6 +133,22 @@ const Subject = ({ semesterId, semesterState }) => {
     setSubjectName(name);
     setLoadPoint(prev => !prev);
     setIsRating(true);
+  }
+  
+  const handleRequest = (selectedId) => {
+    setSubjectId(selectedId);
+    setIsRequest(true);
+  }
+
+  const sendRequest = (status) => {
+    if(status){
+      toast.success('Send Successfully!', {
+        position: "top-right", autoClose: 3000,
+        hideProgressBar: false, closeOnClick: true,
+        pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
   }
 
   return (
@@ -235,7 +249,7 @@ const Subject = ({ semesterId, semesterState }) => {
                           {semesterState === 2 && 
                           <Tooltip title='Request' placement='left'>
                             <IconButton color='warning' size='small'
-                              onClick={() => setIsRequest(true)}
+                              onClick={() => handleRequest(subject.Id)}
                             >
                               <Send />
                             </IconButton>
@@ -263,10 +277,12 @@ const Subject = ({ semesterId, semesterState }) => {
           />
         </Paper>}
       </Stack>
-      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} />
+      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} subjectId={subjectId}
+        subjects={subjects} semesterId={semesterId} sendRequest={sendRequest}/>
       <RatingModal isRating={isRating} setIsRating={setIsRating}
         subjectId={subjectId} subjectName={subjectName} semesterId={semesterId}
         favoriteSubjects={favoriteSubjects} loadPoint={loadPoint} />
+      <ToastContainer />
     </Stack>
   )
 }
