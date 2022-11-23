@@ -109,7 +109,7 @@ const SemesterDetail = () => {
       </Stack>
       {
         isSelected === 1 &&
-        <Schedule semester={semester} />
+        <Schedule semester={semester} isLecturer={true}/>
       }
       {
         isSelected === 2 &&

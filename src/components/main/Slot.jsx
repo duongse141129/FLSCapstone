@@ -2,14 +2,17 @@ import { Stack, Typography } from '@mui/material'
 import { blue } from '@mui/material/colors'
 import React from 'react'
 
-const Slot = ({ slot }) => {
+const Slot = ({ slot, isSwap, clickSlotToSwap }) => {
   const clickSlot = () => {
-    console.log(slot)
+    if(isSwap){
+      clickSlotToSwap(slot)
+    }
   }
 
   return (
     <Stack flex={1} px={1} justifyContent='center'
-      className={Object.values(slot).length === 0 ? 'timetable-slot is-sunday' : 'timetable-slot '}
+      className={Object.values(slot).length === 0 ? 'timetable-slot is-sunday' : 
+        (isSwap ? 'timetable-slot swap-on' : 'timetable-slot')}
       onClick={clickSlot}
     >
       <Typography fontWeight={500} fontSize='15px'>

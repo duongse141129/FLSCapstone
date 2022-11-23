@@ -22,3 +22,7 @@
   opacity: 0.2;
 }
 
+.swap-on:hover{
+  cursor: pointer;
+  background-color: #bbdefb;
+}

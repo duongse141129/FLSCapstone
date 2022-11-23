@@ -1,7 +1,10 @@
-import { Box, MenuItem, Select, Stack, Typography } from '@mui/material'
+import { Box, MenuItem, Select, Stack, Switch, Typography } from '@mui/material'
+import { blue, grey } from '@mui/material/colors';
 import { useState, useEffect } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
 import { getWeeksInYear, getSemesterWeeks } from '../../utils/weeksInYear';
 import Timetable from '../main/Timetable';
+import SwapModal from '../swap/SwapModal';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -13,12 +16,16 @@ const MenuProps = {
   },
 };
 
-const Schedule = ({ semester, selectedId, popUp }) => {
+const Schedule = ({ semester, selectedId, popUp, isLecturer }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [weeksInYear, setWeeksInYear] = useState([]);
   const [weeksInSemester, setWeeksInSemester] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState('');
-  const [selectedWeekObj, setSelectedWeekObj] = useState({})
+  const [selectedWeekObj, setSelectedWeekObj] = useState({});
+  const [isSwap, setIsSwap] = useState(false);
+  const [isSwapModal, setIsSwapModal] = useState(false);
+  const [selectedSwap, setSelectedSwap] = useState({});
+  const [afterSwap, setAfterSwap] = useState(false)
 
   //set Week in year
   useEffect(() => {
@@ -65,33 +72,61 @@ const Schedule = ({ semester, selectedId, popUp }) => {
     setSelectedWeekObj(weeksInSemester.find(item => item.id === e.target.value))
   }
 
+  const clickSlotToSwap = (pickedSlot) => {
+    if(isSwap && pickedSlot.Id){
+      console.log(pickedSlot)
+      setSelectedSwap(pickedSlot)
+      setIsSwapModal(true)
+    }
+  }
+
+  const handleAfterSwap = (status) => {
+    if(status){
+      setAfterSwap(prev => !prev)
+      toast.success('Swap Successfully!', {
+        position: "top-right", autoClose: 3000, hideProgressBar: false,
+        closeOnClick: true, pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
+  }
+
   return (
     <Box height='100%' mb={1}>
-      <Stack direction='row' gap={1} alignItems='center' px={popUp ? '' : 9} mb={2}>
-        <Typography fontWeight={500}>Week</Typography>
-        <Select color='success' MenuProps={MenuProps}
-          size='small'
-          value={selectedWeek}
-          onChange={handleSelectWeek}
-        >
-          {
-            weeksInSemester.length > 0 &&
-            weeksInSemester.map(week => (
-              <MenuItem value={week.id} key={week.id}>
-                <span>{week.week.split(' to ')[0].split('-')[2]}</span>
-                <span>/{week.week.split(' to ')[0].split('-')[1]}</span>
-                <span>{' - '}</span>
-                <span>{week.week.split(' to ')[1].split('-')[2]}</span>
-                <span>/{week.week.split(' to ')[1].split('-')[1]}</span>
-              </MenuItem>
-            ))
-          }
-        </Select>
+      <Stack direction='row' alignItems='center' justifyContent='space-between'  
+        px={popUp ? '' : 9} mb={2}>
+        <Stack direction='row' gap={1} alignItems='center'>
+          <Typography fontWeight={500}>Week</Typography>
+          <Select color='success' MenuProps={MenuProps}
+            size='small' value={selectedWeek} onChange={handleSelectWeek}>
+            {weeksInSemester.length > 0 &&
+              weeksInSemester.map(week => (
+                <MenuItem value={week.id} key={week.id}>
+                  <span>{week.week.split(' to ')[0].split('-')[2]}</span>
+                  <span>/{week.week.split(' to ')[0].split('-')[1]}</span>
+                  <span>{' - '}</span>
+                  <span>{week.week.split(' to ')[1].split('-')[2]}</span>
+                  <span>/{week.week.split(' to ')[1].split('-')[1]}</span>
+                </MenuItem>
+              ))}
+          </Select>
+        </Stack>
+        {isLecturer && <Stack direction='row' alignItems='center' bgcolor={grey[200]}>
+          <Switch checked={isSwap} onChange={() => setIsSwap(!isSwap)}/>
+          <Typography pr={2}>
+            {isSwap ? <span style={{ color: blue[700] }}>Swap On</span> : 'Swap Off'}
+          </Typography>
+        </Stack>}
       </Stack>
+
       <Timetable selectedSemester={semester?.Id} selectedWeekObj={selectedWeekObj}
-        lecturerId={selectedId ? selectedId : account.Id} popUp={popUp}/>
+        lecturerId={selectedId ? selectedId : account.Id} popUp={popUp} isSwap={isSwap}
+        clickSlotToSwap={clickSlotToSwap} afterSwap={afterSwap}/>
       <Box height='16px'>
       </Box>
+      <SwapModal isSwapModal={isSwapModal} setIsSwapModal={setIsSwapModal} 
+        selectedSwap={selectedSwap} handleAfterSwap={handleAfterSwap}/>
+      <ToastContainer/>
     </Box>
   )
 }

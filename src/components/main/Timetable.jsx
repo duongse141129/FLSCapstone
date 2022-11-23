@@ -1,11 +1,11 @@
 import { Stack, Typography } from '@mui/material';
 import { green } from '@mui/material/colors';
 import { HashLoader } from 'react-spinners';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Day from './Day';
 import request from '../../utils/request'
 
-const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp }) => {
+const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwap, clickSlotToSwap, afterSwap }) => {
   const [courseAssign, setCourseAssign] = useState([]);
   const [slotType, setSlotType] = useState([]);
   const [loadingCourseAssign, setLoadingCourseAssign] = useState(false);
@@ -18,6 +18,18 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp }) => 
   const [thu, setThu] = useState([]);
   const [fri, setFri] = useState([]);
   const [sat, setSat] = useState([]);
+
+  const renderDays = useMemo(() => {
+    return [
+      {id:1, day: 'MON', slots: mon},
+      {id:2, day: 'TUE', slots: tue},
+      {id:3, day: 'WED', slots: wed},
+      {id:4, day: 'THU', slots: thu},
+      {id:5, day: 'FRI', slots: fri},
+      {id:6, day: 'SAT', slots: sat},
+      {id:7, day: 'SUN', slots: []},
+    ]
+  }, [mon, tue, wed, thu, fri, sat])
 
   //1. get Schedule by semester, ispublic - 2.get course assign by lecturerId, scheduleId
   useEffect(() => {
@@ -62,7 +74,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp }) => 
     return () => {
       setCourseAssign([]);
     }
-  }, [lecturerId, selectedSemester, selectedWeekObj])
+  }, [lecturerId, selectedSemester, selectedWeekObj, afterSwap])
 
   //get slottype list
   useEffect(() => {
@@ -217,7 +229,13 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp }) => 
                 </Stack>
               </Stack>
             </Stack>
-            <Day day='MON'
+            {renderDays.map(item => (
+              <Day key={item.id} day={item.day} 
+                date={dates.length > 0 && dates[item.id-1].split('-')[2] + '/' + dates[0].split('-')[1]}
+                slots={item.slots} isSwap={isSwap} clickSlotToSwap={clickSlotToSwap}
+              />
+            ))}
+            {/* <Day day='MON'
               date={dates.length > 0 && dates[0].split('-')[2] + '/' + dates[0].split('-')[1]}
               slots={mon} 
             />
@@ -243,7 +261,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp }) => 
             />
             <Day day='SUN'
               date={dates.length > 0 && dates[6].split('-')[2] + '/' + dates[6].split('-')[1]} 
-            />
+            /> */}
           </Stack>
           </>
         )
