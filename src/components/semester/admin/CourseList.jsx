@@ -1,6 +1,7 @@
 import { Add, FileUploadOutlined } from '@mui/icons-material';
 import { Box, Button, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
 import React, { useState, useRef, useEffect } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import * as XLSX from "xlsx";
 import request from '../../../utils/request';
 import AddModal from './AddModal';
@@ -24,12 +25,13 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
   const [allCourses, setAllCourses] = useState([]);
   const [departments, setDepartments] = useState([]);
   const [selectedDepartment, setSelectedDepartment] = useState('');
-  const [selectedSubject, setSelectedSubject] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState('all');
   const [subjects, setSubjects] = useState([]);
   const [isImport, setIsImport] = useState(false);
   const [importCourses, setImportCourses] = useState([]);
   const [assignedCourses, setAssignedCourses] = useState([]);
   const [isAdd, setIsAdd] = useState(false);
+  const [reload, setReload] = useState(false);
 
   //get all departments 
   useEffect(() => {
@@ -63,7 +65,6 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
       }).then(res => {
         if (res.data) {
           setSubjects(res.data);
-          setSelectedSubject(res.data[0]?.Id)
         }
       }).catch(err => { alert('Fail to load subjects'); })
     }
@@ -74,18 +75,27 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
     if (selectedSubject) {
       request.get('Course', {
         params: {
-          SubjectId: selectedSubject, SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
+          SubjectId: selectedSubject === 'all' ? '' : selectedSubject, 
+          SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
           pageIndex: 1, pageSize: 1000
         }
       })
         .then(res => {
           if (res.data) {
-            setCourses(res.data)
+            let internal = res.data
+            let external = res.data
+            for(let i in subjects){
+              external = external.filter(course => course.SubjectId !== subjects[i].Id)
+            }
+            for(let i in external){
+              internal = internal.filter(course => course.SubjectId !== external[i].SubjectId)
+            }
+            setCourses(internal)
           }
         })
         .catch(err => { alert('Fail to load courses') })
     }
-  }, [semesterId, selectedSubject])
+  }, [semesterId, selectedSubject, subjects, reload])
 
   //get assign courses
   useEffect(() => {
@@ -112,7 +122,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
         }
       })
       .catch(err => { alert('Fail to load courses') })
-  }, [semesterId])
+  }, [semesterId, reload])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -133,13 +143,14 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
   }
 
   const changeFile = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files && e.target.files[0];
     if (!file) return;
 
     if (!checkFileName(file.name)) {
       alert('Please import file excel')
       return;
     }
+    e.target.value = null;
     readExcel(file);
   }
 
@@ -168,7 +179,6 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
     });
 
     promise.then((d) => {
-      console.log(d);
       setImportCourses(d);
       setIsImport(true);
     });
@@ -177,10 +187,12 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
 
   const handleSelectDepartment = (e) => {
     setSelectedDepartment(e.target.value)
+    setPage(0);
   }
 
   const handleSelectSubject = (e) => {
     setSelectedSubject(e.target.value)
+    setPage(0)
   }
 
   const getInforSlot = (slotId) => {
@@ -196,15 +208,14 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
     return ''
   }
 
-  const saveImportCourse = () => {
-    if (importCourses.length > 0) {
-      request.post(`Course/AddListCourse/${semesterId}`, importCourses)
-        .then(res => {
-          if (res.status === 201) {
-            setIsImport(false);
-          }
-        })
-        .catch(err => alert('Fail to import course'))
+  const handleAfterImport = (status) => {
+    if(status) {
+      setReload(prev => !prev)
+      toast.success('Import Successfully!', {
+        position: "top-right", autoClose: 3000, hideProgressBar: false,
+        closeOnClick: true, pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
     }
   }
 
@@ -226,6 +237,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
         <Typography fontWeight={500}> Subject: </Typography>
         <Select color='success' size='small'
           value={selectedSubject} onChange={handleSelectSubject} MenuProps={MenuProps}>
+          <MenuItem value='all'>All</MenuItem>
           {subjects.map(subject => (
             <MenuItem key={subject.Id} value={subject.Id}>{subject.Id} - {subject.SubjectName}</MenuItem>
           ))}
@@ -301,8 +313,9 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
         />
       </Paper>
       <ImportModal isImport={isImport} setIsImport={setIsImport} importCourses={importCourses}
-        saveImportCourse={saveImportCourse} />
+        semesterId={semesterId} handleAfterImport={handleAfterImport}/>
       <AddModal isAdd={isAdd} setIsAdd={setIsAdd} departments={departments} subjects={subjects} />
+      <ToastContainer/>
     </Stack>
   )
 }

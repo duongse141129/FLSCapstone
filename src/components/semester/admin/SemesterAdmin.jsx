@@ -55,6 +55,10 @@ const SemesterAdmin = () => {
     }
   }
 
+  const handleAfterCreate = (status) => {
+    if(status) setReload(prev => !prev)
+  }
+
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
       <Stack px={9} mt={1} mb={6} direction='row' justifyContent='space-between' alignItems='flex-start'>
@@ -73,7 +77,7 @@ const SemesterAdmin = () => {
           ))
         }
       </Stack>
-      <SemesterCreate isCreate={isCreate} setIsCreate={setIsCreate}/>
+      <SemesterCreate isCreate={isCreate} setIsCreate={setIsCreate} handleAfterCreate={handleAfterCreate}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} saveDelete={saveDelete}/>
     </Stack>
   )

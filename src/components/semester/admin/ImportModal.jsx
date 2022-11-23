@@ -1,10 +1,15 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody, 
-  TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material';
+import {
+  Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Paper, Table, TableBody,
+  TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography
+} from '@mui/material';
 import { useState } from 'react';
+import { ClipLoader } from 'react-spinners';
+import request from '../../../utils/request';
 
-const ImportModal = ({ isImport, setIsImport, importCourses, saveImportCourse }) => {
+const ImportModal = ({ isImport, setIsImport, importCourses, semesterId, handleAfterImport }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
+  const [loadImport, setLoadImport] = useState(false);
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -14,6 +19,21 @@ const ImportModal = ({ isImport, setIsImport, importCourses, saveImportCourse })
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
   };
+
+  const saveImportCourse = () => {
+    if (importCourses.length > 0) {
+      setLoadImport(true)
+      request.post(`Course/AddListCourse/${semesterId}`, importCourses)
+        .then(res => {
+          if (res.status === 200) {
+            setIsImport(false);
+            setLoadImport(false);
+            handleAfterImport(true)
+          }
+        })
+        .catch(err => {alert('Fail to import course'); setLoadImport(false)})
+    }
+  }
 
   return (
     <Dialog fullWidth={true} maxWidth='md'
@@ -29,7 +49,6 @@ const ImportModal = ({ isImport, setIsImport, importCourses, saveImportCourse })
                 <TableRow>
                   <TableCell size='small' className='subject-header'>Course</TableCell>
                   <TableCell size='small' className='subject-header'>Subject</TableCell>
-                  <TableCell size='small' className='subject-header'>Department</TableCell>
                   <TableCell size='small' className='subject-header'>Description</TableCell>
                   <TableCell size='small' className='subject-header'>Slot Amount</TableCell>
                 </TableRow>
@@ -38,10 +57,9 @@ const ImportModal = ({ isImport, setIsImport, importCourses, saveImportCourse })
                 {
                   importCourses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map(course => (
-                      <TableRow key={course.CourseID} hover>
-                        <TableCell size='small'>{course.CourseID}</TableCell>
-                        <TableCell size='small'>{course.SubjectID}</TableCell>
-                        <TableCell size='small'>{course.DepartmentID}</TableCell>
+                      <TableRow key={course.Id} hover>
+                        <TableCell size='small'>{course.Id}</TableCell>
+                        <TableCell size='small'>{course.SubjectId}</TableCell>
                         <TableCell size='small'>{course.Description}</TableCell>
                         <TableCell size='small'>{course.SlotAmount}</TableCell>
                       </TableRow>
@@ -62,7 +80,9 @@ const ImportModal = ({ isImport, setIsImport, importCourses, saveImportCourse })
       </DialogContent>
       <DialogActions>
         <Button variant='outlined' color='info' onClick={() => setIsImport(false)}>Cancel</Button>
-        <Button variant='contained' onClick={saveImportCourse}>Add</Button>
+        {loadImport ? 
+          <Button variant='contained'><ClipLoader size={20} color='white'/></Button> :
+          <Button variant='contained' onClick={saveImportCourse}>Import</Button>}
       </DialogActions>
     </Dialog>
   )
