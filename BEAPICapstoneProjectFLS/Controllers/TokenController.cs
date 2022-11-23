@@ -58,11 +58,12 @@ namespace BEAPICapstoneProjectFLS.Controllers
             //cấp token
             var token = await GenerateToken(user);
 
-            return Ok(new ApiResponse
+            return Ok(new ApiResponseToken
             {
                 Success = true,
                 Message = "Authenticate success",
-                Data = token
+                AccessToken = token.AccessToken,
+                RefreshToken = token.RefreshToken
             });
         }
 
@@ -229,11 +230,12 @@ namespace BEAPICapstoneProjectFLS.Controllers
 
                 var token = await GenerateToken(user);
 
-                return Ok(new ApiResponse
+                return Ok(new ApiResponseToken
                 {
                     Success = true,
                     Message = "Renew token success",
-                    Data = token
+                    AccessToken = token.AccessToken,
+                    RefreshToken = token.RefreshToken
                 });
             }
             catch (Exception ex)

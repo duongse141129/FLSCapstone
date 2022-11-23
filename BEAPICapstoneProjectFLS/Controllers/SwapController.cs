@@ -21,11 +21,18 @@ namespace BEAPICapstoneProjectFLS.Controllers
         [HttpGet("BlankSlot/{courseAssignID}", Name = "GetBlankSlot")]
         public async Task<IActionResult> GetBlankSlot(string courseAssignID)
         {
-            var slotTypeVM = await _ISwapService.GetBlankSlot(courseAssignID);
-            if (slotTypeVM == null)
+            var courseAssignVM = await _ICourseAssignService.GetCourseAssignById(courseAssignID);
+            if (courseAssignVM == null)
+            {
                 return NotFound();
-            return Ok(slotTypeVM);
-
+            }
+            else
+            {
+                var slotTypeVM = await _ISwapService.GetBlankSlot(courseAssignID);
+                if (slotTypeVM == null)
+                    return NotFound();
+                return Ok(slotTypeVM);
+            }
         }
 
 
