@@ -1,5 +1,5 @@
 import { Check, Close } from '@mui/icons-material';
-import { Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
+import { Box, Button, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
 import { green, grey, red } from '@mui/material/colors';
 import { useEffect, useState } from 'react';
 import request from '../../utils/request';
@@ -20,11 +20,12 @@ const ManagerRequest = ({ semesterId, scheduleId }) => {
   const [afterAccept, setAfterAccept] = useState(false);
   const [isAcceptDis, setIsAcceptDis] = useState(false);
   const [isRejectDis, setIsRejectDis] = useState(false);
+  const [type, setType] = useState('all');
 
   useEffect(() => {
     request.get('Request', {
       params: {
-        DepartmentManagerId: account.Id, SemesterId: semesterId,
+        DepartmentManagerId: account.Id, SemesterId: semesterId, Title: type==='all' ? '' : type,
         sortBy: 'DateCreate', order: 'Des', pageIndex: 1, pageSize: 100
       }
     }).then(res => {
@@ -32,7 +33,7 @@ const ManagerRequest = ({ semesterId, scheduleId }) => {
         setRequests(res.data)
       }
     }).catch(err => { alert('Fail to get requests') })
-  }, [account.Id, semesterId, afterAccept])
+  }, [account.Id, semesterId, afterAccept, type])
 
   useEffect(() => {
     if(scheduleId){
@@ -77,8 +78,25 @@ const ManagerRequest = ({ semesterId, scheduleId }) => {
     }
   }
 
+  const handleChangeType = (e) => {
+    setType(e.target.value)
+    setPage(0);
+  }
+
   return (
     <Stack px={9} height='90vh'>
+      <Stack direction='row' alignItems='center' mb={2} justifyContent='space-between'>
+        <Stack direction='row' alignItems='center' gap={1}> 
+          <Typography fontWeight={500}>Request Type: </Typography>
+          <Select size='small' color='success' value={type} 
+            onChange={handleChangeType}>
+            <MenuItem value='all'>All</MenuItem>
+            <MenuItem value='Teaching Subject'>Teaching Subject</MenuItem>
+            <MenuItem value='Disable Subject'>Disable Subject</MenuItem>
+          </Select>
+        </Stack>
+        <Typography>Total: {requests.length}</Typography>
+      </Stack>
       <Paper sx={{ minWidth: 700, mb: 2 }}>
         <TableContainer component={Box} overflow='auto'>
           <Table size='small'>

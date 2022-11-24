@@ -1,4 +1,5 @@
-import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
+import { Box, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, 
+  TableHead, TablePagination, TableRow, Typography } from '@mui/material'
 import { green, grey, red } from '@mui/material/colors';
 import { useEffect, useState } from 'react';
 import request from '../../utils/request';
@@ -9,11 +10,12 @@ const LecturerRequest = ({ semesterId }) => {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [requests, setRequests] = useState([]);
+  const [type, setType] = useState('all');
 
   useEffect(() => {
     request.get('Request', {
       params: {
-        LecturerId: account.Id, SemesterId: semesterId,
+        LecturerId: account.Id, SemesterId: semesterId, Title: type === 'all' ? '' : type,
         sortBy: 'DateCreate', order: 'Des', pageIndex: 1, pageSize: 100
       }
     }).then(res => {
@@ -21,7 +23,7 @@ const LecturerRequest = ({ semesterId }) => {
         setRequests(res.data)
       }
     }).catch(err => { alert('Fail to get requests') })
-  }, [account.Id, semesterId])
+  }, [account.Id, semesterId, type])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -32,15 +34,32 @@ const LecturerRequest = ({ semesterId }) => {
     setPage(0);
   };
 
+  const handleChangeType = (e) => {
+    setType(e.target.value)
+    setPage(0);
+  }
+
   return (
     <Stack px={9} height='90vh'>
+      <Stack direction='row' alignItems='center' mb={2} justifyContent='space-between'>
+        <Stack direction='row' alignItems='center' gap={1}> 
+          <Typography fontWeight={500}>Request Type: </Typography>
+          <Select size='small' color='success' value={type} 
+            onChange={handleChangeType}>
+            <MenuItem value='all'>All</MenuItem>
+            <MenuItem value='Teaching Subject'>Teaching Subject</MenuItem>
+            <MenuItem value='Disable Subject'>Disable Subject</MenuItem>
+          </Select>
+        </Stack>
+        <Typography>Total: {requests.length}</Typography>
+      </Stack>
       <Paper sx={{ minWidth: 700, mb: 2 }}>
         <TableContainer component={Box} overflow='auto'>
           <Table size='small'>
             <TableHead>
               <TableRow>
                 <TableCell size='small' className='subject-header request-border'>Create At</TableCell>
-                <TableCell size='small' className='subject-header request-border'>Title</TableCell>
+                <TableCell size='small' className='subject-header request-border'>Type</TableCell>
                 <TableCell size='small' className='subject-header request-border'>Subject</TableCell>
                 <TableCell size='small' className='subject-header request-border'>Receiver</TableCell>
                 <TableCell size='small' className='subject-header request-border'>Response Note</TableCell>

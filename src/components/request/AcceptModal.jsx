@@ -1,10 +1,11 @@
-import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
+import { Alert, Box, Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
 import { green, red } from '@mui/material/colors';
 import { useEffect, useMemo, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
 const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRequest, assignedCourses, setAfterAccept }) => {
+  const account = JSON.parse(localStorage.getItem('web-user'));
   const [courses, setCourses] = useState([]);
   const [slots, setSlots] = useState([]);
   const [disableSlots, setDisableSlots] = useState([]);
@@ -14,6 +15,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
   const [loadCourse, setLoadCourse] = useState(false);
   const [loadSlot, setLoadSlot] = useState(false);
   const [loadAccept, setLoadAccept] = useState(false);
+  const [lecturer, setLecturer] = useState({});
   const courseTime = useMemo(() => {
     if(selectedCourse && assignedCourses.length > 0){
       let time = [];
@@ -29,10 +31,23 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
     return [];
   }, [selectedCourse, assignedCourses])
 
+  const isInSide = useMemo(() => {
+    return account.DepartmentId === lecturer.DepartmentId
+  }, [account, lecturer])
+
   useEffect(() => {
     setSelectedCourse('');
     setSelectedSlot({});
     setLoadAccept(false);
+    if(selectedRequest.LecturerId){
+      request.get(`User/${selectedRequest.LecturerId}`)
+      .then(res => {
+        if(res.data){
+          setLecturer(res.data)
+        }
+      })
+      .catch(err => {alert('Fail to get lecturer')})
+    }
   }, [selectedRequest])
 
   useEffect(() => {
@@ -145,9 +160,11 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
         </Stack>
       </DialogTitle>
       <DialogContent>
+        {!isInSide && <Alert severity='warning' sx={{mb: 2}}>
+          This Lecturer is out of your department</Alert>}
         <Stack mb={1} gap={0.5}>
           <Typography><span style={{fontWeight: 500}}>Lecturer:</span> {' '}
-            {selectedRequest.LecturerId}</Typography>
+            {selectedRequest.LecturerId} - {lecturer.Name} (Department: {lecturer.DepartmentName})</Typography>
           <Typography><span style={{fontWeight: 500}}>Subject:</span> {' '}
             {selectedRequest.SubjectId} - {selectedRequest.SubjectName}</Typography>
 

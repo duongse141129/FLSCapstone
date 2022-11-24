@@ -1,12 +1,29 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, Stack, TextField, Typography } from '@mui/material'
-import { useState } from 'react'
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, Radio, RadioGroup, Stack, TextField, Typography } from '@mui/material'
+import { useEffect, useMemo, useState } from 'react'
 import {ClipLoader} from 'react-spinners'
 import request from '../../utils/request'
 
 const RejectModal = ({ isReject, setIsReject, selectedRequest, setAfterAccept, isRejectDis }) => {
+  const account = JSON.parse(localStorage.getItem('web-user'));
   const [value, setValue] = useState(100)
   const [reason, setReason] = useState('')
   const [loadReject, setLoadReject] = useState(false)
+  const [lecturer, setLecturer] = useState({})
+  const isInSide = useMemo(() => {
+    return account.DepartmentId === lecturer.DepartmentId
+  }, [account, lecturer])
+
+  useEffect(() => {
+    if(selectedRequest.LecturerId){
+      request.get(`User/${selectedRequest.LecturerId}`)
+      .then(res => {
+        if(res.data){
+          setLecturer(res.data)
+        }
+      })
+      .catch(err => {alert('Fail to get lecturer')})
+    }
+  }, [selectedRequest])
 
   const handleChangeValue = (e) => {
     setValue(Number(e.target.value))
@@ -42,6 +59,14 @@ const RejectModal = ({ isReject, setIsReject, selectedRequest, setAfterAccept, i
         <Typography variant='subtitle1'>*Choose a reason for reject</Typography>
       </DialogTitle>
       <DialogContent>
+        {!isInSide && <Alert severity='warning' sx={{mb: 2}}>
+          This Lecturer is out of your department</Alert>}
+        <Stack mb={1} gap={0.5}>
+          <Typography><span style={{fontWeight: 500}}>Lecturer:</span> {' '}
+            {lecturer.Name} (Department: {lecturer.DepartmentName})</Typography>
+          <Typography><span style={{fontWeight: 500}}>Subject:</span> {' '}
+            {selectedRequest.SubjectId} - {selectedRequest.SubjectName}</Typography>
+        </Stack>
         <Stack alignItems='center'>
           <FormControl margin='normal'>
             <RadioGroup value={value} onChange={handleChangeValue}>

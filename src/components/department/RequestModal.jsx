@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, Typography } from '@mui/material'
+import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, Typography } from '@mui/material'
 import { orange } from '@mui/material/colors';
 import {Send} from '@mui/icons-material'
 import { useEffect, useMemo, useState } from 'react';
@@ -17,7 +17,12 @@ const RequestModal = ({ isRequest, setIsRequest, subjectId, subjects, semesterId
     return {}
   }, [subjects, subjectId])
 
+  const isInSide = useMemo(() => {
+    return subject.DepartmentId === account.DepartmentId
+  }, [subject, account])
+
   useEffect(() => {
+    setType(types[0])
     if(subject.DepartmentId){
       request.get('User', {
         params: {DepartmentId:subject.DepartmentId, RoleIDs:'DMA', pageIndex:1, pageSize:1}
@@ -48,7 +53,7 @@ const RequestModal = ({ isRequest, setIsRequest, subjectId, subjects, semesterId
 
   return (
     <Dialog open={isRequest} onClose={() => setIsRequest(false)}>
-      <DialogTitle color={orange[600]} mb={1}>
+      <DialogTitle color={orange[600]}>
         <Stack direction='row' alignItems='center' gap={1}>
           <Send />
           <Typography variant='h5'>Subject Request</Typography>
@@ -57,13 +62,14 @@ const RequestModal = ({ isRequest, setIsRequest, subjectId, subjects, semesterId
           *Request Manager a subject which you want or don't want to teach</Typography>
       </DialogTitle>
       <DialogContent>
+        {!isInSide && <Alert severity='warning' sx={{mb: 2}}>
+          This subject is out of your department. Only Teaching Subject request is enable.</Alert>}
         <Stack direction='row' mb={2} gap={2} alignItems='center'>
           <Typography fontWeight={500}>Request Type: </Typography>
           <Select color='warning' size='small' value={type} 
             onChange={(e) => setType(e.target.value)}>
-            {types.map(item => (
-              <MenuItem key={item} value={item}>{item}</MenuItem>
-            ))}
+            <MenuItem value={types[0]}>{types[0]}</MenuItem>
+            {isInSide && <MenuItem value={types[1]}>{types[1]}</MenuItem>}
           </Select>
         </Stack>
         <Stack direction='row' mb={2} gap={1}>
