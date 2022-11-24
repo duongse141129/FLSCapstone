@@ -3,6 +3,7 @@ import { Box, Button, Paper, Stack, Table, TableBody, TableCell, TableContainer,
 import { green, grey, red } from '@mui/material/colors';
 import { useEffect, useState } from 'react';
 import request from '../../utils/request';
+import AcceptDisableModal from './AcceptDisableModal';
 import AcceptModal from './AcceptModal';
 import RejectModal from './RejectModal';
 import './Request.css';
@@ -17,6 +18,8 @@ const ManagerRequest = ({ semesterId, scheduleId }) => {
   const [selectedRequest, setSelectedRequest] = useState({});
   const [assignedCourses, setAssignedCourses] = useState([]);
   const [afterAccept, setAfterAccept] = useState(false);
+  const [isAcceptDis, setIsAcceptDis] = useState(false);
+  const [isRejectDis, setIsRejectDis] = useState(false);
 
   useEffect(() => {
     request.get('Request', {
@@ -55,12 +58,23 @@ const ManagerRequest = ({ semesterId, scheduleId }) => {
 
   const handleAccept = (pickedRequest) => {
     setSelectedRequest(pickedRequest)
-    setIsAccept(true);
+    if(pickedRequest.Title === types[1]){
+      setIsAcceptDis(true);
+    }
+    else{
+      setIsAccept(true);
+    }
   }
 
   const handleReject = (pickedRequest) => {
     setSelectedRequest(pickedRequest)
     setIsReject(true)
+    if(pickedRequest.Title === types[1]){
+      setIsRejectDis(true);
+    }
+    else{
+      setIsRejectDis(false);
+    }
   }
 
   return (
@@ -76,6 +90,7 @@ const ManagerRequest = ({ semesterId, scheduleId }) => {
                 <TableCell size='small' className='subject-header request-border'>Sender</TableCell>
                 <TableCell size='small' className='subject-header request-border'>Response Note</TableCell>
                 <TableCell size='small' className='subject-header request-border'>Status</TableCell>
+                <TableCell size='small' className='subject-header request-border'>Date Reply</TableCell>
                 <TableCell size='small' className='subject-header'>Action</TableCell>
               </TableRow>
             </TableHead>
@@ -101,6 +116,9 @@ const ManagerRequest = ({ semesterId, scheduleId }) => {
                     {item.ResponseState === 1 &&
                       <Typography fontSize='15px' color={green[700]} fontWeight={500}>
                         Accepted</Typography>}
+                  </TableCell>
+                  <TableCell size='small' className='request-border'>
+                    {item.DateResponeFormat}
                   </TableCell>
                   <TableCell size='small'>
                     {item.ResponseState === 0 && <Stack direction='row' gap={1} flexWrap='wrap'>
@@ -137,9 +155,16 @@ const ManagerRequest = ({ semesterId, scheduleId }) => {
       <AcceptModal isAccept={isAccept} setIsAccept={setIsAccept} semesterId={semesterId} scheduleId={scheduleId}
         selectedRequest={selectedRequest} assignedCourses={assignedCourses} setAfterAccept={setAfterAccept}/>
       <RejectModal isReject={isReject} setIsReject={setIsReject} selectedRequest={selectedRequest} 
-        setAfterAccept={setAfterAccept}/>
+        setAfterAccept={setAfterAccept} isRejectDis={isRejectDis}/>
+      <AcceptDisableModal isAcceptDis={isAcceptDis} setIsAcceptDis={setIsAcceptDis}
+        selectedRequest={selectedRequest} setAfterAccept={setAfterAccept}/>
     </Stack>
   )
 }
 
 export default ManagerRequest
+
+const types = [
+  'Teaching Subject',
+  'Disable Subject'
+]

@@ -118,7 +118,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
         isAssign: 1
       }).then(res => {
         if(res.status === 201){
-          const des = `${selectedCourse} at slot ${selectedSlot.SlotTypeCode}: ${selectedSlot.Duration}, ${selectedSlot.ConvertDateOfWeek}`
+          const des = `Teaching course ${selectedCourse}`
           request.put(`Request/${selectedRequest.Id}`, {
             Title: selectedRequest.Title, Description: des,
             LecturerId: selectedRequest.LecturerId, DepartmentManagerId: selectedRequest.DepartmentManagerId,

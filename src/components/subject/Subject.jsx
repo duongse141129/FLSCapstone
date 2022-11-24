@@ -39,7 +39,7 @@ const Subject = ({ semesterId, semesterState }) => {
           params: {
             DepartmentGroupId: response.data.DepartmentGroupId,
             pageIndex: 1,
-            pageSize: 9999
+            pageSize: 100
           }
         })
         setDepartments(departmentList.data)
@@ -85,7 +85,7 @@ const Subject = ({ semesterId, semesterState }) => {
             SemesterId: semesterId,
             LecturerId: account.Id,
             pageIndex: 1,
-            pageSize: 9999
+            pageSize: 1000
           }
         })
         if (response.data) {

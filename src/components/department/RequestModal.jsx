@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, Typography } from '@mui/material'
 import { orange } from '@mui/material/colors';
 import {Send} from '@mui/icons-material'
 import { useEffect, useMemo, useState } from 'react';
@@ -9,6 +9,7 @@ const RequestModal = ({ isRequest, setIsRequest, subjectId, subjects, semesterId
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [managerId, setManagerId] = useState('');
   const [loadRequest, setLoadRequest] = useState(false);
+  const [type, setType] = useState(types[0])
   const subject = useMemo(() => {
     if(subjects.length > 0){
       return subjects.find(item => item.Id === subjectId) || {}
@@ -32,7 +33,7 @@ const RequestModal = ({ isRequest, setIsRequest, subjectId, subjects, semesterId
     if(subject.Id && managerId){
       setLoadRequest(true)
       request.post('Request', {
-        Title: 'Need of teaching subject', Description: '',
+        Title: type, Description: '',
         LecturerId: account.Id, DepartmentManagerId: managerId,
         SubjectId: subject.Id, SemesterId: semesterId
       }).then(res => {
@@ -46,22 +47,30 @@ const RequestModal = ({ isRequest, setIsRequest, subjectId, subjects, semesterId
   }
 
   return (
-    <Dialog open={isRequest} onClose={() => setIsRequest(false)}
-    >
+    <Dialog open={isRequest} onClose={() => setIsRequest(false)}>
       <DialogTitle color={orange[600]} mb={1}>
         <Stack direction='row' alignItems='center' gap={1}>
           <Send />
           <Typography variant='h5'>Subject Request</Typography>
         </Stack>
         <Typography color='gray' fontSize='14px'>
-          *Suggest Manager a subject which you want to teach</Typography>
+          *Request Manager a subject which you want or don't want to teach</Typography>
       </DialogTitle>
       <DialogContent>
-        <Stack direction='row' mb={1} gap={1}>
+        <Stack direction='row' mb={2} gap={2} alignItems='center'>
+          <Typography fontWeight={500}>Request Type: </Typography>
+          <Select color='warning' size='small' value={type} 
+            onChange={(e) => setType(e.target.value)}>
+            {types.map(item => (
+              <MenuItem key={item} value={item}>{item}</MenuItem>
+            ))}
+          </Select>
+        </Stack>
+        <Stack direction='row' mb={2} gap={1}>
           <Typography fontWeight={500}>Subject: </Typography>
           <Typography>{subject?.Id} - {subject?.SubjectName}</Typography>
         </Stack>
-        <Stack direction='row' mb={1} gap={1}>
+        <Stack direction='row' mb={2} gap={1}>
           <Typography fontWeight={500}>Department: </Typography>
           <Typography>{subject?.DepartmentName}</Typography>
         </Stack>
@@ -78,3 +87,8 @@ const RequestModal = ({ isRequest, setIsRequest, subjectId, subjects, semesterId
 }
 
 export default RequestModal
+
+const types = [
+  'Teaching Subject',
+  'Disable Subject'
+]

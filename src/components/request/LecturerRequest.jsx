@@ -44,6 +44,7 @@ const LecturerRequest = ({ semesterId }) => {
                 <TableCell size='small' className='subject-header request-border'>Subject</TableCell>
                 <TableCell size='small' className='subject-header request-border'>Receiver</TableCell>
                 <TableCell size='small' className='subject-header request-border'>Response Note</TableCell>
+                <TableCell size='small' className='subject-header request-border'>Date Reply</TableCell>
                 <TableCell size='small' className='subject-header'>Status</TableCell>
               </TableRow>
             </TableHead>
@@ -60,6 +61,7 @@ const LecturerRequest = ({ semesterId }) => {
                       <Typography fontSize='14px'>{item.Description}</Typography>
                     }
                   </TableCell>
+                  <TableCell size='small' className='request-border'>{item.DateResponeFormat}</TableCell>
                   <TableCell size='small'>
                     {item.ResponseState === 0 &&
                       <Typography fontSize='14px' color={grey[600]}>Waiting</Typography>}
