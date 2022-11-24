@@ -4,7 +4,7 @@ import { blue, grey, red } from '@mui/material/colors';
 import React from 'react'
 import { useNavigate } from 'react-router-dom';
 
-const SemesterCardAdmin = ({ semester, clickDelete }) => {
+const SemesterCardAdmin = ({ semester, clickDelete, clickUpdate }) => {
   const navigate = useNavigate();
 
   if (!semester) {
@@ -17,11 +17,12 @@ const SemesterCardAdmin = ({ semester, clickDelete }) => {
 
   const handleEdit = (e) => {
     e.stopPropagation();
+    clickUpdate(semester)
   }
 
   const handleDelete = (e) => {
     e.stopPropagation();
-    clickDelete(semester.Id)
+    clickDelete(semester)
   }
 
   return (

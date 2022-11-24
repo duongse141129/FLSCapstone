@@ -3,18 +3,22 @@ import { Button, Stack } from '@mui/material'
 import { green } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react'
 import { HashLoader } from 'react-spinners';
+import { ToastContainer, toast } from 'react-toastify';
 import request from '../../../utils/request';
 import DeleteModal from '../../priority/DeleteModal';
 import Title from '../../title/Title'
 import SemesterCardAdmin from './SemesterCardAdmin';
 import SemesterCreate from './SemesterCreate';
+import SemesterUpdate from './SemesterUpdate';
 
 const SemesterAdmin = () => {
   const [isCreate, setIsCreate] = useState(false);
   const [semesters, setSemesters] = useState([]);
   const [loading, setLoading] = useState(false);
-  const [selectedId, setSelectedId] = useState('');
+  const [selectedSemester, setSelectedSemester] = useState({});
   const [isDelete, setIsDelete] = useState(false);
+  const [contentDelete, setContentDelete] = useState('');
+  const [isUpdate, setIsUpdate] = useState(false);
   const [reload, setReload] = useState(false);
 
   useEffect(() => {
@@ -37,14 +41,15 @@ const SemesterAdmin = () => {
       })
   }, [reload])
 
-  const clickDelete = (semesterId) => {
-    setSelectedId(semesterId);
+  const clickDelete = (pickedSemester) => {
+    setSelectedSemester(pickedSemester);
+    setContentDelete(`Semester: ${pickedSemester.Term}`)
     setIsDelete(true)
   }
 
   const saveDelete = () => {
-    if(selectedId){
-      request.delete(`Semester/${selectedId}`)
+    if(selectedSemester.Id){
+      request.delete(`Semester/${selectedSemester.Id}`)
       .then(res => {
         if(res.status === 200){
           setIsDelete(false);
@@ -55,8 +60,31 @@ const SemesterAdmin = () => {
     }
   }
 
+  const clickUpdate = (pickedSemester) => {
+    setSelectedSemester(pickedSemester)
+    setIsUpdate(true)
+  }
+
   const handleAfterCreate = (status) => {
-    if(status) setReload(prev => !prev)
+    if(status) {
+      setReload(prev => !prev)
+      toast.success('Create Successfully!', {
+        position: "top-right", autoClose: 3000, hideProgressBar: false,
+        closeOnClick: true, pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
+  }
+
+  const handleAfterUpdate = (status) => {
+    if(status) {
+      setReload(prev => !prev)
+      toast.success('Update Successfully!', {
+        position: "top-right", autoClose: 3000, hideProgressBar: false,
+        closeOnClick: true, pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
   }
 
   return (
@@ -73,12 +101,17 @@ const SemesterAdmin = () => {
         {
           !loading &&
           semesters.map(semester => (
-            <SemesterCardAdmin key={semester.Id} semester={semester} clickDelete={clickDelete}/>
+            <SemesterCardAdmin key={semester.Id} semester={semester} 
+              clickDelete={clickDelete} clickUpdate={clickUpdate}/>
           ))
         }
       </Stack>
       <SemesterCreate isCreate={isCreate} setIsCreate={setIsCreate} handleAfterCreate={handleAfterCreate}/>
-      <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} saveDelete={saveDelete}/>
+      <SemesterUpdate isUpdate={isUpdate} setIsUpdate={setIsUpdate} 
+        selectedSemester={selectedSemester} handleAfterUpdate={handleAfterUpdate}/>
+      <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} saveDelete={saveDelete}
+        contentDelete={contentDelete}/>
+      <ToastContainer/>
     </Stack>
   )
 }

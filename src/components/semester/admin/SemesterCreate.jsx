@@ -3,6 +3,7 @@ import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Se
 } from '@mui/material';
 import { red } from '@mui/material/colors';
 import { useEffect, useMemo, useState } from 'react';
+import { ClipLoader } from 'react-spinners';
 import request from '../../../utils/request';
 import {getMondays, getSundays} from '../../../utils/weeksInYear'
 
@@ -12,6 +13,7 @@ const SemesterCreate = ({ isCreate, setIsCreate, handleAfterCreate }) => {
   const [semesters, setSemesters] = useState([]);
   const [startDate, setStartDate] = useState('');
   const [endDate, setEndDate] = useState('');
+  const [loadCreate, setLoadCreate] = useState(false);
 
   const duplicateTerm = useMemo(() => {
     if(semesters.length > 0 && selectedTerm && selectedYear){
@@ -53,7 +55,7 @@ const SemesterCreate = ({ isCreate, setIsCreate, handleAfterCreate }) => {
       }).catch(err => {
         alert('Fail to load semesters!')
       })
-  }, [])
+  }, [isCreate])
 
   const handleSelectTerm = (e) => {
     setSelectedTerm(e.target.value);
@@ -68,7 +70,8 @@ const SemesterCreate = ({ isCreate, setIsCreate, handleAfterCreate }) => {
   }
 
   const createSemester = () => {
-    if(startDate && endDate){
+    if(selectedTerm && selectedYear && startDate && endDate && !duplicateTerm){
+      setLoadCreate(true)
       request.post('Semester', {
         Term: `${selectedTerm} ${selectedYear}`,
         DateStart: startDate, DateEnd: endDate,
@@ -76,13 +79,14 @@ const SemesterCreate = ({ isCreate, setIsCreate, handleAfterCreate }) => {
       }).then(res => {
         if(res.status === 201){
           setIsCreate(false)
+          setLoadCreate(false)
           setSelectedTerm('')
           setSelectedYear(0)
           setStartDate('')
           setEndDate('')
           handleAfterCreate(true)
         }
-      }).catch(err => {alert('Fail to create semester')})
+      }).catch(err => {alert('Fail to create semester'); setLoadCreate(false)})
     }
   }
 
@@ -135,10 +139,12 @@ const SemesterCreate = ({ isCreate, setIsCreate, handleAfterCreate }) => {
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setIsCreate(false)} color='info' variant='outlined'>Cancel</Button>
-        <Button onClick={createSemester} variant='contained'
-          disabled={(startDate && endDate && !duplicateTerm)? false : true}>
+        {loadCreate ?
+        <Button variant='contained' color='success'><ClipLoader size={20} color='white'/></Button>:
+        <Button onClick={createSemester} variant='contained' color='success'
+          disabled={(selectedTerm && selectedYear && startDate && endDate && !duplicateTerm)? false : true}>
           Create
-        </Button>
+        </Button>}
       </DialogActions>
     </Dialog>
   )

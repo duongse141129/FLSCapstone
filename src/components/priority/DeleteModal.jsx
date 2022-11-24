@@ -1,8 +1,8 @@
-import { Button, Dialog, DialogActions, DialogContent, Typography } from '@mui/material';
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material';
 import { ClipLoader } from 'react-spinners';
 import { useState, useEffect } from 'react';
 
-const DeleteModal = ({isDelete, setIsDelete, saveDelete}) => {
+const DeleteModal = ({isDelete, setIsDelete, saveDelete, contentDelete}) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -19,9 +19,12 @@ const DeleteModal = ({isDelete, setIsDelete, saveDelete}) => {
       open={isDelete}
       onClose={() => setIsDelete(false)}
     >
+      <DialogTitle>
+        <Typography variant='h5' fontWeight={500}>Delete Confirm</Typography>
+      </DialogTitle>
       <DialogContent>
-        <Typography px={2} fontSize='20px'>
-          Are you sure to delete ?
+        <Typography fontSize='20px'>
+          Are you sure to delete {contentDelete} ?
         </Typography>
       </DialogContent>
       <DialogActions>
