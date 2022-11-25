@@ -157,6 +157,7 @@ namespace BEAPICapstoneProjectFLS.Services
                     return null;
                 }
                 upRequest = _mapper.Map(request, upRequest);
+                upRequest.DateRespone = DateTime.Now;
                 await _res.UpdateAsync(upRequest);
                 await _res.SaveAsync();
 

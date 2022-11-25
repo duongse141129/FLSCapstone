@@ -16,6 +16,10 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public DateTime? DateCreate { get; set; }
         [JsonProperty("DateCreateFormat")]
         public string? DateCreateFormat { get; set; }
+        [JsonProperty("DateRespone")]
+        public DateTime? DateRespone { get; set; }
+        [JsonProperty("DateResponeFormat")]
+        public string? DateResponeFormat { get; set; }
         [JsonProperty("LecturerId")]
         public string? LecturerId { get; set; }
         [JsonProperty("LecturerName")]

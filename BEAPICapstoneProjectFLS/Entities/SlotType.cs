@@ -13,6 +13,19 @@ namespace BEAPICapstoneProjectFLS.Entities
             LecturerSlotConfigs = new HashSet<LecturerSlotConfig>();
         }
 
+        public SlotType(string id, string slotTypeCode, TimeSpan timeStart, TimeSpan timeEnd, int slotNumber, int dateOfWeek, string semesterId, int status, Semester semester)
+        {
+            Id = id;
+            SlotTypeCode = slotTypeCode;
+            TimeStart = timeStart;
+            TimeEnd = timeEnd;
+            SlotNumber = slotNumber;
+            DateOfWeek = dateOfWeek;
+            SemesterId = semesterId;
+            Status = status;
+            Semester = semester;
+        }
+
         public string Id { get; set; }
         public string SlotTypeCode { get; set; }
         public TimeSpan? TimeStart { get; set; }

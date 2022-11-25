@@ -3,6 +3,7 @@ using BEAPICapstoneProjectFLS.Requests.DepartmentGroupRequest;
 using BEAPICapstoneProjectFLS.Requests.LecturerSlotConfigRequest;
 using BEAPICapstoneProjectFLS.ViewModel;
 using PagedList;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace BEAPICapstoneProjectFLS.IServices
@@ -15,5 +16,6 @@ namespace BEAPICapstoneProjectFLS.IServices
         Task<LecturerSlotConfigViewModel> CreateLecturerSlotConfig(CreateLecturerSlotConfigRequest request);
         Task<LecturerSlotConfigViewModel> UpdateLecturerSlotConfig(string id, UpdateLecturerSlotConfigRequest request);
         Task<bool> DeleteLecturerSlotConfig(string id);
+        Task<ApiResponse> CreateSlotTypesAndLecturerSlotConfigsInSemester(string semesterID);
     }
 }

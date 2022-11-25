@@ -133,6 +133,7 @@ namespace BEAPICapstoneProjectFLS.Services
                             .Where(x => x.ScheduleId == courseAssign.ScheduleId &&  x.Status == (int)CourseAssignStatus.Active)
                             .Include(x => x.Lecturer)
                             .Include(x => x.Course)
+                            .Include(x => x.SlotType)
                             .ToListAsync();
 
             foreach (var ca in courseAssigns)

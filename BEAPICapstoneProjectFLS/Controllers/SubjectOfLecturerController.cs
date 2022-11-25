@@ -13,10 +13,12 @@ namespace BEAPICapstoneProjectFLS.Controllers
     public class SubjectOfLecturerController : ControllerBase
     {
         private readonly ISubjectOfLecturerService _ISubjectOfLecturerService;
+        private readonly ISemesterService _ISemesterService;
 
-        public SubjectOfLecturerController(ISubjectOfLecturerService SubjectOfLecturerService)
+        public SubjectOfLecturerController(ISubjectOfLecturerService SubjectOfLecturerService, ISemesterService SemesterService)
         {
             _ISubjectOfLecturerService = SubjectOfLecturerService;
+            _ISemesterService = SemesterService;
         }
 
         [HttpGet("{id}", Name = "GetSubjectOfLecturerById")]
@@ -65,6 +67,29 @@ namespace BEAPICapstoneProjectFLS.Controllers
             if (rs == false)
                 return NotFound();
             return Ok();
+        }
+
+        [HttpPost("CreateSolNewSemester/{semesterID}", Name = "CreateSubjectOfLecturerInSemester")]
+        public async Task<IActionResult> CreateSubjectOfLecturerInSemester(string semesterID)
+        {
+            var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
+            if (checkSemesterID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var apiResponse = await _ISubjectOfLecturerService.CreateSubjectOfLecturerInSemester(semesterID);
+                if (apiResponse.Success == false)
+                {
+                    return BadRequest(apiResponse);
+                }
+                else
+                {
+                    return Ok(apiResponse);
+                }
+            }
+
         }
     }
 }

@@ -15,17 +15,22 @@ using BEAPICapstoneProjectFLS.Enum;
 using BEAPICapstoneProjectFLS.Requests;
 using BEAPICapstoneProjectFLS.RandomKey;
 using BEAPICapstoneProjectFLS.Requests.SubjectOfLecturerRequest;
+using System;
 
 namespace BEAPICapstoneProjectFLS.Services
 {
     public class SubjectOfLecturerService : ISubjectOfLecturerService
     {
         private readonly IGenericRepository<SubjectOfLecturer> _res;
+        private readonly IGenericRepository<User> _resUser;
+        private readonly IGenericRepository<Subject> _resSubject;
         private readonly IMapper _mapper;
 
-        public SubjectOfLecturerService(IGenericRepository<SubjectOfLecturer> repository, IMapper mapper)
+        public SubjectOfLecturerService(IGenericRepository<SubjectOfLecturer> repository, IGenericRepository<User> userRepository, IGenericRepository<Subject> subjectRepository, IMapper mapper)
         {
             _res = repository;
+            _resUser = userRepository;
+            _resSubject = subjectRepository;
             _mapper = mapper;
         }
 
@@ -146,5 +151,67 @@ namespace BEAPICapstoneProjectFLS.Services
                 return null;
             }
         }
+
+        public async Task<ApiResponse> CreateSubjectOfLecturerInSemester(string semesterID)
+        {
+            try
+            {
+                var listUser = _resUser.FindBy(x => x.Status == (int)FLSStatus.Active);
+
+
+                UserViewModel flitter = new UserViewModel { RoleIDs = new List<string>() { "LC" } };
+                var listLecturer = await (listUser.ProjectTo<UserViewModel>
+                    (_mapper.ConfigurationProvider)).DynamicFilter(flitter).ToListAsync();
+
+                foreach (var lec in listLecturer)
+                {
+                    var ListSubjectOfLecturer = await _resSubject.GetAllByIQueryable()
+                        .Where(x => x.DepartmentId == lec.DepartmentId && x.Status == (int)SubjectOfLecturerStatus.Active)
+                        .Include(x => x.Department)
+                        .ToListAsync();
+
+                    UserViewModel flitterGetDepartmentManager = new UserViewModel {DepartmentId = lec.DepartmentId, RoleIDs = new List<string>() { "DMA" } };
+                    var DepartmentManager = await (listUser.ProjectTo<UserViewModel>
+                        (_mapper.ConfigurationProvider)).DynamicFilter(flitter).FirstOrDefaultAsync();
+
+                    foreach (var subject in ListSubjectOfLecturer)
+                    {
+                        SubjectOfLecturer subjectOfLecturer = new SubjectOfLecturer
+                        {
+                            Id = RandomPKKey.NewRamDomPKKey(),
+                            SemesterId = semesterID,
+                            SubjectId = subject.Id,
+                            DepartmentManagerId = DepartmentManager.Id,
+                            LecturerId=lec.Id,
+                            FavoritePoint=3,
+                            FeedbackPoint=3,
+                            MaxCourseSubject=3,
+                            IsEnable=1,
+                            Status=1
+                        };
+                        await _res.InsertAsync(subjectOfLecturer);
+                        await _res.SaveAsync();
+                    }
+                }
+
+
+                return new ApiResponse
+                {
+                    Success = true,
+                    Message = "Create SubjectOfLecturer In Semester Success"
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Create SubjectOfLecturer In Semester Fail",
+                    Data = ex.Message
+                };
+            }
+        }
+
+
     }
 }

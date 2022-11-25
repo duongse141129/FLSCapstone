@@ -15,5 +15,6 @@ namespace BEAPICapstoneProjectFLS.IServices
         Task<LecturerCourseGroupViewModel> CreateLecturerCourseGroup(CreateLecturerCourseGroupRequest request);
         Task<LecturerCourseGroupViewModel> UpdateLecturerCourseGroup(string id, UpdateLecturerCourseGroupRequest request);
         Task<bool> DeleteLecturerCourseGroup(string id);
+        Task<ApiResponse> CreateLecturerCourseGroupInSemester(string semesterID);
     }
 }

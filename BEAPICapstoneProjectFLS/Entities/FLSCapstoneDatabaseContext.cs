@@ -286,6 +286,8 @@ namespace BEAPICapstoneProjectFLS.Entities
 
                 entity.Property(e => e.DateCreate).HasColumnType("datetime");
 
+                entity.Property(e => e.DateRespone).HasColumnType("datetime");
+
                 entity.Property(e => e.DepartmentManagerId)
                     .HasMaxLength(30)
                     .IsUnicode(false)

@@ -15,17 +15,22 @@ using BEAPICapstoneProjectFLS.Enum;
 using BEAPICapstoneProjectFLS.Requests;
 using BEAPICapstoneProjectFLS.RandomKey;
 using BEAPICapstoneProjectFLS.Requests.LecturerSlotConfigRequest;
+using System;
 
 namespace BEAPICapstoneProjectFLS.Services
 {
     public class LecturerSlotConfigService : ILecturerSlotConfigService
     {
         private readonly IGenericRepository<LecturerSlotConfig> _res;
+        private readonly IGenericRepository<SlotType> _resSlotType;
+        private readonly IGenericRepository<User> _resUser;
         private readonly IMapper _mapper;
 
-        public LecturerSlotConfigService(IGenericRepository<LecturerSlotConfig> repository, IMapper mapper)
+        public LecturerSlotConfigService(IGenericRepository<LecturerSlotConfig> repository, IGenericRepository<SlotType> slotTypeRepository, IGenericRepository<User> userRepository, IMapper mapper)
         {
             _res = repository;
+            _resSlotType = slotTypeRepository;
+            _resUser = userRepository;  
             _mapper = mapper;
         }
 
@@ -134,6 +139,71 @@ namespace BEAPICapstoneProjectFLS.Services
             {
                 return null;
             }
+        }
+
+        public async Task<ApiResponse> CreateSlotTypesAndLecturerSlotConfigsInSemester(string semesterID)
+        {
+
+
+            try
+            {
+                List<SlotType> listSlotType = new List<SlotType>()
+                {
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST11", TimeStart = new TimeSpan(7,0,0), TimeEnd =new TimeSpan(9,15,0), SlotNumber =1, DateOfWeek=36,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST12", TimeStart = new TimeSpan(9,30,0), TimeEnd =new TimeSpan(11,45,0), SlotNumber =2, DateOfWeek=36,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST13", TimeStart = new TimeSpan(12,30,0), TimeEnd =new TimeSpan(14,45,0), SlotNumber =3, DateOfWeek=36,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST14", TimeStart = new TimeSpan(15,0,0), TimeEnd =new TimeSpan(17,15,0), SlotNumber =4, DateOfWeek=36,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST21", TimeStart = new TimeSpan(7,0,0), TimeEnd =new TimeSpan(9,15,0), SlotNumber =1, DateOfWeek=72,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST22", TimeStart = new TimeSpan(9,30,0), TimeEnd =new TimeSpan(11,45,0), SlotNumber =2, DateOfWeek=72,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST23", TimeStart = new TimeSpan(12,30,0), TimeEnd =new TimeSpan(14,45,0), SlotNumber =3, DateOfWeek=72,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST24", TimeStart = new TimeSpan(15,0,0), TimeEnd =new TimeSpan(17,15,0), SlotNumber =4, DateOfWeek=72,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST31", TimeStart = new TimeSpan(7,0,0), TimeEnd =new TimeSpan(9,15,0), SlotNumber =1, DateOfWeek=144,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST32", TimeStart = new TimeSpan(9,30,0), TimeEnd =new TimeSpan(11,45,0), SlotNumber =2, DateOfWeek=144,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST33", TimeStart = new TimeSpan(12,30,0), TimeEnd =new TimeSpan(14,45,0), SlotNumber =3, DateOfWeek=144,SemesterId = semesterID ,Status=1 },
+                    new SlotType{Id= RandomPKKey.NewRamDomPKKey(), SlotTypeCode = "ST34", TimeStart = new TimeSpan(15,0,0), TimeEnd =new TimeSpan(17,15,0), SlotNumber =4, DateOfWeek=144,SemesterId = semesterID ,Status=1 },
+                };
+                foreach (var slotType in listSlotType)
+                {
+                    await _resSlotType.InsertAsync(slotType);
+                    await _resSlotType.SaveAsync();
+                }
+
+
+                var listUser = _resUser.FindBy(x => x.Status == (int)FLSStatus.Active);
+
+
+                UserViewModel flitter = new UserViewModel { RoleIDs = new List<string>() { "LC" } };
+                var listLecturer = await (listUser.ProjectTo<UserViewModel>
+                    (_mapper.ConfigurationProvider)).DynamicFilter(flitter).ToListAsync();
+
+                foreach (var lec in listLecturer)
+                {
+                    foreach (var slotTypeOfLecSlotConfig in listSlotType)
+                    {
+                        LecturerSlotConfig lecturerSlotConfig = new LecturerSlotConfig { Id = RandomPKKey.NewRamDomPKKey(), SlotTypeId = slotTypeOfLecSlotConfig.Id, LecturerId = lec.Id, SemesterId = semesterID, PreferenceLevel = 0, IsEnable = 1, Status = 1 };
+                        await _res.InsertAsync(lecturerSlotConfig);
+                        await _res.SaveAsync();
+                    }
+
+                }
+
+                return new ApiResponse
+                {
+                    Success = true,
+                    Message = "Create SlotTypes And LecturerSlotConfigs In Semester Success",
+                };
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Create SlotTypes And LecturerSlotConfigs In Semester Fail",
+                    Data = ex.Message
+                };
+            }
+            
+
         }
     }
 }

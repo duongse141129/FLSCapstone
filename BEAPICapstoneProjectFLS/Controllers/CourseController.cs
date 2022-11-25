@@ -54,7 +54,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
         }
 
         [HttpPost("AddListCourse/{SemesterID}", Name = "AddListCourseInSemester")]
-        public async Task<IActionResult> CreateListCourse(string SemesterID, [FromBody] List<CreateCourseRequest> requests)
+        public async Task<IActionResult> CreateListCourse(string SemesterID, [FromBody] List<CreateCourseInSemesterRequest> requests)
         {
             var checkSemesterID = await _ISemesterService.GetSemesterById(SemesterID);
             if (checkSemesterID == null)
@@ -101,5 +101,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 return NotFound();
             return Ok();
         }
+
+
     }
 }

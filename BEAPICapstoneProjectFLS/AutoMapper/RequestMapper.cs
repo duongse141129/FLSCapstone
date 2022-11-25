@@ -17,7 +17,8 @@ namespace BEAPICapstoneProjectFLS.AutoMapper
                 .ForMember(des => des.LecturerName, s => s.MapFrom(s => s.Lecturer.Name))
                 .ForMember(des => des.Term, s => s.MapFrom(s => s.Semester.Term))
                 .ForMember(des => des.SubjectName, s => s.MapFrom(s => s.Subject.SubjectName))
-                .ForMember(d => d.DateCreateFormat, s => s.MapFrom(s => ConvertDateTimeToString(s.DateCreate)));
+                .ForMember(d => d.DateCreateFormat, s => s.MapFrom(s => ConvertDateTimeToString(s.DateCreate)))
+                .ForMember(d => d.DateResponeFormat, s => s.MapFrom(s => ConvertDateTimeToString(s.DateRespone)));
 
             CreateMap<RequestViewModel, Request>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)RequestStatus.Active));

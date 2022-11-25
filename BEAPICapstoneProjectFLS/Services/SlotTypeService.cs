@@ -51,15 +51,15 @@ namespace BEAPICapstoneProjectFLS.Services
 
 
 
-        public async Task<ApiResponse> CreateListSlotType(string semesterID, List<CreateSlotTypeRequest> requests)
+        public async Task<ApiResponse> CreateListSlotType(string semesterID, List<CreateSlotTypeInSemesterRequest> requests)
         {
             try
             {
 
                 foreach (var cr in requests)
                 {
-                    cr.SemesterId = semesterID;
                     var newSlotType = _mapper.Map<SlotType>(cr);
+                    newSlotType.SemesterId = semesterID;
                     newSlotType.Id = RandomPKKey.NewRamDomPKKey();
                     await _res.InsertAsync(newSlotType);
                     await _res.SaveAsync();

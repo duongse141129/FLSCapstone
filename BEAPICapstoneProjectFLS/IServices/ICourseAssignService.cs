@@ -14,6 +14,8 @@ namespace BEAPICapstoneProjectFLS.IServices
         Task<IEnumerable<CourseAssignViewModel>> GetCourseAssignByGroup(string GroupID);
         IPagedList<CourseAssignViewModel> GetAllCourseAssign(CourseAssignViewModel flitter, int pageIndex,
            int pageSize, CourseAssignSortBy sortBy, OrderBy order);
+        Task<IEnumerable<UserViewModel>> GetUserAssignInDepartment(string subjectID, string semesterID);
+        Task<IEnumerable<UserViewModel>> GetUserAssignOutDepartment(string subjectID, string semesterID);
         Task<CourseAssignViewModel> CreateCourseAssign(CreateCourseAssignRequest request);
         Task<CourseAssignViewModel> UpdateCourseAssign(string id, UpdateCourseAssignRequest request);
         Task<bool> DeleteCourseAssign(string id);

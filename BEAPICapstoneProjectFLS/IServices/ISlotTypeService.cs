@@ -17,7 +17,7 @@ namespace BEAPICapstoneProjectFLS.IServices
         Task<SlotTypeViewModel> UpdateSlotType(string id, UpdateSlotTypeRequest request);
         Task<bool> DeleteSlotType(string id);
 
-        Task<ApiResponse> CreateListSlotType(string semesterID, List<CreateSlotTypeRequest> requests);
+        Task<ApiResponse> CreateListSlotType(string semesterID, List<CreateSlotTypeInSemesterRequest> requests);
 
         Task<bool> DeleteListSlotTypeInSemester(string SemesterID);
     }

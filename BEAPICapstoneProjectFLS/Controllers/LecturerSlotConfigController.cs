@@ -13,10 +13,13 @@ namespace BEAPICapstoneProjectFLS.Controllers
     public class LecturerSlotConfigController : ControllerBase
     {
         private readonly ILecturerSlotConfigService _ILecturerSlotConfigService;
+        private readonly ISemesterService _ISemesterService;
 
-        public LecturerSlotConfigController(ILecturerSlotConfigService LecturerSlotConfigService)
+        public LecturerSlotConfigController(ILecturerSlotConfigService LecturerSlotConfigService, ISemesterService SemesterService)
         {
             _ILecturerSlotConfigService = LecturerSlotConfigService;
+            _ISemesterService = SemesterService;
+
         }
 
         [HttpGet("{id}", Name = "GetLecturerSlotConfigById")]
@@ -65,6 +68,30 @@ namespace BEAPICapstoneProjectFLS.Controllers
             if (rs == false)
                 return NotFound();
             return Ok();
+        }
+
+
+        [HttpPost("CreateStAndLscNewSemester/{semesterID}", Name = "CreateSlotTypesAndLecturerSlotConfigsInSemester")]
+        public async Task<IActionResult> CreateSlotTypesAndLecturerSlotConfigsInSemester(string semesterID)
+        {
+            var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
+            if (checkSemesterID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var apiResponse = await _ILecturerSlotConfigService.CreateSlotTypesAndLecturerSlotConfigsInSemester(semesterID);
+                if (apiResponse.Success == false)
+                {
+                    return BadRequest(apiResponse);
+                }
+                else
+                {
+                    return Ok(apiResponse);
+                }
+            }
+
         }
     }
 }

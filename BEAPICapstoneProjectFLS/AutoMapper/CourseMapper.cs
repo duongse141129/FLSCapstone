@@ -22,6 +22,9 @@ namespace BEAPICapstoneProjectFLS.AutoMapper
             CreateMap<CreateCourseRequest, Course>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)CourseStatus.Active));
 
+            CreateMap<CreateCourseInSemesterRequest, Course>()
+                .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)CourseStatus.Active));
+
             CreateMap<UpdateCourseRequest, Course>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)CourseStatus.Active));
         }

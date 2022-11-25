@@ -15,17 +15,20 @@ using BEAPICapstoneProjectFLS.Enum;
 using BEAPICapstoneProjectFLS.Requests;
 using BEAPICapstoneProjectFLS.RandomKey;
 using BEAPICapstoneProjectFLS.Requests.LecturerCourseGroupRequest;
+using System;
 
 namespace BEAPICapstoneProjectFLS.Services
 {
     public class LecturerCourseGroupService : ILecturerCourseGroupService
     {
         private readonly IGenericRepository<LecturerCourseGroup> _res;
+        private readonly IGenericRepository<User> _resUser;
         private readonly IMapper _mapper;
 
-        public LecturerCourseGroupService(IGenericRepository<LecturerCourseGroup> repository, IMapper mapper)
+        public LecturerCourseGroupService(IGenericRepository<LecturerCourseGroup> repository, IGenericRepository<User> userRepository, IMapper mapper)
         {
             _res = repository;
+            _resUser = userRepository;
             _mapper = mapper;
         }
 
@@ -132,6 +135,65 @@ namespace BEAPICapstoneProjectFLS.Services
             catch
             {
                 return null;
+            }
+        }
+
+        public int getMinCourseOfLecturer(int? isFullTime)
+        {
+            if (isFullTime.HasValue)
+            {
+                if (isFullTime == 0)
+                    return 2;
+                if (isFullTime == 1)
+                    return 5;
+            }
+            return 1;
+        }
+        public int getMaxCourseOfLecturer(int? isFullTime)
+        {
+            if (isFullTime.HasValue)
+            {
+                if (isFullTime == 0)
+                    return 6;
+                if (isFullTime == 1)
+                    return 11;
+            }
+            return 12;
+        }
+        public async Task<ApiResponse> CreateLecturerCourseGroupInSemester(string semesterID)
+        {
+            try
+            {
+                var listUser = _resUser.FindBy(x => x.Status == (int)FLSStatus.Active);
+
+
+                UserViewModel flitter = new UserViewModel { RoleIDs = new List<string>() { "LC" } };
+                var listLecturer = await (listUser.ProjectTo<UserViewModel>
+                    (_mapper.ConfigurationProvider)).DynamicFilter(flitter).ToListAsync();
+
+                foreach (var lec in listLecturer)
+                {
+                    LecturerCourseGroup lecturerCourseGroup = new LecturerCourseGroup { Id = RandomPKKey.NewRamDomPKKey() , LecturerId = lec.Id, SemesterId= semesterID, GroupName = "The priority courses of lecturer "+lec.Id,
+                        MinCourse = getMinCourseOfLecturer(lec.IsFullTime), MaxCourse = getMaxCourseOfLecturer(lec.IsFullTime), Status =1};
+                    await _res.InsertAsync(lecturerCourseGroup);
+                    await _res.SaveAsync();
+                }
+
+
+                return new ApiResponse
+                {
+                    Success = true,
+                    Message = "Create LecturerCourseGroup In Semester Success"
+                };
+            }
+            catch(Exception ex)
+            {
+                return new ApiResponse
+                {
+                    Success = false,
+                    Message = "Create LecturerCourseGroup In Semester Fail",
+                    Data = ex.Message
+                };
             }
         }
     }

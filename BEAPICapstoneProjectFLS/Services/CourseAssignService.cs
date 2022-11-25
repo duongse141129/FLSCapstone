@@ -19,14 +19,22 @@ using System;
 
 namespace BEAPICapstoneProjectFLS.Services
 {
-    public class CourseAssignService : ICourseAssignService 
+    public class CourseAssignService : ICourseAssignService
     {
         private readonly IGenericRepository<CourseAssign> _res;
+        private readonly IGenericRepository<Course> _resCourse;
+        private readonly IGenericRepository<User> _resUser;
+        private readonly IGenericRepository<Subject> _resSubject;
         private readonly IMapper _mapper;
 
-        public CourseAssignService(IGenericRepository<CourseAssign> repository, IMapper mapper)
+        public CourseAssignService(IGenericRepository<CourseAssign> repository, IGenericRepository<Course> courseRepository,
+                            IGenericRepository<User> userRepository, IGenericRepository<Subject> subjectRepository,
+                            IMapper mapper)
         {
             _res = repository;
+            _resCourse = courseRepository;
+            _resUser = userRepository;
+            _resSubject = subjectRepository;
             _mapper = mapper;
         }
 
@@ -108,7 +116,7 @@ namespace BEAPICapstoneProjectFLS.Services
                     .Where(x => x.ScheduleId == ScheduleID)
                     .Where(x => x.IsAssign == 0)
                     .ToListAsync();
-                if(listCourseAssign.Count <= 0 )
+                if (listCourseAssign.Count <= 0)
                 {
                     return false;
                 }
@@ -120,7 +128,7 @@ namespace BEAPICapstoneProjectFLS.Services
                     }
                     return true;
                 }
-                
+
             }
             catch (Exception ex)
             {
@@ -180,6 +188,7 @@ namespace BEAPICapstoneProjectFLS.Services
                 .Where(x => x.Id == id && x.Status == (int)CourseAssignStatus.Active)
                 .Include(x => x.Lecturer)
                 .Include(x => x.Course)
+                .Include(x => x.SlotType)
                 .FirstOrDefaultAsync();
             if (dg == null)
                 return null;
@@ -225,27 +234,28 @@ namespace BEAPICapstoneProjectFLS.Services
             try
             {
                 var courseAssigns = await _res.GetAllByIQueryable()
-                             .Where(x=> x.Status == (int)CourseAssignStatus.Active)
+                             .Where(x => x.Status == (int)CourseAssignStatus.Active)
                              .Include(x => x.Lecturer)
                              .Include(x => x.Course)
+                             .Include(x => x.SlotType)
                              .ToListAsync();
                 if (courseAssigns == null)
                     return null;
                 foreach (var ca in courseAssigns)
                 {
                     string s = ca.CourseId.Split('_')[1];
-                    if(s == GroupID)
+                    if (s == GroupID)
                     {
                         result.Add(ca);
                     }
                 }
 
-                var courseAssignVM =  _mapper.Map<IEnumerable<CourseAssignViewModel>>(result);
+                var courseAssignVM = _mapper.Map<IEnumerable<CourseAssignViewModel>>(result);
                 return courseAssignVM;
             }
             catch (Exception ex)
             {
-                string error= ex.Message;
+                string error = ex.Message;
                 return null;
             }
 
@@ -276,6 +286,93 @@ namespace BEAPICapstoneProjectFLS.Services
             {
                 return null;
             }
+        }
+
+        public async Task<bool> checkLecturerInOutDepartment(string subjectID, string departmentID)
+        {
+            var subject = await _resSubject.GetAllByIQueryable()
+                 .Where(x => x.Id == subjectID && x.Status == (int)UserStatus.Active)
+                 .FirstOrDefaultAsync();
+            if (subject.DepartmentId == departmentID)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        public async Task<List<User>> GetUserAssign(string subjectID, string semesterID, bool inDepartment)
+        {
+            List<User> result = new List<User>();
+            try
+            {
+                var listCourse = await _resCourse.GetAllByIQueryable()
+                                     .Where(x => x.SemesterId == semesterID && x.SubjectId == subjectID && x.Status == (int)CourseStatus.Active)
+                                     .ToListAsync();
+
+                var listCourseAssign = await _res.GetAllByIQueryable()
+                                     .Where(x => x.Status == (int)CourseAssignStatus.Active)
+                                     .ToListAsync();
+
+                var listUserAssign = from course in listCourse
+                                     join courseAssign in listCourseAssign on course.Id equals courseAssign.CourseId
+                                     group course by courseAssign.LecturerId;
+
+                if (inDepartment == true)
+                {
+                    foreach (var group in listUserAssign)
+                    {
+                        var user = await _resUser.GetAllByIQueryable()
+                                         .Where(x => x.Id == group.Key && x.Status == (int)UserStatus.Active)
+                                         .Include(x => x.Department)
+                                         .Include(x => x.UserAndRoles)
+                                         .FirstOrDefaultAsync();
+                        bool checkInOutD = await checkLecturerInOutDepartment(subjectID, user.DepartmentId);
+                        if (checkInOutD == true)
+                        {
+                            result.Add(user);
+                        }
+                    }
+
+                    return result;
+                }
+                if (inDepartment == false)
+                {
+                    foreach (var group in listUserAssign)
+                    {
+                        var user = await _resUser.GetAllByIQueryable()
+                                         .Where(x => x.Id == group.Key && x.Status == (int)UserStatus.Active)
+                                         .Include(x => x.Department)
+                                         .Include(x => x.UserAndRoles)
+                                         .FirstOrDefaultAsync();
+
+                        bool checkInOutD = await checkLecturerInOutDepartment(subjectID, user.DepartmentId);
+                        if (checkInOutD == false)
+                        {
+                            result.Add(user);
+                        }
+                    }
+
+                    return result;
+                }
+                return null;
+            }
+            catch
+            {
+                return null;
+            }
+            
+        }
+
+        public async Task<IEnumerable<UserViewModel>> GetUserAssignInDepartment(string subjectID, string semesterID)
+        {
+            List<User> rs = await GetUserAssign(subjectID, semesterID, true);
+            return _mapper.Map<IEnumerable<UserViewModel>>(rs);
+        }
+
+        public async Task<IEnumerable<UserViewModel>> GetUserAssignOutDepartment(string subjectID, string semesterID)
+        {
+            List<User> rs = await GetUserAssign(subjectID, semesterID, false);
+            return _mapper.Map<IEnumerable<UserViewModel>>(rs);
         }
     }
 }

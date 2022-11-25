@@ -52,17 +52,17 @@ namespace BEAPICapstoneProjectFLS.Controllers
             }
         }
 
-        [HttpPost("AddListSlotType/{SemesterID}", Name = "AddListSlotTypeInSemester")]
-        public async Task<IActionResult> CreateListSlotType(string SemesterID, [FromBody] List<CreateSlotTypeRequest> requests)
+        [HttpPost("AddListSlotType/{semesterID}", Name = "AddListSlotTypeInSemester")]
+        public async Task<IActionResult> CreateListSlotType(string semesterID, [FromBody] List<CreateSlotTypeInSemesterRequest> requests)
         {
-            var checkSemesterID = await _ISemesterService.GetSemesterById(SemesterID);
+            var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
             if (checkSemesterID == null)
             {
                 return NotFound();
             }
             else
             {
-                var checkSlotTypeVM = await _ISlotTypeService.CreateListSlotType(SemesterID, requests);
+                var checkSlotTypeVM = await _ISlotTypeService.CreateListSlotType(semesterID, requests);
                 if (checkSlotTypeVM.Success == false)
                 {
                     return BadRequest(checkSlotTypeVM);

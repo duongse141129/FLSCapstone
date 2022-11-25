@@ -17,6 +17,10 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public string? SlotTypeId { get; set; }
         [JsonProperty("SlotTypeCode")]
         public string? SlotTypeCode { get; set; }
+        [JsonProperty("Duration")]
+        public string? Duration { get; set; }
+        [JsonProperty("ConvertDateOfWeek")]
+        public string? ConvertDateOfWeek { get; set; }
         [JsonProperty("ScheduleId")]
         public string? ScheduleId { get; set; }
         [JsonProperty("isAssign")]

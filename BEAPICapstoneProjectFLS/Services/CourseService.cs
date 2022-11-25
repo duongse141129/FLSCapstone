@@ -51,14 +51,14 @@ namespace BEAPICapstoneProjectFLS.Services
 
  
 
-        public async Task<ApiResponse> CreateListCourse(string semesterID, List<CreateCourseRequest> requests)
+        public async Task<ApiResponse> CreateListCourse(string semesterID, List<CreateCourseInSemesterRequest> requests)
         {
             try
             {
                 foreach (var cr in requests)
                 {
-                    cr.SemesterId = semesterID;
                     var newCourse = _mapper.Map<Course>(cr);
+                    newCourse.SemesterId = semesterID;
                     await _res.InsertAsync(newCourse);
                     await _res.SaveAsync();
                 }
@@ -193,5 +193,7 @@ namespace BEAPICapstoneProjectFLS.Services
                 return null;
             }
         }
+
+
     }
 }

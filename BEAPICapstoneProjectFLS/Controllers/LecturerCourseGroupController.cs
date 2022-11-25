@@ -13,10 +13,12 @@ namespace BEAPICapstoneProjectFLS.Controllers
     public class LecturerCourseGroupController : ControllerBase
     {
         private readonly ILecturerCourseGroupService _ILecturerCourseGroupService;
+        private readonly ISemesterService _ISemesterService;
 
-        public LecturerCourseGroupController(ILecturerCourseGroupService LecturerCourseGroupService)
+        public LecturerCourseGroupController(ILecturerCourseGroupService LecturerCourseGroupService, ISemesterService SemesterService)
         {
             _ILecturerCourseGroupService = LecturerCourseGroupService;
+            _ISemesterService = SemesterService;
         }
 
         [HttpGet("{id}", Name = "GetLecturerCourseGroupById")]
@@ -66,5 +68,29 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 return NotFound();
             return Ok();
         }
+
+        [HttpPost("CreateLcgNewSemester/{semesterID}", Name = "CreateLecturerCourseGroupInSemester")]
+        public async Task<IActionResult> CreateLecturerCourseGroupInSemester(string semesterID)
+        {
+            var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
+            if (checkSemesterID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var apiResponse = await _ILecturerCourseGroupService.CreateLecturerCourseGroupInSemester(semesterID);
+                if (apiResponse.Success == false)
+                {
+                    return BadRequest(apiResponse);
+                }
+                else
+                {
+                    return Ok(apiResponse);
+                }
+            }
+
+        }
+
     }
 }

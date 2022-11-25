@@ -243,7 +243,9 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 return BadRequest(new ApiResponse
                 {
                     Success = false,
-                    Message = "Something went wrong"
+                    Message = "Something went wrong",
+                    Data = ex.Message
+                    
                 });
             }
         }
@@ -254,6 +256,140 @@ namespace BEAPICapstoneProjectFLS.Controllers
             dateTimeInterval.AddSeconds(utcExpireDate).ToUniversalTime();
 
             return dateTimeInterval;
+        }
+
+
+
+        [HttpGet("CheckTokenValue")]
+        public IActionResult checkToken([FromQuery]  TokenViewModel model)
+        {
+            var jwtTokenHandler = new JwtSecurityTokenHandler();
+            var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
+            var tokenValidateParam = new TokenValidationParameters
+            {
+                //tự cấp token
+                ValidateIssuer = false,
+                ValidateAudience = false,
+
+                //ký vào token
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = new SymmetricSecurityKey(secretKeyBytes),
+
+                ClockSkew = TimeSpan.Zero,
+
+                ValidateLifetime = false //ko kiểm tra token hết hạn
+            };
+            try
+            {
+                //check 1: AccessToken valid format
+                var tokenInVerification = jwtTokenHandler.ValidateToken(model.AccessToken, tokenValidateParam, out var validatedToken);
+
+                //check 2: Check alg
+                if (validatedToken is JwtSecurityToken jwtSecurityToken)
+                {
+                    var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase);
+                    if (!result)//false
+                    {
+                        return BadRequest(new ApiResponse
+                        {
+                            Success = false,
+                            Message = "Invalid token"
+                        });
+                    }
+                }
+
+                //check 3: Check accessToken expire?
+                var utcExpireDate = long.Parse(tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Exp).Value);
+
+                var expireDate = ConvertUnixTimeToDateTime(utcExpireDate);
+                if (expireDate > DateTime.UtcNow)
+                {
+                    return BadRequest(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Access token has not yet expired"
+                    });
+                }
+
+                //check 4: Check refreshtoken exist in DB
+                var storedToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.RefreshToken);
+                if (storedToken == null)
+                {
+                    return NotFound(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Refresh token does not exist"
+                    });
+                }
+
+                //check 5: check refreshToken is used/revoked?
+                if (storedToken.IsUsed)
+                {
+                    return BadRequest(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Refresh token has been used"
+                    });
+                }
+                if (storedToken.IsRevoked)
+                {
+                    return BadRequest(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Refresh token has been revoked"
+                    });
+                }
+
+                //check 6: AccessToken id == JwtId in RefreshToken
+                var jti = tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
+                if (storedToken.JwtId != jti)
+                {
+                    return BadRequest(new ApiResponse
+                    {
+                        Success = false,
+                        Message = "Token doesn't match"
+                    });
+                }
+
+                return Ok(new ApiResponse
+                {
+                    Success = true,
+                    Message = "Token is still valid"
+                });
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Something went wrong",
+                    Data = ex.Message
+                });
+            }
+        }
+
+
+        [HttpGet("GetUserByRefreshToken/{refreshToken}", Name = "GetUserByRefreshToken")]
+        public async Task<IActionResult> GetUserByRefreshToken(string refreshToken)
+        {
+            var storedRefreshToken = await _context.RefreshTokens.Where(x => x.Token == refreshToken).OrderByDescending(x => x.IsUsed).FirstOrDefaultAsync();
+            if (storedRefreshToken == null)
+            {
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Not found RefreshToken"
+                });
+            }
+
+            var userVM = await _IUserService.GetUserById(storedRefreshToken.UserId);
+            if (userVM == null)
+                return NotFound(new ApiResponse
+                {
+                    Success = false,
+                    Message = "Not found userID"
+                });
+            return Ok(userVM);
         }
     }
 }

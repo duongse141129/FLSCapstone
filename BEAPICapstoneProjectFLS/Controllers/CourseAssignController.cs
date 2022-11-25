@@ -14,10 +14,14 @@ namespace BEAPICapstoneProjectFLS.Controllers
     public class CourseAssignController : ControllerBase
     {
         private readonly ICourseAssignService _ICourseAssignService;
+        private readonly ISemesterService _ISemesterService;
+        private readonly ISubjectService _ISubjectService;
 
-        public CourseAssignController(ICourseAssignService CourseAssignService)
+        public CourseAssignController(ICourseAssignService CourseAssignService, ISemesterService SemesterService, ISubjectService SubjectService)
         {
             _ICourseAssignService = CourseAssignService;
+            _ISemesterService = SemesterService;
+            _ISubjectService = SubjectService;
         }
 
         [HttpGet("{id}", Name = "GetCourseAssignById")]
@@ -100,6 +104,48 @@ namespace BEAPICapstoneProjectFLS.Controllers
             if (rs == false)
                 return NotFound();
             return Ok();
+        }
+
+        [HttpGet("GetUserAssignInDepartment/{subjectID}&{semesterID}", Name = "GetUserAssignInDepartment")]
+        public async Task<IActionResult> GetUserAssignInDepartment(string subjectID, string semesterID)
+        {
+            var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
+            var checkSubjectID = await _ISubjectService.GetSubjectById(subjectID);
+
+            if (checkSubjectID == null || checkSubjectID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var rs = await _ICourseAssignService.GetUserAssignInDepartment(subjectID, semesterID);
+                if (rs == null)
+                    return NotFound();
+                return Ok(rs);
+            }
+
+        }
+
+        [HttpGet("GetUserAssignOutDepartment/{subjectID}&{semesterID}", Name = "GetUserAssignOutDepartment")]
+        public async Task<IActionResult> GetUserAssignOutDepartment(string subjectID, string semesterID)
+        {
+            var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
+            var checkSubjectID = await _ISubjectService.GetSubjectById(subjectID);
+
+            if (checkSubjectID == null || checkSubjectID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var rs = await _ICourseAssignService.GetUserAssignOutDepartment(subjectID, semesterID);
+                if (rs == null)
+                    return NotFound();
+                return Ok(rs);
+            }
+
+
+            
         }
     }
 }

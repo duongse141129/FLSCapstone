@@ -23,6 +23,9 @@ namespace BEAPICapstoneProjectFLS.AutoMapper
             CreateMap<CreateSlotTypeRequest, SlotType>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)SlotTypeStatus.Active));
 
+            CreateMap<CreateSlotTypeInSemesterRequest, SlotType>()
+               .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)SlotTypeStatus.Active));
+
             CreateMap<UpdateSlotTypeRequest, SlotType>()
                 .ForMember(des => des.Status, opt => opt.MapFrom(src => (int)SlotTypeStatus.Active));
         }
