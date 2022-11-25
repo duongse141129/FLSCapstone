@@ -153,14 +153,15 @@ const FeedbackSelection = ({ id, semester, admin }) => {
     <Stack flex={5} height='90vh'>
       {!admin && lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
         <Stack>
-          <Alert severity="error">Can not give reply point to lecturer outside my department</Alert>
+          <Alert severity="error">Can not evaluate to lecturer outside my department</Alert>
         </Stack>
       }
       {((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) && <>
         <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
           <Stack>
             <Typography color='gray' variant='subtitle1'>
-              *Give reply point to a lecturer with each subject
+              *Manager can evaluate lecturer's skill with each subject.
+              {' '}All parameters is relative to generate schedule.
             </Typography>
             <Typography>Total: {subjects.length}</Typography>
           </Stack>
@@ -182,17 +183,26 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                       Subject</TableCell>
                     <TableCell size='small' className='subject-header' align='center'
                       sx={{ borderRight: '1px solid #e3e3e3' }}>
-                      Favorite</TableCell>
-                    <TableCell size='small' className='subject-header' align='center'
-                      sx={{ borderRight: '1px solid #e3e3e3' }}>
-                      Evaluation
+                      <Tooltip title='This is graded by Lecturer' placement='top' arrow>
+                        <span>Favorite</span>
+                      </Tooltip>
                     </TableCell>
                     <TableCell size='small' className='subject-header' align='center'
                       sx={{ borderRight: '1px solid #e3e3e3' }}>
-                      Max Courses
+                      <Tooltip title="Evaluate by Lecturer's skill" placement='top' arrow>
+                        <span>Evaluation</span>
+                      </Tooltip>
+                    </TableCell>
+                    <TableCell size='small' className='subject-header' align='center'
+                      sx={{ borderRight: '1px solid #e3e3e3' }}>
+                      <Tooltip title='Edit max course number of each subject for lecturer' placement='top' arrow>
+                        <span>Max Courses</span>
+                      </Tooltip>
                     </TableCell>
                     <TableCell size='small' className='subject-header' align='center'>
-                      Disable ({disableNumber}/{configData.DISABLE_SUBJECT})
+                      <Tooltip title="Lecturer can't teach disable subjects" placement='top' arrow>
+                        <span>Disable ({disableNumber}/{configData.DISABLE_SUBJECT})</span>
+                      </Tooltip>
                     </TableCell>
                   </TableRow>
                 </TableHead>

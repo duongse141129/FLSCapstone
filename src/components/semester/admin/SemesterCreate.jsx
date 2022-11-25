@@ -69,6 +69,51 @@ const SemesterCreate = ({ isCreate, setIsCreate, handleAfterCreate }) => {
     setEndDate('');
   }
 
+  const newLecCourseGroup = (semesterId) => {
+    request.post(`LecturerCourseGroup/CreateLcgNewSemester/${semesterId}`)
+    .then(res => {
+      if(res.status === 200 || res.status === 201){
+        console.log('LecCourseGroup')
+      }
+    })
+    .catch(err => {alert('Fail to create priority groups for new semester')})
+  }
+
+  const newSubjectOfLec = (semesterId) => {
+    request.post(`SubjectOfLecturer/CreateSolNewSemester/${semesterId}`)
+    .then(res => {
+      if(res.status === 200 || res.status === 201){
+        console.log('SubjectOfLec')
+      }
+    })
+    .catch(err => {alert('Fail to create default point of subject for lecturer')})
+  }
+
+  const newSlotAndConfig = (semesterId) => {
+    request.post(`LecturerSlotConfig/CreateStAndLscNewSemester/${semesterId}`)
+    .then(res => {
+      if(res.status === 200 || res.status === 201){
+        console.log('SlotTYpe and slot config')
+      }
+    })
+    .catch(err => {alert('Fail to create slot for new semester')})
+  }
+
+  const newSchedule = (semesterId) => {
+    const currentDate = new Date();
+    request.post('Schedule', {
+      IsPublic: 0, SemesterId: semesterId,
+      Description: 'Create new semester',
+      DateCreate: currentDate.toLocaleDateString('en-CA')
+    })
+    .then(res => {
+      if(res.status === 200 || res.status === 201){
+        console.log('Schedule')
+      }
+    })
+    .catch(err => {alert('Fail to create schedule for new semester')})
+  }
+
   const createSemester = () => {
     if(selectedTerm && selectedYear && startDate && endDate && !duplicateTerm){
       setLoadCreate(true)
@@ -78,6 +123,12 @@ const SemesterCreate = ({ isCreate, setIsCreate, handleAfterCreate }) => {
         State: 1
       }).then(res => {
         if(res.status === 201){
+          const newSemesterId = res.data.Id;
+          newLecCourseGroup(newSemesterId)
+          newSubjectOfLec(newSemesterId)
+          newSlotAndConfig(newSemesterId)
+          newSchedule(newSemesterId)
+
           setIsCreate(false)
           setLoadCreate(false)
           setSelectedTerm('')

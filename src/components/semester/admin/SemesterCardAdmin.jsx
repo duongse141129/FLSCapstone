@@ -56,6 +56,7 @@ const SemesterCardAdmin = ({ semester, clickDelete, clickUpdate }) => {
           <Typography fontWeight={500}>End: </Typography>
           <Typography>{semester?.DateEndFormat.split('-').reverse().join('/')}</Typography>
         </Stack>
+        {semester.DateStatus === 'Not Yet' && semester.State === 1 &&
         <Stack direction='row' gap={1} alignItems='center'>
           <Tooltip title='Edit' placement='top'>
             <IconButton size='small' onClick={handleEdit}><Edit/></IconButton>
@@ -64,7 +65,7 @@ const SemesterCardAdmin = ({ semester, clickDelete, clickUpdate }) => {
           <Tooltip title='Delete' placement='top'>
             <IconButton size='small' onClick={handleDelete}><Delete/></IconButton>
           </Tooltip>
-        </Stack>
+        </Stack>}
       </Stack>
     </Stack>
   )
