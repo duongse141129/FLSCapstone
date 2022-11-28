@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
-const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRequest, assignedCourses, setAfterAccept }) => {
+const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRequest, assignedCourses, handleAfterSave }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [courses, setCourses] = useState([]);
   const [slots, setSlots] = useState([]);
@@ -141,8 +141,8 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
             ResponseState: 1
           }).then(res => {
             if(res.status === 200){
-              setAfterAccept(prev => !prev)
               setIsAccept(false)
+              handleAfterSave('Accept Successfully')
               setLoadAccept(false)
             }
           }).catch(err => {alert('Fail to update request'); setLoadAccept(false)})

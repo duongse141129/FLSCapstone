@@ -1,9 +1,22 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Typography } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, Stack, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
 import request from '../../utils/request'
 
 const AcceptDisableModal = ({isAcceptDis, setIsAcceptDis, selectedRequest, setAfterAccept}) => {
   const [subjectOfLec, setSubjectOfLec] = useState({})
+  const [lecturer, setLecturer] = useState({})
+
+  useEffect(() => {
+    if(selectedRequest.LecturerId){
+      request.get(`User/${selectedRequest.LecturerId}`)
+      .then(res => {
+        if(res.data){
+          setLecturer(res.data)
+        }
+      })
+      .catch(err => {alert('Fail to get lecturer')})
+    }
+  }, [selectedRequest])
 
   useEffect(() => {
     if(selectedRequest.Id){
@@ -55,10 +68,14 @@ const AcceptDisableModal = ({isAcceptDis, setIsAcceptDis, selectedRequest, setAf
         <Typography variant='h5' fontWeight={500}>Accept for disable subject</Typography>
       </DialogTitle>
       <DialogContent>
-        <Typography>Accept to disable subject: {' '}
-          <span style={{fontWeight: 500}}>{selectedRequest.SubjectId}-{selectedRequest.SubjectName}</span> {' '}
-          for lecturer: <span style={{fontWeight: 500}}>{selectedRequest.LecturerId}</span> ?
-        </Typography>
+        <Stack direction='row' alignItems='center' gap={1} mb={2}>
+          <Typography fontWeight={500}>Lecturer: </Typography>
+          <Typography>{lecturer.Name} (Department: {lecturer.DepartmentName})</Typography>
+        </Stack>
+        <Stack direction='row' gap={1} mb={2}>
+          <Typography fontWeight={500}>Subject: </Typography>
+          <Typography>{selectedRequest.SubjectId} - {selectedRequest.SubjectName}</Typography>
+        </Stack>
       </DialogContent>
       <DialogActions>
         <Button color='info' variant='outlined' onClick={() => setIsAcceptDis(false)}>Cancel</Button>

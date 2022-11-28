@@ -9,7 +9,6 @@ import Schedule from './Schedule';
 import request from '../../utils/request';
 import Title from '../title/Title';
 import { blue, green, grey, red } from '@mui/material/colors';
-import LecturerRequest from '../request/LecturerRequest';
 
 const SemesterDetail = () => {
   const [isSelected, setIsSelected] = useState(1)
@@ -119,7 +118,6 @@ const SemesterDetail = () => {
         isSelected === 3 &&
         <SlotType semesterId={id} semesterState={semester.State} />
       }
-      {isSelected === 4 && <LecturerRequest semesterId={id}/>}
     </Stack>
   )
 }
@@ -138,9 +136,5 @@ const tabs = [
   {
     id: 3,
     name: 'Preference Slots'
-  },
-  {
-    id: 4,
-    name: 'Requests'
   },
 ]

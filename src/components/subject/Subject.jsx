@@ -1,5 +1,5 @@
 import {Box, Paper, Stack, Table, TableBody, TableCell, TableContainer,
-  TableHead, TableRow, Typography, TablePagination, Tooltip, IconButton, Select, MenuItem
+  TableHead, TableRow, Typography, TablePagination, Tooltip, IconButton, Select, MenuItem, Button
 } from '@mui/material';
 import { Send, StarBorder, Beenhere } from '@mui/icons-material';
 import React, { useState, useEffect } from 'react';
@@ -28,6 +28,7 @@ const Subject = ({ semesterId, semesterState }) => {
   const [pointFive, setPointFive] = useState(0);
   const [pointOne, setPointOne] = useState(0);
   const [loadSubject, setLoadSubject] = useState(false);
+  const [requests, setRequests] = useState([])
 
   //get Department to get Department Group --> list department in group
   useEffect(() => {
@@ -100,6 +101,19 @@ const Subject = ({ semesterId, semesterState }) => {
     getFavoriteSubjects();
   }, [isRating, account.Id, semesterId])
 
+  useEffect(() => {
+    request.get('Request', {
+      params: {
+        LecturerId: account.Id, SemesterId: semesterId, 
+        sortBy: 'DateCreate', order: 'Des', pageIndex: 1, pageSize: 100
+      }
+    }).then(res => {
+      if (res.data) {
+        setRequests(res.data)
+      }
+    }).catch(err => { alert('Fail to get requests') })
+  }, [account.Id, semesterId, isRequest])
+
   //set number subjecs at point 1 and 5
   useEffect(() => {
     if (favoriteSubjects.length > 0) {
@@ -134,10 +148,11 @@ const Subject = ({ semesterId, semesterState }) => {
     setLoadPoint(prev => !prev);
     setIsRating(true);
   }
-  
-  const handleRequest = (selectedId) => {
-    setSubjectId(selectedId);
-    setIsRequest(true);
+
+  const showStatus = (state) => {
+    if(state === -1) return 'Rejected';
+    if(state === 0) return 'Requested';
+    if(state === 1) return 'Accepted';
   }
 
   const sendRequest = (status) => {
@@ -186,18 +201,20 @@ const Subject = ({ semesterId, semesterState }) => {
             />
           </Tooltip>
         </Stack>
-        <Stack>
+        <Stack direction='row' alignItems='center' gap={8}>
           {
             selectedDepartment === account.DepartmentId &&
-            <>
+            <Stack>
               <Typography color='red' fontSize='14px'>
                 Subjects at point 1: {pointOne}/{configData.POINT_ONE_NUMBER}
               </Typography>
               <Typography color='red' fontSize='14px'>
                 Subjects at point 5: {pointFive}/{configData.POINT_FIVE_NUMBER}
               </Typography>
-            </>
+            </Stack>
           }
+          <Button variant='contained' endIcon={<Send/>} 
+            onClick={() => setIsRequest(true)}>Request</Button>
         </Stack>
       </Stack>
       <Stack px={9}>
@@ -214,7 +231,8 @@ const Subject = ({ semesterId, semesterState }) => {
                     selectedDepartment === account.DepartmentId &&
                     <TableCell size='small' className='subject-header'>Favorite Point</TableCell>
                   }
-                  <TableCell size='small' className='subject-header'>Request</TableCell>
+                  <TableCell size='small' className='subject-header'>Request Status</TableCell>
+                  <TableCell size='small' className='subject-header'>Request Type</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -246,14 +264,14 @@ const Subject = ({ semesterId, semesterState }) => {
                           </TableCell>
                         }
                         <TableCell size='small'>
-                          {semesterState === 2 && 
-                          <Tooltip title='Request' placement='left'>
-                            <IconButton color='warning' size='small'
-                              onClick={() => handleRequest(subject.Id)}
-                            >
-                              <Send />
-                            </IconButton>
-                          </Tooltip>}
+                          {requests.find(item => item.SubjectId === subject.Id) ? 
+                            showStatus(requests.find(item => item.SubjectId === subject.Id).ResponseState) :
+                            'Available'}
+                        </TableCell>
+                        <TableCell size='small'>
+                          {requests.find(item => item.SubjectId === subject.Id) ? 
+                            requests.find(item => item.SubjectId === subject.Id).Title :
+                            '-'}
                         </TableCell>
                       </TableRow>
                     ))
@@ -277,8 +295,8 @@ const Subject = ({ semesterId, semesterState }) => {
           />
         </Paper>}
       </Stack>
-      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} subjectId={subjectId}
-        subjects={subjects} semesterId={semesterId} sendRequest={sendRequest}/>
+      <RequestModal isRequest={isRequest} setIsRequest={setIsRequest} requests={requests}
+        semesterId={semesterId} sendRequest={sendRequest}/>
       <RatingModal isRating={isRating} setIsRating={setIsRating}
         subjectId={subjectId} subjectName={subjectName} semesterId={semesterId}
         favoriteSubjects={favoriteSubjects} loadPoint={loadPoint} />
