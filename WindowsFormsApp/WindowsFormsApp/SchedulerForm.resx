@@ -204,6 +204,9 @@
 - Total assigned course column: Assigned course amount for lecturer.
 </value>
   </data>
+  <metadata name="Column26.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="Column9.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>
@@ -225,10 +228,18 @@
   <data name="textBox9.Text" xml:space="preserve">
     <value>- Priority course level: Level of priority courses in lecturer's course group.
 
-- Feedback of department level: Level of the feedback point is assessed by department manager for lecturer.
+- Department's rating level: Level of rating point is assessed by department manager for lecturer with subject.
 
 - Favorite of lecturer level: Level of the favorite point is assessed by lecturer with subject .
 
+</value>
+  </data>
+  <data name="label28.Text" xml:space="preserve">
+    <value>- Optimize the teacher's preference for the subject.
+- Optimize scheduling based on the feedback score of the department manager for lecturers with the subject.
+- Optimize scheduling based on the department manager's priority for the course in the group course priority list.
+- Optimize teacher preference with slot time.
+- Optimize the rest time between slots.
 </value>
   </data>
   <data name="textBox5.Text" xml:space="preserve">
@@ -315,6 +326,9 @@
 - Total assigned course column: Assigned course amount for lecturer.
 </value>
   </data>
+  <metadata name="Column37.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
+    <value>True</value>
+  </metadata>
   <metadata name="Column33.UserAddedColumn" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>True</value>
   </metadata>

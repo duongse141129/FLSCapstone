@@ -11,6 +11,8 @@ namespace FPTULecturerScheduler.Entity
     {
         [JsonProperty("Id")]
         public string ID { get; set; }
+        [JsonProperty("SlotTypeCode")]
+        public string SlotTypeCode { get; set; }
         [JsonProperty("TimeStart")]
         public string TimeStart { get; set; }
         [JsonProperty("TimeEnd")]
@@ -28,9 +30,10 @@ namespace FPTULecturerScheduler.Entity
         {
         }
 
-        public SlotType(string Id, string timeStart, string timeEnd, int slotNumber, string dateOfWeek, int status)
+        public SlotType(string Id, string slotTypeCode, string timeStart, string timeEnd, int slotNumber, string dateOfWeek, int status)
         {
             ID = Id;
+            SlotTypeCode= slotTypeCode;
             TimeStart = timeStart;
             TimeEnd = timeEnd;
             SlotNumber = slotNumber;

@@ -46,3 +46,5 @@ C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\obj\
 C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\obj\Debug\WindowsFormsApp.pdb
 C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\obj\Debug\WindowsFormsApp.WaitingDialog.resources
 C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\obj\Debug\WindowsFormsApp.ScheduleDetailDialog.resources
+C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\obj\Debug\WindowsFormsApp.RunIfnoForm.resources
+C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\obj\Debug\WindowsFormsApp.LoginForm.resources

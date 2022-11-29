@@ -24,7 +24,7 @@ namespace WindowsFormsApp
 
         public List<Semester> Semesters = new List<Semester>();
         
-        public List<Course> Courses = new List<Course>();
+        public static List<Course> Courses = new List<Course>();
         public List<CourseAssign> CourseAssigns = new List<CourseAssign>();
         public List<CourseGroupItem> CourseGroupItems = new List<CourseGroupItem>();
         public List<Department> Departments = new List<Department>();
@@ -37,15 +37,24 @@ namespace WindowsFormsApp
         public List<RoomSemester> roomSemester = new List<RoomSemester>();
 
         public List<Schedule> schedule = new List<Schedule>();
-        public List<CourseAssign> SelectedscheduleItem = new List<CourseAssign>();
+        public static List<CourseAssign> SelectedscheduleItem = new List<CourseAssign>();
 
-        public List<ScheduleShow> scheduleShows = new List<ScheduleShow>();
+        public static List<ScheduleShow> scheduleShows = new List<ScheduleShow>();
         public int ScheduleOrder = 1;
 
-        public ProgressDialog progressDialog = new ProgressDialog();
+        public ProgressDialog progressDialog;
         public WaitingDialog waitingDialog = new WaitingDialog();
-        
-        public SchedulerForm()
+        public RunIfnoForm runInfoDialog = new RunIfnoForm();
+        public static string scheduleNameRun ;
+        public static string scheduleDescriptionRun;
+        public static Boolean scheduleTypeRun ;
+        public LoginForm loginForm;
+
+        public Thread thr;
+
+        //public LoginForm loginForm1;
+
+        public SchedulerForm(LoginForm loginForm, Lecturer user)
         {
             //Xuat file Excel
             //List<CourseAssign> courseAssignsTemp = LecturerScheduler.Run();
@@ -53,6 +62,8 @@ namespace WindowsFormsApp
             //btnExport_Click("C:/Users/84393/Desktop/Capstone/WindowsFormsApp/WindowsFormsApp/bin/Debug/CourseAssignTemp.xlsx", courseAssignsTemp);
 
             InitializeComponent();
+
+            this.loginForm = loginForm;
 
             string semestersJson = new WebClient().DownloadString("http://20.214.249.72/api/Semester?pageIndex=1&pageSize=100");
             Semesters = JsonConvert.DeserializeObject<List<Semester>>(semestersJson);
@@ -64,10 +75,16 @@ namespace WindowsFormsApp
             lecturerCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
             outputSubjectCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
             outputLecturerCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
-
+            listBox1.Hide();
+            label27.Hide();
+            panel3.Hide();
 
             outputLecturerDataGridView.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
+            //loginForm1 = new LoginForm(this);
+            //loginForm1.Show();
+            //this.Hide();
+            //loginForm.Close();
         }
 
 
@@ -200,12 +217,13 @@ namespace WindowsFormsApp
                                    let count = gr.Count()
                                    select count;
 
-                slotTypeDataGridView.Rows[i].Cells[0].Value = SlotTypes.ElementAtOrDefault(i).SlotNumber;
-                slotTypeDataGridView.Rows[i].Cells[1].Value = SlotTypes.ElementAtOrDefault(i).TimeStart;
-                slotTypeDataGridView.Rows[i].Cells[2].Value = SlotTypes.ElementAtOrDefault(i).TimeEnd;
-                slotTypeDataGridView.Rows[i].Cells[3].Value = SlotTypes.ElementAtOrDefault(i).DateOfWeek;
-                slotTypeDataGridView.Rows[i].Cells[4].Value = roomSemester.ElementAtOrDefault(0).Quantity;
-                slotTypeDataGridView.Rows[i].Cells[5].Value = assignAmount.ElementAtOrDefault(0);
+                slotTypeDataGridView.Rows[i].Cells[0].Value = SlotTypes.ElementAtOrDefault(i).SlotTypeCode;
+                slotTypeDataGridView.Rows[i].Cells[1].Value = SlotTypes.ElementAtOrDefault(i).SlotNumber;
+                slotTypeDataGridView.Rows[i].Cells[2].Value = SlotTypes.ElementAtOrDefault(i).TimeStart;
+                slotTypeDataGridView.Rows[i].Cells[3].Value = SlotTypes.ElementAtOrDefault(i).TimeEnd;
+                slotTypeDataGridView.Rows[i].Cells[4].Value = SlotTypes.ElementAtOrDefault(i).DateOfWeek;
+                slotTypeDataGridView.Rows[i].Cells[5].Value = roomSemester.ElementAtOrDefault(0).Quantity;
+                slotTypeDataGridView.Rows[i].Cells[6].Value = assignAmount.ElementAtOrDefault(0);
             }
 
             //load from, to label
@@ -229,73 +247,93 @@ namespace WindowsFormsApp
             }
             else
             {
-                progressDialog.Show();
-                progressDialog.progressBar1.PerformLayout();
-                //show dialog loading chay thuat toan
+                runInfoDialog = new RunIfnoForm();
+                runInfoDialog.textBox1.Text = "Schedule " + ScheduleOrder;
+                scheduleDescriptionRun = "- Coefficient value of priority course: " + (priorityCourseTrackBar.Value + 1) +"\n"+
+                    "- Coefficient value of Department's rating: " + (departmentRatingTrackBar.Value + 1) + "\n" +
+                    "- Coefficient value of Lecturer's favorite subject: " + (favoriteSubjectTrackBar.Value + 1) + "\n" +
+                    "- Coefficient value of Lecturer's favorite slot: " + (favoriteSlotTrackBar.Value + 1);
 
-                Thread thr = new Thread(new ThreadStart(XepLich));
-                thr.IsBackground = true;
-                thr.Start();
+                              
+                           
+                // he so low level
+                //foreach (RadioButton radio in lowPanel.Controls)
+                //{
+                //    if (radio != null)
+                //    {
+                //        if (radio.Checked)
+                //        {
+                //            runInfoDialog.textBox2.Text = runInfoDialog.textBox2.Text + radio.Text + ": Low";
+                //            break;
+                //        }
+                //    }
+                //}
+                            
+                runInfoDialog.ShowDialog();
+
+                if (scheduleTypeRun == false)
+                {
+
+                }
+                else
+                {
+
+                    thr = new Thread(new ThreadStart(XepLich));
+                    thr.IsBackground = true;
+                    thr.Start();
+
+
+                    //show dialog loading chay thuat toan
+
+                    progressDialog = new ProgressDialog(thr);
+                    progressDialog.Show();
+                    progressDialog.progressBar1.PerformLayout();
+
+                    
+                    
+                }
+
             }
-                                  
+            scheduleTypeRun = false;
+
+
         }
        
         void XepLich()
         {
-            string description="";
+            
+           
             Stopwatch stopWatch = new Stopwatch();
             stopWatch.Start();
 
-            // he so priority course
-            if (priorityCourseTrackBar.Value == 0)
-            {
-                LecturerScheduler.HESO_PRIORITYCOURSE = 1;
-                description = description + "Priority course level: Low,";
-            }
-            else if (priorityCourseTrackBar.Value == 1)
-            {
-                LecturerScheduler.HESO_PRIORITYCOURSE = 36;
-                description = description + "Priority course level: Medium,";
-            }
-            else if (priorityCourseTrackBar.Value == 2)
-            {
-                LecturerScheduler.HESO_PRIORITYCOURSE = 215;
-                description = description + "Priority course level: High,";
-            }
+            LecturerScheduler.HESO_PRIORITYCOURSE = (priorityCourseTrackBar.Value + 1); 
+            LecturerScheduler.HESO_FEEDBACKPOINT = (departmentRatingTrackBar.Value + 1);
+            LecturerScheduler.HESO_FAVORITEPOINTSUBJECT = (favoriteSubjectTrackBar.Value + 1);
+            LecturerScheduler.HESO_FAVORITEPOINTSLOT = (favoriteSlotTrackBar.Value + 1);
 
-            // he so feedback
-            if (feedbackTrackBar.Value == 0)
-            {
-                LecturerScheduler.HESO_FEEDBACKPOINT = 1;
-                description = description + " Feedback of department level: Low,";
-            }
-            else if (feedbackTrackBar.Value == 1)
-            {
-                LecturerScheduler.HESO_FEEDBACKPOINT = 36;
-                description = description + " Feedback of department level: Medium,";
-            }
-            else if (feedbackTrackBar.Value == 2)
-            {
-                LecturerScheduler.HESO_FEEDBACKPOINT = 215;
-                description = description + " Feedback of department level: High,";
-            }
-
-            // he so favorite
-            if (favoriteTrackBar.Value == 0)
-            {
-                LecturerScheduler.HESO_FAVORITEPOINT = 1;
-                description = description + " Favorite of lecturer level: Low";
-            }
-            else if (favoriteTrackBar.Value == 1)
-            {
-                LecturerScheduler.HESO_FAVORITEPOINT = 36;
-                description = description + " Favorite of lecturer level: Medium";
-            }
-            else if (favoriteTrackBar.Value == 2)
-            {
-                LecturerScheduler.HESO_FAVORITEPOINT = 215;
-                description = description + " Favorite of lecturer level: High";
-            }
+            // he so low level
+            //foreach (RadioButton radio in lowPanel.Controls)
+            //{
+            //    if (radio != null)
+            //    {
+            //        if (radio.Checked)
+            //        {
+            //            if (radio.Text == "Priority course level")
+            //            {
+            //                LecturerScheduler.HESO_PRIORITYCOURSE = 1;
+            //            }
+            //            else if (radio.Text == "Department's rating level")
+            //            {
+            //                LecturerScheduler.HESO_FEEDBACKPOINT = 1;
+            //            }
+            //            else if (radio.Text == "Favorite of lecturer level")
+            //            {
+            //                LecturerScheduler.HESO_FAVORITEPOINT = 1;
+            //            }                    
+            //            break;
+            //        }
+            //    }
+            //}
 
 
             LecturerScheduler.Courses = Courses;
@@ -322,14 +360,13 @@ namespace WindowsFormsApp
 
             LecturerScheduler.MaxCourseSlot = roomSemester.ElementAtOrDefault(0).Quantity;
 
+            SelectedscheduleItem.Clear();
             SelectedscheduleItem = LecturerScheduler.Run();
             SelectedscheduleItem = SelectedscheduleItem.OrderBy(scheduler => scheduler.LecturerID).ThenBy(scheduler => scheduler.SlotTypeID).ToList();
             btnExport_Click(@"C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\" + "CourseAssignTemp.xlsx", SelectedscheduleItem);
 
-            progressDialog.Invoke(new MethodInvoker(() => {
-                 progressDialog.Hide();
-            }));
-
+            
+                    
             tabControl1.Invoke(new MethodInvoker(() => {
                 tabControl1.SelectTab(1);
             }));
@@ -468,12 +505,13 @@ namespace WindowsFormsApp
                                        let count = gr.Count()
                                        select count;
 
-                    outputSlotTypeDataGridView.Rows[i].Cells[0].Value = SlotTypes.ElementAtOrDefault(i).SlotNumber;
-                    outputSlotTypeDataGridView.Rows[i].Cells[1].Value = SlotTypes.ElementAtOrDefault(i).TimeStart;
-                    outputSlotTypeDataGridView.Rows[i].Cells[2].Value = SlotTypes.ElementAtOrDefault(i).TimeEnd;
-                    outputSlotTypeDataGridView.Rows[i].Cells[3].Value = SlotTypes.ElementAtOrDefault(i).DateOfWeek;
-                    outputSlotTypeDataGridView.Rows[i].Cells[4].Value = roomSemester.ElementAtOrDefault(0).Quantity;
-                    outputSlotTypeDataGridView.Rows[i].Cells[5].Value = assignAmount.ElementAtOrDefault(0);
+                    outputSlotTypeDataGridView.Rows[i].Cells[0].Value = SlotTypes.ElementAtOrDefault(i).SlotTypeCode;
+                    outputSlotTypeDataGridView.Rows[i].Cells[1].Value = SlotTypes.ElementAtOrDefault(i).SlotNumber;
+                    outputSlotTypeDataGridView.Rows[i].Cells[2].Value = SlotTypes.ElementAtOrDefault(i).TimeStart;
+                    outputSlotTypeDataGridView.Rows[i].Cells[3].Value = SlotTypes.ElementAtOrDefault(i).TimeEnd;
+                    outputSlotTypeDataGridView.Rows[i].Cells[4].Value = SlotTypes.ElementAtOrDefault(i).DateOfWeek;
+                    outputSlotTypeDataGridView.Rows[i].Cells[5].Value = roomSemester.ElementAtOrDefault(0).Quantity;
+                    outputSlotTypeDataGridView.Rows[i].Cells[6].Value = assignAmount.ElementAtOrDefault(0);
                 }
             }));
 
@@ -483,31 +521,132 @@ namespace WindowsFormsApp
                 ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10);
 
             //add schedule vao list schedule show
-            scheduleListView.Invoke(new MethodInvoker(() =>
+            //scheduleListView.Invoke(new MethodInvoker(() =>
+            //{
+            //    Schedule temp = new Schedule();
+
+            //    temp.Id = "Schedule " + ScheduleOrder++;
+            //    temp.decription = description;
+
+            //    DateTime now = DateTime.Now;
+            //    temp.createTime = now;
+            //    temp.SemesterId = ((Semester)semesterCombobox.SelectedItem).ID;
+            //    temp.Status = 1;
+            //    List<CourseAssign> scheduleItem = new List<CourseAssign>();
+            //    foreach (var item1 in SelectedscheduleItem)
+            //    {
+            //        scheduleItem.Add(item1);
+            //    }
+            //    ScheduleShow newSchedule = new ScheduleShow(temp, scheduleItem, elapsedTime);
+            //    scheduleShows.Add(newSchedule);
+
+            //    ListViewItem item = new ListViewItem();
+            //    item.Text = temp.Id;
+            //    item.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = temp.createTime.ToString() });
+
+
+            //    scheduleListView.Items.Add(item);
+            //    scheduleListView.Items[scheduleListView.Items.Count-1].Selected = true;
+
+            //    scheduleNOLabel.Invoke(new MethodInvoker(() =>
+            //    {
+            //        scheduleNOLabel.Text = temp.Id;
+            //    }));
+
+            //    createTimeLabel.Invoke(new MethodInvoker(() =>
+            //    {
+            //        createTimeLabel.Text = temp.createTime.ToString();
+            //    }));
+
+            //    descriptionTextBox.Invoke(new MethodInvoker(() =>
+            //    {
+            //        descriptionTextBox.Text = temp.decription;
+            //    }));
+
+            //    totalCourseLabel.Invoke(new MethodInvoker(() =>
+            //    {
+            //        totalCourseLabel.Text = SelectedscheduleItem.Count() + "";
+            //    }));
+            //    runTimeLabel.Invoke(new MethodInvoker(() =>
+            //    {
+            //        runTimeLabel.Text = elapsedTime + "";
+            //    }));
+
+
+            //    scheduleNOLabel1.Invoke(new MethodInvoker(() =>
+            //    {
+            //        scheduleNOLabel1.Text = "Schedule number: " + temp.Id;
+            //    }));
+
+            //    scheduleNOLabel2.Invoke(new MethodInvoker(() =>
+            //    {
+            //        scheduleNOLabel2.Text = "Schedule number: " + temp.Id;
+            //    }));
+
+            //    scheduleNOLabel3.Invoke(new MethodInvoker(() =>
+            //    {
+            //        scheduleNOLabel3.Text = "Schedule number: " + temp.Id;
+            //    }));
+
+            //    scheduleNOLabel4.Invoke(new MethodInvoker(() =>
+            //    {
+            //        scheduleNOLabel4.Text = "Schedule number: " + temp.Id;
+            //    }));
+
+
+
+            //}));
+
+
+            listBox1.Invoke(new MethodInvoker(() =>
             {
+                label27.Show();
+                listBox1.Show();
+                panel3.Show();
                 Schedule temp = new Schedule();
 
-                temp.Id = "Schedule " + ScheduleOrder++;
-                temp.decription = description;
+                temp.Id = scheduleNameRun;
+                ScheduleOrder++;
+                temp.decription = scheduleDescriptionRun;
 
                 DateTime now = DateTime.Now;
                 temp.createTime = now;
                 temp.SemesterId = ((Semester)semesterCombobox.SelectedItem).ID;
                 temp.Status = 1;
                 List<CourseAssign> scheduleItem = new List<CourseAssign>();
-                foreach (var item1 in SelectedscheduleItem)
+
+                //foreach (var item1 in SelectedscheduleItem)
+                //{
+                //    scheduleItem.Add(item1);
+                //}
+
+                for (int i = 0; i < SelectedscheduleItem.Count; i++)
                 {
-                    scheduleItem.Add(item1);
+                    scheduleItem.Add(SelectedscheduleItem[i]);
                 }
-                ScheduleShow newSchedule = new ScheduleShow(temp, scheduleItem, elapsedTime);
+
+                ////////////////////////// them vao list schedule luu tren winform
+                ScheduleShow newSchedule = new ScheduleShow(temp, scheduleItem, elapsedTime, ((priorityCourseTrackBar.Value + 1) + (departmentRatingTrackBar.Value + 1) + (favoriteSubjectTrackBar.Value + 1)) + ((favoriteSlotTrackBar.Value + 1) * (4 / 12)), 0);
+
+                double point = 0;
+                foreach (var item in scheduleItem)
+                {
+                    point = point + item.point;
+                }
+                double pointPerRow = point / scheduleItem.Count();
+                newSchedule.totalAveragePoint = Math.Round((pointPerRow * 10) / (newSchedule.pointPerRowMax), 2);
+
                 scheduleShows.Add(newSchedule);
 
-                ListViewItem item = new ListViewItem();
-                item.Text = temp.Id;
-                item.SubItems.Add(new ListViewItem.ListViewSubItem() { Text = temp.createTime.ToString() });
+                ///////////////////////////
 
-                scheduleListView.Items.Add(item);
-                scheduleListView.Items[scheduleListView.Items.Count-1].Selected = true;
+
+
+                listBox1.Items.Add(temp.Id);
+                listBox1.SelectedIndex = listBox1.Items.Count - 1;
+
+
+
 
                 scheduleNOLabel.Invoke(new MethodInvoker(() =>
                 {
@@ -519,14 +658,16 @@ namespace WindowsFormsApp
                     createTimeLabel.Text = temp.createTime.ToString();
                 }));
 
-                descriptionTextBox.Invoke(new MethodInvoker(() =>
+
+
+                configDescriptionLabel.Invoke(new MethodInvoker(() =>
                 {
-                    descriptionTextBox.Text = temp.decription;
+                    configDescriptionLabel.Text = temp.decription;
                 }));
 
                 totalCourseLabel.Invoke(new MethodInvoker(() =>
                 {
-                    totalCourseLabel.Text = SelectedscheduleItem.Count() + "";
+                    totalCourseLabel.Text = scheduleItem.Count() + "";
                 }));
                 runTimeLabel.Invoke(new MethodInvoker(() =>
                 {
@@ -534,100 +675,40 @@ namespace WindowsFormsApp
                 }));
 
 
+                schedulePointLabel.Invoke(new MethodInvoker(() =>
+                {
+
+                    schedulePointLabel.Text = newSchedule.totalAveragePoint + " / 10";
+                }));
+
+
                 scheduleNOLabel1.Invoke(new MethodInvoker(() =>
                 {
-                    scheduleNOLabel1.Text = "Schedule number: " + temp.Id;
+                    scheduleNOLabel1.Text = "Schedule: " + temp.Id;
                 }));
 
                 scheduleNOLabel2.Invoke(new MethodInvoker(() =>
                 {
-                    scheduleNOLabel2.Text = "Schedule number: " + temp.Id;
+                    scheduleNOLabel2.Text = "Schedule: " + temp.Id;
                 }));
 
                 scheduleNOLabel3.Invoke(new MethodInvoker(() =>
                 {
-                    scheduleNOLabel3.Text = "Schedule number: " + temp.Id;
+                    scheduleNOLabel3.Text = "Schedule: " + temp.Id;
                 }));
 
                 scheduleNOLabel4.Invoke(new MethodInvoker(() =>
                 {
-                    scheduleNOLabel4.Text = "Schedule number: " + temp.Id;
+                    scheduleNOLabel4.Text = "Schedule: " + temp.Id;
                 }));
 
-     
-
             }));
+
+
+
+            progressDialog.Hide();
+
         }
-
-        //load du lieu voi semester truyen vao
-        async Task loadDataAsync(Semester semester)
-        {
-            string semesterId = semester.ID;
-            string filePath = @"C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\";
-            //Courses = CourseDAO.ReadDataJsonCourse(filePath + "Course.json");
-            //Lecturers = LecturerDAO.ReadDataJsonLecturer(filePath + "Lecturer.json");
-            //Departments = DepartmentDAO.ReadDataJsonDepartment(filePath + "Department.json");
-            //SlotTypes = SlotTypeDAO.ReadDataJsonSlotType(filePath + "SlotType.json");
-            //Subjects = SubjectDAO.ReadDataJsonSubject(filePath + "Subject.json");
-            //LecturerSlotConfigs = LecturerSlotConfigDAO.ReadDataJsonLecturerSlotConfig(filePath + "LecturerSlotConfig.json");
-            //SubjectOfLecturers = SubjectOfLecturerDAO.ReadDataJsonSubjectOfLecturer(filePath + "SubjectOfLecturer.json");
-            //LecturerCourseGroups = LecturerCourseGroupDAO.ReadDataJsonLecturerCourseGroup(filePath + "LecturerCourseGroup.json");
-            //CourseGroupItems = CourseGroupItemDAO.ReadDataJsonCourseGroupItem(filePath + "CourseGroupItem.json");
-            //CourseAssigns = CourseAssignDAO.ReadDataJsonCourseAssign(filePath + "CourseAssign.json");
-
-            //string coursesJson = new WebClient().DownloadString("http://20.214.249.72/api/Course?SemesterId="+ semesterId + "&Status=1&pageIndex=1&pageSize=10000");
-            //Courses = JsonConvert.DeserializeObject<List<Course>>(coursesJson);
-            Courses = await CourseDAO.GetCourseAsync(semesterId);
-
-            //string lecturersJson = new WebClient().DownloadString("http://20.214.249.72/api/User?RoleIDs=LC&Status=1&pageIndex=1&pageSize=10000");
-            //Lecturers = JsonConvert.DeserializeObject<List<Lecturer>>(lecturersJson);
-            Lecturers = await LecturerDAO.GetLecturerAsync();
-
-            string departmentsJson = new WebClient().DownloadString("http://20.214.249.72/api/Department?Status=1&pageIndex=1&pageSize=10000");
-            Departments = JsonConvert.DeserializeObject<List<Department>>(departmentsJson);
-
-            string slotTypesJson = new WebClient().DownloadString("http://20.214.249.72/api/SlotType?SemesterId=" + semesterId + "&Status=1&pageIndex=1&pageSize=1000");
-            SlotTypes = JsonConvert.DeserializeObject<List<SlotType>>(slotTypesJson);
-
-            string subjectsJson = new WebClient().DownloadString("http://20.214.249.72/api/Subject?Status=1&pageIndex=1&pageSize=10000");
-            Subjects = JsonConvert.DeserializeObject<List<Subject>>(subjectsJson);
-
-            string lecturerSlotConfigsJson = new WebClient().DownloadString("http://20.214.249.72/api/LecturerSlotConfig?SemesterId=" + semesterId + "&pageIndex=1&pageSize=10000");
-            LecturerSlotConfigs = JsonConvert.DeserializeObject<List<LecturerSlotConfig>>(lecturerSlotConfigsJson);
-
-            string subjectOfLecturersJson = new WebClient().DownloadString("http://20.214.249.72/api/SubjectOfLecturer?SemesterId=" + semesterId + "&pageIndex=1&pageSize=10000");
-            SubjectOfLecturers = JsonConvert.DeserializeObject<List<SubjectOfLecturer>>(subjectOfLecturersJson);
-
-            string lecturerCourseGroupsJson = new WebClient().DownloadString("http://20.214.249.72/api/LecturerCourseGroup?SemesterId=" + semesterId + "&pageIndex=1&pageSize=10000");
-            LecturerCourseGroups = JsonConvert.DeserializeObject<List<LecturerCourseGroup>>(lecturerCourseGroupsJson);
-
-            string courseGroupItemsJson = new WebClient().DownloadString("http://20.214.249.72/api/CourseGroupItem?Status=1&pageIndex=1&pageSize=100000");
-            CourseGroupItems = JsonConvert.DeserializeObject<List<CourseGroupItem>>(courseGroupItemsJson);
-
-            string roomSemesterItemsJson = new WebClient().DownloadString("http://20.214.249.72/api/RoomSemester?RoomTypeId=R1&pageIndex=1&pageSize=10");
-            roomSemester = JsonConvert.DeserializeObject<List<RoomSemester>>(roomSemesterItemsJson);
-
-            string scheduleJson = new WebClient().DownloadString("http://20.214.249.72/api/Schedule?SemesterId="+ semesterId + "&pageIndex=1&pageSize=100");
-            schedule = JsonConvert.DeserializeObject<List<Schedule>>(scheduleJson);
-
-            string CourseAssignsJson = new WebClient().DownloadString("http://20.214.249.72/api/CourseAssign?isAssign=1&pageIndex=1&pageSize=100000");
-            List<CourseAssign> AllCourseAssigns = JsonConvert.DeserializeObject<List<CourseAssign>>(CourseAssignsJson);
-            var temp = from courseAssign in AllCourseAssigns
-                       join course in Courses on courseAssign.CourseID equals course.ID
-                       where course.SemesterID == semesterId
-                       select courseAssign;
-            CourseAssigns.Clear();
-            foreach (var item in temp)
-            {
-                CourseAssigns.Add(item);
-            }
-
-
-            Subjects = Subjects.OrderBy(subject => subject.DepartmentID).ThenBy(subject => subject.ID).ToList();
-            Lecturers = Lecturers.OrderBy(lecturer => lecturer.DepartmentID).ThenBy(lecturer => lecturer.ID).ToList();
-            SlotTypes = SlotTypes.OrderBy(slot => slot.DateOfWeek).ThenBy(slot => slot.SlotNumber).ToList();
-        }
-
         public static void btnExport_Click(string filePath, List<CourseAssign> listCourseAssign)
         {
             // tạo SaveFileDialog để lưu file excel
@@ -699,7 +780,6 @@ namespace WindowsFormsApp
                         ws.Cells[rowIndex, colIndex++].Value = item.CourseID;
                         ws.Cells[rowIndex, colIndex++].Value = item.SlotTypeID;
 
-                        // lưu ý phải .ToShortDateString để dữ liệu khi in ra Excel là ngày như ta vẫn thấy.Nếu không sẽ ra tổng số :v
                         //ws.Cells[rowIndex, colIndex++].Value = item.Birthday.ToShortDateString();
 
                     }
@@ -716,11 +796,78 @@ namespace WindowsFormsApp
             }
         }
 
-
-        private void SchedulerForm_Shown(object sender, EventArgs e)
+        //load du lieu voi semester truyen vao
+        async Task loadDataAsync(Semester semester)
         {
-            
+            string semesterId = semester.ID;
+            string filePath = @"C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\";
+            //Courses = CourseDAO.ReadDataJsonCourse(filePath + "Course.json");
+            //Lecturers = LecturerDAO.ReadDataJsonLecturer(filePath + "Lecturer.json");
+            //Departments = DepartmentDAO.ReadDataJsonDepartment(filePath + "Department.json");
+            //SlotTypes = SlotTypeDAO.ReadDataJsonSlotType(filePath + "SlotType.json");
+            //Subjects = SubjectDAO.ReadDataJsonSubject(filePath + "Subject.json");
+            //LecturerSlotConfigs = LecturerSlotConfigDAO.ReadDataJsonLecturerSlotConfig(filePath + "LecturerSlotConfig.json");
+            //SubjectOfLecturers = SubjectOfLecturerDAO.ReadDataJsonSubjectOfLecturer(filePath + "SubjectOfLecturer.json");
+            //LecturerCourseGroups = LecturerCourseGroupDAO.ReadDataJsonLecturerCourseGroup(filePath + "LecturerCourseGroup.json");
+            //CourseGroupItems = CourseGroupItemDAO.ReadDataJsonCourseGroupItem(filePath + "CourseGroupItem.json");
+            //CourseAssigns = CourseAssignDAO.ReadDataJsonCourseAssign(filePath + "CourseAssign.json");
+
+            //string coursesJson = new WebClient().DownloadString("http://20.214.249.72/api/Course?SemesterId="+ semesterId + "&Status=1&pageIndex=1&pageSize=10000");
+            //Courses = JsonConvert.DeserializeObject<List<Course>>(coursesJson);
+            Courses = await CourseDAO.GetCourseAsync(semesterId);
+
+            //string lecturersJson = new WebClient().DownloadString("http://20.214.249.72/api/User?RoleIDs=LC&Status=1&pageIndex=1&pageSize=10000");
+            //Lecturers = JsonConvert.DeserializeObject<List<Lecturer>>(lecturersJson);
+            Lecturers = await LecturerDAO.GetLecturerAsync();
+
+            string departmentsJson = new WebClient().DownloadString("http://20.214.249.72/api/Department?Status=1&pageIndex=1&pageSize=10000");
+            Departments = JsonConvert.DeserializeObject<List<Department>>(departmentsJson);
+
+            string slotTypesJson = new WebClient().DownloadString("http://20.214.249.72/api/SlotType?SemesterId=" + semesterId + "&Status=1&pageIndex=1&pageSize=1000");
+            SlotTypes = JsonConvert.DeserializeObject<List<SlotType>>(slotTypesJson);
+
+            string subjectsJson = new WebClient().DownloadString("http://20.214.249.72/api/Subject?Status=1&pageIndex=1&pageSize=10000");
+            Subjects = JsonConvert.DeserializeObject<List<Subject>>(subjectsJson);
+
+            string lecturerSlotConfigsJson = new WebClient().DownloadString("http://20.214.249.72/api/LecturerSlotConfig?SemesterId=" + semesterId + "&pageIndex=1&pageSize=10000");
+            LecturerSlotConfigs = JsonConvert.DeserializeObject<List<LecturerSlotConfig>>(lecturerSlotConfigsJson);
+
+            string subjectOfLecturersJson = new WebClient().DownloadString("http://20.214.249.72/api/SubjectOfLecturer?SemesterId=" + semesterId + "&pageIndex=1&pageSize=10000");
+            SubjectOfLecturers = JsonConvert.DeserializeObject<List<SubjectOfLecturer>>(subjectOfLecturersJson);
+
+            string lecturerCourseGroupsJson = new WebClient().DownloadString("http://20.214.249.72/api/LecturerCourseGroup?SemesterId=" + semesterId + "&pageIndex=1&pageSize=10000");
+            LecturerCourseGroups = JsonConvert.DeserializeObject<List<LecturerCourseGroup>>(lecturerCourseGroupsJson);
+
+            string courseGroupItemsJson = new WebClient().DownloadString("http://20.214.249.72/api/CourseGroupItem?Status=1&pageIndex=1&pageSize=100000");
+            CourseGroupItems = JsonConvert.DeserializeObject<List<CourseGroupItem>>(courseGroupItemsJson);
+
+            string roomSemesterItemsJson = new WebClient().DownloadString("http://20.214.249.72/api/RoomSemester?RoomTypeId=R1&pageIndex=1&pageSize=10");
+            roomSemester = JsonConvert.DeserializeObject<List<RoomSemester>>(roomSemesterItemsJson);
+
+            string scheduleJson = new WebClient().DownloadString("http://20.214.249.72/api/Schedule?SemesterId="+ semesterId + "&pageIndex=1&pageSize=100");
+            schedule = JsonConvert.DeserializeObject<List<Schedule>>(scheduleJson);
+
+            string CourseAssignsJson = new WebClient().DownloadString("http://20.214.249.72/api/CourseAssign?isAssign=1&pageIndex=1&pageSize=100000");
+            List<CourseAssign> AllCourseAssigns = JsonConvert.DeserializeObject<List<CourseAssign>>(CourseAssignsJson);
+            var temp = from courseAssign in AllCourseAssigns
+                       join course in Courses on courseAssign.CourseID equals course.ID
+                       where course.SemesterID == semesterId
+                       select courseAssign;
+            CourseAssigns.Clear();
+            foreach (var item in temp)
+            {
+                CourseAssigns.Add(item);
+            }
+
+
+            Subjects = Subjects.OrderBy(subject => subject.DepartmentID).ThenBy(subject => subject.ID).ToList();
+            Lecturers = Lecturers.OrderBy(lecturer => lecturer.DepartmentID).ThenBy(lecturer => lecturer.ID).ToList();
+            SlotTypes = SlotTypes.OrderBy(slot => slot.DateOfWeek).ThenBy(slot => slot.SlotNumber).ToList();
         }
+
+        
+
+
 
         private async void button1_Click_1(object sender, EventArgs e)
         {
@@ -761,16 +908,16 @@ namespace WindowsFormsApp
 
         async void SendDataToSeverAsync()
         {
+            List<CourseAssign> temp = new List<CourseAssign>();
             foreach (var item in SelectedscheduleItem)
             {
                 if (item.isAssign == 0)
                 {
                     item.ScheduleId = schedule.ElementAtOrDefault(0).Id;
-                    await CourseAssignDAO.CreateCourseAssignAsync(item);
-                    //course.Description = "string";
-
+                    temp.Add(item);
                 }
             }
+            await CourseAssignDAO.CreateListCourseAssignAsync(schedule.ElementAtOrDefault(0).Id, temp);
             waitingDialog.Invoke(new MethodInvoker(() => {
                 waitingDialog.Hide();
             }));
@@ -906,96 +1053,22 @@ namespace WindowsFormsApp
             }
         }
 
-        private void priorityCourseTrackBar_Scroll(object sender, EventArgs e)
-        {
-            if (priorityCourseTrackBar.Value==0)
-            {
-                priorityCourseLabel.Text = "Low";
-            }
-            else if (priorityCourseTrackBar.Value == 1)
-            {
-                priorityCourseLabel.Text = "Medium";
-            }
-            else if (priorityCourseTrackBar.Value == 2)
-            {
-                priorityCourseLabel.Text = "High";
-            }
+        
 
-            if(priorityCourseTrackBar.Value == feedbackTrackBar.Value || priorityCourseTrackBar.Value == favoriteTrackBar.Value || feedbackTrackBar.Value == favoriteTrackBar.Value)
-            {
-                runButton.Enabled = false;
-                warningLabel.Text = "Warning: The coefficients of the input parameters cannot be equal !";
-            }
-            else
-            {
-                runButton.Enabled = true;
-                warningLabel.Text = "";
-            }
-        }
+        
 
-        private void feedbackTrackBar_Scroll(object sender, EventArgs e)
-        {
-            if (feedbackTrackBar.Value == 0)
-            {
-                feedbackLabel.Text = "Low";
-            }
-            else if (feedbackTrackBar.Value == 1)
-            {
-                feedbackLabel.Text = "Medium";
-            }
-            else if (feedbackTrackBar.Value == 2)
-            {
-                feedbackLabel.Text = "High";
-            }
-
-            if (priorityCourseTrackBar.Value == feedbackTrackBar.Value || priorityCourseTrackBar.Value == favoriteTrackBar.Value || feedbackTrackBar.Value == favoriteTrackBar.Value)
-            {
-                runButton.Enabled = false;
-                warningLabel.Text = "Warning: The coefficients of the input parameters cannot be equal !";
-            }
-            else
-            {
-                runButton.Enabled = true;
-                warningLabel.Text = "";
-            }
-        }
-
-        private void favoriteTrackBar_Scroll(object sender, EventArgs e)
-        {
-            if (favoriteTrackBar.Value == 0)
-            {
-                favoriteLabel.Text = "Low";
-            }
-            else if (favoriteTrackBar.Value == 1)
-            {
-                favoriteLabel.Text = "Medium";
-            }
-            else if (favoriteTrackBar.Value == 2)
-            {
-                favoriteLabel.Text = "High";
-            }
-
-            if (priorityCourseTrackBar.Value == feedbackTrackBar.Value || priorityCourseTrackBar.Value == favoriteTrackBar.Value || feedbackTrackBar.Value == favoriteTrackBar.Value)
-            {
-                runButton.Enabled = false;
-                warningLabel.Text = "Warning: The coefficients of the input parameters cannot be equal !";
-            }
-            else
-            {
-                runButton.Enabled = true;
-                warningLabel.Text = "";
-            }
-        }
+       
 
         private void outputLecturerDataGridView_CellClick(object sender, DataGridViewCellEventArgs e)
         {
+            int index = listBox1.SelectedIndex;
             if (outputLecturerDataGridView.RowCount > 1)
             {
                 Lecturer lecturerShow = Lecturers.Find(lec => lec.ID == outputLecturerDataGridView.Rows[e.RowIndex].Cells[0].Value);
 
                 List<CourseAssign> scheduleItemShow = SelectedscheduleItem;
                 List<SlotType> slotTypesShow = SlotTypes;
-                ScheduleDetailDialog scheduleDetailDialog = new ScheduleDetailDialog((Semester)semesterCombobox.SelectedItem, lecturerShow, scheduleItemShow, slotTypesShow);
+                ScheduleDetailDialog scheduleDetailDialog = new ScheduleDetailDialog((Semester)semesterCombobox.SelectedItem, lecturerShow, scheduleItemShow, slotTypesShow, scheduleShows[index]);
 
                 scheduleDetailDialog.ShowDialog();
                 //MessageBox.Show(outputLecturerDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value + "", "Message");
@@ -1004,24 +1077,114 @@ namespace WindowsFormsApp
         }
 
 
-        private void scheduleListView_MouseClick(object sender, MouseEventArgs e)
+        
+
+        //private void radioButton3_MouseClick(object sender, MouseEventArgs e)
+        //{
+        //    if (priorityCourseRadioButton.Checked == true)
+        //    {
+        //        radioButton4.Text = feedbackRadioButton.Text;
+        //        radioButton5.Text = favoriteRadioButton.Text;
+        //    }
+        //    else if (feedbackRadioButton.Checked == true)
+        //    {
+        //        radioButton4.Text = priorityCourseRadioButton.Text;
+        //        radioButton5.Text = favoriteRadioButton.Text;
+        //    }
+        //    else if (favoriteRadioButton.Checked == true)
+        //    {
+        //        radioButton4.Text = priorityCourseRadioButton.Text;
+        //        radioButton5.Text = feedbackRadioButton.Text;
+        //    }
+
+
+        //    if (radioButton4.Checked == true)
+        //    {
+        //        radioButton6.Text = radioButton5.Text;
+        //    }
+        //    else if (radioButton5.Checked == true)
+        //    {
+        //        radioButton6.Text = radioButton4.Text;
+        //    }
+
+
+           
+        //}
+
+        //private void radioButton5_MouseClick(object sender, MouseEventArgs e)
+        //{
+        //    if (radioButton4.Checked == true)
+        //    {
+        //        radioButton6.Text = radioButton5.Text;
+        //    }
+        //    else if (radioButton5.Checked == true)
+        //    {
+        //        radioButton6.Text = radioButton4.Text;
+        //    }
+        //}
+
+        private void scheduleComboBox_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            
+        }
+
+        private void priorityCourseTrackBar_Scroll(object sender, EventArgs e)
+        {
+            double total = (priorityCourseTrackBar.Value + 1) + (departmentRatingTrackBar.Value + 1) + (favoriteSubjectTrackBar.Value + 1) + (favoriteSlotTrackBar.Value + 1);
+            priorityCourseValueLabel.Text = "Coefficient value: " + (priorityCourseTrackBar.Value + 1) + "   (" + Math.Round((priorityCourseTrackBar.Value + 1) / total * 100, 2) + "%)";
+            departmentRatingValueLabel.Text = "Coefficient value: " + (departmentRatingTrackBar.Value + 1) + "   (" + Math.Round((departmentRatingTrackBar.Value + 1) / total * 100, 2) + "%)";
+            favoriteSubjectValueLabel.Text = "Coefficient value: " + (favoriteSubjectTrackBar.Value + 1) + "   (" + Math.Round((favoriteSubjectTrackBar.Value + 1) / total * 100, 2) + "%)";
+            favoriteSlotValueLabel.Text = "Coefficient value: " + (favoriteSlotTrackBar.Value + 1) + "   (" + Math.Round((favoriteSlotTrackBar.Value + 1) / total * 100, 2) + "%)";
+        }
+
+        private void departmentRatingTrackBar_Scroll(object sender, EventArgs e)
+        {
+            double total = (priorityCourseTrackBar.Value + 1) + (departmentRatingTrackBar.Value + 1) + (favoriteSubjectTrackBar.Value + 1) + (favoriteSlotTrackBar.Value + 1);
+            priorityCourseValueLabel.Text = "Coefficient value: " + (priorityCourseTrackBar.Value + 1) + "   (" + Math.Round((priorityCourseTrackBar.Value + 1) / total * 100, 2) + "%)";
+            departmentRatingValueLabel.Text = "Coefficient value: " + (departmentRatingTrackBar.Value + 1) + "   (" + Math.Round((departmentRatingTrackBar.Value + 1) / total * 100, 2) + "%)";
+            favoriteSubjectValueLabel.Text = "Coefficient value: " + (favoriteSubjectTrackBar.Value + 1) + "   (" + Math.Round((favoriteSubjectTrackBar.Value + 1) / total * 100, 2) + "%)";
+            favoriteSlotValueLabel.Text = "Coefficient value: " + (favoriteSlotTrackBar.Value + 1) + "   (" + Math.Round((favoriteSlotTrackBar.Value + 1) / total * 100, 2) + "%)";
+        }
+
+        private void favoriteTrackBar_Scroll(object sender, EventArgs e)
+        {
+            double total = (priorityCourseTrackBar.Value + 1) + (departmentRatingTrackBar.Value + 1) + (favoriteSubjectTrackBar.Value + 1) + (favoriteSlotTrackBar.Value + 1);
+            priorityCourseValueLabel.Text = "Coefficient value: " + (priorityCourseTrackBar.Value + 1) + "   (" + Math.Round((priorityCourseTrackBar.Value + 1) / total * 100, 2) + "%)";
+            departmentRatingValueLabel.Text = "Coefficient value: " + (departmentRatingTrackBar.Value + 1) + "   (" + Math.Round((departmentRatingTrackBar.Value + 1) / total * 100, 2) + "%)";
+            favoriteSubjectValueLabel.Text = "Coefficient value: " + (favoriteSubjectTrackBar.Value + 1) + "   (" + Math.Round((favoriteSubjectTrackBar.Value + 1) / total * 100, 2) + "%)";
+            favoriteSlotValueLabel.Text = "Coefficient value: " + (favoriteSlotTrackBar.Value + 1) + "   (" + Math.Round((favoriteSlotTrackBar.Value + 1) / total * 100, 2) + "%)";
+        }
+
+        private void favoriteSlotTrackBar_Scroll(object sender, EventArgs e)
+        {
+            double total = (priorityCourseTrackBar.Value + 1) + (departmentRatingTrackBar.Value + 1) + (favoriteSubjectTrackBar.Value + 1) + (favoriteSlotTrackBar.Value + 1);
+            priorityCourseValueLabel.Text = "Coefficient value: " + (priorityCourseTrackBar.Value + 1) + "   (" + Math.Round((priorityCourseTrackBar.Value + 1) / total * 100, 2) + "%)";
+            departmentRatingValueLabel.Text = "Coefficient value: " + (departmentRatingTrackBar.Value + 1) + "   (" + Math.Round((departmentRatingTrackBar.Value + 1) / total * 100, 2) + "%)";
+            favoriteSubjectValueLabel.Text = "Coefficient value: " + (favoriteSubjectTrackBar.Value + 1) + "   (" + Math.Round((favoriteSubjectTrackBar.Value + 1) / total * 100, 2) + "%)";
+            favoriteSlotValueLabel.Text = "Coefficient value: " + (favoriteSlotTrackBar.Value + 1) + "   (" + Math.Round((favoriteSlotTrackBar.Value + 1) / total * 100, 2) + "%)";
+        }
+
+        private void listBox1_SelectedIndexChanged(object sender, EventArgs e)
         {
             // load du lieu vao info panel
-            int index = scheduleListView.Items.IndexOf(scheduleListView.SelectedItems[0]);
+            int index = listBox1.SelectedIndex;
             scheduleNOLabel.Text = scheduleShows[index].Schedule.Id;
             createTimeLabel.Text = scheduleShows[index].Schedule.createTime.ToString();
-            descriptionTextBox.Text = scheduleShows[index].Schedule.decription;
-            totalCourseLabel.Text = scheduleShows[index].scheduleItem.Count()+"";
+            configDescriptionLabel.Text = scheduleShows[index].Schedule.decription;
+            totalCourseLabel.Text = scheduleShows[index].scheduleItem.Count() + "";
             runTimeLabel.Text = scheduleShows[index].runTime;
 
+            schedulePointLabel.Text = scheduleShows[index].totalAveragePoint + " / 10";
+
             // load du lieu vao cac gridview
-            scheduleNOLabel1.Text = "Schedule number: " + scheduleShows[index].Schedule.Id;
-            scheduleNOLabel2.Text = "Schedule number: " + scheduleShows[index].Schedule.Id;
-            scheduleNOLabel3.Text = "Schedule number: " + scheduleShows[index].Schedule.Id;
-            scheduleNOLabel4.Text = "Schedule number: " + scheduleShows[index].Schedule.Id;
-           
+            scheduleNOLabel1.Text = "Schedule: " + scheduleShows[index].Schedule.Id;
+            scheduleNOLabel2.Text = "Schedule: " + scheduleShows[index].Schedule.Id;
+            scheduleNOLabel3.Text = "Schedule: " + scheduleShows[index].Schedule.Id;
+            scheduleNOLabel4.Text = "Schedule: " + scheduleShows[index].Schedule.Id;
+
             //load data vao output department gridView
             SelectedscheduleItem.Clear();
+
             foreach (var item in scheduleShows[index].scheduleItem)
             {
                 SelectedscheduleItem.Add(item);
@@ -1150,17 +1313,20 @@ namespace WindowsFormsApp
                                    let count = gr.Count()
                                    select count;
 
-                outputSlotTypeDataGridView.Rows[i].Cells[0].Value = SlotTypes.ElementAtOrDefault(i).SlotNumber;
-                outputSlotTypeDataGridView.Rows[i].Cells[1].Value = SlotTypes.ElementAtOrDefault(i).TimeStart;
-                outputSlotTypeDataGridView.Rows[i].Cells[2].Value = SlotTypes.ElementAtOrDefault(i).TimeEnd;
-                outputSlotTypeDataGridView.Rows[i].Cells[3].Value = SlotTypes.ElementAtOrDefault(i).DateOfWeek;
-                outputSlotTypeDataGridView.Rows[i].Cells[4].Value = roomSemester.ElementAtOrDefault(0).Quantity;
-                outputSlotTypeDataGridView.Rows[i].Cells[5].Value = assignAmount.ElementAtOrDefault(0);
+                outputSlotTypeDataGridView.Rows[i].Cells[0].Value = SlotTypes.ElementAtOrDefault(i).SlotTypeCode;
+                outputSlotTypeDataGridView.Rows[i].Cells[1].Value = SlotTypes.ElementAtOrDefault(i).SlotNumber;
+                outputSlotTypeDataGridView.Rows[i].Cells[2].Value = SlotTypes.ElementAtOrDefault(i).TimeStart;
+                outputSlotTypeDataGridView.Rows[i].Cells[3].Value = SlotTypes.ElementAtOrDefault(i).TimeEnd;
+                outputSlotTypeDataGridView.Rows[i].Cells[4].Value = SlotTypes.ElementAtOrDefault(i).DateOfWeek;
+                outputSlotTypeDataGridView.Rows[i].Cells[5].Value = roomSemester.ElementAtOrDefault(0).Quantity;
+                outputSlotTypeDataGridView.Rows[i].Cells[6].Value = assignAmount.ElementAtOrDefault(0);
             }
-
         }
 
-
+        private void SchedulerForm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            loginForm.Close();
+        }
     }
 
     public class ScheduleShow
@@ -1168,16 +1334,21 @@ namespace WindowsFormsApp
         public Schedule Schedule;
         public List<CourseAssign> scheduleItem;
         public string runTime;
+        public double pointPerRowMax;
+        public double totalAveragePoint;
         public ScheduleShow()
         {
         }
 
-        public ScheduleShow(Schedule schedule, List<CourseAssign> scheduleItem, string runTime)
+        public ScheduleShow(Schedule schedule, List<CourseAssign> scheduleItem, string runTime, double pointPerRowMax, double totalAveragePoint)
         {
             Schedule = schedule;
             this.scheduleItem = scheduleItem;
             this.runTime = runTime;
+            this.pointPerRowMax = pointPerRowMax;
+            this.totalAveragePoint = totalAveragePoint;
         }
 
     }
+
 }

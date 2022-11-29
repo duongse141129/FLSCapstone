@@ -23,12 +23,12 @@ namespace FPTULecturerScheduler.Entity
         public string ScheduleId { get; set; }
         [JsonProperty("Status")]
         public int status { get; set; }
-
+        public double point { get; set; }
         public CourseAssign()
         {
         }
 
-        public CourseAssign(string Id, string lecturerID, string courseID, string slotTypeID, string scheduleId, int status)
+        public CourseAssign(string Id, string lecturerID, string courseID, string slotTypeID, string scheduleId, int status, double point)
         {
             ID = Id;
             LecturerID = lecturerID;
@@ -37,7 +37,7 @@ namespace FPTULecturerScheduler.Entity
             isAssign = 0;
             ScheduleId = scheduleId;
             this.status = status;
-
+            this.point = point;
         }
 
         public override string ToString()

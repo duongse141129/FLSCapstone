@@ -137,5 +137,35 @@ namespace WindowsFormsApp.DAO
                 return false;
             }
         }
+
+        public static async Task<bool> CreateListCourseAssignAsync(string scheduleId, List<CourseAssign> courseAssigns)
+        {
+            try
+            {
+                var client = new HttpClient();
+                var endpoint = new Uri("http://20.214.249.72/api/CourseAssign/AddListCourseAssign/"+ scheduleId);
+                var newDepartmentJson = JsonConvert.SerializeObject(courseAssigns);
+                var payload = new StringContent(newDepartmentJson, Encoding.UTF8, "application/json");
+                HttpResponseMessage response = await client.PostAsync(endpoint, payload);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    //Console.WriteLine("POST success ");
+                    //Console.WriteLine("Status Code: " + response.StatusCode);
+                    //Console.WriteLine("Header: " + response.Headers);
+                    //Console.WriteLine("Respone: " + response.Content);
+                    //Console.WriteLine("Content Respone: " + responseContent);
+                    return true;
+                }
+                //Console.WriteLine("POST fail");
+                return false;
+            }
+            catch (Exception ex)
+            {
+
+                //Console.WriteLine("Error at POST: " + ex.Message);
+                return false;
+            }
+        }
     }
 }

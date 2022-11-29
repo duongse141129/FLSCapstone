@@ -13,8 +13,9 @@ namespace FPTULecturerScheduler
         public static double HESO_PRIORITYCOURSE ;
         
         public static double HESO_FEEDBACKPOINT ;
-        public static double HESO_PRIORITYLECTURER = 6;
-        public static double HESO_FAVORITEPOINT ;
+        //public static double HESO_PRIORITYLECTURER = 0.5;
+        public static double HESO_FAVORITEPOINTSUBJECT ;
+        public static double HESO_FAVORITEPOINTSLOT;
         public static int MaxCourseSubjectDiff = 3;
 
 
@@ -76,6 +77,15 @@ namespace FPTULecturerScheduler
                                 lecturerCoursePoint.Course = course;
                                 lecturerCoursePoint.Score = lecturerCoursePoint_temp;
                             }
+                            else if (lecturerCoursePoint_temp == lecturerCoursePoint.Score) //diem bang nhau thi so sanh diem uu tien cua giang vien
+                            {
+                                if (lecturer.PriorityLecturer > lecturerCoursePoint.Lecturer.PriorityLecturer)
+                                {
+                                    lecturerCoursePoint.Lecturer = lecturer;
+                                    lecturerCoursePoint.Course = course;
+                                    lecturerCoursePoint.Score = lecturerCoursePoint_temp;
+                                }
+                            }
                         }
                     }
                 }
@@ -85,19 +95,19 @@ namespace FPTULecturerScheduler
         public static CourseAssign FillSlot(List<CourseAssign> courseAssignsTemp, List<LecturerSlotConfig> lecturerSlotConfigs, CourseAssign courseAssignFillSlot, List<Course> courses, string semesterID, List<SlotType> slotTypes, int Max)
         {
 
-            //cac slot giang vien do ua thich, is enable = 1
+            //cac slot giang vien do ua thich PreferenceLevel = 1, is enable = 1
             var favoriteSlot = from lecturerSlotConfig in lecturerSlotConfigs
                                where lecturerSlotConfig.LecturerID == courseAssignFillSlot.LecturerID && lecturerSlotConfig.SemesterID == semesterID 
                                && lecturerSlotConfig.PreferenceLevel == 1 && lecturerSlotConfig.IsEnable == 1
                                select lecturerSlotConfig.SlotTypeID;
 
-            //cac slot giang vien do trung tinh, is enable = 1
+            //cac slot giang vien do trung tinh PreferenceLevel= 0 , is enable = 1
             var normalSlot = from lecturerSlotConfig in lecturerSlotConfigs
                                where lecturerSlotConfig.LecturerID == courseAssignFillSlot.LecturerID && lecturerSlotConfig.SemesterID == semesterID 
                                && lecturerSlotConfig.PreferenceLevel == 0 && lecturerSlotConfig.IsEnable == 1
                              select lecturerSlotConfig.SlotTypeID;
 
-            //cac slot giang vien do khong thich, is enable = 1
+            //cac slot giang vien do khong thich PreferenceLevel =-1, is enable = 1
             var dislikeSlot = from lecturerSlotConfig in lecturerSlotConfigs
                                where lecturerSlotConfig.LecturerID == courseAssignFillSlot.LecturerID && lecturerSlotConfig.SemesterID == semesterID 
                                && lecturerSlotConfig.PreferenceLevel == -1 && lecturerSlotConfig.IsEnable == 1
@@ -160,6 +170,7 @@ namespace FPTULecturerScheduler
                     if (check == 0)
                     {
                         courseAssignFillSlot.SlotTypeID = favoriteSlotType;// fill slot
+                        courseAssignFillSlot.point = courseAssignFillSlot.point + HESO_FAVORITEPOINTSLOT;
                         stop = 1;
                         break;
                     }
@@ -259,6 +270,7 @@ namespace FPTULecturerScheduler
                         if (check == 0)
                         {
                             courseAssignFillSlot.SlotTypeID = dislikeSlotType;// fill slot
+                            courseAssignFillSlot.point = courseAssignFillSlot.point - HESO_FAVORITEPOINTSLOT;
                             stop = 1;
                             break;
                         }
@@ -270,10 +282,12 @@ namespace FPTULecturerScheduler
                 if (favoriteSlot.Count() > 0)
                 {
                     courseAssignFillSlot.SlotTypeID = favoriteSlot.ElementAtOrDefault(0);
+                    courseAssignFillSlot.point = courseAssignFillSlot.point + HESO_FAVORITEPOINTSLOT;
                 }
                 else
                 {
                     courseAssignFillSlot.SlotTypeID = normalSlot.ElementAtOrDefault(0);
+                    courseAssignFillSlot.point = courseAssignFillSlot.point ;
                 }              
             }
             return courseAssignFillSlot;
@@ -366,8 +380,11 @@ namespace FPTULecturerScheduler
             List<CourseAssign> scheduler = new List<CourseAssign>(); //add cac course da duoc assign vao scheduler 
             foreach(var courseAssign in courseAssigns)
             {
+
+                courseAssign.point = HESO_PRIORITYCOURSE + HESO_FEEDBACKPOINT + HESO_FAVORITEPOINTSUBJECT + HESO_FAVORITEPOINTSLOT;
                 scheduler.Add(courseAssign);
             }
+     
             int schedulerPoint_Temp = 0;
             int courseAssignID = 0;
 
@@ -377,10 +394,9 @@ namespace FPTULecturerScheduler
                 LecturerCoursePoint lecturerCoursePoint = GetCourseLecturer(courses, subjects, lecturerCourseGroups, courseGroupItems, subjectOfLecturers, lecturers, semester.ID, courseAssigns, scheduler);
                 if (lecturerCoursePoint.Score > 0)
                 {
-                    CourseAssign courseAssign = new CourseAssign("CA" + courseAssignID++, lecturerCoursePoint.Lecturer.ID, lecturerCoursePoint.Course.ID, "","", 1);
+                    CourseAssign courseAssign = new CourseAssign("CA" + courseAssignID++, lecturerCoursePoint.Lecturer.ID, lecturerCoursePoint.Course.ID, "","", 1, lecturerCoursePoint.Score);
                     //fill slot 
                     courseAssign = FillSlot(scheduler, lecturerSlotConfigs, courseAssign, courses, semester.ID, slotTypes, Max);
-                  
                     scheduler.Add(courseAssign);
 
                 }
@@ -601,7 +617,7 @@ namespace FPTULecturerScheduler
             double priorityCoursePoint = 0;
             double favoritePoint = 0;
             double feedbackPoint = 0;
-            double priorityLecturerPoint = 0;
+            //double priorityLecturerPoint = 0;
 
             var priorityCoursePoint_temp = from courseGroupItem in courseGroupItems
                                 join lecturerCourseGroup in lecturerCourseGroups on courseGroupItem.LecturerCourseGroupID equals lecturerCourseGroup.ID
@@ -612,7 +628,7 @@ namespace FPTULecturerScheduler
                 priorityCoursePoint = Convert.ToDouble(priorityCoursePoint_temp.ElementAtOrDefault(0));             
             }
 
-            priorityLecturerPoint = lecturer.PriorityLecturer;
+            //priorityLecturerPoint = lecturer.PriorityLecturer;
 
             var favoriteFeedbackPoint_temp = from subjectOfLecturerDTO in subjectOfLecturers
                                              where subjectOfLecturerDTO.LecturerID == lecturer.ID
@@ -623,9 +639,14 @@ namespace FPTULecturerScheduler
                 favoritePoint = favoriteFeedbackPoint_temp.ElementAtOrDefault(0).FavoritePoint;
                 feedbackPoint = favoriteFeedbackPoint_temp.ElementAtOrDefault(0).FeedbackPoint;
             }
+            else
+            {
+                favoritePoint = 3;
+                feedbackPoint = 3;
+            }
 
 
-            double lecturerCoursePoint = ((priorityCoursePoint/4) * HESO_PRIORITYCOURSE + (priorityLecturerPoint/5) * HESO_PRIORITYLECTURER + (feedbackPoint/5) * HESO_FEEDBACKPOINT +(favoritePoint/5) * HESO_FAVORITEPOINT);
+            double lecturerCoursePoint = ((priorityCoursePoint/4) * HESO_PRIORITYCOURSE + (feedbackPoint/5) * HESO_FEEDBACKPOINT +(favoritePoint/5) * HESO_FAVORITEPOINTSUBJECT);
             return lecturerCoursePoint;
         }
     }

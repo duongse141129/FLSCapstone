@@ -70,6 +70,7 @@ namespace WindowsFormsApp
             this.label17 = new System.Windows.Forms.Label();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.slotTypeDataGridView = new System.Windows.Forms.DataGridView();
+            this.Column26 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column9 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column10 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column11 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -80,17 +81,19 @@ namespace WindowsFormsApp
             this.label18 = new System.Windows.Forms.Label();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
-            this.favoriteTrackBar = new System.Windows.Forms.TrackBar();
-            this.warningLabel = new System.Windows.Forms.Label();
+            this.favoriteSlotValueLabel = new System.Windows.Forms.Label();
+            this.favoriteSlotTrackBar = new System.Windows.Forms.TrackBar();
+            this.label31 = new System.Windows.Forms.Label();
+            this.favoriteSubjectValueLabel = new System.Windows.Forms.Label();
+            this.departmentRatingValueLabel = new System.Windows.Forms.Label();
+            this.priorityCourseValueLabel = new System.Windows.Forms.Label();
+            this.favoriteSubjectTrackBar = new System.Windows.Forms.TrackBar();
+            this.departmentRatingTrackBar = new System.Windows.Forms.TrackBar();
             this.priorityCourseTrackBar = new System.Windows.Forms.TrackBar();
-            this.label12 = new System.Windows.Forms.Label();
-            this.feedbackTrackBar = new System.Windows.Forms.TrackBar();
-            this.favoriteLabel = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.feedbackLabel = new System.Windows.Forms.Label();
-            this.label7 = new System.Windows.Forms.Label();
-            this.priorityCourseLabel = new System.Windows.Forms.Label();
+            this.label26 = new System.Windows.Forms.Label();
             this.label8 = new System.Windows.Forms.Label();
+            this.label7 = new System.Windows.Forms.Label();
+            this.label12 = new System.Windows.Forms.Label();
             this.semesterCombobox = new System.Windows.Forms.ComboBox();
             this.loadDataButton = new System.Windows.Forms.Button();
             this.tabControl1 = new System.Windows.Forms.TabControl();
@@ -98,8 +101,20 @@ namespace WindowsFormsApp
             this.outputTabPage = new System.Windows.Forms.TabPage();
             this.tabControl3 = new System.Windows.Forms.TabControl();
             this.tabPage2 = new System.Windows.Forms.TabPage();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.label30 = new System.Windows.Forms.Label();
+            this.label29 = new System.Windows.Forms.Label();
+            this.label28 = new System.Windows.Forms.Label();
+            this.checkBox6 = new System.Windows.Forms.CheckBox();
+            this.checkBox5 = new System.Windows.Forms.CheckBox();
+            this.checkBox4 = new System.Windows.Forms.CheckBox();
+            this.checkBox3 = new System.Windows.Forms.CheckBox();
+            this.checkBox2 = new System.Windows.Forms.CheckBox();
+            this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
-            this.descriptionTextBox = new System.Windows.Forms.TextBox();
+            this.configDescriptionLabel = new System.Windows.Forms.Label();
+            this.schedulePointLabel = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
             this.totalCourseLabel = new System.Windows.Forms.Label();
             this.runTimeLabel = new System.Windows.Forms.Label();
             this.createTimeLabel = new System.Windows.Forms.Label();
@@ -111,9 +126,6 @@ namespace WindowsFormsApp
             this.label22 = new System.Windows.Forms.Label();
             this.label23 = new System.Windows.Forms.Label();
             this.label20 = new System.Windows.Forms.Label();
-            this.scheduleListView = new System.Windows.Forms.ListView();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.Department = new System.Windows.Forms.TabPage();
             this.scheduleNOLabel1 = new System.Windows.Forms.Label();
             this.label13 = new System.Windows.Forms.Label();
@@ -155,6 +167,7 @@ namespace WindowsFormsApp
             this.label10 = new System.Windows.Forms.Label();
             this.textBox8 = new System.Windows.Forms.TextBox();
             this.outputSlotTypeDataGridView = new System.Windows.Forms.DataGridView();
+            this.Column37 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column33 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column34 = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.Column27 = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -164,6 +177,8 @@ namespace WindowsFormsApp
             this.label1 = new System.Windows.Forms.Label();
             this.fromDatelabel = new System.Windows.Forms.Label();
             this.toDatelabel = new System.Windows.Forms.Label();
+            this.label27 = new System.Windows.Forms.Label();
+            this.listBox1 = new System.Windows.Forms.ListBox();
             this.tabControl2.SuspendLayout();
             this.departmentTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.departmentDataGridView)).BeginInit();
@@ -175,14 +190,16 @@ namespace WindowsFormsApp
             ((System.ComponentModel.ISupportInitialize)(this.slotTypeDataGridView)).BeginInit();
             this.tabPage1.SuspendLayout();
             this.panel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.favoriteTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.favoriteSlotTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.favoriteSubjectTrackBar)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.departmentRatingTrackBar)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.priorityCourseTrackBar)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.feedbackTrackBar)).BeginInit();
             this.tabControl1.SuspendLayout();
             this.InputTabPage.SuspendLayout();
             this.outputTabPage.SuspendLayout();
             this.tabControl3.SuspendLayout();
             this.tabPage2.SuspendLayout();
+            this.panel3.SuspendLayout();
             this.panel2.SuspendLayout();
             this.Department.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.outputDepartmentDataGridView)).BeginInit();
@@ -196,7 +213,7 @@ namespace WindowsFormsApp
             // 
             // runButton
             // 
-            this.runButton.Location = new System.Drawing.Point(573, 23);
+            this.runButton.Location = new System.Drawing.Point(592, 23);
             this.runButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.runButton.Name = "runButton";
             this.runButton.Size = new System.Drawing.Size(90, 30);
@@ -225,11 +242,11 @@ namespace WindowsFormsApp
             this.departmentTabPage.Controls.Add(this.label14);
             this.departmentTabPage.Controls.Add(this.textBox1);
             this.departmentTabPage.Controls.Add(this.departmentDataGridView);
-            this.departmentTabPage.Location = new System.Drawing.Point(4, 25);
+            this.departmentTabPage.Location = new System.Drawing.Point(4, 27);
             this.departmentTabPage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.departmentTabPage.Name = "departmentTabPage";
             this.departmentTabPage.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.departmentTabPage.Size = new System.Drawing.Size(1920, 789);
+            this.departmentTabPage.Size = new System.Drawing.Size(1920, 787);
             this.departmentTabPage.TabIndex = 0;
             this.departmentTabPage.Text = "Department";
             this.departmentTabPage.UseVisualStyleBackColor = true;
@@ -329,11 +346,11 @@ namespace WindowsFormsApp
             this.subjectTabPage.Controls.Add(this.subjectCombobox);
             this.subjectTabPage.Controls.Add(this.label2);
             this.subjectTabPage.Controls.Add(this.subjectDataGridView);
-            this.subjectTabPage.Location = new System.Drawing.Point(4, 25);
+            this.subjectTabPage.Location = new System.Drawing.Point(4, 27);
             this.subjectTabPage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.subjectTabPage.Name = "subjectTabPage";
             this.subjectTabPage.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.subjectTabPage.Size = new System.Drawing.Size(1920, 789);
+            this.subjectTabPage.Size = new System.Drawing.Size(1920, 787);
             this.subjectTabPage.TabIndex = 1;
             this.subjectTabPage.Text = "Subject";
             this.subjectTabPage.UseVisualStyleBackColor = true;
@@ -364,18 +381,19 @@ namespace WindowsFormsApp
             // subjectCombobox
             // 
             this.subjectCombobox.FormattingEnabled = true;
-            this.subjectCombobox.Location = new System.Drawing.Point(109, 13);
+            this.subjectCombobox.Location = new System.Drawing.Point(143, 13);
             this.subjectCombobox.Name = "subjectCombobox";
-            this.subjectCombobox.Size = new System.Drawing.Size(300, 24);
+            this.subjectCombobox.Size = new System.Drawing.Size(300, 26);
             this.subjectCombobox.TabIndex = 4;
             this.subjectCombobox.SelectedIndexChanged += new System.EventHandler(this.departmentCbxSubject_SelectedIndexChanged);
             // 
             // label2
             // 
             this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label2.Location = new System.Drawing.Point(26, 16);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(77, 16);
+            this.label2.Size = new System.Drawing.Size(95, 18);
             this.label2.TabIndex = 3;
             this.label2.Text = "Department";
             // 
@@ -439,10 +457,10 @@ namespace WindowsFormsApp
             this.lecturerTabPage.Controls.Add(this.lecturerCombobox);
             this.lecturerTabPage.Controls.Add(this.label3);
             this.lecturerTabPage.Controls.Add(this.lecturerDataGridView);
-            this.lecturerTabPage.Location = new System.Drawing.Point(4, 25);
+            this.lecturerTabPage.Location = new System.Drawing.Point(4, 27);
             this.lecturerTabPage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.lecturerTabPage.Name = "lecturerTabPage";
-            this.lecturerTabPage.Size = new System.Drawing.Size(1920, 789);
+            this.lecturerTabPage.Size = new System.Drawing.Size(1920, 787);
             this.lecturerTabPage.TabIndex = 2;
             this.lecturerTabPage.Text = "Lecturer";
             this.lecturerTabPage.UseVisualStyleBackColor = true;
@@ -471,18 +489,19 @@ namespace WindowsFormsApp
             // lecturerCombobox
             // 
             this.lecturerCombobox.FormattingEnabled = true;
-            this.lecturerCombobox.Location = new System.Drawing.Point(113, 15);
+            this.lecturerCombobox.Location = new System.Drawing.Point(147, 15);
             this.lecturerCombobox.Name = "lecturerCombobox";
-            this.lecturerCombobox.Size = new System.Drawing.Size(297, 24);
+            this.lecturerCombobox.Size = new System.Drawing.Size(297, 26);
             this.lecturerCombobox.TabIndex = 5;
             this.lecturerCombobox.SelectedIndexChanged += new System.EventHandler(this.departmentCbxLecturer_SelectedIndexChanged);
             // 
             // label3
             // 
             this.label3.AutoSize = true;
+            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label3.Location = new System.Drawing.Point(30, 18);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(77, 16);
+            this.label3.Size = new System.Drawing.Size(95, 18);
             this.label3.TabIndex = 4;
             this.label3.Text = "Department";
             // 
@@ -579,10 +598,10 @@ namespace WindowsFormsApp
             this.slotTypeTabPage.Controls.Add(this.label17);
             this.slotTypeTabPage.Controls.Add(this.textBox4);
             this.slotTypeTabPage.Controls.Add(this.slotTypeDataGridView);
-            this.slotTypeTabPage.Location = new System.Drawing.Point(4, 25);
+            this.slotTypeTabPage.Location = new System.Drawing.Point(4, 27);
             this.slotTypeTabPage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.slotTypeTabPage.Name = "slotTypeTabPage";
-            this.slotTypeTabPage.Size = new System.Drawing.Size(1920, 789);
+            this.slotTypeTabPage.Size = new System.Drawing.Size(1920, 787);
             this.slotTypeTabPage.TabIndex = 3;
             this.slotTypeTabPage.Text = "Slot type";
             this.slotTypeTabPage.UseVisualStyleBackColor = true;
@@ -612,6 +631,7 @@ namespace WindowsFormsApp
             // 
             this.slotTypeDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.slotTypeDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column26,
             this.Column9,
             this.Column10,
             this.Column11,
@@ -626,6 +646,14 @@ namespace WindowsFormsApp
             this.slotTypeDataGridView.RowTemplate.Height = 24;
             this.slotTypeDataGridView.Size = new System.Drawing.Size(1297, 782);
             this.slotTypeDataGridView.TabIndex = 0;
+            // 
+            // Column26
+            // 
+            this.Column26.HeaderText = "Slot type code";
+            this.Column26.MinimumWidth = 6;
+            this.Column26.Name = "Column26";
+            this.Column26.ReadOnly = true;
+            this.Column26.Width = 125;
             // 
             // Column9
             // 
@@ -680,10 +708,10 @@ namespace WindowsFormsApp
             this.tabPage1.Controls.Add(this.label18);
             this.tabPage1.Controls.Add(this.textBox9);
             this.tabPage1.Controls.Add(this.panel1);
-            this.tabPage1.Location = new System.Drawing.Point(4, 25);
+            this.tabPage1.Location = new System.Drawing.Point(4, 27);
             this.tabPage1.Name = "tabPage1";
             this.tabPage1.Padding = new System.Windows.Forms.Padding(3);
-            this.tabPage1.Size = new System.Drawing.Size(1920, 789);
+            this.tabPage1.Size = new System.Drawing.Size(1920, 787);
             this.tabPage1.TabIndex = 4;
             this.tabPage1.Text = "Config";
             this.tabPage1.UseVisualStyleBackColor = true;
@@ -712,138 +740,162 @@ namespace WindowsFormsApp
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panel1.Controls.Add(this.favoriteTrackBar);
-            this.panel1.Controls.Add(this.warningLabel);
+            this.panel1.Controls.Add(this.favoriteSlotValueLabel);
+            this.panel1.Controls.Add(this.favoriteSlotTrackBar);
+            this.panel1.Controls.Add(this.label31);
+            this.panel1.Controls.Add(this.favoriteSubjectValueLabel);
+            this.panel1.Controls.Add(this.departmentRatingValueLabel);
+            this.panel1.Controls.Add(this.priorityCourseValueLabel);
+            this.panel1.Controls.Add(this.favoriteSubjectTrackBar);
+            this.panel1.Controls.Add(this.departmentRatingTrackBar);
             this.panel1.Controls.Add(this.priorityCourseTrackBar);
-            this.panel1.Controls.Add(this.label12);
-            this.panel1.Controls.Add(this.feedbackTrackBar);
-            this.panel1.Controls.Add(this.favoriteLabel);
-            this.panel1.Controls.Add(this.label6);
-            this.panel1.Controls.Add(this.feedbackLabel);
-            this.panel1.Controls.Add(this.label7);
-            this.panel1.Controls.Add(this.priorityCourseLabel);
+            this.panel1.Controls.Add(this.label26);
             this.panel1.Controls.Add(this.label8);
+            this.panel1.Controls.Add(this.label7);
+            this.panel1.Controls.Add(this.label12);
             this.panel1.Location = new System.Drawing.Point(3, 3);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(1297, 782);
             this.panel1.TabIndex = 10;
             // 
-            // favoriteTrackBar
+            // favoriteSlotValueLabel
             // 
-            this.favoriteTrackBar.LargeChange = 1;
-            this.favoriteTrackBar.Location = new System.Drawing.Point(343, 307);
-            this.favoriteTrackBar.Maximum = 2;
-            this.favoriteTrackBar.Name = "favoriteTrackBar";
-            this.favoriteTrackBar.Size = new System.Drawing.Size(260, 56);
-            this.favoriteTrackBar.TabIndex = 1;
-            this.favoriteTrackBar.Scroll += new System.EventHandler(this.favoriteTrackBar_Scroll);
+            this.favoriteSlotValueLabel.AutoSize = true;
+            this.favoriteSlotValueLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.favoriteSlotValueLabel.Location = new System.Drawing.Point(559, 404);
+            this.favoriteSlotValueLabel.Name = "favoriteSlotValueLabel";
+            this.favoriteSlotValueLabel.Size = new System.Drawing.Size(212, 20);
+            this.favoriteSlotValueLabel.TabIndex = 30;
+            this.favoriteSlotValueLabel.Text = "Coefficient value: 3   (25%)";
             // 
-            // warningLabel
+            // favoriteSlotTrackBar
             // 
-            this.warningLabel.AutoSize = true;
-            this.warningLabel.ForeColor = System.Drawing.Color.Red;
-            this.warningLabel.Location = new System.Drawing.Point(93, 414);
-            this.warningLabel.Name = "warningLabel";
-            this.warningLabel.Size = new System.Drawing.Size(10, 16);
-            this.warningLabel.TabIndex = 9;
-            this.warningLabel.Text = " ";
+            this.favoriteSlotTrackBar.LargeChange = 1;
+            this.favoriteSlotTrackBar.Location = new System.Drawing.Point(316, 390);
+            this.favoriteSlotTrackBar.Maximum = 4;
+            this.favoriteSlotTrackBar.Name = "favoriteSlotTrackBar";
+            this.favoriteSlotTrackBar.Size = new System.Drawing.Size(212, 56);
+            this.favoriteSlotTrackBar.TabIndex = 29;
+            this.favoriteSlotTrackBar.Value = 2;
+            this.favoriteSlotTrackBar.Scroll += new System.EventHandler(this.favoriteSlotTrackBar_Scroll);
+            // 
+            // label31
+            // 
+            this.label31.AutoSize = true;
+            this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label31.Location = new System.Drawing.Point(105, 404);
+            this.label31.Name = "label31";
+            this.label31.Size = new System.Drawing.Size(137, 20);
+            this.label31.TabIndex = 28;
+            this.label31.Text = "Favorite slot type";
+            // 
+            // favoriteSubjectValueLabel
+            // 
+            this.favoriteSubjectValueLabel.AutoSize = true;
+            this.favoriteSubjectValueLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.favoriteSubjectValueLabel.Location = new System.Drawing.Point(559, 301);
+            this.favoriteSubjectValueLabel.Name = "favoriteSubjectValueLabel";
+            this.favoriteSubjectValueLabel.Size = new System.Drawing.Size(212, 20);
+            this.favoriteSubjectValueLabel.TabIndex = 27;
+            this.favoriteSubjectValueLabel.Text = "Coefficient value: 3   (25%)";
+            // 
+            // departmentRatingValueLabel
+            // 
+            this.departmentRatingValueLabel.AutoSize = true;
+            this.departmentRatingValueLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.departmentRatingValueLabel.Location = new System.Drawing.Point(559, 195);
+            this.departmentRatingValueLabel.Name = "departmentRatingValueLabel";
+            this.departmentRatingValueLabel.Size = new System.Drawing.Size(212, 20);
+            this.departmentRatingValueLabel.TabIndex = 26;
+            this.departmentRatingValueLabel.Text = "Coefficient value: 3   (25%)";
+            // 
+            // priorityCourseValueLabel
+            // 
+            this.priorityCourseValueLabel.AutoSize = true;
+            this.priorityCourseValueLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.priorityCourseValueLabel.Location = new System.Drawing.Point(559, 90);
+            this.priorityCourseValueLabel.Name = "priorityCourseValueLabel";
+            this.priorityCourseValueLabel.Size = new System.Drawing.Size(212, 20);
+            this.priorityCourseValueLabel.TabIndex = 25;
+            this.priorityCourseValueLabel.Text = "Coefficient value: 3   (25%)";
+            // 
+            // favoriteSubjectTrackBar
+            // 
+            this.favoriteSubjectTrackBar.LargeChange = 1;
+            this.favoriteSubjectTrackBar.Location = new System.Drawing.Point(316, 287);
+            this.favoriteSubjectTrackBar.Maximum = 4;
+            this.favoriteSubjectTrackBar.Name = "favoriteSubjectTrackBar";
+            this.favoriteSubjectTrackBar.Size = new System.Drawing.Size(212, 56);
+            this.favoriteSubjectTrackBar.TabIndex = 24;
+            this.favoriteSubjectTrackBar.Value = 2;
+            this.favoriteSubjectTrackBar.Scroll += new System.EventHandler(this.favoriteTrackBar_Scroll);
+            // 
+            // departmentRatingTrackBar
+            // 
+            this.departmentRatingTrackBar.LargeChange = 1;
+            this.departmentRatingTrackBar.Location = new System.Drawing.Point(316, 179);
+            this.departmentRatingTrackBar.Maximum = 4;
+            this.departmentRatingTrackBar.Name = "departmentRatingTrackBar";
+            this.departmentRatingTrackBar.Size = new System.Drawing.Size(212, 56);
+            this.departmentRatingTrackBar.TabIndex = 23;
+            this.departmentRatingTrackBar.Value = 2;
+            this.departmentRatingTrackBar.Scroll += new System.EventHandler(this.departmentRatingTrackBar_Scroll);
             // 
             // priorityCourseTrackBar
             // 
             this.priorityCourseTrackBar.LargeChange = 1;
-            this.priorityCourseTrackBar.Location = new System.Drawing.Point(343, 88);
-            this.priorityCourseTrackBar.Maximum = 2;
+            this.priorityCourseTrackBar.Location = new System.Drawing.Point(316, 76);
+            this.priorityCourseTrackBar.Maximum = 4;
             this.priorityCourseTrackBar.Name = "priorityCourseTrackBar";
-            this.priorityCourseTrackBar.Size = new System.Drawing.Size(260, 56);
-            this.priorityCourseTrackBar.TabIndex = 1;
+            this.priorityCourseTrackBar.Size = new System.Drawing.Size(212, 56);
+            this.priorityCourseTrackBar.TabIndex = 22;
             this.priorityCourseTrackBar.Value = 2;
             this.priorityCourseTrackBar.Scroll += new System.EventHandler(this.priorityCourseTrackBar_Scroll);
+            // 
+            // label26
+            // 
+            this.label26.AutoSize = true;
+            this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label26.Location = new System.Drawing.Point(105, 301);
+            this.label26.Name = "label26";
+            this.label26.Size = new System.Drawing.Size(128, 20);
+            this.label26.TabIndex = 21;
+            this.label26.Text = "Favorite subject";
+            // 
+            // label8
+            // 
+            this.label8.AutoSize = true;
+            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label8.Location = new System.Drawing.Point(105, 194);
+            this.label8.Name = "label8";
+            this.label8.Size = new System.Drawing.Size(157, 20);
+            this.label8.TabIndex = 20;
+            this.label8.Text = "Department\'s rating";
+            // 
+            // label7
+            // 
+            this.label7.AutoSize = true;
+            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label7.Location = new System.Drawing.Point(105, 89);
+            this.label7.Name = "label7";
+            this.label7.Size = new System.Drawing.Size(118, 20);
+            this.label7.TabIndex = 19;
+            this.label7.Text = "Priority course";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(93, 474);
+            this.label12.Location = new System.Drawing.Point(106, 511);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(409, 18);
             this.label12.TabIndex = 8;
             this.label12.Text = "*Priority lecturer level is used when point of two lecturer equal";
             // 
-            // feedbackTrackBar
-            // 
-            this.feedbackTrackBar.LargeChange = 1;
-            this.feedbackTrackBar.Location = new System.Drawing.Point(343, 201);
-            this.feedbackTrackBar.Maximum = 2;
-            this.feedbackTrackBar.Name = "feedbackTrackBar";
-            this.feedbackTrackBar.Size = new System.Drawing.Size(260, 56);
-            this.feedbackTrackBar.TabIndex = 1;
-            this.feedbackTrackBar.Value = 1;
-            this.feedbackTrackBar.Scroll += new System.EventHandler(this.feedbackTrackBar_Scroll);
-            // 
-            // favoriteLabel
-            // 
-            this.favoriteLabel.AutoSize = true;
-            this.favoriteLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.favoriteLabel.Location = new System.Drawing.Point(621, 324);
-            this.favoriteLabel.Name = "favoriteLabel";
-            this.favoriteLabel.Size = new System.Drawing.Size(36, 18);
-            this.favoriteLabel.TabIndex = 7;
-            this.favoriteLabel.Text = "Low";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(93, 219);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(201, 18);
-            this.label6.TabIndex = 2;
-            this.label6.Text = "Feedback of department level";
-            // 
-            // feedbackLabel
-            // 
-            this.feedbackLabel.AutoSize = true;
-            this.feedbackLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.feedbackLabel.Location = new System.Drawing.Point(621, 221);
-            this.feedbackLabel.Name = "feedbackLabel";
-            this.feedbackLabel.Size = new System.Drawing.Size(61, 18);
-            this.feedbackLabel.TabIndex = 6;
-            this.feedbackLabel.Text = "Medium";
-            // 
-            // label7
-            // 
-            this.label7.AutoSize = true;
-            this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(93, 104);
-            this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(137, 18);
-            this.label7.TabIndex = 3;
-            this.label7.Text = "Priority course level";
-            // 
-            // priorityCourseLabel
-            // 
-            this.priorityCourseLabel.AutoSize = true;
-            this.priorityCourseLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.priorityCourseLabel.Location = new System.Drawing.Point(621, 106);
-            this.priorityCourseLabel.Name = "priorityCourseLabel";
-            this.priorityCourseLabel.Size = new System.Drawing.Size(38, 18);
-            this.priorityCourseLabel.TabIndex = 5;
-            this.priorityCourseLabel.Text = "High";
-            // 
-            // label8
-            // 
-            this.label8.AutoSize = true;
-            this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(93, 322);
-            this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(164, 18);
-            this.label8.TabIndex = 4;
-            this.label8.Text = "Favorite of lecturer level";
-            // 
             // semesterCombobox
             // 
             this.semesterCombobox.FormattingEnabled = true;
-            this.semesterCombobox.Location = new System.Drawing.Point(114, 25);
+            this.semesterCombobox.Location = new System.Drawing.Point(138, 23);
             this.semesterCombobox.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.semesterCombobox.Name = "semesterCombobox";
             this.semesterCombobox.Size = new System.Drawing.Size(187, 24);
@@ -851,7 +903,7 @@ namespace WindowsFormsApp
             // 
             // loadDataButton
             // 
-            this.loadDataButton.Location = new System.Drawing.Point(336, 23);
+            this.loadDataButton.Location = new System.Drawing.Point(355, 23);
             this.loadDataButton.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.loadDataButton.Name = "loadDataButton";
             this.loadDataButton.Size = new System.Drawing.Size(90, 30);
@@ -864,6 +916,7 @@ namespace WindowsFormsApp
             // 
             this.tabControl1.Controls.Add(this.InputTabPage);
             this.tabControl1.Controls.Add(this.outputTabPage);
+            this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.tabControl1.Location = new System.Drawing.Point(46, 119);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
@@ -874,11 +927,12 @@ namespace WindowsFormsApp
             // InputTabPage
             // 
             this.InputTabPage.Controls.Add(this.tabControl2);
-            this.InputTabPage.Location = new System.Drawing.Point(4, 25);
+            this.InputTabPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.InputTabPage.Location = new System.Drawing.Point(4, 27);
             this.InputTabPage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.InputTabPage.Name = "InputTabPage";
             this.InputTabPage.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.InputTabPage.Size = new System.Drawing.Size(1925, 820);
+            this.InputTabPage.Size = new System.Drawing.Size(1925, 818);
             this.InputTabPage.TabIndex = 0;
             this.InputTabPage.Text = "Input";
             this.InputTabPage.UseVisualStyleBackColor = true;
@@ -886,11 +940,12 @@ namespace WindowsFormsApp
             // outputTabPage
             // 
             this.outputTabPage.Controls.Add(this.tabControl3);
-            this.outputTabPage.Location = new System.Drawing.Point(4, 25);
+            this.outputTabPage.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.outputTabPage.Location = new System.Drawing.Point(4, 27);
             this.outputTabPage.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.outputTabPage.Name = "outputTabPage";
             this.outputTabPage.Padding = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.outputTabPage.Size = new System.Drawing.Size(1925, 820);
+            this.outputTabPage.Size = new System.Drawing.Size(1925, 818);
             this.outputTabPage.TabIndex = 1;
             this.outputTabPage.Text = "Output";
             this.outputTabPage.UseVisualStyleBackColor = true;
@@ -910,20 +965,154 @@ namespace WindowsFormsApp
             // 
             // tabPage2
             // 
+            this.tabPage2.Controls.Add(this.panel3);
             this.tabPage2.Controls.Add(this.panel2);
             this.tabPage2.Controls.Add(this.label20);
-            this.tabPage2.Controls.Add(this.scheduleListView);
-            this.tabPage2.Location = new System.Drawing.Point(4, 25);
+            this.tabPage2.Location = new System.Drawing.Point(4, 27);
             this.tabPage2.Name = "tabPage2";
-            this.tabPage2.Size = new System.Drawing.Size(1920, 791);
+            this.tabPage2.Size = new System.Drawing.Size(1920, 789);
             this.tabPage2.TabIndex = 4;
             this.tabPage2.Text = "Schedule";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.label30);
+            this.panel3.Controls.Add(this.label29);
+            this.panel3.Controls.Add(this.label28);
+            this.panel3.Controls.Add(this.checkBox6);
+            this.panel3.Controls.Add(this.checkBox5);
+            this.panel3.Controls.Add(this.checkBox4);
+            this.panel3.Controls.Add(this.checkBox3);
+            this.panel3.Controls.Add(this.checkBox2);
+            this.panel3.Controls.Add(this.checkBox1);
+            this.panel3.Location = new System.Drawing.Point(842, 43);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(995, 745);
+            this.panel3.TabIndex = 11;
+            // 
+            // label30
+            // 
+            this.label30.AutoSize = true;
+            this.label30.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label30.Location = new System.Drawing.Point(11, 252);
+            this.label30.Name = "label30";
+            this.label30.Size = new System.Drawing.Size(140, 22);
+            this.label30.TabIndex = 9;
+            this.label30.Text = "Soft constraint";
+            // 
+            // label29
+            // 
+            this.label29.AutoSize = true;
+            this.label29.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label29.Location = new System.Drawing.Point(11, 17);
+            this.label29.Name = "label29";
+            this.label29.Size = new System.Drawing.Size(147, 22);
+            this.label29.TabIndex = 8;
+            this.label29.Text = "Hard constraint";
+            // 
+            // label28
+            // 
+            this.label28.AutoSize = true;
+            this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label28.Location = new System.Drawing.Point(18, 303);
+            this.label28.Name = "label28";
+            this.label28.Size = new System.Drawing.Size(897, 110);
+            this.label28.TabIndex = 7;
+            this.label28.Text = resources.GetString("label28.Text");
+            // 
+            // checkBox6
+            // 
+            this.checkBox6.AutoSize = true;
+            this.checkBox6.Checked = true;
+            this.checkBox6.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox6.Enabled = false;
+            this.checkBox6.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox6.Location = new System.Drawing.Point(22, 196);
+            this.checkBox6.Name = "checkBox6";
+            this.checkBox6.Size = new System.Drawing.Size(711, 24);
+            this.checkBox6.TabIndex = 6;
+            this.checkBox6.Text = "Department manager can specifically assign lecturer to specific slots with specif" +
+    "ic  course.";
+            this.checkBox6.UseVisualStyleBackColor = true;
+            // 
+            // checkBox5
+            // 
+            this.checkBox5.AutoSize = true;
+            this.checkBox5.Checked = true;
+            this.checkBox5.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox5.Enabled = false;
+            this.checkBox5.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox5.Location = new System.Drawing.Point(22, 170);
+            this.checkBox5.Name = "checkBox5";
+            this.checkBox5.Size = new System.Drawing.Size(880, 24);
+            this.checkBox5.TabIndex = 5;
+            this.checkBox5.Text = "The number of courses of a subject that a lecturer teaches  that is specified in " +
+    "each term by department manager.";
+            this.checkBox5.UseVisualStyleBackColor = true;
+            // 
+            // checkBox4
+            // 
+            this.checkBox4.AutoSize = true;
+            this.checkBox4.Checked = true;
+            this.checkBox4.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox4.Enabled = false;
+            this.checkBox4.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox4.Location = new System.Drawing.Point(22, 144);
+            this.checkBox4.Name = "checkBox4";
+            this.checkBox4.Size = new System.Drawing.Size(613, 24);
+            this.checkBox4.TabIndex = 4;
+            this.checkBox4.Text = "Maximum number of courses in 1 week for lecturer are specified in each term.";
+            this.checkBox4.UseVisualStyleBackColor = true;
+            // 
+            // checkBox3
+            // 
+            this.checkBox3.AutoSize = true;
+            this.checkBox3.Checked = true;
+            this.checkBox3.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox3.Enabled = false;
+            this.checkBox3.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox3.Location = new System.Drawing.Point(22, 118);
+            this.checkBox3.Name = "checkBox3";
+            this.checkBox3.Size = new System.Drawing.Size(421, 24);
+            this.checkBox3.TabIndex = 3;
+            this.checkBox3.Text = "Courses conflict can not be taught at the same time.";
+            this.checkBox3.UseVisualStyleBackColor = true;
+            // 
+            // checkBox2
+            // 
+            this.checkBox2.AutoSize = true;
+            this.checkBox2.Checked = true;
+            this.checkBox2.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox2.Enabled = false;
+            this.checkBox2.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox2.Location = new System.Drawing.Point(22, 92);
+            this.checkBox2.Name = "checkBox2";
+            this.checkBox2.Size = new System.Drawing.Size(341, 24);
+            this.checkBox2.TabIndex = 2;
+            this.checkBox2.Text = "A course can only be taught by a lecturer.";
+            this.checkBox2.UseVisualStyleBackColor = true;
+            // 
+            // checkBox1
+            // 
+            this.checkBox1.AutoSize = true;
+            this.checkBox1.Checked = true;
+            this.checkBox1.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.checkBox1.Enabled = false;
+            this.checkBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.checkBox1.Location = new System.Drawing.Point(22, 66);
+            this.checkBox1.Name = "checkBox1";
+            this.checkBox1.Size = new System.Drawing.Size(346, 24);
+            this.checkBox1.TabIndex = 1;
+            this.checkBox1.Text = "Lecturers can only teach a course at time.";
+            this.checkBox1.UseVisualStyleBackColor = true;
+            // 
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.panel2.Controls.Add(this.descriptionTextBox);
+            this.panel2.Controls.Add(this.configDescriptionLabel);
+            this.panel2.Controls.Add(this.schedulePointLabel);
+            this.panel2.Controls.Add(this.label6);
             this.panel2.Controls.Add(this.totalCourseLabel);
             this.panel2.Controls.Add(this.runTimeLabel);
             this.panel2.Controls.Add(this.createTimeLabel);
@@ -934,64 +1123,88 @@ namespace WindowsFormsApp
             this.panel2.Controls.Add(this.label24);
             this.panel2.Controls.Add(this.label22);
             this.panel2.Controls.Add(this.label23);
-            this.panel2.Location = new System.Drawing.Point(573, 43);
+            this.panel2.Location = new System.Drawing.Point(7, 43);
             this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(1300, 745);
+            this.panel2.Size = new System.Drawing.Size(820, 745);
             this.panel2.TabIndex = 10;
             // 
-            // descriptionTextBox
+            // configDescriptionLabel
             // 
-            this.descriptionTextBox.Location = new System.Drawing.Point(109, 210);
-            this.descriptionTextBox.Multiline = true;
-            this.descriptionTextBox.Name = "descriptionTextBox";
-            this.descriptionTextBox.ReadOnly = true;
-            this.descriptionTextBox.Size = new System.Drawing.Size(472, 79);
-            this.descriptionTextBox.TabIndex = 15;
+            this.configDescriptionLabel.AutoSize = true;
+            this.configDescriptionLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.configDescriptionLabel.Location = new System.Drawing.Point(122, 209);
+            this.configDescriptionLabel.Name = "configDescriptionLabel";
+            this.configDescriptionLabel.Size = new System.Drawing.Size(0, 20);
+            this.configDescriptionLabel.TabIndex = 18;
+            // 
+            // schedulePointLabel
+            // 
+            this.schedulePointLabel.AutoSize = true;
+            this.schedulePointLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.schedulePointLabel.Location = new System.Drawing.Point(168, 431);
+            this.schedulePointLabel.Name = "schedulePointLabel";
+            this.schedulePointLabel.Size = new System.Drawing.Size(0, 18);
+            this.schedulePointLabel.TabIndex = 17;
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label6.Location = new System.Drawing.Point(13, 431);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(124, 18);
+            this.label6.TabIndex = 16;
+            this.label6.Text = "Schedule point:";
             // 
             // totalCourseLabel
             // 
             this.totalCourseLabel.AutoSize = true;
-            this.totalCourseLabel.Location = new System.Drawing.Point(187, 303);
+            this.totalCourseLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.totalCourseLabel.Location = new System.Drawing.Point(218, 365);
             this.totalCourseLabel.Name = "totalCourseLabel";
-            this.totalCourseLabel.Size = new System.Drawing.Size(0, 16);
+            this.totalCourseLabel.Size = new System.Drawing.Size(0, 18);
             this.totalCourseLabel.TabIndex = 14;
             // 
             // runTimeLabel
             // 
             this.runTimeLabel.AutoSize = true;
-            this.runTimeLabel.Location = new System.Drawing.Point(106, 155);
+            this.runTimeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.runTimeLabel.Location = new System.Drawing.Point(122, 155);
             this.runTimeLabel.Name = "runTimeLabel";
-            this.runTimeLabel.Size = new System.Drawing.Size(0, 16);
+            this.runTimeLabel.Size = new System.Drawing.Size(0, 18);
             this.runTimeLabel.TabIndex = 12;
             // 
             // createTimeLabel
             // 
             this.createTimeLabel.AutoSize = true;
-            this.createTimeLabel.Location = new System.Drawing.Point(130, 97);
+            this.createTimeLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.createTimeLabel.Location = new System.Drawing.Point(159, 97);
             this.createTimeLabel.Name = "createTimeLabel";
-            this.createTimeLabel.Size = new System.Drawing.Size(0, 16);
+            this.createTimeLabel.Size = new System.Drawing.Size(0, 18);
             this.createTimeLabel.TabIndex = 11;
             // 
             // scheduleNOLabel
             // 
             this.scheduleNOLabel.AutoSize = true;
-            this.scheduleNOLabel.Location = new System.Drawing.Point(150, 35);
+            this.scheduleNOLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.scheduleNOLabel.Location = new System.Drawing.Point(130, 36);
             this.scheduleNOLabel.Name = "scheduleNOLabel";
-            this.scheduleNOLabel.Size = new System.Drawing.Size(0, 16);
+            this.scheduleNOLabel.Size = new System.Drawing.Size(0, 18);
             this.scheduleNOLabel.TabIndex = 10;
             // 
             // label25
             // 
             this.label25.AutoSize = true;
-            this.label25.Location = new System.Drawing.Point(13, 303);
+            this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label25.Location = new System.Drawing.Point(13, 365);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(144, 16);
+            this.label25.Size = new System.Drawing.Size(180, 18);
             this.label25.TabIndex = 8;
             this.label25.Text = "Total course assigned:";
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(26, 386);
+            this.button1.Location = new System.Drawing.Point(16, 507);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(131, 29);
             this.button1.TabIndex = 2;
@@ -1002,74 +1215,52 @@ namespace WindowsFormsApp
             // label21
             // 
             this.label21.AutoSize = true;
+            this.label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label21.Location = new System.Drawing.Point(13, 36);
             this.label21.Name = "label21";
-            this.label21.Size = new System.Drawing.Size(118, 16);
+            this.label21.Size = new System.Drawing.Size(87, 18);
             this.label21.TabIndex = 4;
-            this.label21.Text = "Schedule number: ";
+            this.label21.Text = "Schedule: ";
             // 
             // label24
             // 
             this.label24.AutoSize = true;
+            this.label24.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label24.Location = new System.Drawing.Point(13, 210);
             this.label24.Name = "label24";
-            this.label24.Size = new System.Drawing.Size(78, 16);
+            this.label24.Size = new System.Drawing.Size(62, 18);
             this.label24.TabIndex = 7;
-            this.label24.Text = "Description:";
+            this.label24.Text = "Config:";
             // 
             // label22
             // 
             this.label22.AutoSize = true;
+            this.label22.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label22.Location = new System.Drawing.Point(13, 97);
             this.label22.Name = "label22";
-            this.label22.Size = new System.Drawing.Size(86, 16);
+            this.label22.Size = new System.Drawing.Size(109, 18);
             this.label22.TabIndex = 5;
             this.label22.Text = "Created time:";
             // 
             // label23
             // 
             this.label23.AutoSize = true;
+            this.label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label23.Location = new System.Drawing.Point(13, 155);
             this.label23.Name = "label23";
-            this.label23.Size = new System.Drawing.Size(62, 16);
+            this.label23.Size = new System.Drawing.Size(80, 18);
             this.label23.TabIndex = 6;
             this.label23.Text = "Run time:";
             // 
             // label20
             // 
             this.label20.AutoSize = true;
-            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label20.Location = new System.Drawing.Point(573, 15);
+            this.label20.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label20.Location = new System.Drawing.Point(2, 15);
             this.label20.Name = "label20";
-            this.label20.Size = new System.Drawing.Size(102, 25);
+            this.label20.Size = new System.Drawing.Size(120, 25);
             this.label20.TabIndex = 3;
-            this.label20.Text = "Infomation";
-            // 
-            // scheduleListView
-            // 
-            this.scheduleListView.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1,
-            this.columnHeader2});
-            this.scheduleListView.FullRowSelect = true;
-            this.scheduleListView.HideSelection = false;
-            this.scheduleListView.Location = new System.Drawing.Point(2, 3);
-            this.scheduleListView.MultiSelect = false;
-            this.scheduleListView.Name = "scheduleListView";
-            this.scheduleListView.Size = new System.Drawing.Size(565, 785);
-            this.scheduleListView.TabIndex = 0;
-            this.scheduleListView.UseCompatibleStateImageBehavior = false;
-            this.scheduleListView.View = System.Windows.Forms.View.Details;
-            this.scheduleListView.MouseClick += new System.Windows.Forms.MouseEventHandler(this.scheduleListView_MouseClick);
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Schedule";
-            this.columnHeader1.Width = 114;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Created time";
-            this.columnHeader2.Width = 265;
+            this.label20.Text = "Description";
             // 
             // Department
             // 
@@ -1077,10 +1268,10 @@ namespace WindowsFormsApp
             this.Department.Controls.Add(this.label13);
             this.Department.Controls.Add(this.textBox5);
             this.Department.Controls.Add(this.outputDepartmentDataGridView);
-            this.Department.Location = new System.Drawing.Point(4, 25);
+            this.Department.Location = new System.Drawing.Point(4, 27);
             this.Department.Name = "Department";
             this.Department.Padding = new System.Windows.Forms.Padding(3);
-            this.Department.Size = new System.Drawing.Size(1920, 791);
+            this.Department.Size = new System.Drawing.Size(1920, 789);
             this.Department.TabIndex = 0;
             this.Department.Text = "Department";
             this.Department.UseVisualStyleBackColor = true;
@@ -1091,9 +1282,9 @@ namespace WindowsFormsApp
             this.scheduleNOLabel1.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.scheduleNOLabel1.Location = new System.Drawing.Point(66, 20);
             this.scheduleNOLabel1.Name = "scheduleNOLabel1";
-            this.scheduleNOLabel1.Size = new System.Drawing.Size(135, 16);
+            this.scheduleNOLabel1.Size = new System.Drawing.Size(80, 16);
             this.scheduleNOLabel1.TabIndex = 6;
-            this.scheduleNOLabel1.Text = "Schedule number: ";
+            this.scheduleNOLabel1.Text = "Schedule: ";
             // 
             // label13
             // 
@@ -1199,10 +1390,10 @@ namespace WindowsFormsApp
             this.Subject.Controls.Add(this.outputSubjectCombobox);
             this.Subject.Controls.Add(this.label4);
             this.Subject.Controls.Add(this.outputSubjectDataGridView);
-            this.Subject.Location = new System.Drawing.Point(4, 25);
+            this.Subject.Location = new System.Drawing.Point(4, 27);
             this.Subject.Name = "Subject";
             this.Subject.Padding = new System.Windows.Forms.Padding(3);
-            this.Subject.Size = new System.Drawing.Size(1920, 791);
+            this.Subject.Size = new System.Drawing.Size(1920, 789);
             this.Subject.TabIndex = 1;
             this.Subject.Text = "Subject";
             this.Subject.UseVisualStyleBackColor = true;
@@ -1213,9 +1404,9 @@ namespace WindowsFormsApp
             this.scheduleNOLabel2.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.scheduleNOLabel2.Location = new System.Drawing.Point(68, 25);
             this.scheduleNOLabel2.Name = "scheduleNOLabel2";
-            this.scheduleNOLabel2.Size = new System.Drawing.Size(135, 16);
+            this.scheduleNOLabel2.Size = new System.Drawing.Size(80, 16);
             this.scheduleNOLabel2.TabIndex = 8;
-            this.scheduleNOLabel2.Text = "Schedule number: ";
+            this.scheduleNOLabel2.Text = "Schedule: ";
             // 
             // label11
             // 
@@ -1243,18 +1434,19 @@ namespace WindowsFormsApp
             // outputSubjectCombobox
             // 
             this.outputSubjectCombobox.FormattingEnabled = true;
-            this.outputSubjectCombobox.Location = new System.Drawing.Point(455, 22);
+            this.outputSubjectCombobox.Location = new System.Drawing.Point(461, 20);
             this.outputSubjectCombobox.Name = "outputSubjectCombobox";
-            this.outputSubjectCombobox.Size = new System.Drawing.Size(259, 24);
+            this.outputSubjectCombobox.Size = new System.Drawing.Size(259, 26);
             this.outputSubjectCombobox.TabIndex = 2;
             this.outputSubjectCombobox.SelectedIndexChanged += new System.EventHandler(this.outputSubjectCombobox_SelectedIndexChanged);
             // 
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(372, 25);
+            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label4.Location = new System.Drawing.Point(341, 23);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(77, 16);
+            this.label4.Size = new System.Drawing.Size(95, 18);
             this.label4.TabIndex = 1;
             this.label4.Text = "Department";
             // 
@@ -1315,10 +1507,10 @@ namespace WindowsFormsApp
             this.Lecturer.Controls.Add(this.outputLecturerCombobox);
             this.Lecturer.Controls.Add(this.label5);
             this.Lecturer.Controls.Add(this.outputLecturerDataGridView);
-            this.Lecturer.Location = new System.Drawing.Point(4, 25);
+            this.Lecturer.Location = new System.Drawing.Point(4, 27);
             this.Lecturer.Name = "Lecturer";
             this.Lecturer.Padding = new System.Windows.Forms.Padding(3);
-            this.Lecturer.Size = new System.Drawing.Size(1920, 791);
+            this.Lecturer.Size = new System.Drawing.Size(1920, 789);
             this.Lecturer.TabIndex = 2;
             this.Lecturer.Text = "Lecturer";
             this.Lecturer.UseVisualStyleBackColor = true;
@@ -1329,9 +1521,9 @@ namespace WindowsFormsApp
             this.scheduleNOLabel3.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.scheduleNOLabel3.Location = new System.Drawing.Point(67, 24);
             this.scheduleNOLabel3.Name = "scheduleNOLabel3";
-            this.scheduleNOLabel3.Size = new System.Drawing.Size(135, 16);
+            this.scheduleNOLabel3.Size = new System.Drawing.Size(80, 16);
             this.scheduleNOLabel3.TabIndex = 10;
-            this.scheduleNOLabel3.Text = "Schedule number: ";
+            this.scheduleNOLabel3.Text = "Schedule: ";
             // 
             // label19
             // 
@@ -1367,18 +1559,19 @@ namespace WindowsFormsApp
             // outputLecturerCombobox
             // 
             this.outputLecturerCombobox.FormattingEnabled = true;
-            this.outputLecturerCombobox.Location = new System.Drawing.Point(463, 21);
+            this.outputLecturerCombobox.Location = new System.Drawing.Point(460, 19);
             this.outputLecturerCombobox.Name = "outputLecturerCombobox";
-            this.outputLecturerCombobox.Size = new System.Drawing.Size(233, 24);
+            this.outputLecturerCombobox.Size = new System.Drawing.Size(233, 26);
             this.outputLecturerCombobox.TabIndex = 2;
             this.outputLecturerCombobox.SelectedIndexChanged += new System.EventHandler(this.outputLecturerCombobox_SelectedIndexChanged);
             // 
             // label5
             // 
             this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(371, 24);
+            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label5.Location = new System.Drawing.Point(341, 22);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(77, 16);
+            this.label5.Size = new System.Drawing.Size(95, 18);
             this.label5.TabIndex = 1;
             this.label5.Text = "Department";
             // 
@@ -1447,10 +1640,10 @@ namespace WindowsFormsApp
             this.SlotType.Controls.Add(this.label10);
             this.SlotType.Controls.Add(this.textBox8);
             this.SlotType.Controls.Add(this.outputSlotTypeDataGridView);
-            this.SlotType.Location = new System.Drawing.Point(4, 25);
+            this.SlotType.Location = new System.Drawing.Point(4, 27);
             this.SlotType.Name = "SlotType";
             this.SlotType.Padding = new System.Windows.Forms.Padding(3);
-            this.SlotType.Size = new System.Drawing.Size(1920, 791);
+            this.SlotType.Size = new System.Drawing.Size(1920, 789);
             this.SlotType.TabIndex = 3;
             this.SlotType.Text = "Slot type";
             this.SlotType.UseVisualStyleBackColor = true;
@@ -1461,9 +1654,9 @@ namespace WindowsFormsApp
             this.scheduleNOLabel4.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.scheduleNOLabel4.Location = new System.Drawing.Point(66, 20);
             this.scheduleNOLabel4.Name = "scheduleNOLabel4";
-            this.scheduleNOLabel4.Size = new System.Drawing.Size(135, 16);
+            this.scheduleNOLabel4.Size = new System.Drawing.Size(80, 16);
             this.scheduleNOLabel4.TabIndex = 10;
-            this.scheduleNOLabel4.Text = "Schedule number: ";
+            this.scheduleNOLabel4.Text = "Schedule: ";
             // 
             // label10
             // 
@@ -1490,6 +1683,7 @@ namespace WindowsFormsApp
             // 
             this.outputSlotTypeDataGridView.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.outputSlotTypeDataGridView.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
+            this.Column37,
             this.Column33,
             this.Column34,
             this.Column27,
@@ -1503,6 +1697,14 @@ namespace WindowsFormsApp
             this.outputSlotTypeDataGridView.RowTemplate.Height = 24;
             this.outputSlotTypeDataGridView.Size = new System.Drawing.Size(1297, 736);
             this.outputSlotTypeDataGridView.TabIndex = 0;
+            // 
+            // Column37
+            // 
+            this.Column37.HeaderText = "Slot type code";
+            this.Column37.MinimumWidth = 6;
+            this.Column37.Name = "Column37";
+            this.Column37.ReadOnly = true;
+            this.Column37.Width = 125;
             // 
             // Column33
             // 
@@ -1555,29 +1757,53 @@ namespace WindowsFormsApp
             // label1
             // 
             this.label1.AutoSize = true;
+            this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(43, 28);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(65, 16);
+            this.label1.Size = new System.Drawing.Size(72, 18);
             this.label1.TabIndex = 6;
             this.label1.Text = "Semester";
             // 
             // fromDatelabel
             // 
             this.fromDatelabel.AutoSize = true;
+            this.fromDatelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.fromDatelabel.Location = new System.Drawing.Point(43, 70);
             this.fromDatelabel.Name = "fromDatelabel";
-            this.fromDatelabel.Size = new System.Drawing.Size(71, 16);
+            this.fromDatelabel.Size = new System.Drawing.Size(80, 18);
             this.fromDatelabel.TabIndex = 7;
             this.fromDatelabel.Text = "From date:";
             // 
             // toDatelabel
             // 
             this.toDatelabel.AutoSize = true;
+            this.toDatelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.toDatelabel.Location = new System.Drawing.Point(241, 70);
             this.toDatelabel.Name = "toDatelabel";
-            this.toDatelabel.Size = new System.Drawing.Size(60, 16);
+            this.toDatelabel.Size = new System.Drawing.Size(66, 18);
             this.toDatelabel.TabIndex = 8;
             this.toDatelabel.Text = "To date: ";
+            // 
+            // label27
+            // 
+            this.label27.AutoSize = true;
+            this.label27.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label27.Location = new System.Drawing.Point(871, 29);
+            this.label27.Name = "label27";
+            this.label27.Size = new System.Drawing.Size(82, 18);
+            this.label27.TabIndex = 10;
+            this.label27.Text = "Schedule:";
+            // 
+            // listBox1
+            // 
+            this.listBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.listBox1.FormattingEnabled = true;
+            this.listBox1.ItemHeight = 18;
+            this.listBox1.Location = new System.Drawing.Point(979, 29);
+            this.listBox1.Name = "listBox1";
+            this.listBox1.Size = new System.Drawing.Size(218, 94);
+            this.listBox1.TabIndex = 11;
+            this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
             // SchedulerForm
             // 
@@ -1585,6 +1811,8 @@ namespace WindowsFormsApp
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1903, 979);
+            this.Controls.Add(this.listBox1);
+            this.Controls.Add(this.label27);
             this.Controls.Add(this.toDatelabel);
             this.Controls.Add(this.fromDatelabel);
             this.Controls.Add(this.label1);
@@ -1597,7 +1825,7 @@ namespace WindowsFormsApp
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
             this.Text = "Scheduler";
             this.WindowState = System.Windows.Forms.FormWindowState.Maximized;
-            this.Shown += new System.EventHandler(this.SchedulerForm_Shown);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SchedulerForm_FormClosing);
             this.tabControl2.ResumeLayout(false);
             this.departmentTabPage.ResumeLayout(false);
             this.departmentTabPage.PerformLayout();
@@ -1615,15 +1843,18 @@ namespace WindowsFormsApp
             this.tabPage1.PerformLayout();
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.favoriteTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.favoriteSlotTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.favoriteSubjectTrackBar)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.departmentRatingTrackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.priorityCourseTrackBar)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.feedbackTrackBar)).EndInit();
             this.tabControl1.ResumeLayout(false);
             this.InputTabPage.ResumeLayout(false);
             this.outputTabPage.ResumeLayout(false);
             this.tabControl3.ResumeLayout(false);
             this.tabPage2.ResumeLayout(false);
             this.tabPage2.PerformLayout();
+            this.panel3.ResumeLayout(false);
+            this.panel3.PerformLayout();
             this.panel2.ResumeLayout(false);
             this.panel2.PerformLayout();
             this.Department.ResumeLayout(false);
@@ -1711,17 +1942,7 @@ namespace WindowsFormsApp
         private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.TabPage tabPage1;
-        private System.Windows.Forms.TrackBar priorityCourseTrackBar;
-        private System.Windows.Forms.TrackBar favoriteTrackBar;
-        private System.Windows.Forms.TrackBar feedbackTrackBar;
-        private System.Windows.Forms.Label favoriteLabel;
-        private System.Windows.Forms.Label feedbackLabel;
-        private System.Windows.Forms.Label priorityCourseLabel;
-        private System.Windows.Forms.Label label8;
-        private System.Windows.Forms.Label label7;
-        private System.Windows.Forms.Label label6;
         private System.Windows.Forms.Label label12;
-        private System.Windows.Forms.Label warningLabel;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label fromDatelabel;
@@ -1738,21 +1959,6 @@ namespace WindowsFormsApp
         private System.Windows.Forms.TextBox textBox9;
         private System.Windows.Forms.Label label19;
         private System.Windows.Forms.TabPage tabPage2;
-        private System.Windows.Forms.ListView scheduleListView;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column35;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column17;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column33;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column34;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column27;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column36;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column28;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column29;
         private System.Windows.Forms.Label label25;
         private System.Windows.Forms.Label label24;
         private System.Windows.Forms.Label label23;
@@ -1760,7 +1966,6 @@ namespace WindowsFormsApp
         private System.Windows.Forms.Label label21;
         private System.Windows.Forms.Label label20;
         private System.Windows.Forms.Panel panel2;
-        private System.Windows.Forms.TextBox descriptionTextBox;
         private System.Windows.Forms.Label totalCourseLabel;
         private System.Windows.Forms.Label runTimeLabel;
         private System.Windows.Forms.Label createTimeLabel;
@@ -1769,6 +1974,46 @@ namespace WindowsFormsApp
         private System.Windows.Forms.Label scheduleNOLabel2;
         private System.Windows.Forms.Label scheduleNOLabel3;
         private System.Windows.Forms.Label scheduleNOLabel4;
+        private System.Windows.Forms.Label schedulePointLabel;
+        private System.Windows.Forms.Label label6;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column26;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column35;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column17;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column37;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column33;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column34;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column27;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column36;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column28;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column29;
+        private System.Windows.Forms.Label favoriteSubjectValueLabel;
+        private System.Windows.Forms.Label departmentRatingValueLabel;
+        private System.Windows.Forms.Label priorityCourseValueLabel;
+        private System.Windows.Forms.TrackBar favoriteSubjectTrackBar;
+        private System.Windows.Forms.TrackBar departmentRatingTrackBar;
+        private System.Windows.Forms.TrackBar priorityCourseTrackBar;
+        private System.Windows.Forms.Label label26;
+        private System.Windows.Forms.Label label8;
+        private System.Windows.Forms.Label label7;
+        private System.Windows.Forms.Label label27;
+        private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.CheckBox checkBox6;
+        private System.Windows.Forms.CheckBox checkBox5;
+        private System.Windows.Forms.CheckBox checkBox4;
+        private System.Windows.Forms.CheckBox checkBox3;
+        private System.Windows.Forms.CheckBox checkBox2;
+        private System.Windows.Forms.CheckBox checkBox1;
+        private System.Windows.Forms.Label label30;
+        private System.Windows.Forms.Label label29;
+        private System.Windows.Forms.Label label28;
+        private System.Windows.Forms.Label favoriteSlotValueLabel;
+        private System.Windows.Forms.TrackBar favoriteSlotTrackBar;
+        private System.Windows.Forms.Label label31;
+        private System.Windows.Forms.Label configDescriptionLabel;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
@@ -1777,6 +2022,7 @@ namespace WindowsFormsApp
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
+        private System.Windows.Forms.ListBox listBox1;
     }
 }
 

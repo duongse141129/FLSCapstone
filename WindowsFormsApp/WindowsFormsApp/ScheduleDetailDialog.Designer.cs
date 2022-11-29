@@ -43,6 +43,9 @@
             this.semesterLabel = new System.Windows.Forms.Label();
             this.outputFromLabel = new System.Windows.Forms.Label();
             this.outputToLabel = new System.Windows.Forms.Label();
+            this.teachableTimeLabel = new System.Windows.Forms.Label();
+            this.schoolTimeLabel = new System.Windows.Forms.Label();
+            this.lecturerPointLabel = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
@@ -175,11 +178,41 @@
             this.outputToLabel.TabIndex = 6;
             this.outputToLabel.Text = "To date: ";
             // 
+            // teachableTimeLabel
+            // 
+            this.teachableTimeLabel.AutoSize = true;
+            this.teachableTimeLabel.Location = new System.Drawing.Point(485, 183);
+            this.teachableTimeLabel.Name = "teachableTimeLabel";
+            this.teachableTimeLabel.Size = new System.Drawing.Size(104, 16);
+            this.teachableTimeLabel.TabIndex = 7;
+            this.teachableTimeLabel.Text = "Teachable time:";
+            // 
+            // schoolTimeLabel
+            // 
+            this.schoolTimeLabel.AutoSize = true;
+            this.schoolTimeLabel.Location = new System.Drawing.Point(485, 222);
+            this.schoolTimeLabel.Name = "schoolTimeLabel";
+            this.schoolTimeLabel.Size = new System.Drawing.Size(91, 16);
+            this.schoolTimeLabel.TabIndex = 8;
+            this.schoolTimeLabel.Text = "In school time:";
+            // 
+            // lecturerPointLabel
+            // 
+            this.lecturerPointLabel.AutoSize = true;
+            this.lecturerPointLabel.Location = new System.Drawing.Point(816, 183);
+            this.lecturerPointLabel.Name = "lecturerPointLabel";
+            this.lecturerPointLabel.Size = new System.Drawing.Size(40, 16);
+            this.lecturerPointLabel.TabIndex = 9;
+            this.lecturerPointLabel.Text = "Point:";
+            // 
             // ScheduleDetailDialog
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1499, 683);
+            this.Controls.Add(this.lecturerPointLabel);
+            this.Controls.Add(this.schoolTimeLabel);
+            this.Controls.Add(this.teachableTimeLabel);
             this.Controls.Add(this.outputToLabel);
             this.Controls.Add(this.outputFromLabel);
             this.Controls.Add(this.semesterLabel);
@@ -212,5 +245,8 @@
         private System.Windows.Forms.Label semesterLabel;
         private System.Windows.Forms.Label outputFromLabel;
         private System.Windows.Forms.Label outputToLabel;
+        private System.Windows.Forms.Label teachableTimeLabel;
+        private System.Windows.Forms.Label schoolTimeLabel;
+        private System.Windows.Forms.Label lecturerPointLabel;
     }
 }

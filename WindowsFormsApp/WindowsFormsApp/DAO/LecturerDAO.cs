@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -120,26 +121,69 @@ namespace WindowsFormsApp.DAO
             try
             {
                 var client = new HttpClient();
+
+                //string accessToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ik5nbyBEYW5nIEhhIEFuIiwiZW1haWwiOiJtaW5odmlwcHJvbGsxMjNAZ21haWwuY29tIiwic3ViIjoibWluaHZpcHByb2xrMTIzQGdtYWlsLmNvbSIsImp0aSI6ImdyYnRsNmpPblJCeHZuNElJc1VaU2lpQ3JzUEJXcCIsIlVzZXJOYW1lIjoiTmdvIERhbmcgSGEgQW4iLCJJZCI6IkFuTkRIMiIsIm5iZiI6MTY2OTE5MDMwNiwiZXhwIjoxNjY5MTk3NTA2LCJpYXQiOjE2NjkxOTAzMDZ9.XBGvZYjWpGzS1pfRXjnDyVvfyeKAwcdJMnF5dX3jR8gai88K_zqgtF-JIvcpHLGs9fFXVbK9kdcyeN1FeKvMkw";
+                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                //var endpoint = new Uri("http://20.214.249.72/api/UserAuthen?pageIndex=1&pageSize=1000000");
+
                 var endpoint = new Uri("http://20.214.249.72/api/User?RoleIDs=LC&Status=1&pageIndex=1&pageSize=10000");
+
+
                 HttpResponseMessage response = await client.GetAsync(endpoint);
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine("Get success ");
-                    Console.WriteLine("Status Code: " + response.StatusCode);
-                    Console.WriteLine("Header: " + response.Headers);
-                    Console.WriteLine("Respone: " + response.Content);
+                    //Console.WriteLine("Get success ");
+                    //Console.WriteLine("Status Code: " + response.StatusCode);
+                    //Console.WriteLine("Header: " + response.Headers);
+                    //Console.WriteLine("Respone: " + response.Content);
 
-                    Console.WriteLine("Content Respone: " + responseContent);
+                    //Console.WriteLine("Content Respone: " + responseContent);
                     lecturers = JsonConvert.DeserializeObject<List<Lecturer>>(responseContent);
                     return lecturers;
                 }
-                Console.WriteLine("Get fail");
+                //Console.WriteLine("Get fail");
                 return null;
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Error at Get: " + ex.Message);
+                //Console.WriteLine("Error at Get: " + ex.Message);
+                return null;
+            }
+        }
+
+        public static async Task<Lecturer> GetUserByKeyAsync(string key)
+        {
+            Lecturer lecturer;
+            try
+            {
+                var client = new HttpClient();
+
+                //string accessToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ik5nbyBEYW5nIEhhIEFuIiwiZW1haWwiOiJtaW5odmlwcHJvbGsxMjNAZ21haWwuY29tIiwic3ViIjoibWluaHZpcHByb2xrMTIzQGdtYWlsLmNvbSIsImp0aSI6ImdyYnRsNmpPblJCeHZuNElJc1VaU2lpQ3JzUEJXcCIsIlVzZXJOYW1lIjoiTmdvIERhbmcgSGEgQW4iLCJJZCI6IkFuTkRIMiIsIm5iZiI6MTY2OTE5MDMwNiwiZXhwIjoxNjY5MTk3NTA2LCJpYXQiOjE2NjkxOTAzMDZ9.XBGvZYjWpGzS1pfRXjnDyVvfyeKAwcdJMnF5dX3jR8gai88K_zqgtF-JIvcpHLGs9fFXVbK9kdcyeN1FeKvMkw";
+                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                //var endpoint = new Uri("http://20.214.249.72/api/UserAuthen?pageIndex=1&pageSize=1000000");
+
+                var endpoint = new Uri("http://20.214.249.72/api/Token/GetUserByRefreshToken/" + key);
+
+                HttpResponseMessage response = await client.GetAsync(endpoint);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    //Console.WriteLine("Get success ");
+                    //Console.WriteLine("Status Code: " + response.StatusCode);
+                    //Console.WriteLine("Header: " + response.Headers);
+                    //Console.WriteLine("Respone: " + response.Content);
+
+                    //Console.WriteLine("Content Respone: " + responseContent);
+                    lecturer = JsonConvert.DeserializeObject<Lecturer>(responseContent);
+                    return lecturer;
+                }
+                //Console.WriteLine("Get fail");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine("Error at Get: " + ex.Message);
                 return null;
             }
         }

@@ -155,12 +155,12 @@ namespace WindowsFormsApp.DAO
                 var responseContent = await response.Content.ReadAsStringAsync();
                 if (response.IsSuccessStatusCode)
                 {
-                    Console.WriteLine("Get success ");
-                    Console.WriteLine("Status Code: " + response.StatusCode);
-                    Console.WriteLine("Header: " + response.Headers);
-                    Console.WriteLine("Respone: " + response.Content);
+                    //Console.WriteLine("Get success ");
+                    //Console.WriteLine("Status Code: " + response.StatusCode);
+                    //Console.WriteLine("Header: " + response.Headers);
+                    //Console.WriteLine("Respone: " + response.Content);
 
-                    Console.WriteLine("Content Respone: " + responseContent);
+                    //Console.WriteLine("Content Respone: " + responseContent);
                     courses = JsonConvert.DeserializeObject<List<Course>>(responseContent);
                     return courses;
                 }
