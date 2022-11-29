@@ -5,7 +5,7 @@ const ScheduleAdmin = ({ lecturerId, semester }) => {
 
   return (
     <Stack height='90vh'>
-      <Schedule semester={semester} selectedId={lecturerId} popUp={true}/>
+      <Schedule semester={semester} selectedId={lecturerId} popUp={true} isLecturer={true}/>
     </Stack>
   )
 }

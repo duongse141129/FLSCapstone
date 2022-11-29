@@ -59,116 +59,72 @@ const SemesterDetailAdmin = () => {
     navigate('/admin/semester')
   }
 
-  const openVoting = () => {
-    setMode('openVoting');
-    setContent('After open, lecturers and managers can handle stuffs in semester.')
+  const clickNextState = () => {
+    if(semester.State === 5) return;
+
+    setMode('next');
+    if(semester.State === 1) setContent('Next state is Voting.')
+    else if(semester.State === 2) setContent('Next state is Blocked.')
+    else if(semester.State === 3) setContent('Next state is Adjusting.')
+    else setContent('Next state is Public.')
+    
     setIsConfirm(true);
   }
 
-  const closeVoting = () => {
-    setMode('closeVoting')
-    setContent('You want to close voting.')
+  const clickPrevState = () => {
+    if(semester.State === 1) return;
+
+    setMode('prev')
+    if(semester.State === 5) setContent('Previous state is Adjusting.')
+    else if(semester.State === 4) setContent('Previous state is Blocked.')
+    else if(semester.State === 3) setContent('Previous state is Voting.')
+    else setContent('Previous state is New.')
     setIsConfirm(true);
   }
 
-  const block = () => {
-    setMode('block');
-    setContent('After block, lecturers and managers can not handle stuffs anymore.')
-    setIsConfirm(true);
-  }
+  const saveNextState = () => {
+    if(semester.State === 5) return;
 
-  const unBlock = () => {
-    setMode('unBlock');
-    setContent('You want to return voting state.')
-    setIsConfirm(true);
-  }
-
-  const saveOpenVoting = () => {
-    if (semester) {
-      request.put(`Semester/${id}`, {
-        Term: semester.Term, DateStart: semester.DateStart,
-        DateEnd: semester.DateEnd, State: 2
-      })
-        .then(res => {
-          if (res.status === 200) {
-            setIsConfirm(false)
-            toast.success('Open Successfully!', {
-              position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
-              pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
-            });
-          }
-        })
-        .catch(err => {
-          alert('Fail to open voting')
+    request.put(`Semester/${id}`, {
+      Term: semester.Term, DateStart: semester.DateStart,
+      DateEnd: semester.DateEnd, State: (semester.State + 1)
+    })
+      .then(res => {
+        if (res.status === 200) {
           setIsConfirm(false)
-        })
-    }
+          toast.success('Success to change next state!', {
+            position: "top-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true,
+            pauseOnHover: true, draggable: true, progress: undefined, theme: "light",
+          });
+        }
+      })
+      .catch(err => {
+        alert('Fail to change next state')
+        setIsConfirm(false)
+      })
   }
 
-  const saveCloseVoting = () => {
-    if (semester) {
-      request.put(`Semester/${id}`, {
-        Term: semester.Term, DateStart: semester.DateStart,
-        DateEnd: semester.DateEnd, State: 1
-      })
-        .then(res => {
-          if (res.status === 200) {
-            setIsConfirm(false)
-            toast.success('Close Successfully!', {
-              position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
-              pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
-            });
-          }
-        })
-        .catch(err => {
-          alert('Fail to close voting')
-          setIsConfirm(false)
-        })
-    }
-  }
+  const savePrevState = () => {
+    if(semester.State === 1) return;
 
-  const saveBlock = () => {
-    if (semester) {
-      request.put(`Semester/${id}`, {
-        Term: semester.Term, DateStart: semester.DateStart,
-        DateEnd: semester.DateEnd, State: 3
-      })
-        .then(res => {
-          if (res.status === 200) {
-            setIsConfirm(false)
-            toast.success('Block Successfully!', {
-              position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
-              pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
-            });
-          }
-        })
-        .catch(err => {
-          alert('Fail to block')
+    request.put(`Semester/${id}`, {
+      Term: semester.Term, DateStart: semester.DateStart,
+      DateEnd: semester.DateEnd, State: (semester.State - 1)
+    })
+      .then(res => {
+        if (res.status === 200) {
           setIsConfirm(false)
-        })
-    }
-  }
-
-  const saveUnBlock = () => {
-    if (semester) {
-      request.put(`Semester/${id}`, {
-        Term: semester.Term, DateStart: semester.DateStart,
-        DateEnd: semester.DateEnd, State: 2
+          toast.success('Success to return previous state', {
+            position: "top-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true,
+            pauseOnHover: true, draggable: true, progress: undefined, theme: "light",
+          });
+        }
       })
-        .then(res => {
-          if (res.status === 200) {
-            setIsConfirm(false)
-            toast.success('Unblock Successfully!', {
-              position: "top-right", autoClose: 1000, hideProgressBar: false, closeOnClick: true,
-              pauseOnHover: true, draggable: true, progress: undefined, theme: "colored",
-            });
-          }
-        })
-        .catch(err => {
-          alert('Fail to unblock')
-          setIsConfirm(false)
-        })
-    }
+      .catch(err => {
+        alert('Fail to return previous state')
+        setIsConfirm(false)
+      })
+    
   }
 
   return (
@@ -183,18 +139,12 @@ const SemesterDetailAdmin = () => {
           <Title title={`Semester: ${semester.Term}`} />
         </Stack>
         <Stack pr={9} direction='row' gap={1}>
-          {semester.State === 1 &&
-            <Button variant='outlined' size='small' onClick={openVoting}>Open Voting</Button>}
-          {semester.State === 2 &&
-            <>
-              <Button variant='outlined' color='info' size='small' onClick={closeVoting}>
-                Close Voting</Button>
-              <Button variant='contained' color='success' size='small' onClick={block}>
-                Block</Button>
-            </>}
-          {semester.State === 3 &&
-            <Button variant='outlined' color='info' size='small' onClick={unBlock}>
-              Unblock</Button>}
+          {semester.State !== 1 && 
+            <Button variant='outlined' color='info' size='small' onClick={clickPrevState}>
+            Previous State</Button>}
+          {semester.State !== 5 && 
+            <Button variant='contained' color='success' size='small' onClick={clickNextState}>
+            Next State</Button>}
         </Stack>
       </Stack>
       <Stack px={11} gap={1}>
@@ -205,29 +155,16 @@ const SemesterDetailAdmin = () => {
       <Stack px={9} mb={2}>
         <Stack direction='row' gap={1} border='1px solid #e3e3e3' py={0.5} borderRadius={2}
           justifyContent='center'>
-          <Stack direction='row' alignItems='center' gap={1}>
-            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
-              bgcolor={semester.State === 1 ? blue[600] : grey[400]}>
-              {semester.State === 1 && <Check sx={{ color: 'white' }} />}
+          {states.map(state => (
+            <Stack key={state.id} direction='row' alignItems='center' gap={1}>
+              <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
+                bgcolor={semester.State >= state.id ? blue[600] : grey[300]}>
+                {semester.State >= state.id && <Check sx={{ color: 'white' }} />}
+              </Stack>
+              <Typography>{state.name}</Typography>
+              {state.id !== 5 && <HorizontalRule />}
             </Stack>
-            <Typography>New</Typography>
-            <HorizontalRule />
-          </Stack>
-          <Stack direction='row' alignItems='center' gap={1}>
-            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
-              bgcolor={semester.State === 2 ? blue[600] : grey[400]}>
-              {semester.State === 2 && <Check sx={{ color: 'white' }} />}
-            </Stack>
-            <Typography>Voting</Typography>
-            <HorizontalRule />
-          </Stack>
-          <Stack direction='row' alignItems='center' gap={1}>
-            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
-              bgcolor={semester.State === 3 ? blue[600] : grey[400]}>
-              {semester.State === 3 && <Check sx={{ color: 'white' }} />}
-            </Stack>
-            <Typography>Blocked</Typography>
-          </Stack>
+          ))}
         </Stack>
       </Stack>
       <Stack px={9} mb={2}>
@@ -254,12 +191,19 @@ const SemesterDetailAdmin = () => {
       {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id} slotTypes={slotTypes}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} />}
-      <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm}
-        content={content} openVoting={saveOpenVoting} closeVoting={saveCloseVoting}
-        block={saveBlock} unBlock={saveUnBlock} mode={mode} />
+      <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} content={content} 
+        mode={mode} saveNextState={saveNextState} savePrevState={savePrevState} />
       <ToastContainer />
     </Stack>
   )
 }
 
 export default SemesterDetailAdmin
+
+const states = [
+  {id: 1, name: 'New'},
+  {id: 2, name: 'Voting'},
+  {id: 3, name: 'Blocked'},
+  {id: 4, name: 'Adjusting'},
+  {id: 5, name: 'Public'},
+]

@@ -2,7 +2,7 @@ import { Button, Dialog, DialogActions, DialogContent, Typography } from '@mui/m
 import { ClipLoader } from 'react-spinners';
 import { useState, useEffect } from 'react';
 
-const ConfirmModal = ({isConfirm, setIsConfirm, content, openVoting, closeVoting, block, unBlock, mode}) => {
+const ConfirmModal = ({isConfirm, setIsConfirm, content, mode, saveNextState, savePrevState}) => {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
@@ -11,17 +11,11 @@ const ConfirmModal = ({isConfirm, setIsConfirm, content, openVoting, closeVoting
 
   const clickOK = () => {
     setLoading(true);
-    if(mode === 'openVoting'){
-      openVoting();
+    if(mode === 'next'){
+      saveNextState();
     }
-    else if(mode === 'closeVoting'){
-      closeVoting();
-    }
-    else if(mode === 'block'){
-      block();
-    }
-    else if(mode === 'unBlock'){
-      unBlock();
+    else{
+      savePrevState();
     }
   }
 
