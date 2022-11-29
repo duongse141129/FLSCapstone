@@ -1,16 +1,12 @@
-import { Alert, Button, Dialog, DialogActions, DialogContent, DialogTitle, 
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, 
   Stack, Typography } from '@mui/material'
-import { useEffect, useMemo, useState } from 'react'
+import { useEffect, useState } from 'react'
 import {ClipLoader} from 'react-spinners'
 import request from '../../utils/request'
 
 const RejectModal = ({ isReject, setIsReject, selectedRequest, handleAfterSave, isRejectDis }) => {
-  const account = JSON.parse(localStorage.getItem('web-user'));
   const [loadReject, setLoadReject] = useState(false)
   const [lecturer, setLecturer] = useState({})
-  const isInSide = useMemo(() => {
-    return account.DepartmentId === lecturer.DepartmentId
-  }, [account, lecturer])
 
   useEffect(() => {
     if(selectedRequest.LecturerId){
@@ -47,8 +43,6 @@ const RejectModal = ({ isReject, setIsReject, selectedRequest, handleAfterSave, 
         <Typography variant='h5' fontWeight={500}>Reject Request: {isRejectDis ? 'Disable Subject' : 'Teaching Subject'}</Typography>
       </DialogTitle>
       <DialogContent>
-        {!isInSide && <Alert severity='warning' sx={{mb: 2}}>
-          This Lecturer is out of your department</Alert>}
         <Stack mb={1} gap={0.5}>
           <Typography><span style={{fontWeight: 500}}>Lecturer:</span> {' '}
             {lecturer.Name} (Department: {lecturer.DepartmentName})</Typography>

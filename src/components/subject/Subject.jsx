@@ -6,7 +6,7 @@ import React, { useState, useEffect } from 'react';
 import RequestModal from '../department/RequestModal';
 import RatingModal from '../department/RatingModal';
 import './Subject.css';
-import { green, grey } from '@mui/material/colors';
+import { green, grey, red } from '@mui/material/colors';
 import {HashLoader} from 'react-spinners';
 import { ToastContainer, toast } from 'react-toastify';
 import request from '../../utils/request';
@@ -149,12 +149,6 @@ const Subject = ({ semesterId, semesterState }) => {
     setIsRating(true);
   }
 
-  const showStatus = (state) => {
-    if(state === -1) return 'Rejected';
-    if(state === 0) return 'Requested';
-    if(state === 1) return 'Accepted';
-  }
-
   const sendRequest = (status) => {
     if(status){
       toast.success('Send Successfully!', {
@@ -222,17 +216,17 @@ const Subject = ({ semesterId, semesterState }) => {
         {!loadSubject && <Paper sx={{ minWidth: 700, mb: 2 }}>
           <TableContainer component={Box}
             sx={{ overflow: 'auto' }}>
-            <Table>
+            <Table size='small'>
               <TableHead>
                 <TableRow>
-                  <TableCell size='small' className='subject-header'>Code</TableCell>
-                  <TableCell size='small' className='subject-header'>Name</TableCell>
+                  <TableCell className='subject-header'>Code</TableCell>
+                  <TableCell className='subject-header request-border'>Name</TableCell>
                   {
                     selectedDepartment === account.DepartmentId &&
-                    <TableCell size='small' className='subject-header'>Favorite Point</TableCell>
+                    <TableCell className='subject-header request-border' align='center'>Favorite Point</TableCell>
                   }
-                  <TableCell size='small' className='subject-header'>Request Status</TableCell>
-                  <TableCell size='small' className='subject-header'>Request Type</TableCell>
+                  <TableCell className='subject-header' align='center'>Request Type</TableCell>
+                  <TableCell className='subject-header' align='center'>Request Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -240,12 +234,12 @@ const Subject = ({ semesterId, semesterState }) => {
                   subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((subject) => (
                       <TableRow key={subject.Id} hover>
-                        <TableCell size='small'>{subject.Id}</TableCell>
-                        <TableCell size='small'>{subject.SubjectName}</TableCell>
+                        <TableCell>{subject.Id}</TableCell>
+                        <TableCell className='request-border'>{subject.SubjectName}</TableCell>
                         {
                           selectedDepartment === account.DepartmentId &&
-                          <TableCell size='small'>
-                            <Stack direction='row' alignItems='center' gap={1}>
+                          <TableCell className='request-border'>
+                            <Stack direction='row' alignItems='center' gap={1} justifyContent='center'>
                               <Typography borderRight={semesterState === 2 && '1px solid gray'} pr={2}>
                                 {
                                   favoriteSubjects.length > 0 &&
@@ -263,15 +257,19 @@ const Subject = ({ semesterId, semesterState }) => {
                             </Stack>
                           </TableCell>
                         }
-                        <TableCell size='small'>
-                          {requests.find(item => item.SubjectId === subject.Id) ? 
-                            showStatus(requests.find(item => item.SubjectId === subject.Id).ResponseState) :
-                            'Available'}
-                        </TableCell>
-                        <TableCell size='small'>
+                        <TableCell align='center'>
                           {requests.find(item => item.SubjectId === subject.Id) ? 
                             requests.find(item => item.SubjectId === subject.Id).Title :
                             '-'}
+                        </TableCell>
+                        <TableCell align='center'>
+                          {requests.find(item => item.SubjectId === subject.Id)?.ResponseState === -1 &&
+                            <Typography fontSize='15px' color={red[600]} fontWeight={500}>Rejected</Typography>}
+                          {requests.find(item => item.SubjectId === subject.Id)?.ResponseState === 0 &&
+                            <Typography fontSize='15px' color={grey[600]} fontWeight={500}>Requested</Typography>}
+                          {requests.find(item => item.SubjectId === subject.Id)?.ResponseState === 1 &&
+                            <Typography fontSize='15px' color={green[700]} fontWeight={500}>Accepted</Typography>}
+                          {requests.find(item => item.SubjectId === subject.Id) === undefined && '-'}
                         </TableCell>
                       </TableRow>
                     ))

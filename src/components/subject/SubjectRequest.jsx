@@ -1,4 +1,4 @@
-import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material'
+import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import request from '../../utils/request';
 import ExternalNumber from './ExternalNumber';
@@ -13,6 +13,7 @@ const SubjectRequest = ({semesterId, scheduleId}) => {
   const [courses, setCourses] = useState([]);
   const [isDetail, setIsDetail] = useState(false);
   const [pickedSubject, setPickedSubject] = useState({});
+  const [saveAccept, setSaveAccept] = useState(false);
 
   useEffect(() => {
     const getSubjects = async () => {
@@ -62,23 +63,28 @@ const SubjectRequest = ({semesterId, scheduleId}) => {
 
   return (
     <Stack px={9} height='90vh'>
+      <Stack mb={1} direction='row' gap={1}>
+        <Typography fontWeight={500}>Department: </Typography>
+        <Typography>{account.DepartmentName}</Typography>
+      </Stack>
       <Stack>
         <Paper sx={{ minWidth: 700, mb: 2 }}>
           <TableContainer component={Box}>
             <Table size='small'>
               <TableHead>
                 <TableRow>
-                  <TableCell className='subject-header request-border' colSpan={3}>
-                    Subject</TableCell>
-                  <TableCell className='subject-header' colSpan={2}>
+                  <TableCell className='subject-header request-border' colSpan={3} align='center'>
+                    Subjects ({subjects.length})</TableCell>
+                  <TableCell className='subject-header' colSpan={2} align='center'>
                     Assigned Lecturers</TableCell>
                 </TableRow>
                 <TableRow>
                   <TableCell className='subject-header'>Code</TableCell>
                   <TableCell className='subject-header'>Name</TableCell>
-                  <TableCell className='subject-header request-border'>Total Courses</TableCell>
-                  <TableCell className='subject-header'>Internal</TableCell>
-                  <TableCell className='subject-header'>External</TableCell>
+                  <TableCell className='subject-header request-border' align='center'>
+                    Total Courses</TableCell>
+                  <TableCell className='subject-header' align='center'>Internal</TableCell>
+                  <TableCell className='subject-header' align='center'>External</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -89,10 +95,12 @@ const SubjectRequest = ({semesterId, scheduleId}) => {
                     onClick={() => viewDetail(item)}>
                     <TableCell>{item.Id}</TableCell>
                     <TableCell>{item.SubjectName}</TableCell>
-                    <TableCell className='request-border'>
+                    <TableCell className='request-border' align='center'>
                       {courses.filter(course => course.SubjectId === item.Id).length}</TableCell>
-                    <TableCell><InternalNumber subjectId={item.Id} semesterId={semesterId}/></TableCell>
-                    <TableCell><ExternalNumber subjectId={item.Id} semesterId={semesterId}/></TableCell>
+                    <TableCell align='center'>
+                      <InternalNumber subjectId={item.Id} semesterId={semesterId} isDetail={saveAccept}/></TableCell>
+                    <TableCell align='center'>
+                      <ExternalNumber subjectId={item.Id} semesterId={semesterId} isDetail={saveAccept}/></TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -109,7 +117,7 @@ const SubjectRequest = ({semesterId, scheduleId}) => {
           />
         </Paper>
       </Stack>
-      <SubjectRequestDetail isDetail={isDetail} setIsDetail={setIsDetail} 
+      <SubjectRequestDetail isDetail={isDetail} setIsDetail={setIsDetail} setSaveAccept={setSaveAccept}
         pickedSubject={pickedSubject} scheduleId={scheduleId} semesterId={semesterId}/>
     </Stack>
   )

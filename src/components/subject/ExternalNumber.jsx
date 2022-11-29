@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import request from '../../utils/request'
 
-const ExternalNumber = ({subjectId, semesterId}) => {
+const ExternalNumber = ({subjectId, semesterId, isDetail}) => {
   const [length, setLength] = useState(0)
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const ExternalNumber = ({subjectId, semesterId}) => {
       })
       .catch(err => {alert('Fail to get external number')})
     }
-  }, [subjectId, semesterId])
+  }, [subjectId, semesterId, isDetail])
 
   return (
     <>{length}</>

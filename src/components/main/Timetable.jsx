@@ -79,22 +79,24 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
   //get slottype list
   useEffect(() => {
     const getSlotType = async () => {
-      setLoadingSlotType(true)
-      try {
-        const response = await request.get('SlotType', {
-          params: {
-            SemesterId: selectedSemester,
-            pageIndex: 1,
-            pageSize: 50
+      if(selectedSemester){
+        setLoadingSlotType(true)
+        try {
+          const response = await request.get('SlotType', {
+            params: {
+              SemesterId: selectedSemester,
+              pageIndex: 1,
+              pageSize: 50
+            }
+          })
+          if (response.status === 200) {
+            setSlotType(response.data)
+            setLoadingSlotType(false)
           }
-        })
-        if (response.status === 200) {
-          setSlotType(response.data)
-          setLoadingSlotType(false)
         }
-      }
-      catch (error) {
-        alert('Fail to load slot type')
+        catch (error) {
+          alert('Fail to load slot type')
+        }
       }
     }
 
@@ -235,33 +237,6 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
                 slots={item.slots} isSwap={isSwap} clickSlotToSwap={clickSlotToSwap}
               />
             ))}
-            {/* <Day day='MON'
-              date={dates.length > 0 && dates[0].split('-')[2] + '/' + dates[0].split('-')[1]}
-              slots={mon} 
-            />
-            <Day day='TUE'
-              date={dates.length > 0 && dates[1].split('-')[2] + '/' + dates[1].split('-')[1]}
-              slots={tue} 
-            />
-            <Day day='WED'
-              date={dates.length > 0 && dates[2].split('-')[2] + '/' + dates[2].split('-')[1]}
-              slots={wed} 
-            />
-            <Day day='THU'
-              date={dates.length > 0 && dates[3].split('-')[2] + '/' + dates[3].split('-')[1]}
-              slots={thu} 
-            />
-            <Day day='FRI'
-              date={dates.length > 0 && dates[4].split('-')[2] + '/' + dates[4].split('-')[1]}
-              slots={fri} 
-            />
-            <Day day='SAT'
-              date={dates.length > 0 && dates[5].split('-')[2] + '/' + dates[5].split('-')[1]}
-              slots={sat} 
-            />
-            <Day day='SUN'
-              date={dates.length > 0 && dates[6].split('-')[2] + '/' + dates[6].split('-')[1]} 
-            /> */}
           </Stack>
           </>
         )

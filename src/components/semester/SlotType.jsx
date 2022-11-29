@@ -3,9 +3,10 @@ import { Box, FormControl, FormControlLabel, Paper, Radio, RadioGroup, Stack, Sw
 import React, { useState, useEffect } from 'react'
 import request from '../../utils/request'
 import configData from '../../utils/configData.json';
-import { blue, green, grey, red } from '@mui/material/colors'
+import { blue, grey, red } from '@mui/material/colors'
 import { ToastContainer, toast } from 'react-toastify';
 import { ThumbDown, ThumbUp } from '@mui/icons-material';
+import { ClipLoader } from 'react-spinners';
 
 const SlotType = ({ semesterId, semesterState }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
@@ -13,19 +14,18 @@ const SlotType = ({ semesterId, semesterState }) => {
   const [favoriteSlots, setFavoriteSlots] = useState([]);
   const [likes, setLikes] = useState([]);
   const [dislikes, setDislikes] = useState([]);
-  const [isLoadingSave, setIsLoadingSave] = useState(false);
+  const [reload, setReload] = useState(false);
   const [mode, setMode] = useState('like')
   const [isEdit, setIsEdit] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [picked, setPicked] = useState('');
 
   //get slottype list
   useEffect(() => {
     request.get('SlotType', {
       params: {
-        SemesterId: semesterId,
-        sortBy: 'Id',
-        order: 'Asc',
-        pageIndex: 1,
-        pageSize: 100,
+        SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc',
+        pageIndex: 1, pageSize: 100,
       }
     })
       .then(res => {
@@ -56,7 +56,7 @@ const SlotType = ({ semesterId, semesterState }) => {
       .catch(err => {
         alert('Fail to load favorite slots!');
       })
-  }, [account.Id, semesterId, isLoadingSave])
+  }, [account.Id, semesterId, reload])
 
   //set pickedslot
   useEffect(() => {
@@ -86,12 +86,13 @@ const SlotType = ({ semesterId, semesterState }) => {
       return;
     }
 
+    setPicked(id);
     let obj = {}
     if (mode === 'like') {
       if (likes.find(like => like === id) || dislikes.find(dislike => dislike === id)) {
         return;
       }
-      if (likes.length === configData.LIKE_SLOT_NUMBER) {
+      if (likes.length >= configData.LIKE_SLOT_NUMBER) {
         return;
       }
       for (let i in favoriteSlots) {
@@ -101,32 +102,30 @@ const SlotType = ({ semesterId, semesterState }) => {
         }
       }
       if (Object.values(obj).length > 0) {
-        setIsLoadingSave(true)
+        setLoading(true)
         request.put(`LecturerSlotConfig/${obj.Id}`, {
           SlotTypeId: id, LecturerId: account.Id, SemesterId: semesterId,
           PreferenceLevel: 1, IsEnable: obj.IsEnable
         })
           .then(res => {
             if (res.status === 200) {
-              setIsLoadingSave(false)
+              setReload(prev => !prev)
+              setLoading(false)
               toast.success('Like Successfully!', {
                 position: "top-right", autoClose: 2000, hideProgressBar: false,
                 closeOnClick: true, pauseOnHover: true, draggable: true,
-                progress: undefined, theme: "colored",
+                progress: undefined, theme: "light",
               });
             }
           })
-          .catch(err => {
-            alert('Save like Fail!')
-            setIsLoadingSave(false)
-          })
+          .catch(err => { alert('Save like Fail!'); setLoading(false)})
       }
     }
     else if (mode === 'dislike') {
       if (likes.find(like => like === id) || dislikes.find(dislike => dislike === id)) {
         return;
       }
-      if (dislikes.length === configData.DISLIKE_SLOT_NUMBER) {
+      if (dislikes.length >= configData.DISLIKE_SLOT_NUMBER) {
         return;
       }
       for (let i in favoriteSlots) {
@@ -136,24 +135,25 @@ const SlotType = ({ semesterId, semesterState }) => {
         }
       }
       if (Object.values(obj).length > 0) {
-        setIsLoadingSave(true)
+        setLoading(true)
         request.put(`LecturerSlotConfig/${obj.Id}`, {
           SlotTypeId: id,LecturerId: account.Id, SemesterId: semesterId,
           PreferenceLevel: -1, IsEnable: obj.IsEnable
         })
           .then(res => {
             if (res.status === 200) {
-              setIsLoadingSave(false)
+              setLoading(false)
+              setReload(prev => !prev)
               toast.success('Dislike Successfully!', {
                 position: "top-right", autoClose: 2000, hideProgressBar: false,
                 closeOnClick: true, pauseOnHover: true, draggable: true,
-                progress: undefined, theme: "colored",
+                progress: undefined, theme: "light",
               });
             }
           })
           .catch(err => {
             alert('Save disLike Fail!')
-            setIsLoadingSave(false)
+            setLoading(false)
           })
       }
     }
@@ -166,24 +166,25 @@ const SlotType = ({ semesterId, semesterState }) => {
           }
         }
         if (Object.values(obj).length > 0) {
-          setIsLoadingSave(true)
+          setLoading(true)
           request.put(`LecturerSlotConfig/${obj.Id}`, {
             SlotTypeId: id, LecturerId: account.Id, SemesterId: semesterId,
             PreferenceLevel: 0, IsEnable: obj.IsEnable
           })
             .then(res => {
               if (res.status === 200) {
-                setIsLoadingSave(false)
+                setLoading(false)
+                setReload(prev => !prev)
                 toast.success('Eraser Successfully!', {
                   position: "top-right", autoClose: 1000, hideProgressBar: false,
                   closeOnClick: true, pauseOnHover: true, draggable: true,
-                  progress: undefined, theme: "colored",
+                  progress: undefined, theme: "light",
                 });
               }
             })
             .catch(err => {
               alert('Save disLike Fail!')
-              setIsLoadingSave(false)
+              setLoading(false)
             })
         }
       }
@@ -223,30 +224,34 @@ const SlotType = ({ semesterId, semesterState }) => {
       <Stack mb={2}>
         <Paper sx={{ minWidth: 700, mb: 2 }}>
           <TableContainer component={Box}>
-            <Table>
+            <Table size='small'>
               <TableHead>
-                <TableRow sx={{ bgcolor: green[600] }}>
-                  <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                    <Typography>Day of Week</Typography>
+                <TableRow>
+                  <TableCell align='center' className='subject-header manage-slot'>
+                    Code
                   </TableCell>
-                  <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                    <Typography>Duration</Typography>
+                  <TableCell align='center' className='subject-header manage-slot'>
+                    Day of Week
                   </TableCell>
-                  <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                    <Typography>Slot Number</Typography>
+                  <TableCell align='center' className='subject-header manage-slot'>
+                    Duration
                   </TableCell>
-                  <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                    <Typography>Rating</Typography>
+                  <TableCell align='center' className='subject-header manage-slot'>
+                    Slot Number
+                  </TableCell>
+                  <TableCell align='center' className='subject-header manage-slot'>
+                    Rating
                   </TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {slots.map(slot => (
-                  <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: 'pointer' } }} onClick={() => handlePick(slot.Id)}>
-                    <TableCell size='small' align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>
-                    <TableCell size='small' align='center' className='manage-slot'>{slot.Duration}</TableCell>
-                    <TableCell size='small' align='center' className='manage-slot'>{slot.SlotNumber}</TableCell>
-                    <TableCell size='small' align='center' className='manage-slot'
+                  <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: isEdit ? 'pointer' : 'default' } }} onClick={() => handlePick(slot.Id)}>
+                    <TableCell align='center' className='manage-slot'>{slot.SlotTypeCode}</TableCell>
+                    <TableCell align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>
+                    <TableCell align='center' className='manage-slot'>{slot.Duration}</TableCell>
+                    <TableCell align='center' className='manage-slot'>{slot.SlotNumber}</TableCell>
+                    <TableCell align='center' className='manage-slot'
                       sx={{
                         bgcolor: (likes.find(like => like === slot.Id) || dislikes.find(dislike => dislike === slot.Id))
                           ? '' : (likes.length === configData.LIKE_SLOT_NUMBER && dislikes.length === configData.DISLIKE_SLOT_NUMBER) ? grey[100] : ''
@@ -256,6 +261,7 @@ const SlotType = ({ semesterId, semesterState }) => {
                         <ThumbUp sx={{ color: blue[600], fontSize: '20px' }} />}
                       {dislikes.find(dislike => dislike === slot.Id) &&
                         <ThumbDown sx={{ color: red[600], fontSize: '20px' }} />}
+                      {loading && picked === slot.Id && <ClipLoader size={20} color='grey'/>}
                     </TableCell>
                   </TableRow>
                 ))}

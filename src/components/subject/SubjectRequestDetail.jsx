@@ -1,15 +1,16 @@
-import {Box, Button, Dialog, DialogContent, DialogTitle, Paper, Stack, Table,
-  TableBody, TableCell, TableContainer, TableHead, TableRow, Typography
+import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Paper, Stack, Table,
+  TableBody, TableCell, TableContainer, TableHead, TableRow, Tooltip, Typography
 } from '@mui/material';
-import { Close } from '@mui/icons-material';
+import { Check, Close } from '@mui/icons-material';
 import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import request from '../../utils/request';
 import AcceptModal from '../request/AcceptModal';
 import RejectModal from '../request/RejectModal';
 import AcceptDisableModal from '../request/AcceptDisableModal';
+import ResponsedRequests from '../request/ResponsedRequests';
 
-const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId, semesterId }) => {
+const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId, semesterId, setSaveAccept }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [lecturers, setLecturers] = useState([]);
   const [assignedCourses, setAssignedCourses] = useState([]);
@@ -20,6 +21,9 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
   const [isAcceptDis, setIsAcceptDis] = useState(false);
   const [isRejectDis, setIsRejectDis] = useState(false);
   const [afterSave, setAfterSave] = useState(false);
+  const [inSideLecs, setInSideLecs] = useState([]);
+  const [outSideLecs, setOutSideLecs] = useState([]);
+  const [isResponsed, setIsResponsed] = useState(false);
 
   useEffect(() => {
     request.get('CourseAssign', {
@@ -36,7 +40,7 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
     request.get('Request', {
       params: {
         DepartmentManagerId: account.Id, SemesterId: semesterId, SubjectId: pickedSubject.Id,
-        sortBy: 'DateCreate', order: 'Des', pageIndex: 1, pageSize: 100
+        ResponseState: 0, sortBy: 'DateCreate', order: 'Des', pageIndex: 1, pageSize: 100
       }
     }).then(res => {
       if (res.data) {
@@ -55,6 +59,26 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
       }
     }).catch(err => {alert('Fail to get info of lecturer')})
   }, [])
+
+  useEffect(() => {
+    if(pickedSubject.Id && semesterId){
+      request.get(`CourseAssign/GetUserAssignOutDepartment/${pickedSubject.Id}&${semesterId}`)
+      .then(res => {
+        if(res.status === 200){
+          setOutSideLecs(res.data)
+        }
+      })
+      .catch(err => {alert('Fail to get external number')})
+
+      request.get(`CourseAssign/GetUserAssignInDepartment/${pickedSubject.Id}&${semesterId}`)
+      .then(res => {
+        if(res.status === 200){
+          setInSideLecs(res.data)
+        }
+      })
+      .catch(err => {alert('Fail to get internal number')})
+    }
+  }, [pickedSubject.Id, semesterId, afterSave])
 
   const acceptRequest = (req) => {
     setPickedRequest(req)
@@ -93,17 +117,74 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
     <Dialog maxWidth='lg' fullWidth={true}
       open={isDetail} onClose={() => setIsDetail(false)}>
       <DialogTitle>
-        <Stack direction='row' alignItems='center' justifyContent='space-between'>
+        <Stack direction='row' alignItems='center' justifyContent='space-between' mb={2}>
           <Typography variant='h5' fontWeight={500}>
-            Subject Detail: {pickedSubject.Id} - {pickedSubject.SubjectName}
+            Subject Detail
           </Typography>
           <Button size='small' color='error' variant='outlined' endIcon={<Close/>}
             onClick={() => setIsDetail(false)}>Close</Button>
         </Stack>
+        <Stack>
+          <Typography><span style={{fontWeight: 500}}>Department:</span> {pickedSubject.DepartmentName}</Typography>
+          <Typography><span style={{fontWeight: 500}}>Subject:</span> {pickedSubject.Id} - {pickedSubject.SubjectName}</Typography>
+        </Stack>
       </DialogTitle>
       <DialogContent sx={{height: '90vh'}}>
-        <Stack mb={1}>
-          <Typography fontWeight={500}>Requests of Lecturers</Typography>
+        {requests.length > 0 && <>
+          <Stack mb={1}>
+            <Typography fontWeight={500}>Requests of Lecturers</Typography>
+          </Stack>
+          <Paper sx={{ minWidth: 700, mb: 4 }}>
+            <TableContainer component={Box}>
+              <Table size='small'>
+                <TableHead>
+                  <TableRow>
+                    <TableCell className='subject-header'>Lecturer</TableCell>
+                    <TableCell className='subject-header'>Department</TableCell>
+                    <TableCell className='subject-header' align='center'>Assigned Courses</TableCell>
+                    <TableCell className='subject-header request-border'>Type</TableCell>
+                    <TableCell className='subject-header'>Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {requests.map(req => (
+                    <TableRow hover key={req.Id}>
+                      <TableCell>{req.LecturerId} - {lecturers.find(lec => lec.Id === req.LecturerId)?.Name}</TableCell>
+                      <TableCell>{lecturers.find(lec => lec.Id === req.LecturerId)?.DepartmentId}</TableCell>
+                      <TableCell align='center'>
+                        {assignedCourses.length>0 && assignedCourses.filter(item => (item.LecturerId === req.LecturerId
+                          && item.CourseId.split('_')[0] === pickedSubject.Id)).length}
+                      </TableCell>
+                      <TableCell className='request-border'>{req.Title}</TableCell>
+                      <TableCell>
+                        {req.ResponseState === 0 &&<>
+                          <Tooltip title='Accept' placement='top' arrow>
+                            <IconButton color='success' size='small' 
+                              onClick={() => acceptRequest(req)}>
+                              <Check/>
+                            </IconButton>
+                          </Tooltip>
+                          <span>|</span>
+                          <Tooltip title='Reject' placement='top' arrow>
+                            <IconButton color='error' size='small'
+                              onClick={() => rejectRequest(req)}>
+                              <Close/>
+                            </IconButton>
+                          </Tooltip>
+                        </>}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </Paper>
+        </>}
+        <Stack mb={1} direction='row' alignItems='center' justifyContent='space-between'>
+          <Typography fontWeight={500}>Assigned Lecturers</Typography>
+          <Button variant='outlined' size='small' onClick={() => setIsResponsed(true)}>
+            Responsed Requests
+          </Button>
         </Stack>
         <Paper sx={{ minWidth: 700, mb: 2 }}>
           <TableContainer component={Box}>
@@ -112,34 +193,27 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
                 <TableRow>
                   <TableCell className='subject-header'>Lecturer</TableCell>
                   <TableCell className='subject-header'>Department</TableCell>
-                  <TableCell className='subject-header'>Assigned Courses</TableCell>
-                  <TableCell className='subject-header'>Type</TableCell>
-                  <TableCell className='subject-header'>Status</TableCell>
-                  <TableCell className='subject-header'>Action</TableCell>
+                  <TableCell className='subject-header' align='center'>Assigned Courses</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {requests.map(req => (
-                  <TableRow hover key={req.Id}>
-                    <TableCell>{req.LecturerId} - {lecturers.find(lec => lec.Id === req.LecturerId)?.Name}</TableCell>
-                    <TableCell>{lecturers.find(lec => lec.Id === req.LecturerId)?.DepartmentId}</TableCell>
-                    <TableCell>
-                      {assignedCourses.length>0 && assignedCourses.filter(item => (item.LecturerId === req.LecturerId
+                {inSideLecs.map(lec => (
+                  <TableRow hover key={lec.Id}>
+                    <TableCell>{lec.Id} - {lec.Name}</TableCell>
+                    <TableCell>{lec.DepartmentId} - {lec.DepartmentName}</TableCell>
+                    <TableCell align='center'>
+                      {assignedCourses.length>0 && assignedCourses.filter(item => (item.LecturerId === lec.Id
                         && item.CourseId.split('_')[0] === pickedSubject.Id)).length}
                     </TableCell>
-                    <TableCell>{req.Title}</TableCell>
-                    <TableCell>
-                      {req.ResponseState === -1 && 'Rejected'}
-                      {req.ResponseState === 0 && 'Requested'}
-                      {req.ResponseState === 1 && 'Accepted'}
-                    </TableCell>
-                    <TableCell>
-                      {req.ResponseState === 0 &&<>
-                        <Button size='small' variant='contained' 
-                          onClick={() => acceptRequest(req)}>Accept</Button>
-                        <Button size='small' variant='contained' sx={{ml: 1}} color='error'
-                          onClick={() => rejectRequest(req)}>Reject</Button>
-                      </>}
+                  </TableRow>
+                ))}
+                {outSideLecs.map(lec => (
+                  <TableRow hover key={lec.Id}>
+                    <TableCell>{lec.Id} - {lec.Name}</TableCell>
+                    <TableCell>{lec.DepartmentId} - {lec.DepartmentName}</TableCell>
+                    <TableCell align='center'>
+                      {assignedCourses.length>0 && assignedCourses.filter(item => (item.LecturerId === lec.Id
+                        && item.CourseId.split('_')[0] === pickedSubject.Id)).length}
                     </TableCell>
                   </TableRow>
                 ))}
@@ -150,11 +224,17 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
       </DialogContent>
       <AcceptModal isAccept={isAccept} setIsAccept={setIsAccept} semesterId={semesterId}
         scheduleId={scheduleId} selectedRequest={pickedRequest} assignedCourses={assignedCourses}
-        handleAfterSave={handleAfterSave}/>
+        handleAfterSave={handleAfterSave} setSaveAccept={setSaveAccept}/>
+
       <RejectModal isReject={isReject} setIsReject={setIsReject} selectedRequest={pickedRequest}
         handleAfterSave={handleAfterSave} isRejectDis={isRejectDis}/>
+
       <AcceptDisableModal isAcceptDis={isAcceptDis} setIsAcceptDis={setIsAcceptDis} 
-        selectedRequest={pickedRequest}/>
+        selectedRequest={pickedRequest} handleAfterSave={handleAfterSave} assignedCourses={assignedCourses}
+        setSaveAccept={setSaveAccept}/>
+
+      <ResponsedRequests isResponsed={isResponsed} setIsResponsed={setIsResponsed} 
+        pickedSubject={pickedSubject} semesterId={semesterId} lecturers={lecturers}/>
       <ToastContainer/>
     </Dialog>
   )

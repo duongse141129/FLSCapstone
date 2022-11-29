@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import request from '../../utils/request'
 
-const InternalNumber = ({subjectId, semesterId}) => {
+const InternalNumber = ({subjectId, semesterId, isDetail}) => {
   const [length, setLength] = useState(0)
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const InternalNumber = ({subjectId, semesterId}) => {
       })
       .catch(err => {alert('Fail to get internal number')})
     }
-  }, [subjectId, semesterId])
+  }, [subjectId, semesterId, isDetail])
 
   return (
     <>{length}</>

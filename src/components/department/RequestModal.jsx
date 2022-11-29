@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select, Stack, Typography } from '@mui/material'
 import {Send} from '@mui/icons-material'
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {ClipLoader} from 'react-spinners';
 import request from '../../utils/request';
 
@@ -23,6 +23,12 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
   const [selectedType, setSelectedType] = useState('');
   const [managerId, setManagerId] = useState('');
   const [loadCreate, setLoadCreate] = useState(false);
+  const filterRequests = useMemo(() => {
+    if(requests.length > 0){
+      return requests.filter(item => item.ResponseState === 0)
+    } 
+    return []
+  }, [requests])
 
   useEffect(() => {
     const getDepartments = async () => {
@@ -64,30 +70,49 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
       }).then(res => {
         if (res.data) {
           let dataSubject = res.data;
-          for(let i in requests){
-            dataSubject = dataSubject.filter(data => data.Id !== requests[i].SubjectId)
+          if(filterRequests.length > 0){
+            for(let i in filterRequests){
+              dataSubject = dataSubject.filter(data => (data.Id !== filterRequests[i].SubjectId))
+            }
           }
           setSubjects(dataSubject);
           setSelectedSubject(dataSubject[0].Id)
         }
       }).catch(err => { alert('Fail to load subjects !!' + err); })
     }
-  }, [selectedDepartment, requests])
+  }, [selectedDepartment, filterRequests])
 
   const createRequest = () => {
     if(selectedDepartment && selectedSubject && selectedType){
       setLoadCreate(true)
-      request.post('Request', {
-        Title: selectedType, Description: '',
-        LecturerId: account.Id, DepartmentManagerId: managerId,
-        SubjectId: selectedSubject, SemesterId: semesterId
-      }).then(res => {
-        if(res.status === 201){
-          setIsRequest(false)
-          sendRequest(true)
-          setLoadCreate(false)
-        }
-      }).catch(err => {alert('Fail to request'); setLoadCreate(false)})
+      const alreadyRequest = requests.find(item => item.SubjectId === selectedSubject)
+      if(alreadyRequest){
+        request.put(`Request/${alreadyRequest.Id}`, {
+          Title: selectedType, Description: alreadyRequest.Description,
+          LecturerId: alreadyRequest.LecturerId, DepartmentManagerId: alreadyRequest.DepartmentManagerId,
+          SubjectId: alreadyRequest.SubjectId, SemesterId: alreadyRequest.SemesterId,
+          ResponseState: 0
+        }).then(res => {
+          if(res.status === 200){
+            setIsRequest(false)
+            sendRequest(true)
+            setLoadCreate(false)
+          }
+        }).catch(err => {alert('Fail to request'); setLoadCreate(false)})
+      }
+      else{
+        request.post('Request', {
+          Title: selectedType, Description: '',
+          LecturerId: account.Id, DepartmentManagerId: managerId,
+          SubjectId: selectedSubject, SemesterId: semesterId
+        }).then(res => {
+          if(res.status === 201){
+            setIsRequest(false)
+            sendRequest(true)
+            setLoadCreate(false)
+          }
+        }).catch(err => {alert('Fail to request'); setLoadCreate(false)})
+      }
     }
   }
 
@@ -126,7 +151,8 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
             <RadioGroup value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
               <Stack direction='row' gap={1}>
                 <FormControlLabel value={types[0]} control={<Radio />} label={types[0]} />
-                <FormControlLabel value={types[1]} control={<Radio />} label={types[1]} />
+                {selectedDepartment === account.DepartmentId && 
+                  <FormControlLabel value={types[1]} control={<Radio />} label={types[1]} />}
               </Stack>
             </RadioGroup>
           </FormControl>

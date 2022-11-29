@@ -4,8 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
-const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRequest, assignedCourses, handleAfterSave }) => {
-  const account = JSON.parse(localStorage.getItem('web-user'));
+const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRequest, assignedCourses, handleAfterSave, setSaveAccept }) => {
   const [courses, setCourses] = useState([]);
   const [slots, setSlots] = useState([]);
   const [disableSlots, setDisableSlots] = useState([]);
@@ -16,6 +15,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
   const [loadSlot, setLoadSlot] = useState(false);
   const [loadAccept, setLoadAccept] = useState(false);
   const [lecturer, setLecturer] = useState({});
+  const [disableSubjects, setDisableSubjects] = useState([]);
   const courseTime = useMemo(() => {
     if(selectedCourse && assignedCourses.length > 0){
       let time = [];
@@ -31,10 +31,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
     return [];
   }, [selectedCourse, assignedCourses])
 
-  const isInSide = useMemo(() => {
-    return account.DepartmentId === lecturer.DepartmentId
-  }, [account, lecturer])
-
+  //get lecturer info
   useEffect(() => {
     setSelectedCourse('');
     setSelectedSlot({});
@@ -50,6 +47,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
     }
   }, [selectedRequest])
 
+  //get and filter available courses
   useEffect(() => {
     if(selectedRequest.SubjectId){
       setLoadCourse(true);
@@ -70,6 +68,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
     }
   }, [selectedRequest.SubjectId, selectedRequest.SemesterId, assignedCourses])
 
+  //get disable slots
   useEffect(() => {
     if(selectedRequest.LecturerId){
       request.get('LecturerSlotConfig', {
@@ -83,6 +82,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
     }
   }, [selectedRequest.LecturerId, semesterId])
 
+  //get my assigned courses
   useEffect(() => {
     if(selectedRequest.LecturerId){
       request.get('CourseAssign', {
@@ -96,6 +96,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
     }
   }, [selectedRequest.LecturerId, scheduleId])
 
+  //get and filter available slots
   useEffect(() => {
     setLoadSlot(true);
     request.get('SlotType', {
@@ -119,9 +120,41 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
     }).catch(err => {alert('Fail to get available courses'); setLoadSlot(false)})
   }, [semesterId, myCourses, courseTime, disableSlots])
 
+  //get disable subjects of lecturer
+  useEffect(() => {
+    if(selectedRequest.LecturerId){
+      request.get('SubjectOfLecturer', {
+        params: {SemesterId: semesterId, LecturerId: selectedRequest.LecturerId, 
+          isEnable: 0, sortBy: 'Id', order: 'Asc', pageIndex:1, pageSize:100}
+      }).then(res => {
+        if(res.status === 200){
+          setDisableSubjects(res.data)
+        }
+      }).catch(err => {alert('Fail to get disable subjects')})
+    }
+  }, [selectedRequest, semesterId])
+
   const handleSelectCourse = (courseId) => {
     setSelectedCourse(courseId);
     setSelectedSlot({});
+  }
+
+  const enableSubject = () => {
+    if(disableSubjects.length > 0){
+      const subject = disableSubjects.find(item => item.SubjectId === selectedRequest.SubjectId)
+      if(subject){
+        request.put(`SubjectOfLecturer/${subject.Id}`, {
+          DepartmentManagerId: subject.DepartmentManagerId,
+          SemesterId: subject.SemesterId, SubjectId: subject.SubjectId,
+          LecturerId: subject.LecturerId, FavoritePoint: subject.FavoritePoint,
+          FeedbackPoint: subject.FeedbackPoint, MaxCourseSubject: subject.MaxCourseSubject,
+          isEnable: 1
+        }).then(res => {
+
+        })
+        .catch(err => {alert('Fail to enable subject')})
+      }
+    }
   }
 
   const handleSave = () => {
@@ -133,6 +166,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
         isAssign: 1
       }).then(res => {
         if(res.status === 201){
+          enableSubject();
           const des = `Teaching course ${selectedCourse}`
           request.put(`Request/${selectedRequest.Id}`, {
             Title: selectedRequest.Title, Description: des,
@@ -142,8 +176,9 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
           }).then(res => {
             if(res.status === 200){
               setIsAccept(false)
-              handleAfterSave('Accept Successfully')
               setLoadAccept(false)
+              handleAfterSave('Accept Successfully')
+              setSaveAccept(prev => !prev)
             }
           }).catch(err => {alert('Fail to update request'); setLoadAccept(false)})
         }
@@ -155,13 +190,13 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
     <Dialog maxWidth='md' fullWidth={true}
       open={isAccept} onClose={() => setIsAccept(false)}>
       <DialogTitle>
-        <Stack direction='row' alignItems='center' gap={1}>
+        <Stack direction='row' alignItems='center' gap={1} mb={1}>
           <Typography variant='h5' fontWeight={500}>Assign course and slot for finishing acception</Typography>
         </Stack>
+        {disableSubjects.length>0 && disableSubjects.find(item => item.SubjectId === selectedRequest.SubjectId) &&
+          <Alert severity='warning'>The subject was disable for this lecturer. If Accept this subject will not in disable state</Alert>}
       </DialogTitle>
       <DialogContent>
-        {!isInSide && <Alert severity='warning' sx={{mb: 2}}>
-          This Lecturer is out of your department</Alert>}
         <Stack mb={1} gap={0.5}>
           <Typography><span style={{fontWeight: 500}}>Lecturer:</span> {' '}
             {selectedRequest.LecturerId} - {lecturer.Name} (Department: {lecturer.DepartmentName})</Typography>
@@ -212,7 +247,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
       </DialogContent>
       <DialogActions>
         {(selectedCourse && selectedSlot.Id) ? 
-          <Typography color={green[700]} mr={4}>*Ready to finish</Typography> :
+          <Typography color={green[700]} mr={4}>*Ready to accept</Typography> :
           <Typography color={red[700]} mr={4}>*Choose available courses and slots</Typography>  
         }
         <Button color='info' variant='outlined' onClick={() => setIsAccept(false)}>
@@ -221,7 +256,7 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
           <Button color='success' variant='contained'><ClipLoader size={20} color='white'/></Button> : 
           <Button color='success' variant='contained' onClick={handleSave}
             disabled={(selectedCourse && selectedSlot.Id) ? false : true}>
-            Finish</Button>
+            Accept</Button>
         }
       </DialogActions>
     </Dialog>
