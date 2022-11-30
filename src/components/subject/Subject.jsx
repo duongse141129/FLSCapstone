@@ -208,7 +208,8 @@ const Subject = ({ semesterId, semesterState }) => {
             </Stack>
           }
           <Button variant='contained' endIcon={<Send/>} 
-            onClick={() => setIsRequest(true)}>Request</Button>
+            onClick={() => setIsRequest(true)} disabled={(semesterState===2 || semesterState===4) ? false : true}>
+            Request</Button>
         </Stack>
       </Stack>
       <Stack px={9}>
@@ -225,7 +226,6 @@ const Subject = ({ semesterId, semesterState }) => {
                     selectedDepartment === account.DepartmentId &&
                     <TableCell className='subject-header request-border' align='center'>Favorite Point</TableCell>
                   }
-                  <TableCell className='subject-header' align='center'>Request Type</TableCell>
                   <TableCell className='subject-header' align='center'>Request Status</TableCell>
                 </TableRow>
               </TableHead>
@@ -257,11 +257,6 @@ const Subject = ({ semesterId, semesterState }) => {
                             </Stack>
                           </TableCell>
                         }
-                        <TableCell align='center'>
-                          {requests.find(item => item.SubjectId === subject.Id) ? 
-                            requests.find(item => item.SubjectId === subject.Id).Title :
-                            '-'}
-                        </TableCell>
                         <TableCell align='center'>
                           {requests.find(item => item.SubjectId === subject.Id)?.ResponseState === -1 &&
                             <Typography fontSize='15px' color={red[600]} fontWeight={500}>Rejected</Typography>}

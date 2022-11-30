@@ -1,5 +1,5 @@
 import { AssignmentOutlined, DeleteOutline } from '@mui/icons-material';
-import {Alert, Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer,
+import { Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
 import { red } from '@mui/material/colors';
@@ -186,15 +186,11 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin }) => {
   return (
     <Stack height='90vh'>
       <Typography color='gray' variant='subtitle1'>
-        *Courses which lecturer is assigned
+        *Courses which lecturer is fixed a course and time
       </Typography>
-      {!admin && outSide &&
-        <Stack mb={2}>
-          <Alert severity="warning">This lecturer outside my department</Alert>
-        </Stack>}
       <Stack direction='row' alignItems='center' mb={1} justifyContent='space-between'>
         <Typography fontWeight={500}>Fixed Courses: {fixCourses.length}</Typography>
-        {semester.State === 2 && !admin && 
+        {(semester.State === 2 || semester.State === 4) && !admin && 
         <Button variant='contained' color='success' size='small' endIcon={<AssignmentOutlined />}
           onClick={() => setIsAssign(true)}>
           Assign

@@ -76,29 +76,16 @@ const SemesterDetailManager = () => {
       <Stack px={9} mb={2}>
         <Stack direction='row' gap={1} border='1px solid #e3e3e3' py={0.5} borderRadius={2}
           justifyContent='center'>
-          <Stack direction='row' alignItems='center' gap={1}>
-            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
-              bgcolor={semester.State === 1 ? blue[600] : grey[400]}>
-              {semester.State === 1 && <Check sx={{ color: 'white' }} />}
+          {states.map(state => (
+            <Stack key={state.id} direction='row' alignItems='center' gap={1}>
+              <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
+                bgcolor={semester.State >= state.id ? blue[600] : grey[300]}>
+                {semester.State >= state.id && <Check sx={{ color: 'white' }} />}
+              </Stack>
+              <Typography>{state.name}</Typography>
+              {state.id !== 5 && <HorizontalRule />}
             </Stack>
-            <Typography>New</Typography>
-            <HorizontalRule />
-          </Stack>
-          <Stack direction='row' alignItems='center' gap={1}>
-            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
-              bgcolor={semester.State === 2 ? blue[600] : grey[400]}>
-              {semester.State === 2 && <Check sx={{ color: 'white' }} />}
-            </Stack>
-            <Typography>Voting</Typography>
-            <HorizontalRule />
-          </Stack>
-          <Stack direction='row' alignItems='center' gap={1}>
-            <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
-              bgcolor={semester.State === 3 ? blue[600] : grey[400]}>
-              {semester.State === 3 && <Check sx={{ color: 'white' }} />}
-            </Stack>
-            <Typography>Blocked</Typography>
-          </Stack>
+          ))}
         </Stack>
       </Stack>
       <Stack px={9} mb={2}>
@@ -113,7 +100,7 @@ const SemesterDetailManager = () => {
         </Stack>
       </Stack>
       {selected === tabs[0].name && <CourseList semesterId={id} semesterState={semester.State} scheduleId={schedule.Id} />}
-      {selected === tabs[1].name && <SubjectRequest semesterId={id} scheduleId={schedule.Id}/>}
+      {selected === tabs[1].name && <SubjectRequest semesterId={id} semesterState={semester.State} scheduleId={schedule.Id}/>}
       {selected === tabs[2].name && <LecturerContainer semester={semester} />}
     </Stack>
   )
@@ -125,4 +112,12 @@ const tabs = [
   { id: 1, name: 'Courses' },
   { id: 2, name: 'Subjects' },
   { id: 3, name: 'Lecturers' },
+]
+
+const states = [
+  {id: 1, name: 'New'},
+  {id: 2, name: 'Voting'},
+  {id: 3, name: 'Blocked'},
+  {id: 4, name: 'Adjusting'},
+  {id: 5, name: 'Public'},
 ]

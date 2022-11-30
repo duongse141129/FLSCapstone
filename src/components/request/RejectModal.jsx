@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react'
 import {ClipLoader} from 'react-spinners'
 import request from '../../utils/request'
 
-const RejectModal = ({ isReject, setIsReject, selectedRequest, handleAfterSave, isRejectDis }) => {
+const RejectModal = ({ isReject, setIsReject, selectedRequest, handleAfterSave }) => {
   const [loadReject, setLoadReject] = useState(false)
   const [lecturer, setLecturer] = useState({})
 
@@ -23,7 +23,7 @@ const RejectModal = ({ isReject, setIsReject, selectedRequest, handleAfterSave, 
   const handleSave = () => {
     setLoadReject(true)
     request.put(`Request/${selectedRequest.Id}`, {
-      Title: selectedRequest.Title, Description: selectedRequest.Description,
+      Title: selectedRequest.Title, Description: 'Request is rejected',
       LecturerId: selectedRequest.LecturerId, DepartmentManagerId: selectedRequest.DepartmentManagerId,
       SubjectId: selectedRequest.SubjectId, SemesterId: selectedRequest.SemesterId,
       ResponseState: -1
@@ -40,7 +40,7 @@ const RejectModal = ({ isReject, setIsReject, selectedRequest, handleAfterSave, 
     <Dialog maxWidth='sm' fullWidth={true}
       open={isReject} onClose={() => setIsReject(false)}>
       <DialogTitle>
-        <Typography variant='h5' fontWeight={500}>Reject Request: {isRejectDis ? 'Disable Subject' : 'Teaching Subject'}</Typography>
+        <Typography variant='h5' fontWeight={500}>Reject Request: Teaching Subject</Typography>
       </DialogTitle>
       <DialogContent>
         <Stack mb={1} gap={0.5}>

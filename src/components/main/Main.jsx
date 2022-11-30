@@ -153,7 +153,7 @@ const Main = () => {
         </Stack>
       </Stack>
       <Timetable selectedSemester={selectedSemester} selectedWeekObj={selectedWeekObj}
-        lecturerId={account.Id}/>
+        lecturerId={account.Id} isPublic={true}/>
     </Stack>
   )
 }

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
-const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRequest, assignedCourses, handleAfterSave, setSaveAccept }) => {
+const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRequest, assignedCourses, handleAfterSave }) => {
   const [courses, setCourses] = useState([]);
   const [slots, setSlots] = useState([]);
   const [disableSlots, setDisableSlots] = useState([]);
@@ -167,9 +167,8 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
       }).then(res => {
         if(res.status === 201){
           enableSubject();
-          const des = `Teaching course ${selectedCourse}`
           request.put(`Request/${selectedRequest.Id}`, {
-            Title: selectedRequest.Title, Description: des,
+            Title: selectedRequest.Title, Description: 'Request is accepted',
             LecturerId: selectedRequest.LecturerId, DepartmentManagerId: selectedRequest.DepartmentManagerId,
             SubjectId: selectedRequest.SubjectId, SemesterId: selectedRequest.SemesterId,
             ResponseState: 1
@@ -178,7 +177,6 @@ const AcceptModal = ({ isAccept, setIsAccept, semesterId, scheduleId, selectedRe
               setIsAccept(false)
               setLoadAccept(false)
               handleAfterSave('Accept Successfully')
-              setSaveAccept(prev => !prev)
             }
           }).catch(err => {alert('Fail to update request'); setLoadAccept(false)})
         }

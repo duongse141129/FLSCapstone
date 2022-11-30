@@ -16,7 +16,7 @@ const MenuProps = {
   },
 };
 
-const Schedule = ({ semester, selectedId, popUp, isLecturer }) => {
+const Schedule = ({ semester, selectedId, popUp, isManager }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [weeksInYear, setWeeksInYear] = useState([]);
   const [weeksInSemester, setWeeksInSemester] = useState([]);
@@ -111,14 +111,18 @@ const Schedule = ({ semester, selectedId, popUp, isLecturer }) => {
               ))}
           </Select>
         </Stack>
-        {isLecturer && <Stack direction='row' alignItems='center' bgcolor={grey[200]}>
-          <Switch checked={isSwap} onChange={() => setIsSwap(!isSwap)}/>
-          <Typography pr={2}>
-            {isSwap ? <span style={{ color: blue[700] }}>Swap On</span> : 'Swap Off'}
-          </Typography>
-        </Stack>}
+        {isManager && semester.State === 4 && 
+          <Stack direction='row' alignItems='center' bgcolor={grey[200]}>
+            <Switch checked={isSwap} onChange={() => setIsSwap(!isSwap)}/>
+            <Typography pr={2}>
+              {isSwap ? <span style={{ color: blue[700] }}>Swap On</span> : 'Swap Off'}
+            </Typography>
+          </Stack>}
       </Stack>
-
+      {(semester.State !== 4 && semester.State !== 5) && 
+        <Typography px={popUp ? '' : 9}>The system haven't generated the schedule yet</Typography>}
+      
+      {(semester.State === 4 || semester.State === 5) && <>
       <Timetable selectedSemester={semester?.Id} selectedWeekObj={selectedWeekObj}
         lecturerId={selectedId ? selectedId : account.Id} popUp={popUp} isSwap={isSwap}
         clickSlotToSwap={clickSlotToSwap} afterSwap={afterSwap}/>
@@ -126,7 +130,7 @@ const Schedule = ({ semester, selectedId, popUp, isLecturer }) => {
       </Box>
       <SwapModal isSwapModal={isSwapModal} setIsSwapModal={setIsSwapModal} 
         selectedSwap={selectedSwap} handleAfterSwap={handleAfterSwap}/>
-      <ToastContainer/>
+      <ToastContainer/></>}
     </Box>
   )
 }

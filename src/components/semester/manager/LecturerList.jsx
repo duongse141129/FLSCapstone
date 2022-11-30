@@ -151,7 +151,8 @@ const LecturerList = ({ handleSelect, admin }) => {
                 {
                   lecturers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((lecturer) => (
-                      <TableRow key={lecturer.Id} hover onClick={() => selectLecturer(lecturer.Id)}>
+                      <TableRow key={lecturer.Id} hover onClick={() => selectLecturer(lecturer.Id)}
+                        sx={{'&:hover': {cursor: 'pointer'}}}>
                         <TableCell size='small'>{lecturer.Id}</TableCell>
                         <TableCell size='small'>
                           <Stack direction='row' alignItems='center' gap={1}>

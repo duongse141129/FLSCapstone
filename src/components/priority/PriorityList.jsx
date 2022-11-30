@@ -1,5 +1,5 @@
 import { TryOutlined, DeleteOutline } from '@mui/icons-material';
-import {Alert, Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, 
+import { Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, 
   TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
 import { blue, lightGreen, orange, red, yellow } from '@mui/material/colors';
@@ -121,12 +121,8 @@ const PriorityList = ({ lecturer, semester, allSubjects, admin }) => {
   return (
     <Stack height='90vh'>
       <Typography color='gray' variant='subtitle1'>
-        *Courses which lecturer is given priority
+        *Courses which lecturer is given priority level
       </Typography>
-      {!admin && outSide &&
-        <Stack mb={2}>
-          <Alert severity="warning">This lecturer outside my department</Alert>
-        </Stack>}
       <Stack direction='row' alignItems='center' mb={1} justifyContent='space-between'>
         <Typography fontWeight={500}>Priority Courses: {items.length}</Typography>
         {semester.State === 2 && !admin && <Button variant='contained' color='success' size='small' endIcon={<TryOutlined />}

@@ -142,13 +142,12 @@ const SlotManage = ({ lecturer, semester, admin }) => {
 
   return (
     <Stack height='90vh'>
-      <Typography color='gray' variant='subtitle1' mb={1}>
-        *View favorite point and Disable teaching slot
-      </Typography>
+      {(admin || lecturer.DepartmentId === account.DepartmentId) &&
+        <Typography color='gray' variant='subtitle1' mb={1}>
+          *View favorite point and Disable teaching slot
+        </Typography>}
       {!admin && lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
-        <Stack>
-          <Alert severity="error">Can not ban slot to lecturer outside my department</Alert>
-        </Stack>
+        <Alert severity="error">Can not disable slot to the external lecturer.</Alert>
       }
       {((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) &&
         <><Stack direction='row' justifyContent='space-between' mb={1} alignItems='center'>
@@ -161,7 +160,7 @@ const SlotManage = ({ lecturer, semester, admin }) => {
                 disabled={disables.length > 0 || dislikes.length === 0} onClick={handleApply}>
                 Apply Dislike for Disable
               </Button>
-              <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
+              <Stack direction='row' alignItems='center' bgcolor={grey[200]}>
                 <Switch checked={edit} onChange={() => setEdit(!edit)} />
                 <Typography pr={2}>
                   {edit ? <span style={{ color: blue[600] }}>Disable On</span> : 'Disable Off'}

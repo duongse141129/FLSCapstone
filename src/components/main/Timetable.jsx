@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import Day from './Day';
 import request from '../../utils/request'
 
-const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwap, clickSlotToSwap, afterSwap }) => {
+const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwap, clickSlotToSwap, afterSwap, isPublic }) => {
   const [courseAssign, setCourseAssign] = useState([]);
   const [slotType, setSlotType] = useState([]);
   const [loadingCourseAssign, setLoadingCourseAssign] = useState(false);
@@ -38,7 +38,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
       try {
         const responseSchedule = await request.get('Schedule', {
           params: {
-            IsPublic:1,
+            IsPublic: isPublic ? 1 : '',
             SemesterId: selectedSemester,
             pageIndex: 1,
             pageSize: 1
@@ -74,13 +74,13 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
     return () => {
       setCourseAssign([]);
     }
-  }, [lecturerId, selectedSemester, selectedWeekObj, afterSwap])
+  }, [lecturerId, selectedSemester, selectedWeekObj, afterSwap, isPublic])
 
   //get slottype list
   useEffect(() => {
     const getSlotType = async () => {
+      setLoadingSlotType(true)
       if(selectedSemester){
-        setLoadingSlotType(true)
         try {
           const response = await request.get('SlotType', {
             params: {

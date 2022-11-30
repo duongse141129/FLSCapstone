@@ -7,10 +7,9 @@ import { useEffect, useState } from 'react';
 import request from '../../utils/request';
 import AcceptModal from '../request/AcceptModal';
 import RejectModal from '../request/RejectModal';
-import AcceptDisableModal from '../request/AcceptDisableModal';
 import ResponsedRequests from '../request/ResponsedRequests';
 
-const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId, semesterId, setSaveAccept }) => {
+const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId, semesterId, semesterState }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [lecturers, setLecturers] = useState([]);
   const [assignedCourses, setAssignedCourses] = useState([]);
@@ -18,8 +17,6 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
   const [pickedRequest, setPickedRequest] = useState({});
   const [isAccept, setIsAccept] = useState(false);
   const [isReject, setIsReject] = useState(false);
-  const [isAcceptDis, setIsAcceptDis] = useState(false);
-  const [isRejectDis, setIsRejectDis] = useState(false);
   const [afterSave, setAfterSave] = useState(false);
   const [inSideLecs, setInSideLecs] = useState([]);
   const [outSideLecs, setOutSideLecs] = useState([]);
@@ -82,23 +79,12 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
 
   const acceptRequest = (req) => {
     setPickedRequest(req)
-    if(req.Title === 'Teaching Subject'){
-      setIsAccept(true)
-    }
-    else{
-      setIsAcceptDis(true)
-    }
+    setIsAccept(true)
   }
 
   const rejectRequest = (req) => {
     setPickedRequest(req)
     setIsReject(true)
-    if(req.Title === 'Teaching Subject'){
-      setIsRejectDis(false)
-    }
-    else{
-      setIsRejectDis(true)
-    }
   }
   
   const handleAfterSave = (content) => {
@@ -142,8 +128,7 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
                     <TableCell className='subject-header'>Lecturer</TableCell>
                     <TableCell className='subject-header'>Department</TableCell>
                     <TableCell className='subject-header' align='center'>Assigned Courses</TableCell>
-                    <TableCell className='subject-header request-border'>Type</TableCell>
-                    <TableCell className='subject-header'>Action</TableCell>
+                    <TableCell className='subject-header request-border'>Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -155,9 +140,8 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
                         {assignedCourses.length>0 && assignedCourses.filter(item => (item.LecturerId === req.LecturerId
                           && item.CourseId.split('_')[0] === pickedSubject.Id)).length}
                       </TableCell>
-                      <TableCell className='request-border'>{req.Title}</TableCell>
                       <TableCell>
-                        {req.ResponseState === 0 &&<>
+                        {(semesterState === 2 || semesterState === 4) &&<>
                           <Tooltip title='Accept' placement='top' arrow>
                             <IconButton color='success' size='small' 
                               onClick={() => acceptRequest(req)}>
@@ -224,14 +208,10 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
       </DialogContent>
       <AcceptModal isAccept={isAccept} setIsAccept={setIsAccept} semesterId={semesterId}
         scheduleId={scheduleId} selectedRequest={pickedRequest} assignedCourses={assignedCourses}
-        handleAfterSave={handleAfterSave} setSaveAccept={setSaveAccept}/>
+        handleAfterSave={handleAfterSave}/>
 
       <RejectModal isReject={isReject} setIsReject={setIsReject} selectedRequest={pickedRequest}
-        handleAfterSave={handleAfterSave} isRejectDis={isRejectDis}/>
-
-      <AcceptDisableModal isAcceptDis={isAcceptDis} setIsAcceptDis={setIsAcceptDis} 
-        selectedRequest={pickedRequest} handleAfterSave={handleAfterSave} assignedCourses={assignedCourses}
-        setSaveAccept={setSaveAccept}/>
+        handleAfterSave={handleAfterSave}/>
 
       <ResponsedRequests isResponsed={isResponsed} setIsResponsed={setIsResponsed} 
         pickedSubject={pickedSubject} semesterId={semesterId} lecturers={lecturers}/>

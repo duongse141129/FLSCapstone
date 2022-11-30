@@ -1,4 +1,4 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, FormControl, FormControlLabel, MenuItem, Radio, RadioGroup, Select, Stack, Typography } from '@mui/material'
+import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, Typography } from '@mui/material'
 import {Send} from '@mui/icons-material'
 import { useEffect, useMemo, useState } from 'react';
 import {ClipLoader} from 'react-spinners';
@@ -20,7 +20,6 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
   const [selectedDepartment, setSelectedDepartment] = useState(account.DepartmentId);
   const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState('');
-  const [selectedType, setSelectedType] = useState('');
   const [managerId, setManagerId] = useState('');
   const [loadCreate, setLoadCreate] = useState(false);
   const filterRequests = useMemo(() => {
@@ -83,36 +82,19 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
   }, [selectedDepartment, filterRequests])
 
   const createRequest = () => {
-    if(selectedDepartment && selectedSubject && selectedType){
+    if(selectedDepartment && selectedSubject && managerId){
       setLoadCreate(true)
-      const alreadyRequest = requests.find(item => item.SubjectId === selectedSubject)
-      if(alreadyRequest){
-        request.put(`Request/${alreadyRequest.Id}`, {
-          Title: selectedType, Description: alreadyRequest.Description,
-          LecturerId: alreadyRequest.LecturerId, DepartmentManagerId: alreadyRequest.DepartmentManagerId,
-          SubjectId: alreadyRequest.SubjectId, SemesterId: alreadyRequest.SemesterId,
-          ResponseState: 0
-        }).then(res => {
-          if(res.status === 200){
-            setIsRequest(false)
-            sendRequest(true)
-            setLoadCreate(false)
-          }
-        }).catch(err => {alert('Fail to request'); setLoadCreate(false)})
-      }
-      else{
-        request.post('Request', {
-          Title: selectedType, Description: '',
-          LecturerId: account.Id, DepartmentManagerId: managerId,
-          SubjectId: selectedSubject, SemesterId: semesterId
-        }).then(res => {
-          if(res.status === 201){
-            setIsRequest(false)
-            sendRequest(true)
-            setLoadCreate(false)
-          }
-        }).catch(err => {alert('Fail to request'); setLoadCreate(false)})
-      }
+      request.post('Request', {
+        Title: 'Teaching Subject', Description: '',
+        LecturerId: account.Id, DepartmentManagerId: managerId,
+        SubjectId: selectedSubject, SemesterId: semesterId
+      }).then(res => {
+        if(res.status === 201){
+          setIsRequest(false)
+          sendRequest(true)
+          setLoadCreate(false)
+        }
+      }).catch(err => {alert('Fail to request'); setLoadCreate(false)})
     }
   }
 
@@ -122,10 +104,10 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
       <DialogTitle>
         <Stack direction='row' alignItems='center' gap={1}>
           <Send />
-          <Typography variant='h5'>Subject Request</Typography>
+          <Typography variant='h5'>Request for teaching subject</Typography>
         </Stack>
         <Typography color='gray' fontSize='14px'>
-          *Request Manager a subject which you want or don't want to teach</Typography>
+          *Request Manager a subject which you want to teach</Typography>
       </DialogTitle>
       <DialogContent>
         <Stack direction='row' alignItems='center' gap={2} mb={2}>
@@ -145,24 +127,12 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
             ))}
           </Select>
         </Stack>
-        <Stack direction='row' alignItems='center' gap={2}>
-          <Typography fontWeight={500}>Request Type: </Typography>
-          <FormControl>
-            <RadioGroup value={selectedType} onChange={(e) => setSelectedType(e.target.value)}>
-              <Stack direction='row' gap={1}>
-                <FormControlLabel value={types[0]} control={<Radio />} label={types[0]} />
-                {selectedDepartment === account.DepartmentId && 
-                  <FormControlLabel value={types[1]} control={<Radio />} label={types[1]} />}
-              </Stack>
-            </RadioGroup>
-          </FormControl>
-        </Stack>
       </DialogContent>
       <DialogActions>
         <Button variant='outlined' color='info' onClick={() => setIsRequest(false)}>Cancel</Button>
         {loadCreate ?
           <Button variant='contained'><ClipLoader size={20} color='white'/></Button> :
-          <Button variant='contained' onClick={createRequest} disabled={selectedType ? false : true}>
+          <Button variant='contained' onClick={createRequest}>
             Request</Button>}
       </DialogActions>
     </Dialog>
@@ -170,8 +140,3 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
 }
 
 export default RequestModal
-
-const types = [
-  'Teaching Subject',
-  'Disable Subject'
-]

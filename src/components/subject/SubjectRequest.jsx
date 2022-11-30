@@ -1,11 +1,9 @@
 import { Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
 import request from '../../utils/request';
-import ExternalNumber from './ExternalNumber';
-import InternalNumber from './InternalNumber';
 import SubjectRequestDetail from './SubjectRequestDetail';
 
-const SubjectRequest = ({semesterId, scheduleId}) => {
+const SubjectRequest = ({semesterId, semesterState, scheduleId}) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -13,8 +11,10 @@ const SubjectRequest = ({semesterId, scheduleId}) => {
   const [courses, setCourses] = useState([]);
   const [isDetail, setIsDetail] = useState(false);
   const [pickedSubject, setPickedSubject] = useState({});
-  const [saveAccept, setSaveAccept] = useState(false);
+  const [assignedCourses, setAssignedCourses] = useState([]);
+  const [requests, setRequests] = useState([]);
 
+  //get subject by manager's department id
   useEffect(() => {
     const getSubjects = async () => {
       try {
@@ -36,6 +36,7 @@ const SubjectRequest = ({semesterId, scheduleId}) => {
     getSubjects();
   }, [account.DepartmentId])
 
+  //get all courses in semester 
   useEffect(() => {
     request.get('Course', {
       params: {SemesterId: semesterId, sortBy: 'SubjectId', order: 'Asc',
@@ -46,6 +47,32 @@ const SubjectRequest = ({semesterId, scheduleId}) => {
       }
     }).catch(err => {alert('Fail to get total courses')})
   }, [semesterId])
+
+  //get all courses assigned in semester
+  useEffect(() => {
+    request.get('CourseAssign', {
+      params: {ScheduleId: scheduleId, sortBy: 'CourseId', order: 'Asc',
+        pageIndex:1, pageSize:1000}
+    }).then(res => {
+      if(res.status === 200){
+        setAssignedCourses(res.data)
+      }
+    }).catch(err => {alert('Fail to get assigned courses')})
+  }, [scheduleId, isDetail])
+
+  //get requests have state=0, to show total not responsed request
+  useEffect(() => {
+    request.get('Request', {
+      params: {
+        DepartmentManagerId: account.Id, SemesterId: semesterId, ResponseState: 0, 
+        sortBy: 'DateCreate', order: 'Des', pageIndex: 1, pageSize: 100
+      }
+    }).then(res => {
+      if (res.data) {
+        setRequests(res.data)
+      }
+    }).catch(err => { alert('Fail to get requests') })
+  }, [account.Id, semesterId, isDetail])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -73,34 +100,36 @@ const SubjectRequest = ({semesterId, scheduleId}) => {
             <Table size='small'>
               <TableHead>
                 <TableRow>
-                  <TableCell className='subject-header request-border' colSpan={3} align='center'>
-                    Subjects ({subjects.length})</TableCell>
-                  <TableCell className='subject-header' colSpan={2} align='center'>
-                    Assigned Lecturers</TableCell>
-                </TableRow>
-                <TableRow>
                   <TableCell className='subject-header'>Code</TableCell>
                   <TableCell className='subject-header'>Name</TableCell>
                   <TableCell className='subject-header request-border' align='center'>
                     Total Courses</TableCell>
-                  <TableCell className='subject-header' align='center'>Internal</TableCell>
-                  <TableCell className='subject-header' align='center'>External</TableCell>
+                  <TableCell className='subject-header request-border' align='center'>
+                    Total Assigned Courses</TableCell>
+                  <TableCell className='subject-header' align='center'>
+                    Total Requests</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {subjects.length > 0 && 
                 subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map(item => (
-                  <TableRow hover key={item.Id} sx={{'&:hover':{cursor: 'pointer'}}}
-                    onClick={() => viewDetail(item)}>
-                    <TableCell>{item.Id}</TableCell>
-                    <TableCell>{item.SubjectName}</TableCell>
+                .map(subject => (
+                  <TableRow hover key={subject.Id} sx={{'&:hover':{cursor: 'pointer'}}}
+                    onClick={() => viewDetail(subject)}>
+                    <TableCell>{subject.Id}</TableCell>
+                    <TableCell>{subject.SubjectName}</TableCell>
                     <TableCell className='request-border' align='center'>
-                      {courses.filter(course => course.SubjectId === item.Id).length}</TableCell>
-                    <TableCell align='center'>
-                      <InternalNumber subjectId={item.Id} semesterId={semesterId} isDetail={saveAccept}/></TableCell>
-                    <TableCell align='center'>
-                      <ExternalNumber subjectId={item.Id} semesterId={semesterId} isDetail={saveAccept}/></TableCell>
+                      {courses.filter(course => course.SubjectId === subject.Id).length}</TableCell>
+                    <TableCell className='request-border' align='center'>
+                      {assignedCourses.length > 0 && 
+                        assignedCourses.filter(course => course.CourseId.split('_')[0] === subject.Id).length}
+                      {assignedCourses.length === 0 && '0'} 
+                    </TableCell>
+                    <TableCell className='request-border' align='center'>
+                      {requests.length > 0 &&
+                        requests.filter(req => req.SubjectId === subject.Id).length}
+                      {requests.length === 0 && '0'}
+                    </TableCell>
                   </TableRow>
                 ))}
               </TableBody>
@@ -117,8 +146,8 @@ const SubjectRequest = ({semesterId, scheduleId}) => {
           />
         </Paper>
       </Stack>
-      <SubjectRequestDetail isDetail={isDetail} setIsDetail={setIsDetail} setSaveAccept={setSaveAccept}
-        pickedSubject={pickedSubject} scheduleId={scheduleId} semesterId={semesterId}/>
+      <SubjectRequestDetail isDetail={isDetail} setIsDetail={setIsDetail} pickedSubject={pickedSubject} 
+        scheduleId={scheduleId} semesterId={semesterId} semesterState={semesterState}/>
     </Stack>
   )
 }

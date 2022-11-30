@@ -152,9 +152,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
   return (
     <Stack flex={5} height='90vh'>
       {!admin && lecturer.DepartmentId && lecturer.DepartmentId !== account.DepartmentId &&
-        <Stack>
-          <Alert severity="error">Can not evaluate to lecturer outside my department</Alert>
-        </Stack>
+        <Alert severity="error">Can not evaluate to the external lecturer.</Alert>
       }
       {((lecturer.DepartmentId && lecturer.DepartmentId === account.DepartmentId) || admin) && <>
         <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
@@ -166,7 +164,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
             <Typography>Total: {subjects.length}</Typography>
           </Stack>
           {semester.State === 2 && !admin && 
-          <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
+          <Stack direction='row' alignItems='center' bgcolor={grey[200]}>
             <Switch checked={isDisable} onChange={() => setIsDisable(!isDisable)} />
             <Typography pr={2}>
               {isDisable ? <span style={{ color: blue[600] }}>Disable On</span> : 'Disable Off'}
