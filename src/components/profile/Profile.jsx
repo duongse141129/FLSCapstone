@@ -81,7 +81,7 @@ const Profile = () => {
             >
               <Stack direction='row' >
                 <FormControlLabel value='1' control={<Radio color='success' />} label="Male" />
-                <FormControlLabel value='2' control={<Radio color='success' />} label="Female" />
+                <FormControlLabel value='0' control={<Radio color='success' />} label="Female" />
               </Stack>
             </RadioGroup>
           </FormControl>

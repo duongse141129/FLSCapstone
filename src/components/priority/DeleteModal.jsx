@@ -15,8 +15,7 @@ const DeleteModal = ({isDelete, setIsDelete, saveDelete, contentDelete}) => {
   }
 
   return (
-    <Dialog
-      open={isDelete}
+    <Dialog open={isDelete}
       onClose={() => setIsDelete(false)}
     >
       <DialogTitle>

@@ -28,7 +28,7 @@ const ImportModal = ({ isImport, setIsImport, importCourses, semesterId, handleA
           if (res.status === 200) {
             setIsImport(false);
             setLoadImport(false);
-            handleAfterImport(true)
+            handleAfterImport('Import successfully')
           }
         })
         .catch(err => {alert('Fail to import course'); setLoadImport(false)})

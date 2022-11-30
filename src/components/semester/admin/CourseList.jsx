@@ -1,9 +1,10 @@
-import { Add, FileUploadOutlined } from '@mui/icons-material';
-import { Box, Button, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@mui/material'
-import React, { useState, useRef, useEffect } from 'react';
-import { ToastContainer, toast } from 'react-toastify';
+import { Add, DeleteOutlined, EditOutlined, FileUploadOutlined } from '@mui/icons-material';
+import { Box, Button, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
+import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { toast } from 'react-toastify';
 import * as XLSX from "xlsx";
 import request from '../../../utils/request';
+import DeleteModal from '../../priority/DeleteModal';
 import AddModal from './AddModal';
 import ImportModal from './ImportModal';
 
@@ -17,7 +18,7 @@ const MenuProps = {
   },
 };
 
-const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
+const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
   const fileInput = useRef(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -32,6 +33,26 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
   const [assignedCourses, setAssignedCourses] = useState([]);
   const [isAdd, setIsAdd] = useState(false);
   const [reload, setReload] = useState(false);
+  const [isDelete, setIsDelete] = useState(false);
+  const [pickedCourseId, setPickedCourseId] = useState('');
+  const assignedTotal = useMemo(() => {
+    if(assignedCourses.length > 0 && subjects.length > 0){
+      if(selectedSubject !== 'all'){
+        return assignedCourses.filter(item => item.CourseId.split('_')[0] === selectedSubject).length
+      }
+      
+      let external = assignedCourses;
+      let internal = assignedCourses
+      for(let i in subjects){
+        external = external.filter(ex => ex.CourseId.split('_')[0] !== subjects[i].Id)
+      }
+      for(let i in external){
+        internal = internal.filter(inter => inter.CourseId.split('_')[0] !== external[i].CourseId.split('_')[0])
+      }
+      return internal.length;
+    }
+    return 0;
+  }, [assignedCourses, selectedSubject, subjects])
 
   //get all departments 
   useEffect(() => {
@@ -188,6 +209,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
   const handleSelectDepartment = (e) => {
     setSelectedDepartment(e.target.value)
     setPage(0);
+    setSelectedSubject('all');
   }
 
   const handleSelectSubject = (e) => {
@@ -208,15 +230,42 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
     return ''
   }
 
-  const handleAfterImport = (status) => {
-    if(status) {
+  const handleAfterImport = (content) => {
+    if(content) {
       setReload(prev => !prev)
-      toast.success('Import Successfully!', {
+      toast.success(content, {
         position: "top-right", autoClose: 3000, hideProgressBar: false,
         closeOnClick: true, pauseOnHover: true, draggable: true,
         progress: undefined, theme: "light",
       });
     }
+  }
+
+  const clickDelete = (courseId) => {
+    const isAssigned = assignedCourses.find(item => item.CourseId === courseId)
+    if(isAssigned) return;
+
+    setPickedCourseId(courseId);
+    setIsDelete(true);
+  }
+
+  const saveDelete = () => {
+    const isAssigned = assignedCourses.find(item => item.CourseId === pickedCourseId)
+    if(isAssigned) return;
+
+    request.delete(`Course/${pickedCourseId}`)
+    .then(res => {
+      if(res.status === 200){
+        setIsDelete(false)
+        setReload(prev => !prev)
+        toast.success('Delete successfully', {
+          position: "top-right", autoClose: 3000, hideProgressBar: false,
+          closeOnClick: true, pauseOnHover: true, draggable: true,
+          progress: undefined, theme: "light",
+        });
+      }
+    })
+    .catch(err => {alert('Fail to delete course'); setIsDelete(false)})
   }
 
   return (
@@ -245,8 +294,9 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
       </Stack>
       <Stack direction='row' mb={2} alignItems='center' justifyContent='space-between'>
         <Stack direction='row' gap={4}>
-          <Typography>Total: {courses.length}</Typography>
           <Typography>Total All: {allCourses.length}</Typography>
+          <Typography>Total: {courses.length}</Typography>
+          <Typography>Total Assigned: {assignedTotal}</Typography>
         </Stack>
         <Stack direction='row' gap={2}>
           <input ref={fileInput} style={{ display: 'none' }} type="file"
@@ -264,36 +314,52 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
       </Stack>
       <Paper sx={{ minWidth: 700, mb: 2 }}>
         <TableContainer component={Box}>
-          <Table>
+          <Table size='small'> 
             <TableHead>
               <TableRow>
-                <TableCell size='small' className='subject-header'>Course</TableCell>
-                <TableCell size='small' className='subject-header'>Slot Amount</TableCell>
-                <TableCell size='small' className='subject-header'>Assigned To</TableCell>
-                <TableCell size='small' className='subject-header'>Teaching Slot</TableCell>
+                <TableCell className='subject-header'>Course</TableCell>
+                <TableCell className='subject-header'>Subject</TableCell>
+                <TableCell className='subject-header' align='center'>Slot Amount</TableCell>
+                <TableCell className='subject-header'>Assigned To</TableCell>
+                <TableCell className='subject-header request-border'>Teaching Slot</TableCell>
+                {semesterState === 1 && 
+                  <TableCell className='subject-header' align='center'>Option</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
-              {
-                courses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map(course => (
-                    <TableRow key={course.Id} hover>
-                      <TableCell size='small'>{course.Id}</TableCell>
-                      <TableCell size='small'>{course.SlotAmount}</TableCell>
-                      <TableCell size='small'>
-                        {assignedCourses.find(item => item.CourseId === course.Id)?.LecturerId ||
-                          <span style={{ color: 'red' }}>Not Yet</span>
-                        }
-                      </TableCell>
-                      <TableCell size='small'>
-                        {assignedCourses.find(item => item.CourseId === course.Id) ?
-                          getInforSlot(assignedCourses.find(item => item.CourseId === course.Id).SlotTypeId)
-                          : <span style={{ color: 'red' }}>Not Yet</span>
-                        }
-                      </TableCell>
-                    </TableRow>
-                  ))
-              }
+              {courses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map(course => (
+                  <TableRow key={course.Id} hover>
+                    <TableCell>{course.Id}</TableCell>
+                    <TableCell>{course.SubjectId}</TableCell>
+                    <TableCell align='center'>{course.SlotAmount}</TableCell>
+                    <TableCell>
+                      {assignedCourses.find(item => item.CourseId === course.Id)?.LecturerId ||
+                        <span style={{ color: 'red' }}>Not Yet</span>
+                      }
+                    </TableCell>
+                    <TableCell className='request-border'>
+                      {assignedCourses.find(item => item.CourseId === course.Id) ?
+                        getInforSlot(assignedCourses.find(item => item.CourseId === course.Id).SlotTypeId)
+                        : <span style={{ color: 'red' }}>Not Yet</span>
+                      }
+                    </TableCell>
+                    {semesterState===1 &&
+                    <TableCell align='center'>
+                      <Tooltip title='Edit' placement='top' arrow>
+                        <IconButton size='small' color='primary'>
+                          <EditOutlined />
+                        </IconButton>
+                      </Tooltip>
+                      <span>|</span>
+                      <Tooltip title='Delete' placement='top' arrow>
+                        <IconButton size='small' color='error' onClick={() => clickDelete(course.Id)}>
+                          <DeleteOutlined />
+                        </IconButton>
+                      </Tooltip>
+                    </TableCell>}
+                  </TableRow>
+                ))}
             </TableBody>
           </Table>
         </TableContainer>
@@ -314,8 +380,9 @@ const CourseList = ({ semesterId, scheduleId, slotTypes }) => {
       </Paper>
       <ImportModal isImport={isImport} setIsImport={setIsImport} importCourses={importCourses}
         semesterId={semesterId} handleAfterImport={handleAfterImport}/>
-      <AddModal isAdd={isAdd} setIsAdd={setIsAdd} departments={departments} subjects={subjects} />
-      <ToastContainer/>
+      <AddModal isAdd={isAdd} setIsAdd={setIsAdd} departments={departments} semesterId={semesterId}
+        handleAfterImport={handleAfterImport}/>
+      <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} saveDelete={saveDelete}/>
     </Stack>
   )
 }

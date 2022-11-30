@@ -85,11 +85,19 @@ const SemesterDetailAdmin = () => {
   const saveNextState = () => {
     if(semester.State === 5) return;
 
+    if(semester.State === 4){
+      request.put(`Schedule/${schedule.Id}`, {
+        IsPublic: 1, SemesterId: id,
+        Description: '', DateCreate: ''
+      }).then(res => {
+
+      }).catch(err => {alert('Fail to public schedule')})
+    }
+
     request.put(`Semester/${id}`, {
       Term: semester.Term, DateStart: semester.DateStart,
       DateEnd: semester.DateEnd, State: (semester.State + 1)
-    })
-      .then(res => {
+    }).then(res => {
         if (res.status === 200) {
           setIsConfirm(false)
           toast.success('Success to change next state!', {
@@ -97,8 +105,7 @@ const SemesterDetailAdmin = () => {
             pauseOnHover: true, draggable: true, progress: undefined, theme: "light",
           });
         }
-      })
-      .catch(err => {
+      }).catch(err => {
         alert('Fail to change next state')
         setIsConfirm(false)
       })
@@ -107,11 +114,19 @@ const SemesterDetailAdmin = () => {
   const savePrevState = () => {
     if(semester.State === 1) return;
 
+    if(semester.State === 5){
+      request.put(`Schedule/${schedule.Id}`, {
+        IsPublic: 0, SemesterId: id,
+        Description: '', DateCreate: ''
+      }).then(res => {
+
+      }).catch(err => {alert('Fail to update schedule')})
+    }
+
     request.put(`Semester/${id}`, {
       Term: semester.Term, DateStart: semester.DateStart,
       DateEnd: semester.DateEnd, State: (semester.State - 1)
-    })
-      .then(res => {
+    }).then(res => {
         if (res.status === 200) {
           setIsConfirm(false)
           toast.success('Success to return previous state', {
@@ -119,12 +134,10 @@ const SemesterDetailAdmin = () => {
             pauseOnHover: true, draggable: true, progress: undefined, theme: "light",
           });
         }
-      })
-      .catch(err => {
+      }).catch(err => {
         alert('Fail to return previous state')
         setIsConfirm(false)
       })
-    
   }
 
   return (
@@ -147,7 +160,7 @@ const SemesterDetailAdmin = () => {
             Next State</Button>}
         </Stack>
       </Stack>
-      <Stack px={11} gap={1}>
+      <Stack px={11} gap={1} mb={1}>
         <Typography><span style={{fontWeight: 500}}>Start:</span> {semester.DateStartFormat}</Typography>
         <Typography><span style={{fontWeight: 500}}>End:</span> {semester.DateEndFormat}</Typography>
         <Typography><span style={{fontWeight: 500}}>Status:</span> {semester.DateStatus}</Typography>
@@ -188,7 +201,8 @@ const SemesterDetailAdmin = () => {
             Lecturers</Typography>
         </Stack>
       </Stack>
-      {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id} slotTypes={slotTypes}/>}
+      {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id} 
+        slotTypes={slotTypes} semesterState={semester.State}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} />}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} content={content} 
