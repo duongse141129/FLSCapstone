@@ -36,20 +36,22 @@ const ResponsedRequests = ({isResponsed, setIsResponsed, pickedSubject, semester
             <Table size='small'>
               <TableHead>
                 <TableRow>
+                  <TableCell className='subject-header'>Create At</TableCell>
                   <TableCell className='subject-header'>Lecturer</TableCell>
                   <TableCell className='subject-header'>Department</TableCell>
-                  <TableCell className='subject-header'>Subject</TableCell>
-                  <TableCell className='subject-header'>Type</TableCell>
+                  <TableCell className='subject-header'>Note</TableCell>
+                  <TableCell className='subject-header'>Response At</TableCell>
                   <TableCell className='subject-header'>Status</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {requests.map(req => (
                   <TableRow hover key={req.Id}>
+                    <TableCell>{req.DateCreateFormat}</TableCell>
                     <TableCell>{req.LecturerId} - {req.LecturerName}</TableCell>
                     <TableCell>{lecturers.find(lec => lec.Id === req.LecturerId)?.DepartmentId}</TableCell>
-                    <TableCell>{req.SubjectId}</TableCell>
-                    <TableCell>{req.Title}</TableCell>
+                    <TableCell>{req.Description}</TableCell>
+                    <TableCell>{req.DateResponeFormat}</TableCell>
                     <TableCell>
                       {req.ResponseState === -1 && 
                         <Typography fontSize='15px' fontWeight={500} color={red[600]}>Rejected</Typography>}

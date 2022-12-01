@@ -42,20 +42,20 @@ const SlotType = ({ semesterId, semesterState }) => {
   useEffect(() => {
     request.get('LecturerSlotConfig', {
       params: {
-        LecturerId: account.Id,
-        SemesterId: semesterId,
-        pageIndex: 1,
-        pageSize: 100
+        LecturerId: account.Id, SemesterId: semesterId,
+        pageIndex: 1, pageSize: 100
       }
+    }).then(res => {
+      if (res.status === 200) {
+        setFavoriteSlots(res.data)
+      }
+    }).catch(err => {
+      alert('Fail to load favorite slots!');
     })
-      .then(res => {
-        if (res.status === 200) {
-          setFavoriteSlots(res.data)
-        }
-      })
-      .catch(err => {
-        alert('Fail to load favorite slots!');
-      })
+
+    return () => {
+      setFavoriteSlots([]);
+    }
   }, [account.Id, semesterId, reload])
 
   //set pickedslot
@@ -82,7 +82,7 @@ const SlotType = ({ semesterId, semesterState }) => {
   }
 
   const handlePick = (id) => {
-    if (!isEdit) {
+    if (!isEdit && loading && favoriteSlots.length > 0) {
       return;
     }
 
@@ -106,19 +106,17 @@ const SlotType = ({ semesterId, semesterState }) => {
         request.put(`LecturerSlotConfig/${obj.Id}`, {
           SlotTypeId: id, LecturerId: account.Id, SemesterId: semesterId,
           PreferenceLevel: 1, IsEnable: obj.IsEnable
-        })
-          .then(res => {
-            if (res.status === 200) {
-              setReload(prev => !prev)
-              setLoading(false)
-              toast.success('Like Successfully!', {
-                position: "top-right", autoClose: 2000, hideProgressBar: false,
-                closeOnClick: true, pauseOnHover: true, draggable: true,
-                progress: undefined, theme: "light",
-              });
-            }
-          })
-          .catch(err => { alert('Save like Fail!'); setLoading(false)})
+        }).then(res => {
+          if (res.status === 200) {
+            setReload(prev => !prev)
+            setLoading(false)
+            toast.success('Like Successfully!', {
+              position: "top-right", autoClose: 2000, hideProgressBar: false,
+              closeOnClick: true, pauseOnHover: true, draggable: true,
+              progress: undefined, theme: "light",
+            });
+          }
+        }).catch(err => { alert('Save like Fail!'); setLoading(false)})
       }
     }
     else if (mode === 'dislike') {
@@ -139,19 +137,17 @@ const SlotType = ({ semesterId, semesterState }) => {
         request.put(`LecturerSlotConfig/${obj.Id}`, {
           SlotTypeId: id,LecturerId: account.Id, SemesterId: semesterId,
           PreferenceLevel: -1, IsEnable: obj.IsEnable
-        })
-          .then(res => {
-            if (res.status === 200) {
-              setLoading(false)
-              setReload(prev => !prev)
-              toast.success('Dislike Successfully!', {
-                position: "top-right", autoClose: 2000, hideProgressBar: false,
-                closeOnClick: true, pauseOnHover: true, draggable: true,
-                progress: undefined, theme: "light",
-              });
-            }
-          })
-          .catch(err => {
+        }).then(res => {
+          if (res.status === 200) {
+            setLoading(false)
+            setReload(prev => !prev)
+            toast.success('Dislike Successfully!', {
+              position: "top-right", autoClose: 2000, hideProgressBar: false,
+              closeOnClick: true, pauseOnHover: true, draggable: true,
+              progress: undefined, theme: "light",
+            });
+          }
+        }).catch(err => {
             alert('Save disLike Fail!')
             setLoading(false)
           })
@@ -170,8 +166,7 @@ const SlotType = ({ semesterId, semesterState }) => {
           request.put(`LecturerSlotConfig/${obj.Id}`, {
             SlotTypeId: id, LecturerId: account.Id, SemesterId: semesterId,
             PreferenceLevel: 0, IsEnable: obj.IsEnable
-          })
-            .then(res => {
+          }).then(res => {
               if (res.status === 200) {
                 setLoading(false)
                 setReload(prev => !prev)
@@ -181,8 +176,7 @@ const SlotType = ({ semesterId, semesterState }) => {
                   progress: undefined, theme: "light",
                 });
               }
-            })
-            .catch(err => {
+          }).catch(err => {
               alert('Save disLike Fail!')
               setLoading(false)
             })
@@ -214,7 +208,7 @@ const SlotType = ({ semesterId, semesterState }) => {
             </RadioGroup>
           </FormControl>
         </Stack>
-        <Stack direction='row' alignItems='center' bgcolor={grey[100]}>
+        <Stack direction='row' alignItems='center' bgcolor={grey[200]}>
           <Switch checked={isEdit} onChange={() => setIsEdit(!isEdit)} />
           <Typography pr={2}>
             {isEdit ? <span style={{ color: blue[600] }}>Rating On</span> : 'Rating Off'}
@@ -246,7 +240,8 @@ const SlotType = ({ semesterId, semesterState }) => {
               </TableHead>
               <TableBody>
                 {slots.map(slot => (
-                  <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: isEdit ? 'pointer' : 'default' } }} onClick={() => handlePick(slot.Id)}>
+                  <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: isEdit ? 'pointer' : 'default' } }} 
+                    onClick={() => handlePick(slot.Id)}>
                     <TableCell align='center' className='manage-slot'>{slot.SlotTypeCode}</TableCell>
                     <TableCell align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>
                     <TableCell align='center' className='manage-slot'>{slot.Duration}</TableCell>

@@ -1,5 +1,6 @@
 import { Add, DeleteOutlined, EditOutlined, FileUploadOutlined } from '@mui/icons-material';
-import { Box, Button, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
+import { Box, Button, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, 
+  TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
 import React, { useState, useRef, useEffect, useMemo } from 'react';
 import { toast } from 'react-toastify';
 import * as XLSX from "xlsx";
@@ -7,6 +8,7 @@ import request from '../../../utils/request';
 import DeleteModal from '../../priority/DeleteModal';
 import AddModal from './AddModal';
 import ImportModal from './ImportModal';
+import UpdateModal from './UpdateModal';
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -34,7 +36,9 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
   const [isAdd, setIsAdd] = useState(false);
   const [reload, setReload] = useState(false);
   const [isDelete, setIsDelete] = useState(false);
-  const [pickedCourseId, setPickedCourseId] = useState('');
+  const [isUpdate, setIsUpdate] = useState(false);
+  const [contentDelete, setContentDelete] = useState('');
+  const [pickedCourse, setPickedCourse] = useState({});
   const assignedTotal = useMemo(() => {
     if(assignedCourses.length > 0 && subjects.length > 0){
       if(selectedSubject !== 'all'){
@@ -241,19 +245,20 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
     }
   }
 
-  const clickDelete = (courseId) => {
-    const isAssigned = assignedCourses.find(item => item.CourseId === courseId)
+  const clickDelete = (course) => {
+    const isAssigned = assignedCourses.find(item => item.CourseId === course.Id)
     if(isAssigned) return;
 
-    setPickedCourseId(courseId);
+    setPickedCourse(course);
+    setContentDelete(`course: ${course.Id}`)
     setIsDelete(true);
   }
 
   const saveDelete = () => {
-    const isAssigned = assignedCourses.find(item => item.CourseId === pickedCourseId)
+    const isAssigned = assignedCourses.find(item => item.CourseId === pickedCourse.Id)
     if(isAssigned) return;
 
-    request.delete(`Course/${pickedCourseId}`)
+    request.delete(`Course/${pickedCourse.Id}`)
     .then(res => {
       if(res.status === 200){
         setIsDelete(false)
@@ -266,6 +271,25 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
       }
     })
     .catch(err => {alert('Fail to delete course'); setIsDelete(false)})
+  }
+
+  const clickUpdate = (course) => {
+    const isAssigned = assignedCourses.find(item => item.CourseId === course.Id)
+    if(isAssigned) return;
+
+    setPickedCourse(course)
+    setIsUpdate(true)
+  }
+
+  const afterUpdate = (status) => {
+    if (status) {
+      setReload(prev => !prev)
+      toast.success('Edit successfully', {
+        position: "top-right", autoClose: 3000, hideProgressBar: false,
+        closeOnClick: true, pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
   }
 
   return (
@@ -347,13 +371,13 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
                     {semesterState===1 &&
                     <TableCell align='center'>
                       <Tooltip title='Edit' placement='top' arrow>
-                        <IconButton size='small' color='primary'>
+                        <IconButton size='small' color='primary' onClick={() => clickUpdate(course)}>
                           <EditOutlined />
                         </IconButton>
                       </Tooltip>
                       <span>|</span>
                       <Tooltip title='Delete' placement='top' arrow>
-                        <IconButton size='small' color='error' onClick={() => clickDelete(course.Id)}>
+                        <IconButton size='small' color='error' onClick={() => clickDelete(course)}>
                           <DeleteOutlined />
                         </IconButton>
                       </Tooltip>
@@ -382,7 +406,10 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
         semesterId={semesterId} handleAfterImport={handleAfterImport}/>
       <AddModal isAdd={isAdd} setIsAdd={setIsAdd} departments={departments} semesterId={semesterId}
         handleAfterImport={handleAfterImport}/>
-      <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} saveDelete={saveDelete}/>
+      <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} saveDelete={saveDelete}
+        contentDelete={contentDelete}/>
+      <UpdateModal isUpdate={isUpdate} setIsUpdate={setIsUpdate} course={pickedCourse}
+        afterUpdate={afterUpdate}/>
     </Stack>
   )
 }

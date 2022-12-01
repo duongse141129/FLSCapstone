@@ -31,21 +31,22 @@ const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
 
   const handleChangeMin = (e) => {
     setErrorMin('');
-    const value = Number(e.target.value)
-    setMin(value)
+    const value = e.target.value
+    if(value === '') setMin('')
+    else setMin(Number(value))
 
-    if(value <= 0) setErrorMin('Min must be greater than 0')
-    else if(value >= max) setErrorMin('Min must be less then Max') 
-
+    if(Number(value) <= 0) setErrorMin('Min must be greater than 0')
+    else if(Number(value) >= max) setErrorMin('Min must be less than Max') 
   }
 
   const handleChangeMax = (e) => {
     setErrorMax('')
-    const value = Number(e.target.value)
-    setMax(value)
+    const value = e.target.value
+    if(value === '') setMax('')
+    else setMax(Number(value))
 
-    if(value <= min) setErrorMax('Max must be greater than Min')
-    else if(value > 12) setErrorMax('Maximum is 12')
+    if(Number(value) <= min) setErrorMax('Max must be greater than Min')
+    else if(Number(value) > 12) setErrorMax('Maximum is 12')
   }
 
   const handleSave = () => {
@@ -80,14 +81,14 @@ const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
       {(admin || (lecturer.DepartmentId === account.DepartmentId)) && group.Id && <>
       <Stack direction='row' alignItems='center' gap={1} mb={2}>
         <Typography fontWeight={500} width={50}>Min:</Typography>
-        <TextField size='small' type='number' color='success' error={errorMin && true} helperText={errorMin}
-          value={min} onChange={handleChangeMin} 
+        <TextField size='small' type='number' color='success' error={errorMin ? true : false} 
+          helperText={errorMin} value={min} onChange={handleChangeMin} 
           InputProps={{ readOnly: (admin || semesterState !== 2) ? true : false }}/>
       </Stack>
       <Stack direction='row' alignItems='center' gap={1} mb={2}>
         <Typography fontWeight={500} width={50}>Max:</Typography>
-        <TextField size='small' type='number' color='success' error={errorMax && true} helperText={errorMax}
-          value={max} onChange={handleChangeMax} 
+        <TextField size='small' type='number' color='success' error={errorMax ? true : false} 
+          helperText={errorMax} value={max} onChange={handleChangeMax} 
           InputProps={{ readOnly: (admin || semesterState !== 2) ? true : false }}/>
       </Stack>
       {loading && <Button variant='contained' size='small' color='success'>

@@ -205,62 +205,59 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {
-                    subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                      .map((subject) => (
-                        <TableRow key={subject.Id} hover>
-                          <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>{subject.Id} - {subject.SubjectName}</TableCell>
-                          <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }} align='center'>
-                            <Typography fontSize='15px'>
-                              {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.FavoritePoint}
+                  {subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((subject) => (
+                      <TableRow key={subject.Id} hover>
+                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>{subject.Id} - {subject.SubjectName}</TableCell>
+                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }} align='center'>
+                          <Typography fontSize='15px'>
+                            {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.FavoritePoint}
+                          </Typography>
+                        </TableCell>
+                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
+                          <Stack direction='row' alignItems='center' justifyContent='center'>
+                            <Typography fontSize='15px' borderRight={semester.State === 2 && !admin && '1px solid gray'} pr={1}>
+                              {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 1 && 'Weak'}
+                              {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 2 && 'Not good'}
+                              {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 3 && 'Normal'}
+                              {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 4 && 'Good'}
+                              {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 5 && 'Excellent'}
                             </Typography>
-                          </TableCell>
-                          <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
-                            <Stack direction='row' alignItems='center' justifyContent='center'>
-                              <Typography fontSize='15px' borderRight={semester.State === 2 && !admin && '1px solid gray'} pr={1}>
-                                {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 1 && 'Weak'}
-                                {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 2 && 'Not good'}
-                                {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 3 && 'Normal'}
-                                {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 4 && 'Good'}
-                                {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 5 && 'Excellent'}
-                              </Typography>
-                              {semester.State === 2 && !admin &&
-                                <Tooltip title='Evaluate' placement='right'>
-                                  <IconButton color='primary' onClick={() => handleFeedback(subject.Id)}
-                                    size='small'>
-                                    <ChatOutlined />
-                                  </IconButton>
-                                </Tooltip>}
-                            </Stack>
-                          </TableCell>
-                          <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
-                            <Stack direction='row' alignItems='center' gap={1} justifyContent='center'>
-                              <Typography fontSize='15px' borderRight={semester.State === 2 && !admin && '1px solid gray'} pr={2}>
-                                {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.MaxCourseSubject}
-                              </Typography>
-                              {semester.State === 2 && !admin &&
-                                <Tooltip title='Edit' placement='right'>
-                                  <IconButton color='primary' onClick={() => handleEditMax(subject.Id)}
-                                    size='small'>
-                                    <EditOutlined />
-                                  </IconButton>
-                                </Tooltip>}
-                            </Stack>
-                          </TableCell>
-                          <TableCell size='small' align='center'
-                            sx={{
-                              bgcolor: points.find(item => item.SubjectId === subject.Id)?.isEnable === 0 ? '' : (disableNumber >= configData.DISABLE_SUBJECT ? grey[100] : ''),
-                              '&:hover': { cursor: isDisable ? 'pointer' : 'default' }
-                            }}
-                            onClick={() => handleDisable(subject.Id)}>
-                            {points.find(item => item.SubjectId === subject.Id)?.isEnable === 0 &&
-                              <CancelOutlined sx={{ color: red[600] }} />
-                            }
-                            {loadDisable && selectedId === subject.Id && <ClipLoader size={20} color={grey[400]} />}
-                          </TableCell>
-                        </TableRow>
-                      ))
-                  }
+                            {semester.State === 2 && !admin &&
+                              <Tooltip title='Evaluate' placement='right'>
+                                <IconButton color='primary' onClick={() => handleFeedback(subject.Id)}
+                                  size='small'>
+                                  <ChatOutlined />
+                                </IconButton>
+                              </Tooltip>}
+                          </Stack>
+                        </TableCell>
+                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
+                          <Stack direction='row' alignItems='center' gap={1} justifyContent='center'>
+                            <Typography fontSize='15px' borderRight={semester.State === 2 && !admin && '1px solid gray'} pr={2}>
+                              {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.MaxCourseSubject}
+                            </Typography>
+                            {semester.State === 2 && !admin &&
+                              <Tooltip title='Edit' placement='right'>
+                                <IconButton color='primary' onClick={() => handleEditMax(subject.Id)}
+                                  size='small'>
+                                  <EditOutlined />
+                                </IconButton>
+                              </Tooltip>}
+                          </Stack>
+                        </TableCell>
+                        <TableCell size='small' align='center'
+                          sx={{
+                            bgcolor: points.find(item => item.SubjectId === subject.Id)?.isEnable === 0 ? '' : (disableNumber >= configData.DISABLE_SUBJECT ? grey[100] : ''),
+                            '&:hover': { cursor: isDisable ? 'pointer' : 'default' }
+                          }}
+                          onClick={() => handleDisable(subject.Id)}>
+                          {points.find(item => item.SubjectId === subject.Id)?.isEnable === 0 &&
+                            <CancelOutlined sx={{ color: red[600] }} />
+                          }
+                          {loadDisable && selectedId === subject.Id && <ClipLoader size={20} color={grey[400]} />}
+                        </TableCell>
+                      </TableRow>))}
                 </TableBody>
               </Table>
             </TableContainer>

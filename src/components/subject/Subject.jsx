@@ -5,12 +5,12 @@ import { Send, StarBorder, Beenhere } from '@mui/icons-material';
 import React, { useState, useEffect } from 'react';
 import RequestModal from '../department/RequestModal';
 import RatingModal from '../department/RatingModal';
-import './Subject.css';
 import { green, grey, red } from '@mui/material/colors';
 import {HashLoader} from 'react-spinners';
 import { ToastContainer, toast } from 'react-toastify';
 import request from '../../utils/request';
 import configData from  '../../utils/configData.json';
+import './Subject.css';
 
 const Subject = ({ semesterId, semesterState }) => {
   const [page, setPage] = useState(0);

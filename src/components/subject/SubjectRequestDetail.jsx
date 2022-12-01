@@ -118,29 +118,32 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
       <DialogContent sx={{height: '90vh'}}>
         {requests.length > 0 && <>
           <Stack mb={1}>
-            <Typography fontWeight={500}>Requests of Lecturers</Typography>
+            <Typography fontWeight={500}>Requests of Lecturers: {requests.length}</Typography>
           </Stack>
           <Paper sx={{ minWidth: 700, mb: 4 }}>
             <TableContainer component={Box}>
               <Table size='small'>
                 <TableHead>
                   <TableRow>
+                    <TableCell className='subject-header'>Create At</TableCell>
                     <TableCell className='subject-header'>Lecturer</TableCell>
                     <TableCell className='subject-header'>Department</TableCell>
-                    <TableCell className='subject-header' align='center'>Assigned Courses</TableCell>
-                    <TableCell className='subject-header request-border'>Action</TableCell>
+                    <TableCell className='subject-header request-border' align='center'>Assigned Courses</TableCell>
+                    <TableCell className='subject-header' align='center'>Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {requests.map(req => (
                     <TableRow hover key={req.Id}>
+                      <TableCell>{req.DateCreateFormat}</TableCell>
                       <TableCell>{req.LecturerId} - {lecturers.find(lec => lec.Id === req.LecturerId)?.Name}</TableCell>
-                      <TableCell>{lecturers.find(lec => lec.Id === req.LecturerId)?.DepartmentId}</TableCell>
-                      <TableCell align='center'>
+                      <TableCell>{lecturers.find(lec => lec.Id === req.LecturerId)?.DepartmentId} {' '}
+                      {lecturers.find(lec => lec.Id === req.LecturerId)?.DepartmentId !== account.DepartmentId && '(External)'}</TableCell>
+                      <TableCell align='center' className='request-border'>
                         {assignedCourses.length>0 && assignedCourses.filter(item => (item.LecturerId === req.LecturerId
                           && item.CourseId.split('_')[0] === pickedSubject.Id)).length}
                       </TableCell>
-                      <TableCell>
+                      <TableCell align='center'>
                         {(semesterState === 2 || semesterState === 4) &&<>
                           <Tooltip title='Accept' placement='top' arrow>
                             <IconButton color='success' size='small' 
@@ -165,7 +168,7 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
           </Paper>
         </>}
         <Stack mb={1} direction='row' alignItems='center' justifyContent='space-between'>
-          <Typography fontWeight={500}>Assigned Lecturers</Typography>
+          <Typography fontWeight={500}>Assigned Lecturers: {inSideLecs.length + outSideLecs.length}</Typography>
           <Button variant='outlined' size='small' onClick={() => setIsResponsed(true)}>
             Responsed Requests
           </Button>
@@ -194,7 +197,7 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
                 {outSideLecs.map(lec => (
                   <TableRow hover key={lec.Id}>
                     <TableCell>{lec.Id} - {lec.Name}</TableCell>
-                    <TableCell>{lec.DepartmentId} - {lec.DepartmentName}</TableCell>
+                    <TableCell>{lec.DepartmentId} - {lec.DepartmentName} (External)</TableCell>
                     <TableCell align='center'>
                       {assignedCourses.length>0 && assignedCourses.filter(item => (item.LecturerId === lec.Id
                         && item.CourseId.split('_')[0] === pickedSubject.Id)).length}

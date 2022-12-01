@@ -98,8 +98,7 @@ const AddModal = ({ isAdd, setIsAdd, departments, semesterId, handleAfterImport 
 
   return (
     <Dialog fullWidth={true} maxWidth='sm'
-      open={isAdd} onClose={() => setIsAdd(false)}
-    >
+      open={isAdd} onClose={() => setIsAdd(false)}>
       <DialogTitle variant='h5' fontWeight={500}>Add Course</DialogTitle>
       <DialogContent>
         <Stack mb={2}>

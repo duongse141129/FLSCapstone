@@ -1,9 +1,9 @@
 import { AssignmentOutlined, Clear } from '@mui/icons-material';
 import { Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer,
-  TableHead, TablePagination, TableRow, Typography
+  TableHead, TablePagination, TableRow, Tooltip, Typography
 } from '@mui/material'
 import { green } from '@mui/material/colors';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { HashLoader } from 'react-spinners';
 import request from '../../../utils/request';
 import AssignModal from '../AssignModal';
@@ -32,6 +32,24 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
   const [selectedCourse, setSelectedCourse] = useState('');
   const [isClear, setIsClear] = useState(false);
   const [loadCourse, setLoadCourse] = useState(false);
+  const assignedTotal = useMemo(() => {
+    if(assignedCourses.length > 0 && subjects.length > 0){
+      if(selectedSubject !== 'all'){
+        return assignedCourses.filter(item => item.CourseId.split('_')[0] === selectedSubject).length
+      }
+      
+      let external = assignedCourses;
+      let internal = assignedCourses
+      for(let i in subjects){
+        external = external.filter(ex => ex.CourseId.split('_')[0] !== subjects[i].Id)
+      }
+      for(let i in external){
+        internal = internal.filter(inter => inter.CourseId.split('_')[0] !== external[i].CourseId.split('_')[0])
+      }
+      return internal.length;
+    }
+    return 0;
+  }, [assignedCourses, selectedSubject, subjects])
 
   //get subjects by selected department
   useEffect(() => {
@@ -196,62 +214,62 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
             ))}
           </Select>
         </Stack>
-        <Stack direction='row' gap={1}>
-          <Typography fontWeight={500}>Total Courses: </Typography>
-          <Typography>{courses.length}</Typography>
+        <Stack direction='row' gap={4}>
+          <Typography>Total Courses: {courses.length}</Typography>
+          <Typography>Total Assigned: {assignedTotal}</Typography>
         </Stack>
       </Stack>
       {loadCourse && <HashLoader color={green[600]} size={30}/>}
       {!loadCourse && <Paper sx={{ minWidth: 700, mb: 2 }}>
         <TableContainer component={Box}>
-          <Table>
+          <Table size='small'>
             <TableHead>
               <TableRow>
-                <TableCell size='small' className='subject-header'>Course</TableCell>
-                <TableCell size='small' className='subject-header'>Subject</TableCell>
-                <TableCell size='small' className='subject-header'>Slot Amount</TableCell>
-                <TableCell size='small' className='subject-header'>Assigned To</TableCell>
-                <TableCell size='small' className='subject-header'>Teaching Slot</TableCell>
+                <TableCell className='subject-header'>Course</TableCell>
+                <TableCell className='subject-header'>Subject</TableCell>
+                <TableCell className='subject-header'>Slot Amount</TableCell>
+                <TableCell className='subject-header'>Assigned To</TableCell>
+                <TableCell className='subject-header request-border'>Teaching Slot</TableCell>
                 {semesterState === 2 &&
-                  <><TableCell size='small' className='subject-header'>Assign</TableCell>
-                    <TableCell size='small' className='subject-header'>Clear</TableCell></>}
+                  <TableCell className='subject-header' align='center'>Option</TableCell>}
               </TableRow>
             </TableHead>
             <TableBody>
               {courses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(course => (
                   <TableRow key={course.Id} hover>
-                    <TableCell size='small'>{course.Id}</TableCell>
-                    <TableCell size='small'>{course.SubjectId}</TableCell>
-                    <TableCell size='small'>{course.SlotAmount}</TableCell>
-                    <TableCell size='small'>
+                    <TableCell>{course.Id}</TableCell>
+                    <TableCell>{course.SubjectId}</TableCell>
+                    <TableCell>{course.SlotAmount}</TableCell>
+                    <TableCell>
                       {assignedCourses.find(item => item.CourseId === course.Id)?.LecturerId ||
                         <span style={{ color: 'red' }}>Not Yet</span>
                       }
                     </TableCell>
-                    <TableCell size='small'>
+                    <TableCell className='request-border'>
                       {assignedCourses.find(item => item.CourseId === course.Id) ?
                         getInforSlot(assignedCourses.find(item => item.CourseId === course.Id).SlotTypeId)
                         : <span style={{ color: 'red' }}>Not Yet</span>
                       }
                     </TableCell>
-                    {semesterState === 2 && <>
-                      <TableCell size='small'>
-                        <IconButton size='small' color='primary'
-                          disabled={assignedCourses.find(item => item.CourseId === course.Id) && true}
-                          onClick={() => handleAssign(course.Id)}>
-                          <AssignmentOutlined/>
-                        </IconButton>
-                      </TableCell>
-                      <TableCell size='small'>
-                        <IconButton color='error' size='small'
-                          disabled={assignedCourses.find(item => item.CourseId === course.Id) ? false : true}
-                          onClick={() => confirmClear(course.Id)}
-                        >
-                          <Clear />
-                        </IconButton>
-                      </TableCell>
-                    </>}
+                    {semesterState === 2 &&
+                      <TableCell align='center'>
+                        <Tooltip title='Assign' placement='top' arrow>
+                          <IconButton size='small' color='primary'
+                            disabled={assignedCourses.find(item => item.CourseId === course.Id) && true}
+                            onClick={() => handleAssign(course.Id)}>
+                            <AssignmentOutlined />
+                          </IconButton>
+                        </Tooltip>
+                        <span>|</span>
+                        <Tooltip title='Clear Assign' placement='top' arrow>
+                          <IconButton color='error' size='small'
+                            disabled={assignedCourses.find(item => item.CourseId === course.Id) ? false : true}
+                            onClick={() => confirmClear(course.Id)}>
+                            <Clear />
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>}
                   </TableRow>
                 ))}
             </TableBody>
