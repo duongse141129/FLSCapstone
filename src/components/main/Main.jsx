@@ -5,6 +5,16 @@ import { useState, useEffect } from 'react';
 import request from '../../utils/request';
 import {getWeeksInYear, getSemesterWeeks} from '../../utils/weeksInYear'
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+    },
+  },
+};
+
 const Main = () => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [semesters, setSemesters] = useState([]);
@@ -131,11 +141,8 @@ const Main = () => {
           </Stack>
           <Stack direction='row' gap={1} alignItems='center'>
             <Typography fontWeight={500}>Week</Typography>
-            <Select color='success'
-              size='small'
-              value={selectedWeek}
-              onChange={handleSelectWeek}
-            >
+            <Select color='success' size='small' MenuProps={MenuProps}
+              value={selectedWeek} onChange={handleSelectWeek}>
               {
                 weeksInSemester.length > 0 &&
                 weeksInSemester.map(week => (

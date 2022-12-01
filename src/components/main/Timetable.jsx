@@ -105,10 +105,6 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
     }
   }, [selectedSemester])
 
-  console.log('course', courseAssign)
-  console.log('slot', slotType)
-  console.log('semester', selectedSemester)
-
   //clarify courseAssign into 6 days by slottype list
   useEffect(() => {
     if (courseAssign.length > 0 && slotType.length > 0) {
@@ -185,7 +181,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
           <>
           {
             courseAssign.length === 0 &&
-            <Typography color='red' px={popUp ? '' : 9}>No courses in this time</Typography>
+            <Typography color='red' px={popUp ? '' : 9}>No courses or not public yet in this time</Typography>
           }
           <Stack height='100%' direction='row' px={popUp ? '' : 9} mb={1} minWidth='920px' minHeight='445px'>
             <Stack flex={0.6} bgcolor='white'>

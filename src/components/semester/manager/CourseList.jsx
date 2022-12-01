@@ -252,7 +252,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
                         : <span style={{ color: 'red' }}>Not Yet</span>
                       }
                     </TableCell>
-                    {semesterState === 2 &&
+                    {(semesterState === 2 || semesterState === 4) &&
                       <TableCell align='center'>
                         <Tooltip title='Assign' placement='top' arrow>
                           <IconButton size='small' color='primary'

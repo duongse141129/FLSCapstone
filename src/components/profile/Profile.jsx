@@ -90,8 +90,6 @@ const Profile = () => {
             defaultValue={email}
             InputProps={{ readOnly: true }} />
         </Tooltip>
-        {account.RoleIDs.includes('AD') &&
-          <Stack>Click to copy Key</Stack>}
         {account.RoleIDs.includes('LC') && account.RoleIDs.includes('DMA') &&
           <Tooltip title='Can not modify' placement='right' arrow>
             <TextField label='Department' variant='outlined' color='success' margin='normal' size='small'

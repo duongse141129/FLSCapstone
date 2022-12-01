@@ -1,16 +1,29 @@
-import React, { useState } from 'react';
-import Badge from '@mui/material/Badge';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import { Reorder, AccountBox, Logout } from '@mui/icons-material';
-import { Avatar, Box, Divider, Menu, MenuItem, Stack, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react';
+import { Reorder, AccountBox, Logout, Key } from '@mui/icons-material';
+import { Avatar, Box, Divider, Menu, MenuItem, Snackbar, Stack, Typography } from '@mui/material'
 import { useGoogleAuth } from '../../utils/googleAuth';
 import { useLocation } from 'react-router-dom';
+import request from '../../utils/request';
 
 const Navbar = ({ isExtend, setIsExtend }) => {
   const location = useLocation();
   const { signOut, googleUser } = useGoogleAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
+  const [isCopied, setIsCopied] = useState(false)
+  const [key, setKey] = useState('')
+  
+  useEffect(() => {
+    if(googleUser){
+      request.post(`Token/Login?email=${googleUser?.profileObj?.email}`)
+      .then(res => {
+        if(res.status === 200 || res.status === 201){
+          setKey(res.data.refresh_token)
+        }
+      })
+      .catch(err => {alert('Fail to get key')})
+    }
+  }, [googleUser])
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -25,17 +38,19 @@ const Navbar = ({ isExtend, setIsExtend }) => {
     signOut();
   }
 
+  const handleCopyKey = () => {
+    setIsCopied(true);
+    setAnchorEl(null);
+    navigator.clipboard.writeText(key)
+  }
+
   return (
-    <Box
-      bgcolor='white'
-      px={4}
-      py={1}
+    <Box bgcolor='white' px={4} py={1}
       sx={{
         position: 'sticky',
         top: '0',
         borderBottom: '1px solid lightgray'
-      }}
-    >
+      }}>
       <Stack direction='row' justifyContent='space-between' alignItems='center'>
         <Stack direction='row' alignItems='center'>
           <Reorder
@@ -48,15 +63,10 @@ const Navbar = ({ isExtend, setIsExtend }) => {
             }}
             onClick={() => setIsExtend(!isExtend)}
           />
-          <Stack
-            bgcolor='success.main'
-            color='white'
-            width='48px'
-            height='48px'
-            alignItems='center'
-            justifyContent='center'
-            borderRadius='20%'
-          >
+          <Stack bgcolor='success.main' color='white'
+            width='48px' height='48px'
+            alignItems='center' justifyContent='center'
+            borderRadius='20%'>
             <Typography fontWeight='bold'>FLS</Typography>
           </Stack>
           <Typography variant='h5' ml='4px'>FPT Lecturer Scheduler</Typography>
@@ -67,16 +77,8 @@ const Navbar = ({ isExtend, setIsExtend }) => {
             {location.pathname.startsWith('/lecturer') && 'Lecturer'}
             {location.pathname.startsWith('/manager') && 'Department Manager'}
             {location.pathname.startsWith('/admin') && 'Admin'}
+            : {googleUser?.profileObj?.email}
           </Typography>
-          <Badge badgeContent={4} color="error">
-            <NotificationsIcon
-              fontSize='medium'
-              sx={{
-                color: 'success.main',
-                fontSize: '28px'
-              }}
-            />
-          </Badge>
           <Avatar
             src={googleUser && googleUser?.profileObj?.imageUrl}
             sx={{
@@ -87,14 +89,13 @@ const Navbar = ({ isExtend, setIsExtend }) => {
             }}
             onClick={handleClick}
           />
-          <Menu
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-          >
+          <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
             <MenuItem onClick={handleClose}>
               <AccountBox sx={{ mr: 1 }} /> Profile
             </MenuItem>
+            {key && <MenuItem onClick={handleCopyKey}>
+              <Key sx={{ mr: 1 }} /> Copy Key
+            </MenuItem>}
             <Divider />
             <MenuItem onClick={handleSignOut}>
               <Logout sx={{ mr: 1, color: 'gray' }} />  Logout
@@ -102,6 +103,11 @@ const Navbar = ({ isExtend, setIsExtend }) => {
           </Menu>
         </Stack>
       </Stack>
+      <Snackbar open={isCopied}
+        autoHideDuration={2000}
+        onClose={() => setIsCopied(false)}
+        message="Key is copied."
+      />
     </Box>
   )
 }
