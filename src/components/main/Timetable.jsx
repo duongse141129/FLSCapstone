@@ -40,18 +40,15 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
           params: {
             IsPublic: isPublic ? 1 : '',
             SemesterId: selectedSemester,
-            pageIndex: 1,
-            pageSize: 1
+            pageIndex: 1, pageSize: 1
           }
         })
         if(responseSchedule.data.length > 0){
           const scheduleId = responseSchedule.data[0].Id;
           const responseCourseAssign = await request.get('CourseAssign', {
             params: {
-              LecturerId: lecturerId,
-              ScheduleId: scheduleId,
-              pageIndex: 1,
-              pageSize: 50
+              LecturerId: lecturerId, ScheduleId: scheduleId,
+              pageIndex: 1, pageSize: 50
             }
           })
           if(responseCourseAssign.data){
@@ -69,7 +66,9 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
       }
     }
 
-    getCourseAssign();
+    if(selectedSemester){
+      getCourseAssign();
+    }
 
     return () => {
       setCourseAssign([]);
@@ -85,8 +84,7 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
           const response = await request.get('SlotType', {
             params: {
               SemesterId: selectedSemester,
-              pageIndex: 1,
-              pageSize: 50
+              pageIndex: 1, pageSize: 50
             }
           })
           if (response.status === 200) {
@@ -101,7 +99,15 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
     }
 
     getSlotType();
+
+    return () => {
+      setSlotType([])
+    }
   }, [selectedSemester])
+
+  console.log('course', courseAssign)
+  console.log('slot', slotType)
+  console.log('semester', selectedSemester)
 
   //clarify courseAssign into 6 days by slottype list
   useEffect(() => {

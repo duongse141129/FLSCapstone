@@ -37,8 +37,7 @@ const ImportModal = ({ isImport, setIsImport, importCourses, semesterId, handleA
 
   return (
     <Dialog fullWidth={true} maxWidth='md'
-      open={isImport} onClose={() => setIsImport(false)}
-    >
+      open={isImport} onClose={() => setIsImport(false)}>
       <DialogTitle>Import Courses</DialogTitle>
       <DialogContent>
         <Typography>Total: {importCourses.length}</Typography>

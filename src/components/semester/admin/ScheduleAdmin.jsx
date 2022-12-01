@@ -1,11 +1,12 @@
 import { Stack } from '@mui/material'
 import Schedule from '../Schedule'
 
-const ScheduleAdmin = ({ lecturerId, semester, admin }) => {
+const ScheduleAdmin = ({ lecturerId, lecturerDepart, semester, admin }) => {
 
   return (
     <Stack height='90vh'>
-      <Schedule semester={semester} selectedId={lecturerId} popUp={true} isManager={admin ? false : true}/>
+      <Schedule semester={semester} selectedId={lecturerId} popUp={true} 
+        isManager={admin ? false : true} lecturerDepart={lecturerDepart}/> 
     </Stack>
   )
 }

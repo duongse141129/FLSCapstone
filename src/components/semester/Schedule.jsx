@@ -16,7 +16,7 @@ const MenuProps = {
   },
 };
 
-const Schedule = ({ semester, selectedId, popUp, isManager }) => {
+const Schedule = ({ semester, selectedId, popUp, isManager, lecturerDepart }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [weeksInYear, setWeeksInYear] = useState([]);
   const [weeksInSemester, setWeeksInSemester] = useState([]);
@@ -111,7 +111,7 @@ const Schedule = ({ semester, selectedId, popUp, isManager }) => {
               ))}
           </Select>
         </Stack>
-        {isManager && semester.State === 4 && 
+        {isManager && semester.State === 4 && lecturerDepart === account.DepartmentId &&
           <Stack direction='row' alignItems='center' bgcolor={grey[200]}>
             <Switch checked={isSwap} onChange={() => setIsSwap(!isSwap)}/>
             <Typography pr={2}>

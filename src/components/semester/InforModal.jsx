@@ -82,7 +82,8 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
             </Typography>
           ))} */}
         </Stack>
-        {selected === tabs[0].name && <ScheduleAdmin lecturerId={selectedLecturer.Id} semester={semester} admin={admin}/>}
+        {selected === tabs[0].name && <ScheduleAdmin lecturerId={selectedLecturer.Id} 
+          lecturerDepart={selectedLecturer.DepartmentId} semester={semester} admin={admin}/>}
         {selected === tabs[1].name && <AssignmentContainer lecturer={selectedLecturer} semester={semester} 
           allSubjects={allSubjects} admin={admin}/>}
         {selected === tabs[2].name && <FeedbackSelection id={selectedLecturer.Id} semester={semester} admin={admin}/>}

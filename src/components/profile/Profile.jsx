@@ -28,35 +28,24 @@ const Profile = () => {
 
   const handleSave = () => {
     request.put(`User/${account.Id}`, {
-      Name: name,
-      Email: email,
-      Dob: dob,
-      Gender: radioValue,
-      Idcard: idCard,
-      Address: address,
-      Phone: phone,
-      PriorityLecturer: account.PriorityLecturer,
-      IsFullTime: account.IsFullTime,
-      DepartmentId: account.DepartmentId
-    })
-      .then(res => {
-        if (res.status === 200) {
-          localStorage.setItem('web-user', JSON.stringify(res.data))
-          setAccount(res.data)
-          setShow(false);
-          toast.success('Update Profile Successfully!', {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-            theme: "colored",
-          });
-        }
-      })
-      .catch(err => {
+      Name: name, Email: email,
+      Dob: dob, Gender: radioValue,
+      Idcard: idCard, Address: address,
+      Phone: phone, PriorityLecturer: account.PriorityLecturer,
+      IsFullTime: account.IsFullTime, DepartmentId: account.DepartmentId
+    }).then(res => {
+      if (res.status === 200) {
+        localStorage.setItem('web-user', JSON.stringify(res.data))
+        setAccount(res.data)
+        setShow(false);
+        toast.success('Update Profile Successfully!', {
+          position: "top-right", autoClose: 3000,
+          hideProgressBar: false, closeOnClick: true,
+          pauseOnHover: true, draggable: true,
+          progress: undefined, theme: "colored",
+        });
+      }
+    }).catch(err => {
         alert('Fail to save changes in profile!')
       })
   }
@@ -101,6 +90,8 @@ const Profile = () => {
             defaultValue={email}
             InputProps={{ readOnly: true }} />
         </Tooltip>
+        {account.RoleIDs.includes('AD') &&
+          <Stack>Click to copy Key</Stack>}
         {account.RoleIDs.includes('LC') && account.RoleIDs.includes('DMA') &&
           <Tooltip title='Can not modify' placement='right' arrow>
             <TextField label='Department' variant='outlined' color='success' margin='normal' size='small'
@@ -112,21 +103,14 @@ const Profile = () => {
             <TextField label='Lecturer Type' variant='outlined' color='success' margin='normal' size='small'
               defaultValue={type}
               InputProps={{ readOnly: true }} />
-          </Tooltip>
-        }
-        <Button
-          variant='contained'
-          color='success'
-          endIcon={<Save />}
-          onClick={handleShow}
-          size='small'
+          </Tooltip>}
+        <Button variant='contained' color='success'
+          endIcon={<Save />} onClick={handleShow} size='small'
           disabled={
             (name === account.Name || name.length === 0) && dob === account.DateOfBirthFormatted &&
             radioValue === account.Gender && (phone === account.Phone || !/^([0-9]{10,11})$/.test(phone))
             && (idCard === account.Idcard || !/^([0-9]{12})$/.test(idCard)) &&
-            address === account.Address
-          }
-        >
+            address === account.Address}>
           Save
         </Button>
       </Stack>
