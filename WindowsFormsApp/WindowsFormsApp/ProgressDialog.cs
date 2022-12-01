@@ -39,8 +39,7 @@ namespace WindowsFormsApp
                         {
                             try
                             {
-                                int i ;
-                                
+                                int i ;                               
                                 foreach(var item in result)
                                 {
                                     label2.Text = "Assigned course  "+ item.ID;
@@ -51,8 +50,7 @@ namespace WindowsFormsApp
                                 //this.Close();
                             }
                             catch (Exception ex)
-                            {
-                                throw;
+                            {                               
                             }
                         }));
 

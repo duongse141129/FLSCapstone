@@ -363,7 +363,7 @@ namespace WindowsFormsApp
             SelectedscheduleItem.Clear();
             SelectedscheduleItem = LecturerScheduler.Run();
             SelectedscheduleItem = SelectedscheduleItem.OrderBy(scheduler => scheduler.LecturerID).ThenBy(scheduler => scheduler.SlotTypeID).ToList();
-            btnExport_Click(@"C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\" + "CourseAssignTemp.xlsx", SelectedscheduleItem);
+            //btnExport_Click(@"C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\" + "CourseAssignTemp.xlsx", SelectedscheduleItem);
 
             
                     
@@ -800,7 +800,7 @@ namespace WindowsFormsApp
         async Task loadDataAsync(Semester semester)
         {
             string semesterId = semester.ID;
-            string filePath = @"C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\";
+            //string filePath = @"C:\Users\84393\Desktop\Capstone\FLSCapstone\WindowsFormsApp\WindowsFormsApp\";
             //Courses = CourseDAO.ReadDataJsonCourse(filePath + "Course.json");
             //Lecturers = LecturerDAO.ReadDataJsonLecturer(filePath + "Lecturer.json");
             //Departments = DepartmentDAO.ReadDataJsonDepartment(filePath + "Department.json");
@@ -1077,51 +1077,6 @@ namespace WindowsFormsApp
         }
 
 
-        
-
-        //private void radioButton3_MouseClick(object sender, MouseEventArgs e)
-        //{
-        //    if (priorityCourseRadioButton.Checked == true)
-        //    {
-        //        radioButton4.Text = feedbackRadioButton.Text;
-        //        radioButton5.Text = favoriteRadioButton.Text;
-        //    }
-        //    else if (feedbackRadioButton.Checked == true)
-        //    {
-        //        radioButton4.Text = priorityCourseRadioButton.Text;
-        //        radioButton5.Text = favoriteRadioButton.Text;
-        //    }
-        //    else if (favoriteRadioButton.Checked == true)
-        //    {
-        //        radioButton4.Text = priorityCourseRadioButton.Text;
-        //        radioButton5.Text = feedbackRadioButton.Text;
-        //    }
-
-
-        //    if (radioButton4.Checked == true)
-        //    {
-        //        radioButton6.Text = radioButton5.Text;
-        //    }
-        //    else if (radioButton5.Checked == true)
-        //    {
-        //        radioButton6.Text = radioButton4.Text;
-        //    }
-
-
-           
-        //}
-
-        //private void radioButton5_MouseClick(object sender, MouseEventArgs e)
-        //{
-        //    if (radioButton4.Checked == true)
-        //    {
-        //        radioButton6.Text = radioButton5.Text;
-        //    }
-        //    else if (radioButton5.Checked == true)
-        //    {
-        //        radioButton6.Text = radioButton4.Text;
-        //    }
-        //}
 
         private void scheduleComboBox_SelectedIndexChanged(object sender, EventArgs e)
         {
