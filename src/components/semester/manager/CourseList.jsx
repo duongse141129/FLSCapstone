@@ -230,7 +230,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
                 <TableCell className='subject-header'>Slot Amount</TableCell>
                 <TableCell className='subject-header'>Assigned To</TableCell>
                 <TableCell className='subject-header request-border'>Teaching Slot</TableCell>
-                {semesterState === 2 &&
+                {(semesterState === 2 || semesterState === 4) &&
                   <TableCell className='subject-header' align='center'>Option</TableCell>}
               </TableRow>
             </TableHead>
@@ -262,13 +262,14 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
                           </IconButton>
                         </Tooltip>
                         <span>|</span>
+                        {semesterState === 2 && 
                         <Tooltip title='Clear Assign' placement='top' arrow>
                           <IconButton color='error' size='small'
                             disabled={assignedCourses.find(item => item.CourseId === course.Id) ? false : true}
                             onClick={() => confirmClear(course.Id)}>
                             <Clear />
                           </IconButton>
-                        </Tooltip>
+                        </Tooltip>}
                       </TableCell>}
                   </TableRow>
                 ))}

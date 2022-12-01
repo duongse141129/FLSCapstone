@@ -10,6 +10,7 @@ import ConfirmModal from './ConfirmModal'
 import CourseList from './CourseList'
 import SlotType from './SlotType'
 import { ToastContainer, toast } from 'react-toastify';
+import SummarySubject from './SummarySubject'
 
 const SemesterDetailAdmin = () => {
   const navigate = useNavigate();
@@ -63,10 +64,10 @@ const SemesterDetailAdmin = () => {
     if(semester.State === 5) return;
 
     setMode('next');
-    if(semester.State === 1) setContent('Next state is Voting.')
-    else if(semester.State === 2) setContent('Next state is Blocked.')
-    else if(semester.State === 3) setContent('Next state is Adjusting.')
-    else setContent('Next state is Public.')
+    if(semester.State === 1) setContent('Next state is Voting. Lecturers and Department Managers can rate subjects and slots, assign courses, evaluate, ...')
+    else if(semester.State === 2) setContent('Next state is Blocked. All functions are blocked to begin generating schedule.')
+    else if(semester.State === 3) setContent('Next state is Adjusting. The schedule will be shown for Lecturers and Department Managers. The Managers can adjust the schedule.')
+    else setContent('Next state is Public. The schedule will be public and can not be edited.')
     
     setIsConfirm(true);
   }
@@ -75,9 +76,9 @@ const SemesterDetailAdmin = () => {
     if(semester.State === 1) return;
 
     setMode('prev')
-    if(semester.State === 5) setContent('Previous state is Adjusting.')
-    else if(semester.State === 4) setContent('Previous state is Blocked.')
-    else if(semester.State === 3) setContent('Previous state is Voting.')
+    if(semester.State === 5) setContent('Previous state is Adjusting. The schedule will be shown for Lecturers and Department Managers. The Managers can adjust the schedule.')
+    else if(semester.State === 4) setContent('Previous state is Blocked. All functions are blocked to begin generating schedule.')
+    else if(semester.State === 3) setContent('Previous state is Voting. Lecturers and Department Managers can rate subjects and slots, assign courses, evaluate, ...')
     else setContent('Previous state is New.')
     setIsConfirm(true);
   }
@@ -188,6 +189,12 @@ const SemesterDetailAdmin = () => {
             sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
             Courses
           </Typography>
+          <Typography color={selected === 'subjects' ? green[600] : grey[500]} py={0.5}
+            borderBottom={selected === 'subjects' && `4px solid ${green[600]}`}
+            fontSize='20px' onClick={() => setSelected('subjects')}
+            sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
+            Subjects
+          </Typography>
           <Typography color={selected === 'slot' ? green[600] : grey[500]} py={0.5}
             borderBottom={selected === 'slot' && `4px solid ${green[600]}`}
             fontSize='20px' onClick={() => setSelected('slot')}
@@ -203,6 +210,7 @@ const SemesterDetailAdmin = () => {
       </Stack>
       {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id} 
         slotTypes={slotTypes} semesterState={semester.State}/>}
+      {selected === 'subjects' && <SummarySubject semesterId={id} scheduleId={schedule.Id}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} />}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} content={content} 

@@ -101,7 +101,7 @@ const SubjectRequest = ({semesterId, semesterState, scheduleId}) => {
               <TableHead>
                 <TableRow>
                   <TableCell className='subject-header'>Code</TableCell>
-                  <TableCell className='subject-header'>Name</TableCell>
+                  <TableCell className='subject-header request-border'>Name</TableCell>
                   <TableCell className='subject-header request-border' align='center'>
                     Total Courses</TableCell>
                   <TableCell className='subject-header request-border' align='center'>
@@ -117,7 +117,7 @@ const SubjectRequest = ({semesterId, semesterState, scheduleId}) => {
                   <TableRow hover key={subject.Id} sx={{'&:hover':{cursor: 'pointer'}}}
                     onClick={() => viewDetail(subject)}>
                     <TableCell>{subject.Id}</TableCell>
-                    <TableCell>{subject.SubjectName}</TableCell>
+                    <TableCell className='request-border'>{subject.SubjectName}</TableCell>
                     <TableCell className='request-border' align='center'>
                       {courses.filter(course => course.SubjectId === subject.Id).length}</TableCell>
                     <TableCell className='request-border' align='center'>
@@ -125,7 +125,7 @@ const SubjectRequest = ({semesterId, semesterState, scheduleId}) => {
                         assignedCourses.filter(course => course.CourseId.split('_')[0] === subject.Id).length}
                       {assignedCourses.length === 0 && '0'} 
                     </TableCell>
-                    <TableCell className='request-border' align='center'>
+                    <TableCell align='center'>
                       {requests.length > 0 &&
                         requests.filter(req => req.SubjectId === subject.Id).length}
                       {requests.length === 0 && '0'}

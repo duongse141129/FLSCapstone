@@ -1,6 +1,6 @@
 import { ArrowBackIosNew, Check, HorizontalRule } from '@mui/icons-material'
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material'
-import { blue, green, grey, red } from '@mui/material/colors';
+import { blue, green, grey } from '@mui/material/colors';
 import React, { useState, useEffect } from 'react'
 import LecturerContainer from './LecturerContainer';
 import CourseList from './CourseList';
@@ -55,17 +55,26 @@ const SemesterDetailManager = () => {
         </Stack>
         <Stack pr={9} alignItems='center'>
           {semester.State === 1 &&
-            <Typography color={red[700]}>Voting is not opened yet</Typography>}
+            <Typography bgcolor={blue[100]} p={1} borderRadius={2}>
+              Semester has been created</Typography>}
           {semester.State === 2 &&
-            <>
-              <Typography color={green[700]}>Voting is opened</Typography>
-              <Typography color={green[700]}>Assign course and Feedback now!</Typography>
-            </>}
+            <Stack bgcolor={blue[100]} p={0.5} alignItems='center' borderRadius={2}>
+              <Typography>Voting is opened</Typography>
+              <Typography>Rating subjects and slots now</Typography>
+            </Stack>}
           {semester.State === 3 &&
-            <>
-              <Typography color={blue[700]}>Semester has blocked</Typography>
-              <Typography color={blue[700]}>Can not edit already Ratings</Typography>
-            </>}
+            <Stack bgcolor={blue[100]} p={0.5} alignItems='center' borderRadius={2}>
+              <Typography>Semester has blocked</Typography>
+              <Typography>Waiting for schedule generation</Typography>
+            </Stack>}
+          {semester.State === 4 &&
+            <Stack bgcolor={blue[100]} p={0.5} alignItems='center' borderRadius={2}>
+              <Typography>Schedule is generated</Typography>
+              <Typography>Go to view or request extra teaching</Typography>
+            </Stack>}
+          {semester.State === 5 &&
+            <Typography bgcolor={blue[100]} p={1} borderRadius={2}>
+              Schedule is public</Typography>}
         </Stack>
       </Stack>
       <Stack px={11} gap={1} mb={1}>

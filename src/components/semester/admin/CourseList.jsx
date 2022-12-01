@@ -104,21 +104,19 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
           SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
           pageIndex: 1, pageSize: 1000
         }
-      })
-        .then(res => {
-          if (res.data) {
-            let internal = res.data
-            let external = res.data
-            for(let i in subjects){
-              external = external.filter(course => course.SubjectId !== subjects[i].Id)
-            }
-            for(let i in external){
-              internal = internal.filter(course => course.SubjectId !== external[i].SubjectId)
-            }
-            setCourses(internal)
+      }).then(res => {
+        if (res.data) {
+          let internal = res.data
+          let external = res.data
+          for (let i in subjects) {
+            external = external.filter(course => course.SubjectId !== subjects[i].Id)
           }
-        })
-        .catch(err => { alert('Fail to load courses') })
+          for (let i in external) {
+            internal = internal.filter(course => course.SubjectId !== external[i].SubjectId)
+          }
+          setCourses(internal)
+        }
+      }).catch(err => { alert('Fail to load courses') })
     }
   }, [semesterId, selectedSubject, subjects, reload])
 
@@ -322,7 +320,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
           <Typography>Total: {courses.length}</Typography>
           <Typography>Total Assigned: {assignedTotal}</Typography>
         </Stack>
-        <Stack direction='row' gap={2}>
+        {semesterState === 1 && <Stack direction='row' gap={2}>
           <input ref={fileInput} style={{ display: 'none' }} type="file"
             onChange={(e) => changeFile(e)}
           />
@@ -334,7 +332,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
             onClick={() => setIsAdd(true)}>
             Add
           </Button>
-        </Stack>
+        </Stack>}
       </Stack>
       <Paper sx={{ minWidth: 700, mb: 2 }}>
         <TableContainer component={Box}>
