@@ -1,6 +1,7 @@
+import { Add, DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import {
-  Box, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead,
-  TablePagination, TableRow
+  Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead,
+  TablePagination, TableRow, Tooltip
 } from '@mui/material';
 import React, { useState, useEffect } from 'react'
 import request from '../../utils/request';
@@ -14,33 +15,26 @@ const DepartmentAdmin = () => {
 
   useEffect(() => {
     request.get('Department', {
-      params: {
-        sortBy: 'Id',
-        order: 'Asc',
-        pageIndex: 1,
-        pageSize: 1000
+      params: {sortBy: 'Id', order: 'Asc',
+        pageIndex: 1, pageSize: 1000
       }
-    })
-      .then(res => {
-        if (res.data) {
-          setDepartments(res.data);
-        }
-      })
-      .catch(err => {
+    }).then(res => {
+      if (res.data) {
+        setDepartments(res.data);
+      }
+    }).catch(err => {
         alert('Fail to load departments')
-      })
+    })
   }, [])
 
   useEffect(() => {
     request.get('User', {
       params:{RoleIDs: 'DMA',pageIndex: 1, pageSize: 100}
-    })
-    .then(res => {
+    }).then(res => {
       if(res.data){
         setManagers(res.data)
       }
-    })
-    .catch(err => {
+    }).catch(err => {
       alert('Fail to load managers')
     })
   }, [])
@@ -59,28 +53,41 @@ const DepartmentAdmin = () => {
       <Stack mt={1} mb={4} px={9}>
         <Title title='Department' subTitle='List of all departments' />
       </Stack>
+      <Stack px={9} alignItems='flex-end' mb={1}>
+        <Button variant='contained' color='success' endIcon={<Add/>}>Create</Button>
+      </Stack>
       <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}>
-            <Table>
+            <Table size='small'>
               <TableHead>
                 <TableRow>
-                  <TableCell size='small' className='subject-header'>ID</TableCell>
-                  <TableCell size='small' className='subject-header'>Name</TableCell>
-                  <TableCell size='small' className='subject-header'>Manager</TableCell>
-                  <TableCell size='small' className='subject-header'>Group</TableCell>
+                  <TableCell className='subject-header'>ID</TableCell>
+                  <TableCell className='subject-header'>Name</TableCell>
+                  <TableCell className='subject-header'>Manager</TableCell>
+                  <TableCell className='subject-header request-border'>Group</TableCell>
+                  <TableCell className='subject-header' align='center'>Option</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {departments.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map(department => (
                     <TableRow key={department.Id} hover>
-                      <TableCell size='small'>{department.Id}</TableCell>
-                      <TableCell size='small'>{department.DepartmentName}</TableCell>
-                      <TableCell size='small'>
+                      <TableCell>{department.Id}</TableCell>
+                      <TableCell>{department.DepartmentName}</TableCell>
+                      <TableCell>
                         {managers.find(manager => manager.DepartmentId === department.Id)?.Name}
                       </TableCell>
-                      <TableCell size='small'>{department.DepartmentGroupId}</TableCell>
+                      <TableCell className='request-border'>{department.DepartmentGroupId}</TableCell>
+                      <TableCell align='center'>
+                        <Tooltip title='Edit' placement='top' arrow>
+                          <IconButton size='small' color='primary'><EditOutlined/></IconButton>
+                        </Tooltip>
+                        <span>|</span>
+                        <Tooltip title='Delete' placement='top' arrow>
+                          <IconButton size='small' color='error'><DeleteOutlined/></IconButton>
+                        </Tooltip>
+                      </TableCell>
                     </TableRow>
                   ))}
               </TableBody>

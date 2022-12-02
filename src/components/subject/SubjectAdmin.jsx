@@ -1,32 +1,36 @@
-import { Box, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, 
-  TableHead, TablePagination, TableRow, Typography } from '@mui/material'
+import { Add, DeleteOutlined, EditOutlined } from '@mui/icons-material';
+import { Box, Button, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, 
+  TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 import request from '../../utils/request';
+import DeleteModal from '../priority/DeleteModal';
 import Title from '../title/Title'
+import SubjectCreate from './SubjectCreate';
+import SubjectEdit from './SubjectEdit';
 
 const SubjectAdmin = () => {
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(10);
+  const [rowsPerPage, setRowsPerPage] = useState(20);
   const [selectedDepartment, setSelectedDepartment] = useState('');
   const [departments, setDepartments] = useState([]);
   const [subjects, setSubjects] = useState([]);
+  const [isCreate, setIsCreate] = useState(false);
+  const [isEdit, setIsEdit] = useState(false);
+  const [pickedSubject, setPickedSubject] = useState({});
+  const [isDelete, setIsDelete] = useState(false);
+  const [contentDel, setContentDel] = useState('');
 
   useEffect(() => {
     request.get('Department', {
-      params: {
-        sortBy: 'Id',
-        order:'Asc',
-        pageIndex: 1,
-        pageSize: 1000
+      params: { sortBy: 'Id', order:'Asc',
+        pageIndex: 1, pageSize: 100
       }
-    })
-    .then(res => {
+    }).then(res => {
       if(res.data.length > 0){
         setDepartments(res.data);
         setSelectedDepartment(res.data[0].Id)
       }
-    })
-    .catch(err => {
+    }).catch(err => {
       alert('Fail to load departments')
     })
   }, [])
@@ -64,60 +68,80 @@ const SubjectAdmin = () => {
     setSelectedDepartment(event.target.value);
   };
 
+  const clickCreate = () => {
+    setIsCreate(true);
+  }
+  const clickEdit = (subject) => {
+    setPickedSubject(subject)
+    setIsEdit(true);
+  }
+
+  const clickDelete = (subject) => {
+    setPickedSubject(subject)
+    setContentDel(`subject: ${subject.Id}`)
+    setIsDelete(true)
+  }
+
+  const saveDelete = () => {
+    setIsDelete(false)
+  }
+
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
       <Stack mt={1} mb={4} px={9}>
         <Title title='Subject' subTitle='List of all subjects'/>
       </Stack>
-      <Stack px={9} direction='row' alignItems='center' mb={2} gap={2}>
-        <Typography fontWeight={500}>
-          Department:
-        </Typography>
-        <Select color='success'
-          size='small'
-          value={selectedDepartment}
-          onChange={handleSelectDepartment}
-        >
-          {departments.map(department => (
-            <MenuItem key={department.Id} value={department.Id}>
-              {department.DepartmentName}
-            </MenuItem>
-          ))}
-        </Select>
+      <Stack px={9} direction='row' alignItems='center' mb={2} justifyContent='space-between'>
+        <Stack direction='row' alignItems='center' gap={1}>
+          <Typography fontWeight={500}>Department:</Typography>
+          <Select color='success' size='small'
+            value={selectedDepartment} onChange={handleSelectDepartment}>
+            {departments.map(department => (
+              <MenuItem key={department.Id} value={department.Id}>
+                {department.DepartmentName}
+              </MenuItem>
+            ))}
+          </Select>
+        </Stack>
+        <Button variant='contained' endIcon={<Add/>} onClick={clickCreate}>
+          Create
+        </Button>
       </Stack>
       <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}
             sx={{ overflow: 'auto' }}>
-            <Table>
+            <Table size='small'>
               <TableHead>
                 <TableRow>
-                  <TableCell size='small' className='subject-header'
-                    sx={{ borderRight: '1px solid #e3e3e3' }}>
-                    Code 
-                  </TableCell>
-                  <TableCell size='small' className='subject-header'
-                    sx={{ borderRight: '1px solid #e3e3e3' }}>Name</TableCell>
-                  <TableCell size='small' className='subject-header'>Department</TableCell>
+                  <TableCell className='subject-header'>Code </TableCell>
+                  <TableCell className='subject-header'>Name</TableCell>
+                  <TableCell className='subject-header request-border'>Department</TableCell>
+                  <TableCell className='subject-header' align='center'>Option</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {
-                  subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((subject) => (
-                      <TableRow key={subject.Id} hover>
-                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
-                          <Typography>{subject.Id}</Typography>
-                        </TableCell>
-                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
-                          <Typography>{subject.SubjectName}</Typography>
-                        </TableCell>
-                        <TableCell size='small'>
-                          <Typography>{subject.DepartmentName}</Typography>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                }
+                {subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((subject) => (
+                    <TableRow key={subject.Id} hover>
+                      <TableCell>{subject.Id}</TableCell>
+                      <TableCell>{subject.SubjectName}</TableCell>
+                      <TableCell className='request-border'>{subject.DepartmentName}</TableCell>
+                      <TableCell align='center'>
+                        <Tooltip title='Edit' placement='top' arrow>
+                          <IconButton size='small' color='primary' onClick={() => clickEdit(subject)}>
+                            <EditOutlined/>
+                          </IconButton>
+                        </Tooltip>
+                        <span>|</span>
+                        <Tooltip title='Delete' placement='top' arrow>
+                          <IconButton size='small' color='error' onClick={() => clickDelete(subject)}>
+                            <DeleteOutlined/>
+                          </IconButton>
+                        </Tooltip>
+                      </TableCell>
+                    </TableRow>
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -137,6 +161,10 @@ const SubjectAdmin = () => {
           />
         </Paper>
       </Stack>
+      <SubjectCreate isCreate={isCreate} setIsCreate={setIsCreate}/>
+      <SubjectEdit isEdit={isEdit} setIsEdit={setIsEdit} pickedSubject={pickedSubject}/>
+      <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} contentDelete={contentDel}
+        saveDelete={saveDelete}/>
     </Stack>
   )
 }
