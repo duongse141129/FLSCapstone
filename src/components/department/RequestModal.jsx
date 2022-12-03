@@ -17,7 +17,7 @@ const MenuProps = {
 const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendRequest}) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [departments, setDepartments] = useState([]);
-  const [selectedDepartment, setSelectedDepartment] = useState(account.DepartmentId);
+  const [selectedDepartment, setSelectedDepartment] = useState('');
   const [subjects, setSubjects] = useState([]);
   const [selectedSubject, setSelectedSubject] = useState('');
   const [managerId, setManagerId] = useState('');
@@ -39,9 +39,14 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
             pageIndex: 1, pageSize: 100
           }
         })
-        setDepartments(departmentList.data)
+        if(departmentList.data.length > 0){
+          let dataDepart = departmentList.data
+          dataDepart = dataDepart.filter(item => item.Id !== account.DepartmentId)
+          setDepartments(dataDepart)
+          setSelectedDepartment(dataDepart[0]?.Id)
+        }
       }
-      catch (error) {alert('Fail to get Department!')}
+      catch (error) {alert('Fail to get Department!' + error)}
     }
 
     getDepartments();
