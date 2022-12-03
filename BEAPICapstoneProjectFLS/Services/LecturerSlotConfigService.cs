@@ -205,5 +205,46 @@ namespace BEAPICapstoneProjectFLS.Services
             
 
         }
+
+        public async Task<ApiResponse> DeleteLecturerSlotConfigInSemester(string semesterID)
+        {
+            try
+            {
+                var listLecturerSlotConfig = await _res.GetAllByIQueryable()
+                    .Where(x => x.SemesterId == semesterID && x.Status == (int)LecturerSlotConfigStatus.Active)
+                    .ToListAsync();
+                if (listLecturerSlotConfig.Count == 0)
+                {
+                    return new ApiResponse()
+                    {
+                        Success = true,
+                        Message = "Delete LecturerSlotConfig In Semester Success",
+                        Data = "List already is empty"
+                    };
+                }
+                else
+                {
+                    foreach (var SlotType in listLecturerSlotConfig)
+                    {
+                        await _res.DeleteAsync(SlotType.Id);
+                    }
+                    return new ApiResponse()
+                    {
+                        Success = true,
+                        Message = "Delete LecturerSlotConfig In Semester Success"
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse()
+                {
+                    Success = false,
+                    Message = "Delete LecturerSlotConfig In Semester Fail",
+                    Data = ex.Message
+                };
+            }
+        }
     }
 }

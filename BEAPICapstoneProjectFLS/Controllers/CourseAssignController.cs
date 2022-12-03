@@ -106,13 +106,23 @@ namespace BEAPICapstoneProjectFLS.Controllers
             return Ok();
         }
 
+        [HttpDelete("DeleteAssignedCourses/{ScheduleID}")]
+        public async Task<IActionResult> DeleteAssignedCourses(string ScheduleID)
+        {
+            var rs = await _ICourseAssignService.DeleteAssignedCourses(ScheduleID);
+            if (rs == false)
+                return NotFound();
+            return Ok();
+        }
+
+
         [HttpGet("GetUserAssignInDepartment/{subjectID}&{semesterID}", Name = "GetUserAssignInDepartment")]
         public async Task<IActionResult> GetUserAssignInDepartment(string subjectID, string semesterID)
         {
             var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
             var checkSubjectID = await _ISubjectService.GetSubjectById(subjectID);
 
-            if (checkSubjectID == null || checkSubjectID == null)
+            if (checkSemesterID == null || checkSubjectID == null)
             {
                 return NotFound();
             }
@@ -132,7 +142,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
             var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
             var checkSubjectID = await _ISubjectService.GetSubjectById(subjectID);
 
-            if (checkSubjectID == null || checkSubjectID == null)
+            if (checkSemesterID == null || checkSubjectID == null)
             {
                 return NotFound();
             }

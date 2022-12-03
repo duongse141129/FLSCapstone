@@ -91,5 +91,29 @@ namespace BEAPICapstoneProjectFLS.Controllers
             }
 
         }
+
+
+        [HttpDelete("DeleteSolInSemester/{semesterID}", Name = "DeleteSubjectOfLecturerInSemester")]
+        public async Task<IActionResult> DeleteSubjectOfLecturerInSemester(string semesterID)
+        {
+            var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
+            if (checkSemesterID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var apiResponse = await _ISubjectOfLecturerService.DeleteSubjectOfLecturerInSemester(semesterID);
+                if (apiResponse.Success == false)
+                {
+                    return BadRequest(apiResponse);
+                }
+                else
+                {
+                    return Ok(apiResponse);
+                }
+            }
+
+        }
     }
 }

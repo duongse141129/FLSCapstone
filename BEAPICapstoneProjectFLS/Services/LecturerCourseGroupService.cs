@@ -156,7 +156,7 @@ namespace BEAPICapstoneProjectFLS.Services
                 if (isFullTime == 0)
                     return 6;
                 if (isFullTime == 1)
-                    return 11;
+                    return 10;
             }
             return 12;
         }
@@ -173,8 +173,15 @@ namespace BEAPICapstoneProjectFLS.Services
 
                 foreach (var lec in listLecturer)
                 {
-                    LecturerCourseGroup lecturerCourseGroup = new LecturerCourseGroup { Id = RandomPKKey.NewRamDomPKKey() , LecturerId = lec.Id, SemesterId= semesterID, GroupName = "The priority courses of lecturer "+lec.Id,
-                        MinCourse = getMinCourseOfLecturer(lec.IsFullTime), MaxCourse = getMaxCourseOfLecturer(lec.IsFullTime), Status =1};
+                    LecturerCourseGroup lecturerCourseGroup = new LecturerCourseGroup { 
+                        Id = RandomPKKey.NewRamDomPKKey() , 
+                        LecturerId = lec.Id, 
+                        SemesterId= semesterID, 
+                        GroupName = "The priority courses of lecturer "+lec.Id,
+                        MinCourse = getMinCourseOfLecturer(lec.IsFullTime), 
+                        MaxCourse = getMaxCourseOfLecturer(lec.IsFullTime), 
+                        Status =1
+                    };
                     await _res.InsertAsync(lecturerCourseGroup);
                     await _res.SaveAsync();
                 }
@@ -196,5 +203,47 @@ namespace BEAPICapstoneProjectFLS.Services
                 };
             }
         }
+
+        public async Task<ApiResponse> DeleteLecturerCourseGroupInSemester(string semesterID)
+        {
+            try
+            {
+                var listLecturerCourseGroup = await _res.GetAllByIQueryable()
+                    .Where(x => x.SemesterId== semesterID && x.Status == (int)LecturerCourseGroupStatus.Active)
+                    .ToListAsync();
+                if (listLecturerCourseGroup.Count == 0)
+                {
+                    return new ApiResponse()
+                    {
+                        Success = true,
+                        Message = "Delete LecturerCourseGroup In Semester Success",
+                        Data = "List already is empty"
+                    };
+                }
+                else
+                {
+                    foreach (var SlotType in listLecturerCourseGroup)
+                    {
+                        await _res.DeleteAsync(SlotType.Id);
+                    }
+                    return new ApiResponse()
+                    {
+                        Success = true,
+                        Message = "Delete LecturerCourseGroup In Semester Success"
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse()
+                {
+                    Success=false,
+                    Message = "Delete LecturerCourseGroup In Semester Fail",
+                    Data=ex.Message
+                };
+            }
+        }
+
     }
 }

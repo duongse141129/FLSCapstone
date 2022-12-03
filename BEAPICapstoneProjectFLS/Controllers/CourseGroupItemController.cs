@@ -65,5 +65,14 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 return NotFound();
             return Ok();
         }
+
+        [HttpDelete("DeleteCourseGroupItemInSemester/{semesterID}")]
+        public async Task<IActionResult> DeleteCourseGroupItemInSemester(string semesterID)
+        {
+            var rs = await _ICourseGroupItemService.DeleteCourseGroupItemInSemester(semesterID);
+            if (rs == false)
+                return NotFound();
+            return Ok();
+        }
     }
 }

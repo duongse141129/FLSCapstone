@@ -29,15 +29,22 @@ namespace BEAPICapstoneProjectFLS.Controllers
         private readonly FLSCapstoneDatabaseContext _context;
 
         private readonly IUserService _IUserService;
+        private readonly ITokenService _ITokenService;
 
         private readonly IGenericRepository<User> _res;
 
-        public TokenController(FLSCapstoneDatabaseContext context, IOptionsMonitor<AppSetting> optionsMonitor, IUserService UserService, IGenericRepository<User> repository)
+        private readonly IGenericRepository<RefreshToken> _resRefresh;
+
+        public TokenController(FLSCapstoneDatabaseContext context, IOptionsMonitor<AppSetting> optionsMonitor, 
+            IUserService UserService, ITokenService TokenService,
+            IGenericRepository<User> repository, IGenericRepository<RefreshToken> refreshtokenRepository)
         {
             _context = context;
             _appSettings = optionsMonitor.CurrentValue;
             _IUserService = UserService;
+            _ITokenService = TokenService;
             _res = repository;
+            _resRefresh = refreshtokenRepository;
         }
 
 
@@ -100,8 +107,8 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 JwtId = token.Id,
                 UserId = user.Id,
                 Token = refreshToken,
-                IsUsed = false,
-                IsRevoked = false,
+                IsUsed = 0,
+                IsRevoked = 0,
                 IssuedAt = DateTime.UtcNow,
                 ExpiredAt = DateTime.UtcNow.AddHours(2)
             };
@@ -118,13 +125,17 @@ namespace BEAPICapstoneProjectFLS.Controllers
 
         private string GenerateRefreshToken()
         {
-            var random = new byte[32];
+            /*var random = new byte[32];
             using (var rng = RandomNumberGenerator.Create())
             {
                 rng.GetBytes(random);
 
                 return Convert.ToBase64String(random);
-            }
+            }*/
+
+            string token = RandomPKKey.NewRamDomToken();
+            return token;
+
         }
 
         [HttpPost("RenewToken")]
@@ -157,7 +168,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
                     var result = jwtSecurityToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha512, StringComparison.InvariantCultureIgnoreCase);
                     if (!result)//false
                     {
-                        return Ok(new ApiResponse
+                        return BadRequest(new ApiResponse
                         {
                             Success = false,
                             Message = "Invalid token"
@@ -171,7 +182,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 var expireDate = ConvertUnixTimeToDateTime(utcExpireDate);
                 if (expireDate > DateTime.UtcNow)
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Access token has not yet expired"
@@ -182,7 +193,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 var storedToken = _context.RefreshTokens.FirstOrDefault(x => x.Token == model.RefreshToken);
                 if (storedToken == null)
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Refresh token does not exist"
@@ -190,17 +201,17 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 }
 
                 //check 5: check refreshToken is used/revoked?
-                if (storedToken.IsUsed)
+                if (storedToken.IsUsed == 1)
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Refresh token has been used"
                     });
                 }
-                if (storedToken.IsRevoked)
+                if (storedToken.IsRevoked == 1 )
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Refresh token has been revoked"
@@ -211,7 +222,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 var jti = tokenInVerification.Claims.FirstOrDefault(x => x.Type == JwtRegisteredClaimNames.Jti).Value;
                 if (storedToken.JwtId != jti)
                 {
-                    return Ok(new ApiResponse
+                    return BadRequest(new ApiResponse
                     {
                         Success = false,
                         Message = "Token doesn't match"
@@ -219,8 +230,8 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 }
 
                 //Update token is used
-                storedToken.IsRevoked = true;
-                storedToken.IsUsed = true;
+                storedToken.IsRevoked = 1;
+                storedToken.IsUsed = 1;
                 _context.Update(storedToken);
                 await _context.SaveChangesAsync();
 
@@ -260,8 +271,8 @@ namespace BEAPICapstoneProjectFLS.Controllers
 
 
 
-        [HttpGet("CheckTokenValue")]
-        public IActionResult checkToken([FromQuery]  TokenViewModel model)
+        [HttpPost("CheckTokenValue")]
+        public IActionResult checkToken(TokenViewModel model)
         {
             var jwtTokenHandler = new JwtSecurityTokenHandler();
             var secretKeyBytes = Encoding.UTF8.GetBytes(_appSettings.SecretKey);
@@ -323,7 +334,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 }
 
                 //check 5: check refreshToken is used/revoked?
-                if (storedToken.IsUsed)
+                if (storedToken.IsUsed == 1)
                 {
                     return BadRequest(new ApiResponse
                     {
@@ -331,7 +342,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
                         Message = "Refresh token has been used"
                     });
                 }
-                if (storedToken.IsRevoked)
+                if (storedToken.IsRevoked == 1)
                 {
                     return BadRequest(new ApiResponse
                     {
@@ -372,24 +383,43 @@ namespace BEAPICapstoneProjectFLS.Controllers
         [HttpGet("GetUserByRefreshToken/{refreshToken}", Name = "GetUserByRefreshToken")]
         public async Task<IActionResult> GetUserByRefreshToken(string refreshToken)
         {
-            var storedRefreshToken = await _context.RefreshTokens.Where(x => x.Token == refreshToken).OrderByDescending(x => x.IsUsed).FirstOrDefaultAsync();
+            //var storedRefreshToken = await _context.RefreshTokens.Where(x => x.Token == refreshToken).FirstOrDefaultAsync();
+            var storedRefreshToken = await _ITokenService.GetRefreshTokenByToken(refreshToken);
+            ApiResponse response = new ApiResponse();
             if (storedRefreshToken == null)
             {
-                return NotFound(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Not found RefreshToken"
-                });
+                response.Success = false;
+                response.Message = "Not found RefreshToken";
+                return NotFound(response);
             }
+
+
+            if (storedRefreshToken.IsRevoked == 1)
+            {
+                response.Success = false;
+                response.Message = "RefreshToken have been revoked";
+                return NotFound(response);
+            }
+
 
             var userVM = await _IUserService.GetUserById(storedRefreshToken.UserId);
             if (userVM == null)
-                return NotFound(new ApiResponse
-                {
-                    Success = false,
-                    Message = "Not found userID"
-                });
+            {
+                response.Success = false;
+                response.Message = "Not found user";
+                return NotFound(response);
+            }
             return Ok(userVM);
+        }
+
+
+        [HttpDelete("DeleteRefreshToken/{refreshToken}", Name = "DeleteRefreshToken")]
+        public async Task<IActionResult> DeleteRefreshToken(string refreshToken)
+        {
+            var rs = await _ITokenService.DeleteRefreshToken(refreshToken);
+            if (rs == false)
+                return NotFound();
+            return Ok();
         }
     }
 }

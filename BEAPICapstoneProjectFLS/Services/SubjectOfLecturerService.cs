@@ -170,9 +170,11 @@ namespace BEAPICapstoneProjectFLS.Services
                         .Include(x => x.Department)
                         .ToListAsync();
 
+             
                     UserViewModel flitterGetDepartmentManager = new UserViewModel {DepartmentId = lec.DepartmentId, RoleIDs = new List<string>() { "DMA" } };
                     var DepartmentManager = await (listUser.ProjectTo<UserViewModel>
-                        (_mapper.ConfigurationProvider)).DynamicFilter(flitter).FirstOrDefaultAsync();
+                        (_mapper.ConfigurationProvider)).DynamicFilter(flitterGetDepartmentManager).FirstOrDefaultAsync();
+
 
                     foreach (var subject in ListSubjectOfLecturer)
                     {
@@ -212,6 +214,45 @@ namespace BEAPICapstoneProjectFLS.Services
             }
         }
 
+        public async Task<ApiResponse> DeleteSubjectOfLecturerInSemester(string semesterID)
+        {
+            try
+            {
+                var listSubjectOfLecturer = await _res.GetAllByIQueryable()
+                    .Where(x => x.SemesterId == semesterID && x.Status == (int)SubjectOfLecturerStatus.Active)
+                    .ToListAsync();
+                if (listSubjectOfLecturer.Count == 0)
+                {
+                    return new ApiResponse()
+                    {
+                        Success = true,
+                        Message = "Delete SubjectOfLecturer In Semester Success",
+                        Data = "List already is empty"
+                    };
+                }
+                else
+                {
+                    foreach (var SlotType in listSubjectOfLecturer)
+                    {
+                        await _res.DeleteAsync(SlotType.Id);
+                    }
+                    return new ApiResponse()
+                    {
+                        Success = true,
+                        Message = "Delete SubjectOfLecturer In Semester Success"
+                    };
+                }
 
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse()
+                {
+                    Success = false,
+                    Message = "Delete SubjectOfLecturer In Semester Fail",
+                    Data = ex.Message
+                };
+            }
+        }
     }
 }

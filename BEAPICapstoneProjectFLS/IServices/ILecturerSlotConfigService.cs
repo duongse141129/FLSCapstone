@@ -17,5 +17,6 @@ namespace BEAPICapstoneProjectFLS.IServices
         Task<LecturerSlotConfigViewModel> UpdateLecturerSlotConfig(string id, UpdateLecturerSlotConfigRequest request);
         Task<bool> DeleteLecturerSlotConfig(string id);
         Task<ApiResponse> CreateSlotTypesAndLecturerSlotConfigsInSemester(string semesterID);
+        Task<ApiResponse> DeleteLecturerSlotConfigInSemester(string semesterID);
     }
 }

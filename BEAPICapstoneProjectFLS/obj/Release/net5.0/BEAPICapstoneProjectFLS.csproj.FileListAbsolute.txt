@@ -78,3 +78,12 @@ G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\obj\Release\net
 G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\obj\Release\net5.0\ref\BEAPICapstoneProjectFLS.dll
 G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\obj\Release\net5.0\BEAPICapstoneProjectFLS.pdb
 G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\obj\Release\net5.0\BEAPICapstoneProjectFLS.genruntimeconfig.cache
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Release\net5.0\Firebase\firebase-config.json
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Release\net5.0\FirebaseAdmin.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Release\net5.0\Google.Api.Gax.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Release\net5.0\Google.Api.Gax.Rest.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Release\net5.0\Google.Apis.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Release\net5.0\Google.Apis.Auth.PlatformServices.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Release\net5.0\Google.Apis.Auth.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Release\net5.0\Google.Apis.Core.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Release\net5.0\Microsoft.Bcl.AsyncInterfaces.dll

@@ -78,3 +78,12 @@ G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.
 G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\System.Diagnostics.PerformanceCounter.dll
 G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\System.Linq.Dynamic.Core.dll
 G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\runtimes\win\lib\netcoreapp2.0\System.Diagnostics.PerformanceCounter.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\Firebase\firebase-config.json
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\FirebaseAdmin.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\Google.Api.Gax.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\Google.Api.Gax.Rest.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\Google.Apis.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\Google.Apis.Auth.PlatformServices.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\Google.Apis.Auth.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\Google.Apis.Core.dll
+G:\CSharpProject\BEAPICapstoneProjectFLS\BEAPICapstoneProjectFLS\bin\Debug\net5.0\Microsoft.Bcl.AsyncInterfaces.dll

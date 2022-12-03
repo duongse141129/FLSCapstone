@@ -4,6 +4,8 @@ using BEAPICapstoneProjectFLS.IRepositories;
 using BEAPICapstoneProjectFLS.IServices;
 using BEAPICapstoneProjectFLS.Repositories;
 using BEAPICapstoneProjectFLS.Services;
+using FirebaseAdmin;
+using Google.Apis.Auth.OAuth2;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -21,6 +23,7 @@ using Newtonsoft.Json.Converters;
 using Newtonsoft.Json.Serialization;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -40,6 +43,12 @@ namespace BEAPICapstoneProjectFLS
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //var path = Directory.GetCurrentDirectory();
+            //FirebaseApp.Create(new AppOptions()
+            //{
+            //    Credential = GoogleCredential.FromFile($"{path}\\Firebase\\firebase-config.json"),
+            //});
+
             services.AddCors(option =>
             {
                 option.AddPolicy(name: _corsName,
@@ -95,6 +104,8 @@ namespace BEAPICapstoneProjectFLS
             services.AddScoped<ICourseGroupItemService, CourseGroupItemService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<ISwapService, SwapService>();
+            services.AddScoped<ITokenService, TokenService>();
+            services.AddScoped<ICheckConstraintService, CheckConstraintService>();
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(option =>

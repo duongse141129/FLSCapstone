@@ -137,6 +137,35 @@ namespace BEAPICapstoneProjectFLS.Services
             }
         }
 
+        public async Task<bool> DeleteAssignedCourses(string ScheduleID)
+        {
+            try
+            {
+                var listCourseAssign = await _res.GetAllByIQueryable().Where(x => x.Status == (int)CourseAssignStatus.Active)
+                    .Where(x => x.ScheduleId == ScheduleID)
+                    .Where(x => x.IsAssign == 1)
+                    .ToListAsync();
+                if (listCourseAssign.Count <= 0)
+                {
+                    return false;
+                }
+                else
+                {
+                    foreach (var CourseAssign in listCourseAssign)
+                    {
+                        await _res.DeleteAsync(CourseAssign.Id);
+                    }
+                    return true;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                var message = ex.Message;
+                return false;
+            }
+        }
+
         public IPagedList<CourseAssignViewModel> GetAllCourseAssign(CourseAssignViewModel flitter, int pageIndex, int pageSize, CourseAssignSortBy sortBy, OrderBy order)
         {
             var listCourseAssign = _res.FindBy(x => x.Status == (int)FLSStatus.Active);

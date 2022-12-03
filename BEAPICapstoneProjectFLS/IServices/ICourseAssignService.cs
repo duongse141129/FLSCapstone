@@ -23,5 +23,6 @@ namespace BEAPICapstoneProjectFLS.IServices
         Task<bool> CreateListCourseAssign(string ScheduleID, List<CreateCourseAssignRequest> requests);
 
         Task<bool> DeleteListCourseAssignInSemester(string ScheduleID);
+        Task<bool> DeleteAssignedCourses(string ScheduleID);
     }
 }

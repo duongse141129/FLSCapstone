@@ -16,5 +16,6 @@ namespace BEAPICapstoneProjectFLS.IServices
         Task<SubjectOfLecturerViewModel> UpdateSubjectOfLecturer(string id, UpdateSubjectOfLecturerRequest request);
         Task<bool> DeleteSubjectOfLecturer(string id);
         Task<ApiResponse> CreateSubjectOfLecturerInSemester(string semesterID);
+        Task<ApiResponse> DeleteSubjectOfLecturerInSemester(string semesterID);
     }
 }

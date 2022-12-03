@@ -21,11 +21,13 @@ namespace BEAPICapstoneProjectFLS.Services
     public class CourseGroupItemService : ICourseGroupItemService
     {
         private readonly IGenericRepository<CourseGroupItem> _res;
+        private readonly IGenericRepository<LecturerCourseGroup> _resLecturerCourseGroup;
         private readonly IMapper _mapper;
 
-        public CourseGroupItemService(IGenericRepository<CourseGroupItem> repository, IMapper mapper)
+        public CourseGroupItemService(IGenericRepository<CourseGroupItem> repository, IGenericRepository<LecturerCourseGroup> lecturerCourseGroupRepository, IMapper mapper)
         {
             _res = repository;
+            _resLecturerCourseGroup = lecturerCourseGroupRepository;
             _mapper = mapper;
         }
 
@@ -60,6 +62,39 @@ namespace BEAPICapstoneProjectFLS.Services
             await _res.SaveAsync();
             return true;
         }
+
+        public async Task<bool> DeleteCourseGroupItemInSemester(string semesterID)
+        {
+            try
+            {
+                var listlecturerCourseGroup = await _resLecturerCourseGroup.GetAllByIQueryable().Where(x => x.Status == (int)LecturerCourseGroupStatus.Active)
+                    .Where(x => x.SemesterId == semesterID)
+                    .Include(x => x.CourseGroupItems)
+                    .ToListAsync();
+
+                if (listlecturerCourseGroup == null)
+                {
+                    return false;
+                }
+
+                foreach (var item in listlecturerCourseGroup)
+                {
+                    foreach (var courseGroupItem in item.CourseGroupItems)
+                    {
+                        await _res.DeleteAsync(courseGroupItem.Id);
+                    }
+                }
+                return true;
+
+            }
+            catch
+            {
+                return false;
+            }
+
+
+        }
+
 
         public IPagedList<CourseGroupItemViewModel> GetAllCourseGroupItem(CourseGroupItemViewModel flitter, int pageIndex, int pageSize, CourseGroupItemSortBy sortBy, OrderBy order)
         {
