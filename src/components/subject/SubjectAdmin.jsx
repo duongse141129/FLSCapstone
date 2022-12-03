@@ -1,6 +1,8 @@
 import { Add, DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { Box, Button, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, 
   TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
+import { green } from '@mui/material/colors';
+import {HashLoader} from 'react-spinners'
 import { useEffect, useState } from 'react';
 import request from '../../utils/request';
 import DeleteModal from '../priority/DeleteModal';
@@ -19,6 +21,7 @@ const SubjectAdmin = () => {
   const [pickedSubject, setPickedSubject] = useState({});
   const [isDelete, setIsDelete] = useState(false);
   const [contentDel, setContentDel] = useState('');
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     request.get('Department', {
@@ -36,21 +39,22 @@ const SubjectAdmin = () => {
   }, [])
 
   useEffect(() => {
+    setLoading(true)
     if(selectedDepartment){
       request.get('Subject', {
-        params: {
-          DepartmentId: selectedDepartment,
-          pageIndex: 1,
-          pageSize: 1000
+        params: {DepartmentId: selectedDepartment, sortBy: 'Id', order:'Asc',
+          pageIndex: 1, pageSize: 1000
         }
       })
       .then(res => {
         if(res.data){
           setSubjects(res.data);
+          setLoading(false)
         }
       })
       .catch(err => {
         alert('Fail to load subjects')
+        setLoading(false)
       })
     }
   }, [selectedDepartment])
@@ -107,7 +111,8 @@ const SubjectAdmin = () => {
           Create
         </Button>
       </Stack>
-      <Stack px={9} mb={2}>
+      {loading && <Stack px={9}><HashLoader size={30} color={green[600]}/></Stack>}
+      {!loading && <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}
             sx={{ overflow: 'auto' }}>
@@ -160,7 +165,7 @@ const SubjectAdmin = () => {
             }}
           />
         </Paper>
-      </Stack>
+      </Stack>}
       <SubjectCreate isCreate={isCreate} setIsCreate={setIsCreate}/>
       <SubjectEdit isEdit={isEdit} setIsEdit={setIsEdit} pickedSubject={pickedSubject}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} contentDelete={contentDel}

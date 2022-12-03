@@ -34,7 +34,7 @@ const SubjectEdit = ({isEdit, setIsEdit, pickedSubject}) => {
       </DialogTitle>
       <DialogContent>
         <Stack mb={2} direction='row' gap={1}>
-          <Typography fontWeight={500}>Subject Code: </Typography>
+          <Typography fontWeight={500}>Code: </Typography>
           <Typography>{pickedSubject.Id}</Typography>
         </Stack>
         <Stack mb={2}>
@@ -47,7 +47,7 @@ const SubjectEdit = ({isEdit, setIsEdit, pickedSubject}) => {
           </Select>
         </Stack>
         <Stack mb={2}>
-          <Typography fontWeight={500}>Subject Name<span style={{color: red[600]}}>*</span></Typography>
+          <Typography fontWeight={500}>Name<span style={{color: red[600]}}>*</span></Typography>
           <TextField size='small' value={subName} onChange={(e) => setSubName(e.target.value)}/>
         </Stack>
         <Stack mb={2}>

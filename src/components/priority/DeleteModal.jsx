@@ -17,8 +17,8 @@ const DeleteModal = ({isDelete, setIsDelete, saveDelete, contentDelete}) => {
   return (
     <Dialog open={isDelete}
       onClose={() => setIsDelete(false)}>
-      <DialogTitle>
-        <Typography variant='h5' fontWeight={500}>Delete Confirm</Typography>
+      <DialogTitle variant='h5' fontWeight={500}>
+        Delete Confirm
       </DialogTitle>
       <DialogContent>
         <Typography fontSize='20px'>

@@ -1,35 +1,35 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react';
 import request from '../../utils/request';
 
-const SubjectCreate = ({isCreate, setIsCreate}) => {
-  const [departments, setDepartments] = useState([]);
-  const [selectedDepart, setSelectedDepart] = useState('');
+const DepartmentCreate = ({isCreate, setIsCreate}) => {
+  const [groups, setGroups] = useState([]);
+  const [selectedGroup, setSelectedGroup] = useState('');
 
   useEffect(() => {
-    request.get('Department', {
-      params: {sortBy: 'Id', order:'Asc', pageIndex: 1, pageSize: 100}
+    request.get('DepartmentGroup', {
+      params: {pageIndex: 1, pageSize: 100}
     }).then(res => {
-      if(res.status === 200){
-        setDepartments(res.data)
-        setSelectedDepart(res.data[0]?.Id)
+      if(res.data.length > 0){
+        setGroups(res.data)
+        setSelectedGroup(res.data[0]?.Id)
       }
-    }).catch(err => {alert('Fail to get departments')})
+    }).catch(err => {alert('Fail to get department groups')})
   }, [])
 
   return (
     <Dialog open={isCreate} onClose={() => setIsCreate(false)} fullWidth={true}>
       <DialogTitle variant='h5' fontWeight={500} mb={1}>
-        Create Subject
+        Create Department
       </DialogTitle>
       <DialogContent>
         <Stack mb={2}>
-          <Typography fontWeight={500}>Department</Typography>
-          <Select size='small' value={selectedDepart} 
-            onChange={(e) => setSelectedDepart(e.target.value)}>
-            {departments.map(depart => (
-              <MenuItem key={depart.Id} value={depart.Id}>{depart.Id} - {depart.DepartmentName}</MenuItem>
+          <Typography fontWeight={500}>Group</Typography>
+          <Select size='small' value={selectedGroup} 
+            onChange={(e) => setSelectedGroup(e.target.value)}>
+            {groups.map(group => (
+              <MenuItem key={group.Id} value={group.Id}>{group.Id} - {group.DepartmentGroupName}</MenuItem>
             ))}
           </Select>
         </Stack>
@@ -41,10 +41,6 @@ const SubjectCreate = ({isCreate, setIsCreate}) => {
           <Typography fontWeight={500}>Name<span style={{color: red[600]}}>*</span></Typography>
           <TextField size='small'/>
         </Stack>
-        <Stack mb={2}>
-          <Typography fontWeight={500}>Description</Typography>
-          <TextField size='small'/>
-        </Stack>
       </DialogContent>
       <DialogActions>
         <Button color='info' variant='outlined' onClick={() => setIsCreate(false)}>Cancel</Button>
@@ -54,4 +50,4 @@ const SubjectCreate = ({isCreate, setIsCreate}) => {
   )
 }
 
-export default SubjectCreate
+export default DepartmentCreate
