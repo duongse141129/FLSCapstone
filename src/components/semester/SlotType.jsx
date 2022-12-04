@@ -82,7 +82,7 @@ const SlotType = ({ semesterId, semesterState }) => {
   }
 
   const handlePick = (id) => {
-    if (!isEdit && loading && favoriteSlots.length > 0) {
+    if (!isEdit || loading || favoriteSlots.length === 0) {
       return;
     }
 

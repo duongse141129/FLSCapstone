@@ -55,15 +55,20 @@ const SemesterDetail = () => {
             </Stack>}
           {semester.State === 3 &&
             <Stack bgcolor={blue[100]} p={0.5} alignItems='center' borderRadius={2}>
-              <Typography>Semester has blocked</Typography>
-              <Typography>Waiting for schedule generation</Typography>
+              <Typography>Voting is closed</Typography>
+              <Typography>Department Managers are evaluating</Typography>
             </Stack>}
           {semester.State === 4 &&
             <Stack bgcolor={blue[100]} p={0.5} alignItems='center' borderRadius={2}>
-              <Typography>Schedule is generated</Typography>
-              <Typography>Go to view or request extra teaching</Typography>
+              <Typography>Semester has blocked</Typography>
+              <Typography>Waiting for schedule generation</Typography>
             </Stack>}
           {semester.State === 5 &&
+            <Stack bgcolor={blue[100]} p={0.5} alignItems='center' borderRadius={2}>
+              <Typography>Schedule is generated</Typography>
+              <Typography>You can preview the schedule</Typography>
+            </Stack>}
+          {semester.State === 6 &&
             <Typography bgcolor={blue[100]} p={1} borderRadius={2}>
               Schedule is public</Typography>}
         </Stack>
@@ -75,7 +80,7 @@ const SemesterDetail = () => {
       </Stack>
       <Stack px={9} mb={2}>
         <Stack direction='row' gap={1} border='1px solid #e3e3e3' py={0.5} borderRadius={2}
-          justifyContent='center'>
+          justifyContent='center' flexWrap='wrap'>
           {states.map(state => (
             <Stack key={state.id} direction='row' alignItems='center' gap={1}>
               <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
@@ -83,7 +88,7 @@ const SemesterDetail = () => {
                 {semester.State >= state.id && <Check sx={{ color: 'white' }} />}
               </Stack>
               <Typography>{state.name}</Typography>
-              {state.id !== 5 && <HorizontalRule />}
+              {state.id !== 6 && <HorizontalRule />}
             </Stack>
           ))}
         </Stack>
@@ -138,7 +143,8 @@ const tabs = [
 const states = [
   {id: 1, name: 'New'},
   {id: 2, name: 'Voting'},
-  {id: 3, name: 'Blocked'},
-  {id: 4, name: 'Adjusting'},
-  {id: 5, name: 'Public'},
+  {id: 3, name: 'Evaluating'},
+  {id: 4, name: 'Blocked'},
+  {id: 5, name: 'Adjusting'},
+  {id: 6, name: 'Public'},
 ]

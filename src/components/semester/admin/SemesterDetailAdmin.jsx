@@ -61,12 +61,13 @@ const SemesterDetailAdmin = () => {
   }
 
   const clickNextState = () => {
-    if(semester.State === 5) return;
+    if(semester.State === 6) return;
 
     setMode('next');
-    if(semester.State === 1) setContent('Next state is Voting. Lecturers and Department Managers can rate subjects and slots, assign courses, evaluate, ...')
-    else if(semester.State === 2) setContent('Next state is Blocked. All functions are blocked to begin generating schedule.')
-    else if(semester.State === 3) setContent('Next state is Adjusting. The schedule will be shown for Lecturers and Department Managers. The Managers can adjust the schedule.')
+    if(semester.State === 1) setContent('Next state is Voting. Lecturers can rate subjects, slots and send requests.')
+    else if(semester.State === 2) setContent('Next state is Evaluating. Department Managers can evaluate subjects, courses and slots to Lecturers. ')
+    else if(semester.State === 3) setContent('Next state is Blocked. All functions are blocked to begin generating schedule.')
+    else if(semester.State === 4) setContent('Next state is Adjusting. The schedule will be shown for Lecturers and Department Managers. The Managers can adjust the schedule.')
     else setContent('Next state is Public. The schedule will be public and can not be edited.')
     
     setIsConfirm(true);
@@ -76,17 +77,18 @@ const SemesterDetailAdmin = () => {
     if(semester.State === 1) return;
 
     setMode('prev')
-    if(semester.State === 5) setContent('Previous state is Adjusting. The schedule will be shown for Lecturers and Department Managers. The Managers can adjust the schedule.')
-    else if(semester.State === 4) setContent('Previous state is Blocked. All functions are blocked to begin generating schedule.')
-    else if(semester.State === 3) setContent('Previous state is Voting. Lecturers and Department Managers can rate subjects and slots, assign courses, evaluate, ...')
+    if(semester.State === 6) setContent('Previous state is Adjusting. The schedule will be shown for Lecturers and Department Managers. The Managers can adjust the schedule.')
+    else if(semester.State === 5) setContent('Previous state is Blocked. All functions are blocked to begin generating schedule.')
+    else if(semester.State === 4) setContent('Previous state is Evaluating. Department Managers can evaluate subjects, courses and slots to Lecturers.')
+    else if(semester.State === 3) setContent('Previous state is Voting. Lecturers can rate subjects, slots and send requests.')
     else setContent('Previous state is New.')
     setIsConfirm(true);
   }
 
   const saveNextState = () => {
-    if(semester.State === 5) return;
+    if(semester.State === 6) return;
 
-    if(semester.State === 4){
+    if(semester.State === 5){
       request.put(`Schedule/${schedule.Id}`, {
         IsPublic: 1, SemesterId: id,
         Description: '', DateCreate: ''
@@ -115,7 +117,7 @@ const SemesterDetailAdmin = () => {
   const savePrevState = () => {
     if(semester.State === 1) return;
 
-    if(semester.State === 5){
+    if(semester.State === 6){
       request.put(`Schedule/${schedule.Id}`, {
         IsPublic: 0, SemesterId: id,
         Description: '', DateCreate: ''
@@ -156,7 +158,7 @@ const SemesterDetailAdmin = () => {
           {semester.State !== 1 && 
             <Button variant='outlined' color='info' size='small' onClick={clickPrevState}>
             Previous State</Button>}
-          {semester.State !== 5 && 
+          {semester.State !== 6 && 
             <Button variant='contained' color='success' size='small' onClick={clickNextState}>
             Next State</Button>}
         </Stack>
@@ -168,7 +170,7 @@ const SemesterDetailAdmin = () => {
       </Stack>
       <Stack px={9} mb={2}>
         <Stack direction='row' gap={1} border='1px solid #e3e3e3' py={0.5} borderRadius={2}
-          justifyContent='center'>
+          justifyContent='center' flexWrap='wrap'>
           {states.map(state => (
             <Stack key={state.id} direction='row' alignItems='center' gap={1}>
               <Stack width={40} height={40} borderRadius='50%' alignItems='center' justifyContent='center'
@@ -176,7 +178,7 @@ const SemesterDetailAdmin = () => {
                 {semester.State >= state.id && <Check sx={{ color: 'white' }} />}
               </Stack>
               <Typography>{state.name}</Typography>
-              {state.id !== 5 && <HorizontalRule />}
+              {state.id !== 6 && <HorizontalRule />}
             </Stack>
           ))}
         </Stack>
@@ -225,7 +227,8 @@ export default SemesterDetailAdmin
 const states = [
   {id: 1, name: 'New'},
   {id: 2, name: 'Voting'},
-  {id: 3, name: 'Blocked'},
-  {id: 4, name: 'Adjusting'},
-  {id: 5, name: 'Public'},
+  {id: 3, name: 'Evaluating'},
+  {id: 4, name: 'Blocked'},
+  {id: 5, name: 'Adjusting'},
+  {id: 6, name: 'Public'},
 ]

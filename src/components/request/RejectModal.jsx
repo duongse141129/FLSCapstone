@@ -56,7 +56,7 @@ const RejectModal = ({ isReject, setIsReject, selectedRequest, handleAfterSave }
     <Dialog maxWidth='sm' fullWidth={true}
       open={isReject} onClose={() => setIsReject(false)}>
       <DialogTitle>
-        <Typography variant='h5' fontWeight={500}>Reject Request: Teaching Subject</Typography>
+        <Typography variant='h5' fontWeight={500}>Reject for teaching external subject</Typography>
         <Typography variant='subtitle1' color='gray'>*Choose a reason for rejection</Typography>
       </DialogTitle>
       <DialogContent>

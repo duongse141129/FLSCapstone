@@ -142,6 +142,7 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
                       <TableCell align='center' className='request-border'>
                         {assignedCourses.length>0 && assignedCourses.filter(item => (item.LecturerId === req.LecturerId
                           && item.CourseId.split('_')[0] === pickedSubject.Id)).length}
+                        {assignedCourses.length === 0 && '0'}
                       </TableCell>
                       <TableCell align='center'>
                         {(semesterState === 2 || semesterState === 4) &&<>
@@ -209,8 +210,7 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
           </TableContainer>
         </Paper>
       </DialogContent>
-      <AcceptModal isAccept={isAccept} setIsAccept={setIsAccept} semesterId={semesterId}
-        scheduleId={scheduleId} selectedRequest={pickedRequest} assignedCourses={assignedCourses}
+      <AcceptModal isAccept={isAccept} setIsAccept={setIsAccept} selectedRequest={pickedRequest} 
         handleAfterSave={handleAfterSave}/>
 
       <RejectModal isReject={isReject} setIsReject={setIsReject} selectedRequest={pickedRequest}

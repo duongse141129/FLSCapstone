@@ -1,6 +1,6 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, Typography } from '@mui/material'
 import {Send} from '@mui/icons-material'
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {ClipLoader} from 'react-spinners';
 import request from '../../utils/request';
 
@@ -22,12 +22,6 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
   const [selectedSubject, setSelectedSubject] = useState('');
   const [managerId, setManagerId] = useState('');
   const [loadCreate, setLoadCreate] = useState(false);
-  const filterRequests = useMemo(() => {
-    if(requests.length > 0){
-      return requests.filter(item => item.ResponseState === 0)
-    } 
-    return []
-  }, [requests])
 
   useEffect(() => {
     const getDepartments = async () => {
@@ -35,7 +29,7 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
         const response = await request.get(`Department/${account.DepartmentId}`);
         const departmentList = await request.get('Department', {
           params: {
-            DepartmentGroupId: response.data.DepartmentGroupId,
+            DepartmentGroupId: response.data.DepartmentGroupId, sortBy: 'Id', order: 'Asc',
             pageIndex: 1, pageSize: 100
           }
         })
@@ -74,17 +68,15 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
       }).then(res => {
         if (res.data) {
           let dataSubject = res.data;
-          if(filterRequests.length > 0){
-            for(let i in filterRequests){
-              dataSubject = dataSubject.filter(data => (data.Id !== filterRequests[i].SubjectId))
-            }
+          for(let i in requests){
+            dataSubject = dataSubject.filter(data => (data.Id !== requests[i].SubjectId))
           }
           setSubjects(dataSubject);
           setSelectedSubject(dataSubject[0].Id)
         }
       }).catch(err => { alert('Fail to load subjects !!' + err); })
     }
-  }, [selectedDepartment, filterRequests])
+  }, [selectedDepartment, requests])
 
   const createRequest = () => {
     if(selectedDepartment && selectedSubject && managerId){
@@ -109,22 +101,22 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
       <DialogTitle>
         <Stack direction='row' alignItems='center' gap={1}>
           <Send />
-          <Typography variant='h5'>Request for teaching subject</Typography>
+          <Typography variant='h5'>Request for teaching external subjects</Typography>
         </Stack>
         <Typography color='gray' fontSize='14px'>
           *Request Manager a subject which you want to teach</Typography>
       </DialogTitle>
       <DialogContent>
-        <Stack direction='row' alignItems='center' gap={2} mb={2}>
-          <Typography fontWeight={500}>Department: </Typography>
+        <Stack mb={2}>
+          <Typography fontWeight={500}>External Departments: </Typography>
           <Select size='small' fullWidth value={selectedDepartment} onChange={(e) => setSelectedDepartment(e.target.value)}>
             {departments.map(item => (
               <MenuItem key={item.Id} value={item.Id}>{item.Id} - {item.DepartmentName}</MenuItem>
             ))}
           </Select>
         </Stack>
-        <Stack direction='row' alignItems='center' gap={2} mb={2}>
-          <Typography fontWeight={500}>Subject: </Typography>
+        <Stack mb={2}>
+          <Typography fontWeight={500}>Subjects: </Typography>
           <Select size='small' fullWidth value={selectedSubject} onChange={(e) => setSelectedSubject(e.target.value)}
             MenuProps={MenuProps}>
             {subjects.map(item => (

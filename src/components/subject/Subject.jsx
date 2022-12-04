@@ -274,7 +274,11 @@ const Subject = ({ semesterId, semesterState }) => {
                         </TableCell></>
                       }
                       {selectedDepartment !== account.DepartmentId && 
-                        <TableCell align='center'>
+                        <TableCell align='center' 
+                          sx={{'&:hover': {
+                            bgcolor: requests.find(item => item.SubjectId === subject.Id) ? blue[100] : '',
+                            cursor: requests.find(item => item.SubjectId === subject.Id) ? 'pointer' : 'default',
+                          }}}>
                           {requests.find(item => item.SubjectId === subject.Id)?.ResponseState === -1 &&
                             <Typography fontSize='15px' color={red[600]} fontWeight={500}>Rejected</Typography>}
                           {requests.find(item => item.SubjectId === subject.Id)?.ResponseState === 0 &&
