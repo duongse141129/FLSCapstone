@@ -111,7 +111,7 @@ const Schedule = ({ semester, selectedId, popUp, isManager, lecturerDepart }) =>
               ))}
           </Select>
         </Stack>
-        {isManager && semester.State === 4 && lecturerDepart === account.DepartmentId &&
+        {isManager && semester.State === 5 && lecturerDepart === account.DepartmentId &&
           <Stack direction='row' alignItems='center' bgcolor={grey[200]}>
             <Switch checked={isSwap} onChange={() => setIsSwap(!isSwap)}/>
             <Typography pr={2}>
@@ -119,10 +119,10 @@ const Schedule = ({ semester, selectedId, popUp, isManager, lecturerDepart }) =>
             </Typography>
           </Stack>}
       </Stack>
-      {(semester.State !== 4 && semester.State !== 5) && 
+      {(semester.State !== 5 && semester.State !== 6) && 
         <Typography px={popUp ? '' : 9}>The system haven't generated the schedule yet</Typography>}
       
-      {(semester.State === 4 || semester.State === 5) && <>
+      {(semester.State === 5 || semester.State === 6) && <>
       <Timetable selectedSemester={semester?.Id} selectedWeekObj={selectedWeekObj}
         lecturerId={selectedId ? selectedId : account.Id} popUp={popUp} isSwap={isSwap}
         clickSlotToSwap={clickSlotToSwap} afterSwap={afterSwap}/>

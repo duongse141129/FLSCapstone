@@ -1,6 +1,6 @@
 import { CancelOutlined, ThumbDown, ThumbUp } from '@mui/icons-material'
 import { Alert, Box, Button, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import { blue, green, grey, red } from '@mui/material/colors'
+import { blue, grey, red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify';
 import request from '../../utils/request'
@@ -154,7 +154,7 @@ const SlotManage = ({ lecturer, semester, admin }) => {
           <Stack direction='row' alignItems='center' gap={2}>
             <Typography color={grey[500]} variant='subtitle1'>(*Re-select to disable new one)</Typography>
           </Stack>
-          {semester.State === 2 && !admin &&
+          {semester.State === 3 && !admin &&
             <Stack direction='row' alignItems='center' gap={2}>
               <Button variant='contained' color='warning' size='small' sx={{ textTransform: 'none' }}
                 disabled={disables.length > 0 || dislikes.length === 0} onClick={handleApply}>
@@ -171,26 +171,21 @@ const SlotManage = ({ lecturer, semester, admin }) => {
           <Stack>
             <Paper sx={{ minWidth: 700 }}>
               <TableContainer component={Box}>
-                <Table>
+                <Table size='small'>
                   <TableHead>
-                    <TableRow sx={{ bgcolor: green[600] }}>
-                      <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                        <Typography>Code</Typography>
-                      </TableCell>
-                      <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                        <Typography>Day of Week</Typography>
-                      </TableCell>
-                      <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                        <Typography>Duration</Typography>
-                      </TableCell>
-                      <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                        <Typography>Slot Number</Typography>
-                      </TableCell>
-                      <TableCell size='small' align='center' sx={{ color: 'white' }} className='manage-slot'>
-                        <Typography>Rating</Typography>
-                      </TableCell>
-                      <TableCell size='small' align='center' sx={{ color: 'white' }}>
-                        <Typography>Disable ({bans.length}/{configData.DISABLE_SLOT})</Typography>
+                    <TableRow>
+                      <TableCell align='center' className='subject-header manage-slot'>
+                        Code</TableCell>
+                      <TableCell align='center' className='subject-header manage-slot'>
+                        Day of Week</TableCell>
+                      <TableCell align='center' className='subject-header manage-slot'>
+                        Duration</TableCell>
+                      <TableCell align='center' className='subject-header manage-slot'>
+                        Slot Number</TableCell>
+                      <TableCell align='center' className='subject-header manage-slot'>
+                        Rating</TableCell>
+                      <TableCell align='center' className='subject-header'>
+                        Disable ({bans.length}/{configData.DISABLE_SLOT})
                       </TableCell>
                     </TableRow>
                   </TableHead>
@@ -198,22 +193,21 @@ const SlotManage = ({ lecturer, semester, admin }) => {
                     {slots.map(slot => (
                       <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: edit ? 'pointer' : 'default' } }}
                         onClick={() => handleBan(slot.Id)}>
-                        <TableCell size='small' align='center' className='manage-slot'>{slot.SlotTypeCode}</TableCell>
-                        <TableCell size='small' align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>
-                        <TableCell size='small' align='center' className='manage-slot'>{slot.Duration}</TableCell>
-                        <TableCell size='small' align='center' className='manage-slot'>{slot.SlotNumber}</TableCell>
-                        <TableCell size='small' align='center' className='manage-slot'
+                        <TableCell align='center' className='manage-slot'>{slot.SlotTypeCode}</TableCell>
+                        <TableCell align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>
+                        <TableCell align='center' className='manage-slot'>{slot.Duration}</TableCell>
+                        <TableCell align='center' className='manage-slot'>{slot.SlotNumber}</TableCell>
+                        <TableCell align='center' className='manage-slot'
                           sx={{
                             bgcolor: (likes.find(like => like === slot.Id) || dislikes.find(dislike => dislike === slot.Id))
                               ? '' : grey[100]
-                          }}
-                        >
+                          }}>
                           {likes.find(like => like === slot.Id) &&
                             <ThumbUp sx={{ color: blue[600] }} />}
                           {dislikes.find(dislike => dislike === slot.Id) &&
                             <ThumbDown sx={{ color: red[600] }} />}
                         </TableCell>
-                        <TableCell size='small' align='center'
+                        <TableCell align='center'
                           sx={{ bgcolor: disables.find(disable => disable === slot.Id) ? '' : (disables.length >= configData.DISABLE_SLOT ? grey[100] : '') }}
                         >
                           {disables.find(disable => disable === slot.Id) &&

@@ -163,6 +163,7 @@ const Subject = ({ semesterId, semesterState }) => {
   }
 
   const clickRegister = (id) => {
+    if(semesterState !== 2) return;
     setSubjectId(id)
     setIsRegister(true)
   }
@@ -215,7 +216,7 @@ const Subject = ({ semesterId, semesterState }) => {
               </Typography>
             </Stack>}
           <Button variant='contained' endIcon={<Send/>} 
-            onClick={() => setIsRequest(true)} disabled={(semesterState===2 || semesterState===4) ? false : true}>
+            onClick={() => setIsRequest(true)} disabled={(semesterState===2) ? false : true}>
             Request</Button>
         </Stack>
       </Stack>
@@ -262,7 +263,7 @@ const Subject = ({ semesterId, semesterState }) => {
                           </Stack>
                         </TableCell>
                         <TableCell align='center' onClick={() => clickRegister(subject.Id)} 
-                          sx={{'&:hover': {bgcolor: blue[100], cursor: 'pointer'}}}>
+                          sx={{'&:hover': {bgcolor: semesterState === 2 ? blue[100] : '', cursor: semesterState === 2 ? 'pointer' : 'default'}}}>
                           {favoriteSubjects.length > 0 && 
                             favoriteSubjects.find(item => item.SubjectId === subject.Id)?.isEnable === 1 &&
                             <CheckCircleOutlined sx={{color: green[800]}}/>

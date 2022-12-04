@@ -125,7 +125,7 @@ const PriorityList = ({ lecturer, semester, allSubjects, admin }) => {
       </Typography>
       <Stack direction='row' alignItems='center' mb={1} justifyContent='space-between'>
         <Typography fontWeight={500}>Priority Courses: {items.length}</Typography>
-        {semester.State === 2 && !admin && <Button variant='contained' color='success' size='small' endIcon={<TryOutlined />}
+        {semester.State === 3 && !admin && <Button variant='contained' color='success' size='small' endIcon={<TryOutlined />}
           onClick={() => setIsPriority(true)}>
           More
         </Button>}
@@ -140,7 +140,7 @@ const PriorityList = ({ lecturer, semester, allSubjects, admin }) => {
                   <TableCell size='small' className='subject-header'>Course</TableCell>
                   <TableCell size='small' className='subject-header'>Subject</TableCell>
                   <TableCell size='small' className='subject-header'>Priority Level</TableCell>
-                  {semester.State === 2 && !admin && <TableCell size='small' className='subject-header'>Option</TableCell>}
+                  {semester.State === 3 && !admin && <TableCell size='small' className='subject-header'>Option</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -162,7 +162,7 @@ const PriorityList = ({ lecturer, semester, allSubjects, admin }) => {
                           {item.PriorityCourse === 1 &&
                             <span style={{ color: orange[600]}}>External</span>}
                         </TableCell>
-                        {semester.State === 2 && !admin && <TableCell size='small'>
+                        {semester.State === 3 && !admin && <TableCell size='small'>
                           {outSide ? <>
                             {(outSide && insideSubjects.find(inside => inside.Id === item.CourseId.split('_')[0])) ? (
                               <Tooltip title='delete' placement='right' arrow>

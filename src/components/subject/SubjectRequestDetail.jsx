@@ -129,7 +129,8 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
                     <TableCell className='subject-header'>Lecturer</TableCell>
                     <TableCell className='subject-header'>Department</TableCell>
                     <TableCell className='subject-header request-border' align='center'>Assigned Courses</TableCell>
-                    <TableCell className='subject-header' align='center'>Action</TableCell>
+                    {semesterState === 3 &&
+                      <TableCell className='subject-header' align='center'>Action</TableCell>}
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -144,23 +145,22 @@ const SubjectRequestDetail = ({ isDetail, setIsDetail, pickedSubject, scheduleId
                           && item.CourseId.split('_')[0] === pickedSubject.Id)).length}
                         {assignedCourses.length === 0 && '0'}
                       </TableCell>
-                      <TableCell align='center'>
-                        {(semesterState === 2 || semesterState === 4) &&<>
+                      {semesterState === 3 && 
+                        <TableCell align='center'>
                           <Tooltip title='Accept' placement='top' arrow>
-                            <IconButton color='success' size='small' 
+                            <IconButton color='success' size='small'
                               onClick={() => acceptRequest(req)}>
-                              <Check/>
+                              <Check />
                             </IconButton>
                           </Tooltip>
                           <span>|</span>
                           <Tooltip title='Reject' placement='top' arrow>
                             <IconButton color='error' size='small'
                               onClick={() => rejectRequest(req)}>
-                              <Close/>
+                              <Close />
                             </IconButton>
                           </Tooltip>
-                        </>}
-                      </TableCell>
+                        </TableCell>}
                     </TableRow>
                   ))}
                 </TableBody>

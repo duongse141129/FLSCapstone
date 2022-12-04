@@ -190,7 +190,7 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin }) => {
       </Typography>
       <Stack direction='row' alignItems='center' mb={1} justifyContent='space-between'>
         <Typography fontWeight={500}>Fixed Courses: {fixCourses.length}</Typography>
-        {(semester.State === 2 || semester.State === 4) && !admin && 
+        {(semester.State === 3 || semester.State === 5) && !admin && 
         <Button variant='contained' color='success' size='small' endIcon={<AssignmentOutlined />}
           onClick={() => setIsAssign(true)}>
           Assign
@@ -206,7 +206,7 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin }) => {
                   <TableCell size='small' className='subject-header'>Course</TableCell>
                   <TableCell size='small' className='subject-header'>Subject</TableCell>
                   <TableCell size='small' className='subject-header'>Slot</TableCell>
-                  {semester.State === 2 && !admin && 
+                  {semester.State === 3 && !admin && 
                   <TableCell size='small' className='subject-header'>
                     Delete</TableCell>}
                 </TableRow>
@@ -224,7 +224,7 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin }) => {
                         {slots.find(slot => slot.Id === course.SlotTypeId)?.Duration} {' '}
                         ({slots.find(slot => slot.Id === course.SlotTypeId)?.ConvertDateOfWeek})
                       </TableCell>
-                      {semester.State === 2 && !admin && 
+                      {semester.State === 3 && !admin && 
                       <TableCell size='small'>
                         {outSide ? <>
                           {(outSide && insideSubjects.find(inside => inside.Id === course.CourseId.split('_')[0])) ? (

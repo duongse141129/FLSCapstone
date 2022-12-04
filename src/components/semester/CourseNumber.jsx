@@ -83,18 +83,18 @@ const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
         <Typography fontWeight={500} width={50}>Min:</Typography>
         <TextField size='small' type='number' color='success' error={errorMin ? true : false} 
           helperText={errorMin} value={min} onChange={handleChangeMin} 
-          InputProps={{ readOnly: (admin || semesterState !== 2) ? true : false }}/>
+          InputProps={{ readOnly: (admin || semesterState !== 3) ? true : false }}/>
       </Stack>
       <Stack direction='row' alignItems='center' gap={1} mb={2}>
         <Typography fontWeight={500} width={50}>Max:</Typography>
         <TextField size='small' type='number' color='success' error={errorMax ? true : false} 
           helperText={errorMax} value={max} onChange={handleChangeMax} 
-          InputProps={{ readOnly: (admin || semesterState !== 2) ? true : false }}/>
+          InputProps={{ readOnly: (admin || semesterState !== 3) ? true : false }}/>
       </Stack>
       {loading && <Button variant='contained' size='small' color='success'>
           <ClipLoader size={20} color='white'/>
         </Button>}
-      {!admin && semesterState===2 && !loading && 
+      {!admin && semesterState===3 && !loading && 
         <Button variant='contained' size='small' color='success' onClick={handleSave}
           disabled={(errorMin || errorMax || (group.MinCourse === min && group.MaxCourse === max)) ? true : false}>
           Save

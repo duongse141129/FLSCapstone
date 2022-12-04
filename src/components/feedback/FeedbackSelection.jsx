@@ -163,7 +163,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
             </Typography>
             <Typography>Total: {subjects.length}</Typography>
           </Stack>
-          {semester.State === 2 && !admin && 
+          {semester.State === 3 && !admin && 
           <Stack direction='row' alignItems='center' bgcolor={grey[200]}>
             <Switch checked={isDisable} onChange={() => setIsDisable(!isDisable)} />
             <Typography pr={2}>
@@ -174,30 +174,30 @@ const FeedbackSelection = ({ id, semester, admin }) => {
         <Stack mb={2}>
           <Paper sx={{ minWidth: 700, mb: 2 }}>
             <TableContainer component={Box} sx={{ overflow: 'auto' }}>
-              <Table>
+              <Table size='small'>
                 <TableHead>
                   <TableRow>
-                    <TableCell size='small' className='subject-header' sx={{ borderRight: '1px solid #e3e3e3' }}>
+                    <TableCell className='subject-header' sx={{ borderRight: '1px solid #e3e3e3' }}>
                       Subject</TableCell>
-                    <TableCell size='small' className='subject-header' align='center'
+                    <TableCell className='subject-header' align='center'
                       sx={{ borderRight: '1px solid #e3e3e3' }}>
                       <Tooltip title='This is graded by Lecturer' placement='top' arrow>
                         <span>Favorite</span>
                       </Tooltip>
                     </TableCell>
-                    <TableCell size='small' className='subject-header' align='center'
+                    <TableCell className='subject-header' align='center'
                       sx={{ borderRight: '1px solid #e3e3e3' }}>
                       <Tooltip title="Evaluate by Lecturer's skill" placement='top' arrow>
                         <span>Evaluation</span>
                       </Tooltip>
                     </TableCell>
-                    <TableCell size='small' className='subject-header' align='center'
+                    <TableCell className='subject-header' align='center'
                       sx={{ borderRight: '1px solid #e3e3e3' }}>
                       <Tooltip title='Edit max course number of each subject for lecturer' placement='top' arrow>
                         <span>Max Courses</span>
                       </Tooltip>
                     </TableCell>
-                    <TableCell size='small' className='subject-header' align='center'>
+                    <TableCell className='subject-header' align='center'>
                       <Tooltip title="Lecturer can't teach disable subjects" placement='top' arrow>
                         <span>Disable ({disableNumber}/{configData.DISABLE_SUBJECT})</span>
                       </Tooltip>
@@ -208,22 +208,22 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                   {subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     .map((subject) => (
                       <TableRow key={subject.Id} hover>
-                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>{subject.Id} - {subject.SubjectName}</TableCell>
-                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }} align='center'>
+                        <TableCell sx={{ borderRight: '1px solid #e3e3e3' }}>{subject.Id} - {subject.SubjectName}</TableCell>
+                        <TableCell sx={{ borderRight: '1px solid #e3e3e3' }} align='center'>
                           <Typography fontSize='15px'>
                             {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.FavoritePoint}
                           </Typography>
                         </TableCell>
-                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
+                        <TableCell sx={{ borderRight: '1px solid #e3e3e3' }}>
                           <Stack direction='row' alignItems='center' justifyContent='center'>
-                            <Typography fontSize='15px' borderRight={semester.State === 2 && !admin && '1px solid gray'} pr={1}>
+                            <Typography fontSize='15px' borderRight={semester.State === 3 && !admin && '1px solid gray'} pr={1}>
                               {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 1 && 'Weak'}
                               {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 2 && 'Not good'}
                               {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 3 && 'Normal'}
                               {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 4 && 'Good'}
                               {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 5 && 'Excellent'}
                             </Typography>
-                            {semester.State === 2 && !admin &&
+                            {semester.State === 3 && !admin &&
                               <Tooltip title='Evaluate' placement='right'>
                                 <IconButton color='primary' onClick={() => handleFeedback(subject.Id)}
                                   size='small'>
@@ -232,12 +232,12 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                               </Tooltip>}
                           </Stack>
                         </TableCell>
-                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
+                        <TableCell sx={{ borderRight: '1px solid #e3e3e3' }}>
                           <Stack direction='row' alignItems='center' gap={1} justifyContent='center'>
-                            <Typography fontSize='15px' borderRight={semester.State === 2 && !admin && '1px solid gray'} pr={2}>
+                            <Typography fontSize='15px' borderRight={semester.State === 3 && !admin && '1px solid gray'} pr={2}>
                               {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.MaxCourseSubject}
                             </Typography>
-                            {semester.State === 2 && !admin &&
+                            {semester.State === 3 && !admin &&
                               <Tooltip title='Edit' placement='right'>
                                 <IconButton color='primary' onClick={() => handleEditMax(subject.Id)}
                                   size='small'>
@@ -246,7 +246,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
                               </Tooltip>}
                           </Stack>
                         </TableCell>
-                        <TableCell size='small' align='center'
+                        <TableCell align='center'
                           sx={{
                             bgcolor: points.find(item => item.SubjectId === subject.Id)?.isEnable === 0 ? '' : (disableNumber >= configData.DISABLE_SUBJECT ? grey[100] : ''),
                             '&:hover': { cursor: isDisable ? 'pointer' : 'default' }
