@@ -136,15 +136,15 @@ const LecturerList = ({ handleSelect, admin }) => {
       <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}>
-            <Table>
+            <Table size='small'>
               <TableHead>
                 <TableRow>
-                  <TableCell size='small' className='subject-header'>ID</TableCell>
-                  <TableCell size='small' className='subject-header'>Name</TableCell>
-                  <TableCell size='small' className='subject-header'>Email</TableCell>
-                  <TableCell size='small' className='subject-header'>Department</TableCell>
-                  <TableCell size='small' className='subject-header'>FullTime</TableCell>
-                  <TableCell size='small' className='subject-header'>More</TableCell>
+                  <TableCell className='subject-header'>ID</TableCell>
+                  <TableCell className='subject-header'>Name</TableCell>
+                  <TableCell className='subject-header'>Email</TableCell>
+                  <TableCell className='subject-header'>Department</TableCell>
+                  <TableCell className='subject-header' align='center'>FullTime</TableCell>
+                  <TableCell className='subject-header' align='center'>More</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
@@ -153,8 +153,8 @@ const LecturerList = ({ handleSelect, admin }) => {
                     .map((lecturer) => (
                       <TableRow key={lecturer.Id} hover onClick={() => selectLecturer(lecturer.Id)}
                         sx={{'&:hover': {cursor: 'pointer'}}}>
-                        <TableCell size='small'>{lecturer.Id}</TableCell>
-                        <TableCell size='small'>
+                        <TableCell>{lecturer.Id}</TableCell>
+                        <TableCell>
                           <Stack direction='row' alignItems='center' gap={1}>
                             <Typography fontSize='14px'>{lecturer.Name}</Typography>
                             {lecturer.RoleIDs && lecturer.RoleIDs.includes('DMA') &&
@@ -164,13 +164,13 @@ const LecturerList = ({ handleSelect, admin }) => {
                             }
                           </Stack>
                         </TableCell>
-                        <TableCell size='small'>{lecturer.Email}</TableCell>
-                        <TableCell size='small'>{lecturer.DepartmentName}</TableCell>
-                        <TableCell size='small'>
+                        <TableCell>{lecturer.Email}</TableCell>
+                        <TableCell>{lecturer.DepartmentName}</TableCell>
+                        <TableCell align='center'>
                           {lecturer.IsFullTime === 1 &&
                             <Check />}
                         </TableCell>
-                        <TableCell size='small'>
+                        <TableCell align='center'>
                           <Tooltip title='More' placement='right'>
                             <IconButton><MoreHoriz/></IconButton>
                           </Tooltip>

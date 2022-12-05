@@ -41,7 +41,7 @@ const AcceptModal = ({ isAccept, setIsAccept, selectedRequest, handleAfterSave }
         DepartmentManagerId: selectedRequest.DepartmentManagerId,
         SemesterId: selectedRequest.SemesterId, SubjectId: selectedRequest.SubjectId,
         LecturerId: selectedRequest.LecturerId,
-        FavoritePoint: 5, FeedbackPoint: 4,
+        FavoritePoint: 4, FeedbackPoint: 4,
         MaxCourseSubject: 3, isEnable: 1
       }).then(res => {
         if(res.status === 200 || res.status === 201){

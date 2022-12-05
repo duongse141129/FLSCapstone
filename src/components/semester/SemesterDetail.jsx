@@ -3,12 +3,12 @@ import { ArrowBackIosNew, Check, HorizontalRule } from '@mui/icons-material';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import SlotType from './SlotType';
-import Subject from '../subject/Subject';
 import { useNavigate, useParams } from 'react-router-dom';
 import Schedule from './Schedule';
 import request from '../../utils/request';
 import Title from '../title/Title';
 import { blue, green, grey} from '@mui/material/colors';
+import SubjectContainer from '../subject/SubjectContainer';
 
 const SemesterDetail = () => {
   const [isSelected, setIsSelected] = useState(1)
@@ -113,7 +113,7 @@ const SemesterDetail = () => {
       }
       {
         isSelected === 2 &&
-        <Subject semesterId={id} semesterState={semester.State} />
+        <SubjectContainer semesterId={id} semesterState={semester.State}/>
       }
       {
         isSelected === 3 &&

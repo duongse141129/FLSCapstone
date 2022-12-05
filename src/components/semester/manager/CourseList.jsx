@@ -255,21 +255,21 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
                     {(semesterState === 3 || semesterState === 5) &&
                       <TableCell align='center'>
                         <Tooltip title='Assign' placement='top' arrow>
-                          <IconButton size='small' color='primary'
+                          <span><IconButton size='small' color='primary'
                             disabled={assignedCourses.find(item => item.CourseId === course.Id) && true}
                             onClick={() => handleAssign(course.Id)}>
                             <AssignmentOutlined />
-                          </IconButton>
+                          </IconButton></span>
                         </Tooltip>
-                        <span>|</span>
                         {semesterState === 3 && 
+                        <><span>|</span>
                         <Tooltip title='Clear Assign' placement='top' arrow>
-                          <IconButton color='error' size='small'
+                          <span><IconButton color='error' size='small'
                             disabled={assignedCourses.find(item => item.CourseId === course.Id) ? false : true}
                             onClick={() => confirmClear(course.Id)}>
                             <Clear />
-                          </IconButton>
-                        </Tooltip>}
+                          </IconButton></span>
+                        </Tooltip></>}
                       </TableCell>}
                   </TableRow>
                 ))}

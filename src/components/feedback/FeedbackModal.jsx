@@ -87,7 +87,7 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
               value={value}
               onChange={handleChangeValue}
             >
-              <Stack direction='row-reverse' alignItems='center'>
+              <Stack direction='row' alignItems='center'>
                 <FormControlLabel value='1' control={<Radio color='error' />} label="Weak" labelPlacement='bottom' />
                 <FormControlLabel value='2' control={<Radio color='error' />} label="Not Good" labelPlacement='bottom' />
                 <FormControlLabel value='3' control={<Radio color='success' />} label="Normal" labelPlacement='bottom' />
