@@ -65,7 +65,7 @@ namespace BEAPICapstoneProjectFLS.Services
                                     .Where(x => x.Status == (int)CourseAssignStatus.Active && x.ScheduleId == schedule.Id)
                                     .ToListAsync();
 
-                if(listCourse != null && listCourseAssign != null)
+                if(listCourse != null && listCourseAssign != null && listCourseAssign.Count > 0)
                 {
                     apiResponse.Data = listCourseAssign.Count + " CourseAssigns / total " + listCourse.Count + " Courses";
                     if (listCourse.Count == listCourseAssign.Count)
@@ -93,6 +93,7 @@ namespace BEAPICapstoneProjectFLS.Services
                     return apiResponse;
 
                 }
+                apiResponse.Data = "List course assign null";
                 return apiResponse;
 
 

@@ -171,5 +171,47 @@ namespace BEAPICapstoneProjectFLS.Services
 
 
         }
+
+
+        public async Task<ApiResponse> DeleteRequestInSemester(string semesterID)
+        {
+            try
+            {
+                var listRequests = await _res.GetAllByIQueryable()
+                    .Where(x => x.SemesterId == semesterID && x.Status == (int)RequestStatus.Active)
+                    .ToListAsync();
+                if (listRequests.Count == 0)
+                {
+                    return new ApiResponse()
+                    {
+                        Success = true,
+                        Message = "Delete LecturerCourseGroup In Semester Success",
+                        Data = "List already is empty"
+                    };
+                }
+                else
+                {
+                    foreach (var request in listRequests)
+                    {
+                        await _res.DeleteAsync(request.Id);
+                    }
+                    return new ApiResponse()
+                    {
+                        Success = true,
+                        Message = "Delete Requests In Semester Success"
+                    };
+                }
+
+            }
+            catch (Exception ex)
+            {
+                return new ApiResponse()
+                {
+                    Success = false,
+                    Message = "Delete Requests In Semester Fail",
+                    Data = ex.Message
+                };
+            }
+        }
     }
 }

@@ -38,15 +38,24 @@ namespace BEAPICapstoneProjectFLS.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateDepartment([FromBody] CreateDepartmentRequest request)
         {
-            var departmentVM = await _IDepartmentService.CreateDepartment(request);
-            if (departmentVM == null)
+            var CheckIDDuplicate = await _IDepartmentService.GetDepartmentById(request.Id);
+            if (CheckIDDuplicate != null)
             {
-                return BadRequest();
+                return BadRequest("Duplicate Id");
             }
             else
             {
-                return CreatedAtRoute(nameof(GetDepartmentById), new { id = departmentVM.Id }, departmentVM);
-            }      
+                var departmentVM = await _IDepartmentService.CreateDepartment(request);
+                if (departmentVM == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    return CreatedAtRoute(nameof(GetDepartmentById), new { id = departmentVM.Id }, departmentVM);
+                }
+            }
+
         }
 
         [HttpPut("{id}")]

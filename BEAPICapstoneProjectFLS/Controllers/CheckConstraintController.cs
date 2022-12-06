@@ -29,14 +29,19 @@ namespace BEAPICapstoneProjectFLS.Controllers
             else
             {
                 var apiResponse = await _ICheckConstraintService.CheckCourseOflecrurer(lecturerID, semesterID);
-                if (apiResponse.Success == false)
-                {
-                    return BadRequest(apiResponse);
-                }
-                else
+                if(apiResponse!= null)
                 {
                     return Ok(apiResponse);
                 }
+                return BadRequest();
+                //if (apiResponse.Success == false)
+                //{
+                //    return BadRequest(apiResponse);
+                //}
+                //else
+                //{
+                //    return Ok(apiResponse);
+                //}
             }
 
         }
@@ -53,14 +58,11 @@ namespace BEAPICapstoneProjectFLS.Controllers
             else
             {
                 var apiResponse = await _ICheckConstraintService.CheckSemesterPublic(semesterID);
-                if (apiResponse.Success == false)
-                {
-                    return BadRequest(apiResponse);
-                }
-                else
+                if (apiResponse != null)
                 {
                     return Ok(apiResponse);
                 }
+                return BadRequest();
             }
 
         }
@@ -76,14 +78,11 @@ namespace BEAPICapstoneProjectFLS.Controllers
             else
             {
                 var apiResponse = await _ICheckConstraintService.CheckAllDepartmentManagerConfirm(semesterID);
-                if (apiResponse.Success == false)
-                {
-                    return BadRequest(apiResponse);
-                }
-                else
+                if (apiResponse != null)
                 {
                     return Ok(apiResponse);
                 }
+                return BadRequest();
             }
 
         }

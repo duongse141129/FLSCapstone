@@ -39,15 +39,24 @@ namespace BEAPICapstoneProjectFLS.Controllers
         [HttpPost]
         public async Task<IActionResult> CreateSubject([FromBody] CreateSubjectRequest request)
         {
-            var SubjectVM = await _ISubjectService.CreateSubject(request);
-            if (SubjectVM == null)
+            var CheckIDDuplicate = await _ISubjectService.GetSubjectById(request.Id);
+            if (CheckIDDuplicate != null)
             {
-                return BadRequest();
+                return BadRequest("Duplicate Id");
             }
             else
             {
-                return CreatedAtRoute(nameof(GetSubjectById), new { id = SubjectVM.Id }, SubjectVM);
+                var SubjectVM = await _ISubjectService.CreateSubject(request);
+                if (SubjectVM == null)
+                {
+                    return BadRequest();
+                }
+                else
+                {
+                    return CreatedAtRoute(nameof(GetSubjectById), new { id = SubjectVM.Id }, SubjectVM);
+                }
             }
+
         }
 
         /*[HttpPost("CreateListSubject/")]

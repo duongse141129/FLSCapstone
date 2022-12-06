@@ -36,7 +36,6 @@ namespace BEAPICapstoneProjectFLS.Services
             try
             {
                 var su = _mapper.Map<Subject>(request);
-                su.Id = RandomPKKey.NewRamDomPKKey();
                 await _res.InsertAsync(su);
                 await _res.SaveAsync();
 

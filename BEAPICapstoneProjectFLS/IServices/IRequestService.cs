@@ -14,5 +14,6 @@ namespace BEAPICapstoneProjectFLS.IServices
         Task<RequestViewModel> CreateRequest(CreateRequest request);
         Task<RequestViewModel> UpdateRequest(string id, UpdateRequest request);
         Task<bool> DeleteRequest(string id);
+        Task<ApiResponse> DeleteRequestInSemester(string semesterID);
     }
 }

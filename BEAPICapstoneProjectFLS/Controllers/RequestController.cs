@@ -13,10 +13,12 @@ namespace BEAPICapstoneProjectFLS.Controllers
     public class RequestController : ControllerBase
     {
         private readonly IRequestService _IRequestService;
+        private readonly ISemesterService _ISemesterService;
 
-        public RequestController(IRequestService RequestService)
+        public RequestController(IRequestService RequestService, ISemesterService SemesterService)
         {
             _IRequestService = RequestService;
+            _ISemesterService = SemesterService;
         }
 
         [HttpGet("{id}", Name = "GetRequestById")]
@@ -65,6 +67,29 @@ namespace BEAPICapstoneProjectFLS.Controllers
             if (rs == false)
                 return NotFound();
             return Ok();
+        }
+
+        [HttpDelete("DeleteRequestInSemester/{semesterID}", Name = "DeleteRequestInSemester")]
+        public async Task<IActionResult> DeleteRequestInSemester(string semesterID)
+        {
+            var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
+            if (checkSemesterID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var apiResponse = await _IRequestService.DeleteRequestInSemester(semesterID);
+                if (apiResponse.Success == false)
+                {
+                    return BadRequest(apiResponse);
+                }
+                else
+                {
+                    return Ok(apiResponse);
+                }
+            }
+
         }
     }
 }
