@@ -142,7 +142,6 @@ const LecturerList = ({ handleSelect, admin }) => {
                   <TableCell className='subject-header'>ID</TableCell>
                   <TableCell className='subject-header'>Name</TableCell>
                   <TableCell className='subject-header'>Email</TableCell>
-                  <TableCell className='subject-header'>Department</TableCell>
                   <TableCell className='subject-header' align='center'>FullTime</TableCell>
                   <TableCell className='subject-header' align='center'>More</TableCell>
                 </TableRow>
@@ -165,7 +164,6 @@ const LecturerList = ({ handleSelect, admin }) => {
                           </Stack>
                         </TableCell>
                         <TableCell>{lecturer.Email}</TableCell>
-                        <TableCell>{lecturer.DepartmentName}</TableCell>
                         <TableCell align='center'>
                           {lecturer.IsFullTime === 1 &&
                             <Check />}

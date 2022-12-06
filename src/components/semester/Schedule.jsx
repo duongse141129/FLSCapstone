@@ -113,11 +113,12 @@ const Schedule = ({ semester, selectedId, popUp, isManager, lecturerDepart }) =>
         </Stack>
         {isManager && semester.State === 5 && lecturerDepart === account.DepartmentId &&
           <Stack direction='row' alignItems='center' bgcolor={grey[200]}>
-            <Switch checked={isSwap} onChange={() => setIsSwap(!isSwap)}/>
+            <Switch checked={isSwap} onChange={() => setIsSwap(!isSwap)} />
             <Typography pr={2}>
               {isSwap ? <span style={{ color: blue[700] }}>Swap On</span> : 'Swap Off'}
             </Typography>
-          </Stack>}
+          </Stack>
+        }
       </Stack>
       {(semester.State !== 5 && semester.State !== 6) && 
         <Typography px={popUp ? '' : 9}>The system haven't generated the schedule yet</Typography>}

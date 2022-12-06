@@ -36,7 +36,8 @@ const FeedbackSelection = ({ id, semester, admin }) => {
 
   //get lecturer by id
   useEffect(() => {
-    request.get(`User/${id}`)
+    if(id){
+      request.get(`User/${id}`)
       .then(res => {
         if (res.data) {
           setLecturer(res.data)
@@ -45,6 +46,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
       .catch(err => {
         alert('Fail to load lecturer in Schedule')
       })
+    }
   }, [id])
 
   //get subject by department of lecturer

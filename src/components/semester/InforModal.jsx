@@ -1,6 +1,6 @@
 import { Alert, Button, Dialog, DialogContent, DialogTitle, MenuItem, Select, Stack, Typography } from '@mui/material'
 import { green, grey } from '@mui/material/colors'
-import { useState, useEffect  } from 'react'
+import { useState, useEffect, useMemo  } from 'react'
 import ScheduleAdmin from './admin/ScheduleAdmin'
 import FeedbackSelection from '../feedback/FeedbackSelection'
 import SlotManage from './SlotManage';
@@ -8,7 +8,7 @@ import { Check, Close } from '@mui/icons-material'
 import request from '../../utils/request'
 import AssignmentContainer from './AssignmentContainer'
 import CourseNumber from './CourseNumber'
-import { useMemo } from 'react'
+import GetCourse from '../swap/GetCourse'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -26,7 +26,6 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
   const [allSubjects, setAllSubjects] = useState([]);
   const [lecturers, setLecturers] = useState([]);
   const [selectedLec, setSelectedLec] = useState('');
-  //const [passLec, setPassLec] = useState({});
   const passLec = useMemo(() => {
     if (selectedLec && lecturers.length > 0) {
       for (let i in lecturers) {
@@ -63,17 +62,6 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
     }
   }, [selectedLecturer])
 
-  // useEffect(() => {
-  //   if(selectedLec && lecturers.length > 0){
-  //     for(let i in lecturers){
-  //       if(lecturers[i].Id === selectedLec){
-  //         setPassLec(lecturers[i])
-  //         break;
-  //       }
-  //     }
-  //   }
-  // }, [lecturers, selectedLec])
-
   return (
     <Dialog maxWidth='lg' fullWidth={true}
       open={isSelected} onClose={() => setIsSelected(false)}
@@ -99,7 +87,6 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
               ))}
             </Select>
           </Stack>
-          {/* <Typography><span style={{fontWeight:500}}>Name:</span> {selectedLecturer.Name}</Typography> */}
           <Typography><span style={{fontWeight:500}}>Department:</span> {passLec.DepartmentName}</Typography>
         </Stack>
         <Stack mb={2} direction='row' gap={2} alignItems='center'>
@@ -110,42 +97,44 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
           </Stack>
         </Stack>
         <Stack direction='row' gap={4} borderBottom='1px solid #e3e3e3' mb={2}>
-          {tabs.map(tab => {
-            if(selectedLecturer.Id){
-              if(!admin && (selectedLecturer.DepartmentId !== account.DepartmentId)){
-                if(tab.id===1 || tab.id===2){
-                  return (
-                    <Typography key={tab.id} color={selected === tab.name ? green[600] : grey[500]} py={0.5}
-                      borderBottom={selected === tab.name && `4px solid ${green[600]}`}
-                      fontSize='20px' onClick={() => setSelected(tab.name)}
-                      sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
-                      {tab.name}
-                    </Typography>
-                  )
-                }
-                return <></>
-              }
-              else{
-                return (
-                  <Typography key={tab.id} color={selected === tab.name ? green[600] : grey[500]} py={0.5}
-                    borderBottom={selected === tab.name && `4px solid ${green[600]}`}
-                    fontSize='20px' onClick={() => setSelected(tab.name)}
-                    sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
-                    {tab.name}
-                  </Typography>
-                )
-              }
-            }
-            return <></>
-          })}
-          {/* {tabs.map(tab => (
-            <Typography key={tab.id} color={selected === tab.name ? green[600] : grey[500]} py={0.5}
-              borderBottom={selected === tab.name && `4px solid ${green[600]}`}
-              fontSize='20px' onClick={() => setSelected(tab.name)}
+          <Typography color={selected === tabs[0].name ? green[600] : grey[500]} py={0.5}
+            borderBottom={selected === tabs[0].name && `4px solid ${green[600]}`}
+            fontSize='20px' onClick={() => setSelected(tabs[0].name)}
+            sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
+            {tabs[0].name}
+          </Typography>
+          {!admin && semester.State === 5 && selectedLecturer.DepartmentId === account.DepartmentId &&
+            <Typography color={selected === tabs[5].name ? green[600] : grey[500]} py={0.5}
+              borderBottom={selected === tabs[5].name && `4px solid ${green[600]}`}
+              fontSize='20px' onClick={() => setSelected(tabs[5].name)}
               sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
-              {tab.name}
+              {tabs[5].name}
             </Typography>
-          ))} */}
+          }
+          <Typography color={selected === tabs[1].name ? green[600] : grey[500]} py={0.5}
+            borderBottom={selected === tabs[1].name && `4px solid ${green[600]}`}
+            fontSize='20px' onClick={() => setSelected(tabs[1].name)}
+            sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
+            {tabs[1].name}
+          </Typography>
+          <Typography color={selected === tabs[2].name ? green[600] : grey[500]} py={0.5}
+            borderBottom={selected === tabs[2].name && `4px solid ${green[600]}`}
+            fontSize='20px' onClick={() => setSelected(tabs[2].name)}
+            sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
+            {tabs[2].name}
+          </Typography>
+          <Typography color={selected === tabs[3].name ? green[600] : grey[500]} py={0.5}
+            borderBottom={selected === tabs[3].name && `4px solid ${green[600]}`}
+            fontSize='20px' onClick={() => setSelected(tabs[3].name)}
+            sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
+            {tabs[3].name}
+          </Typography>
+          <Typography color={selected === tabs[4].name ? green[600] : grey[500]} py={0.5}
+            borderBottom={selected === tabs[4].name && `4px solid ${green[600]}`}
+            fontSize='20px' onClick={() => setSelected(tabs[4].name)}
+            sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
+            {tabs[4].name}
+          </Typography>
         </Stack>
         {selected === tabs[0].name && <ScheduleAdmin lecturerId={passLec.Id} 
           lecturerDepart={selectedLecturer.DepartmentId} semester={semester} admin={admin}/>}
@@ -155,6 +144,7 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
         {selected === tabs[3].name && <SlotManage lecturer={passLec} semester={semester} admin={admin}/>}
         {selected === tabs[4].name && <CourseNumber lecturer={passLec} 
           semesterId={semester.Id} semesterState={semester.State} admin={admin}/>}
+        {selected === tabs[5].name && <GetCourse semesterId={semester.Id} lecturer={passLec}/>}
       </DialogContent>
     </Dialog>
   )
@@ -167,5 +157,6 @@ const tabs = [
   { id: 2, name: 'Assignment'},
   { id: 3, name: 'Subject Evaluation' },
   { id: 4, name: 'Preference Slot' },
-  { id: 5, name: 'Course Number'}
+  { id: 5, name: 'Course Number'},
+  { id: 6, name: 'Get Course'},
 ]
