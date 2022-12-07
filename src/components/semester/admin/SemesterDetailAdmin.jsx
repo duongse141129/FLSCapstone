@@ -11,6 +11,7 @@ import CourseList from './CourseList'
 import SlotType from './SlotType'
 import { ToastContainer, toast } from 'react-toastify';
 import SummarySubject from './SummarySubject'
+import ViewConfirm from './ViewConfirm'
 
 const SemesterDetailAdmin = () => {
   const navigate = useNavigate();
@@ -22,7 +23,10 @@ const SemesterDetailAdmin = () => {
   const [mode, setMode] = useState('');
   const [schedule, setSchedule] = useState({});
   const [slotTypes, setSlotTypes] = useState([]);
+  const [checkAllConfirm, setCheckAllConfirm] = useState({});
+  const [reCheckAll, setReCheckAll] = useState(false);
 
+  //set semester
   useEffect(() => {
     request.get(`Semester/${id}`)
       .then(res => {
@@ -35,6 +39,7 @@ const SemesterDetailAdmin = () => {
       })
   }, [id, isConfirm])
 
+  //set schedule
   useEffect(() => {
     request.get('Schedule', {
       params: {SemesterId: id, pageIndex: 1, pageSize: 10}
@@ -45,6 +50,7 @@ const SemesterDetailAdmin = () => {
     .catch(err => alert('Fail to get schedule'))
   }, [id])
 
+  //get list slot types by semester
   useEffect(() => {
     request.get('SlotType', {
       params: {
@@ -55,6 +61,19 @@ const SemesterDetailAdmin = () => {
       if (res.data) setSlotTypes(res.data);
     }).catch(err => alert('Fail to load slottype'))
   }, [id])
+
+  //check all manager confirmed
+  useEffect(() => {
+    if(id){
+      request.get(`CheckConstraint/CheckAllDepartmentManagerConfirm/${id}`)
+      .then(res => {
+        if(res.data){
+          setCheckAllConfirm(res.data)
+        }
+      })
+      .catch(err => {alert('Fail to check managers confirmed')})
+    }
+  }, [id, reCheckAll])
 
   const backToSemester = () => {
     navigate('/admin/semester')
@@ -101,17 +120,17 @@ const SemesterDetailAdmin = () => {
       Term: semester.Term, DateStart: semester.DateStart,
       DateEnd: semester.DateEnd, State: (semester.State + 1)
     }).then(res => {
-        if (res.status === 200) {
-          setIsConfirm(false)
-          toast.success('Success to change next state!', {
-            position: "top-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true,
-            pauseOnHover: true, draggable: true, progress: undefined, theme: "light",
-          });
-        }
-      }).catch(err => {
-        alert('Fail to change next state')
+      if (res.status === 200) {
         setIsConfirm(false)
-      })
+        toast.success('Success to change next state!', {
+          position: "top-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true,
+          pauseOnHover: true, draggable: true, progress: undefined, theme: "light",
+        });
+      }
+    }).catch(err => {
+      alert('Fail to change next state')
+      setIsConfirm(false)
+    })
   }
 
   const savePrevState = () => {
@@ -208,6 +227,12 @@ const SemesterDetailAdmin = () => {
             fontSize='20px' onClick={() => setSelected('lecturers')}
             sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
             Lecturers</Typography>
+          {semester.State === 5 && 
+          <Typography color={selected === 'confirm' ? green[600] : grey[500]} py={0.5}
+            borderBottom={selected === 'confirm' && `4px solid ${green[600]}`}
+            fontSize='20px' onClick={() => setSelected('confirm')}
+            sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
+            Confirmation</Typography>}
         </Stack>
       </Stack>
       {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id} 
@@ -215,6 +240,8 @@ const SemesterDetailAdmin = () => {
       {selected === 'subjects' && <SummarySubject semesterId={id} scheduleId={schedule.Id}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} scheduleId={schedule.Id}/>}
+      {selected === 'confirm' && <ViewConfirm semesterId={id} checkAllConfirm={checkAllConfirm}
+        setReCheckAll={setReCheckAll}/>}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} content={content} 
         mode={mode} saveNextState={saveNextState} savePrevState={savePrevState} />
       <ToastContainer />

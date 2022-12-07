@@ -20,12 +20,8 @@ const ConfirmModal = ({isConfirm, setIsConfirm, content, mode, saveNextState, sa
   }
 
   return (
-    <Dialog
-      fullWidth={true}
-      maxWidth='xs'
-      open={isConfirm}
-      onClose={() => setIsConfirm(false)}
-    >
+    <Dialog fullWidth={true} maxWidth='xs'
+      open={isConfirm} onClose={() => setIsConfirm(false)}>
       <DialogContent>
         <Typography fontSize='18px'>
           {content}
