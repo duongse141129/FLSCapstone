@@ -20,7 +20,7 @@ const MenuProps = {
   },
 };
 
-const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, admin }) => {
+const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, admin, myCourseGroup }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [selected, setSelected] = useState(tabs[0].name)
   const [allSubjects, setAllSubjects] = useState([]);
@@ -104,6 +104,7 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
             {tabs[0].name}
           </Typography>
           {!admin && semester.State === 5 && selectedLecturer.DepartmentId === account.DepartmentId &&
+            myCourseGroup.GroupName !== 'confirm' &&
             <Typography color={selected === tabs[5].name ? green[600] : grey[500]} py={0.5}
               borderBottom={selected === tabs[5].name && `4px solid ${green[600]}`}
               fontSize='20px' onClick={() => setSelected(tabs[5].name)}
@@ -117,6 +118,7 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
             sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
             {tabs[1].name}
           </Typography>
+          {(admin || selectedLecturer.DepartmentId === account.DepartmentId) &&<>
           <Typography color={selected === tabs[2].name ? green[600] : grey[500]} py={0.5}
             borderBottom={selected === tabs[2].name && `4px solid ${green[600]}`}
             fontSize='20px' onClick={() => setSelected(tabs[2].name)}
@@ -135,16 +137,18 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
             sx={{ '&:hover': { cursor: 'pointer', color: green[600] } }}>
             {tabs[4].name}
           </Typography>
+          </>}
         </Stack>
-        {selected === tabs[0].name && <ScheduleAdmin lecturerId={passLec.Id} 
+        {selected === tabs[0].name && <ScheduleAdmin lecturerId={passLec.Id} myCourseGroup={myCourseGroup}
           lecturerDepart={selectedLecturer.DepartmentId} semester={semester} admin={admin}/>}
         {selected === tabs[1].name && <AssignmentContainer lecturer={passLec} semester={semester} 
-          allSubjects={allSubjects} admin={admin}/>}
+          allSubjects={allSubjects} admin={admin} myCourseGroup={myCourseGroup}/>}
         {selected === tabs[2].name && <FeedbackSelection id={passLec.Id} semester={semester} admin={admin}/>}
         {selected === tabs[3].name && <SlotManage lecturer={passLec} semester={semester} admin={admin}/>}
         {selected === tabs[4].name && <CourseNumber lecturer={passLec} 
           semesterId={semester.Id} semesterState={semester.State} admin={admin}/>}
-        {selected === tabs[5].name && <GetCourse semesterId={semester.Id} lecturer={passLec}/>}
+        {selected === tabs[5].name && <GetCourse semesterId={semester.Id} semesterState={semester.State}
+          lecturer={passLec} myCourseGroup={myCourseGroup}/>}
       </DialogContent>
     </Dialog>
   )

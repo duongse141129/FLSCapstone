@@ -122,13 +122,15 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
 
   //get assign courses
   useEffect(() => {
-    request.get('CourseAssign', {
-      params: { ScheduleId: scheduleId, order: 'Asc', pageIndex: 1, pageSize: 1000 }
-    }).then(res => {
-      if (res.data) {
-        setAssignedCourses(res.data)
-      }
-    }).catch(err => alert('Fail to load course assign'))
+    if(scheduleId){
+      request.get('CourseAssign', {
+        params: { ScheduleId: scheduleId, order: 'Asc', pageIndex: 1, pageSize: 1000 }
+      }).then(res => {
+        if (res.data) {
+          setAssignedCourses(res.data)
+        }
+      }).catch(err => alert('Fail to load course assign'))
+    }
   }, [scheduleId])
 
   //get all courses to show total

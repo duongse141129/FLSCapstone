@@ -9,7 +9,7 @@ import request from '../../utils/request';
 import DeleteModal from '../priority/DeleteModal';
 import AssignmentModal from './AssignmentModal';
 
-const AssignmentList = ({ lecturer, semester, allSubjects, admin }) => {
+const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -190,7 +190,7 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin }) => {
       </Typography>
       <Stack direction='row' alignItems='center' mb={1} justifyContent='space-between'>
         <Typography fontWeight={500}>Fixed Courses: {fixCourses.length}</Typography>
-        {(semester.State === 3 || semester.State === 5) && !admin && 
+        {(semester.State === 3 || (semester.State === 5 && myCourseGroup.GroupName !== 'confirm')) && !admin && 
         <Button variant='contained' color='success' size='small' endIcon={<AssignmentOutlined />}
           onClick={() => setIsAssign(true)}>
           Assign

@@ -4,7 +4,7 @@ import { useState } from 'react'
 import AssignmentList from '../assignment/AssignmentList';
 import PriorityList from '../priority/PriorityList';
 
-const AssignmentContainer = ({lecturer, semester, allSubjects, admin}) => {
+const AssignmentContainer = ({lecturer, semester, allSubjects, admin, myCourseGroup}) => {
   const [selected, setSelected] = useState('fixed');
 
   return (
@@ -20,7 +20,7 @@ const AssignmentContainer = ({lecturer, semester, allSubjects, admin}) => {
         </Button>
       </Stack>
       {selected === 'fixed' && <AssignmentList lecturer={lecturer} semester={semester} 
-        allSubjects={allSubjects} admin={admin}/>}
+        allSubjects={allSubjects} admin={admin} myCourseGroup={myCourseGroup}/>}
       {selected === 'priority' && <PriorityList lecturer={lecturer} semester={semester} 
           allSubjects={allSubjects} admin={admin}/>}
     </Stack>

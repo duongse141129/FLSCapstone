@@ -6,7 +6,7 @@ import request from '../../utils/request';
 import GetCourseModal from './GetCourseModal';
 import { grey } from '@mui/material/colors';
 
-const GetCourse = ({semesterId, lecturer}) => {
+const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [scheduleId, setScheduleId] = useState('');
   const [slots, setSlots] = useState([]);
@@ -100,7 +100,8 @@ const GetCourse = ({semesterId, lecturer}) => {
 
   return (
     <Stack height='90vh'>
-      {lecturer.DepartmentId === account.DepartmentId && <>
+      {semesterState === 5 && myCourseGroup.GroupName!=='confirm' && 
+        lecturer.DepartmentId === account.DepartmentId && <>
       <Typography variant='subtitle1' color={grey[500]} mb={1}>
         *Add course into empty slots.The course will be taken from other internal lecturers.
       </Typography>

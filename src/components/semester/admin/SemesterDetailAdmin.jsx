@@ -214,7 +214,7 @@ const SemesterDetailAdmin = () => {
         slotTypes={slotTypes} semesterState={semester.State}/>}
       {selected === 'subjects' && <SummarySubject semesterId={id} scheduleId={schedule.Id}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
-      {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} />}
+      {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} scheduleId={schedule.Id}/>}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} content={content} 
         mode={mode} saveNextState={saveNextState} savePrevState={savePrevState} />
       <ToastContainer />
