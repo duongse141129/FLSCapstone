@@ -38,16 +38,21 @@ const Profile = () => {
         localStorage.setItem('web-user', JSON.stringify(res.data))
         setAccount(res.data)
         setShow(false);
-        toast.success('Update Profile Successfully!', {
+        toast.success('Update profile successfully', {
           position: "top-right", autoClose: 3000,
           hideProgressBar: false, closeOnClick: true,
           pauseOnHover: true, draggable: true,
-          progress: undefined, theme: "colored",
+          progress: undefined, theme: "light",
         });
       }
     }).catch(err => {
-        alert('Fail to save changes in profile!')
-      })
+      toast.error('Fail to update profile', {
+        position: "top-right", autoClose: 3000,
+        hideProgressBar: false, closeOnClick: true,
+        pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    })
   }
 
   return (
@@ -105,10 +110,11 @@ const Profile = () => {
         <Button variant='contained' color='success'
           endIcon={<Save />} onClick={handleShow} size='small'
           disabled={
-            (name === account.Name || name.length === 0) && dob === account.DateOfBirthFormatted &&
-            radioValue === account.Gender && (phone === account.Phone || !/^([0-9]{10,11})$/.test(phone))
-            && (idCard === account.Idcard || !/^([0-9]{12})$/.test(idCard)) &&
-            address === account.Address}>
+            (!/^([0-9]{12})$/.test(idCard) || !/^([0-9]{10,11})$/.test(phone)) || 
+            ((name === account.Name || name.length === 0) && 
+            dob === account.DateOfBirthFormatted &&
+            radioValue === account.Gender && phone === account.Phone && 
+            idCard === account.Idcard  && address === account.Address)}>
           Save
         </Button>
       </Stack>
