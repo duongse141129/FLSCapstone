@@ -1,28 +1,78 @@
-// ignore_for_file: use_build_context_synchronously, sized_box_for_whitespace
+// ignore_for_file: use_build_context_synchronously, sized_box_for_whitespace, unnecessary_null_comparison
+
+import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:scheduler_project/screen/home_screen.dart';
+import 'package:scheduler_project/home/home_page.dart';
+import 'package:scheduler_project/model/token.dart';
+import 'package:scheduler_project/model/user.dart';
 
+import '../consts/api_const.dart';
 import '../google/google_sigin_api.dart';
+import '../services/api_handler.dart';
+import 'package:http/http.dart' as http;
 
-class Login extends StatelessWidget {
+import 'login_message.dart';
+
+class Login extends StatefulWidget {
   static String routeName = 'login';
+
+  @override
+  State<Login> createState() => _LoginState();
+}
+
+class _LoginState extends State<Login> {
+  UserModel userModel = UserModel();
+  TokenModel tokenModel = TokenModel();
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
-    // This size provide us total height and with of our screen
 
     Future signIn() async {
       final user = await GoogleSignInApi.login();
-      if (user == null) {
+      userModel = await APIHandler.getUserByEmail(email: user!.email);
+      setState(() {});
+      if (userModel == null) {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text('Sign In Failed!')));
       } else {
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => HomeScreen(user: user),
-        ));
+        for (var role in userModel.roleIDs!) {
+          if (role == 'LC') {
+            Navigator.of(context).pushReplacement(MaterialPageRoute(
+              builder: (context) => HomePage(userModel: userModel),
+            ));
+          } else {
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text('Sign In Failed!')));
+          }
+        }
       }
     }
+
+    // Future signIn() async {
+    //   final user = await GoogleSignInApi.login();
+
+    //   tokenModel = await APIHandler.getTokenByEmail(email: user!.email);
+
+    //   userModel = await APIHandler.getUserAuthenByEmail(
+    //       email: user.email, token: tokenModel.accessToken.toString());
+    //   setState(() {});
+    //   if (userModel == null) {
+    //     ScaffoldMessenger.of(context)
+    //         .showSnackBar(SnackBar(content: Text('Sign In Failed!')));
+    //   } else {
+    //     for (var role in userModel.roleIDs!) {
+    //       if (role == 'LC') {
+    //         Navigator.of(context).pushReplacement(MaterialPageRoute(
+    //           builder: (context) => HomePage(userModel: userModel),
+    //         ));
+    //       } else {
+    //         ScaffoldMessenger.of(context)
+    //             .showSnackBar(SnackBar(content: Text('Sign In Failed!')));
+    //       }
+    //     }
+    //   }
+    // }
 
     return Container(
       alignment: Alignment.center,
@@ -31,11 +81,11 @@ class Login extends StatelessWidget {
       child: Stack(
         children: [
           Positioned(
-            top: 30,
-            left: 100,
+            top: 45,
+            left: 80,
             child: Image.asset(
               "assets/images/Logo_Đại_học_FPT.png",
-              width: size.width * 0.5,
+              width: size.width * 0.6,
             ),
           ),
           Positioned(
@@ -43,11 +93,11 @@ class Login extends StatelessWidget {
             left: 40,
             child: Image.asset(
               "assets/images/scheduler.png",
-              width: size.width * 0.8,
+              width: size.width * 0.65,
             ),
           ),
           Positioned(
-            bottom: 200,
+            bottom: 240,
             left: 30,
             child: Column(
               children: [
@@ -60,7 +110,7 @@ class Login extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  height: 25,
+                  height: 30,
                 ),
                 Container(
                   width: size.width * 0.8,
@@ -68,7 +118,7 @@ class Login extends StatelessWidget {
                     borderRadius: BorderRadius.circular(29),
                     // ignore: deprecated_member_use
                     child: FlatButton(
-                      color: Color.fromRGBO(1, 183, 224, 1),
+                      color: Colors.green,
                       padding:
                           EdgeInsets.symmetric(vertical: 0, horizontal: 30),
                       onPressed: signIn,
@@ -94,7 +144,7 @@ class Login extends StatelessWidget {
                             width: 10,
                           ),
                           Text(
-                            'Login with google',
+                            'Login with gmail',
                             style: TextStyle(
                               color: Colors.white,
                               fontSize: 23,

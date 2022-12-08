@@ -39,6 +39,11 @@ dependencies:
   google_fonts: ^3.0.1
   date_picker_timeline:
   intl:
+  auto_size_text:
+  http:
+  provider:
+  table_calendar:
+  
 
 dev_dependencies:
   flutter_test:

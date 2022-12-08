@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:scheduler_project/model/user.dart';
 
 class MyHeaderDrawer extends StatelessWidget {
   const MyHeaderDrawer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    UserModel userProvider = Provider.of<UserModel>(context);
     return Container(
       color: Colors.green[700],
       width: double.infinity,
@@ -17,25 +20,19 @@ class MyHeaderDrawer extends StatelessWidget {
             margin: EdgeInsets.only(bottom: 10),
             height: 70,
             width: 70,
-            // decoration: BoxDecoration(
-            //   shape: BoxShape.circle,
-            //   image: DecorationImage(
-            //     image: AssetImage('assets/images/gaixinh.jpg'),
-            //   ),
-            // ),
             child: CircleAvatar(
               backgroundImage: AssetImage("assets/images/gaixinh.jpg"),
             ),
           ),
           Text(
-            'Rapid Tech',
+            userProvider.name.toString(),
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
             ),
           ),
           Text(
-            'infor@rapidtech.dev',
+            userProvider.email.toString(),
             style: TextStyle(
               color: Colors.grey[200],
               fontSize: 14,

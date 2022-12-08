@@ -1,54 +1,82 @@
 // ignore_for_file: prefer_const_literals_to_create_immutables
 
 import 'package:flutter/material.dart';
+import 'package:scheduler_project/profile/edit_profile_page.dart';
+import 'package:scheduler_project/services/api_handler.dart';
 
-class ProfilePage extends StatelessWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+import '../model/user.dart';
+
+class ProfilePage extends StatefulWidget {
+  const ProfilePage({
+    Key? key,
+    required this.userModel,
+  }) : super(key: key);
+  final UserModel userModel;
+
+  @override
+  State<ProfilePage> createState() => _ProfilePageState();
+}
+
+class _ProfilePageState extends State<ProfilePage> {
+  UserModel user = UserModel();
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getUser();
+  }
+
+  Future<void> getUser() async {
+    user = await APIHandler.getUserByEmail(
+        email: widget.userModel.email.toString());
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
+    Size size = MediaQuery.of(context).size;
     return Scaffold(
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container(
-            color: Color.fromARGB(255, 10, 189, 234),
+            color: Colors.green[700],
             padding: EdgeInsets.only(left: 20, right: 20, top: 10),
-            height: 250,
+            height: size.height * 0.255,
             width: double.infinity,
             child: Column(
               children: [
                 SizedBox(
-                  height: 30,
+                  height: 25,
                 ),
                 Row(
                   children: [
                     GestureDetector(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.pop(context);
+                      },
                       child: Icon(
                         Icons.arrow_back_outlined,
                         size: 30,
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(width: 10),
+                    SizedBox(width: 15),
                     Text(
                       'Profile',
-                      style: TextStyle(fontSize: 20, color: Colors.white),
+                      style: TextStyle(fontSize: 23, color: Colors.white),
                     ),
                   ],
                 ),
-                SizedBox(height: 10),
                 Column(
                   children: [
                     CircleAvatar(
                       backgroundColor: Colors.white,
-                      radius: 55,
+                      radius: 45,
                       backgroundImage: AssetImage('assets/images/profile.png'),
                     ),
-                    SizedBox(height: 20),
+                    SizedBox(height: 10),
                     Text(
-                      ' Thai Bach Long',
+                      user.name.toString(),
                       style: TextStyle(fontSize: 22, color: Colors.white),
                     ),
                   ],
@@ -60,10 +88,17 @@ class ProfilePage extends StatelessWidget {
             color: Colors.white,
             child: Column(
               children: [
-                _builderTextField('Department', 'Software Engineering'),
-                _builderTextField('Date Of Birth', '12/03/1983'),
-                _builderTextField('Email', 'longDt12@fpt.edu.vn'),
-                _builderTextField('Phone Number', '0324718963'),
+                _builderTextField('Department', user.departmentName.toString()),
+                _builderTextField(
+                    'Date Of Birth', user.dateOfBirthFormatted.toString()),
+                _builderTextField('Email', user.email.toString()),
+                _builderTextField('Phone Number', user.phone.toString()),
+                _builderTextField('Card Id', user.idcard.toString()),
+                _builderTextField(
+                    'Lecturer Type',
+                    user.isFullTime.toString() == '1'
+                        ? 'Full-time'
+                        : 'Part-time'),
               ],
             ),
           ),
@@ -73,9 +108,16 @@ class ProfilePage extends StatelessWidget {
             alignment: Alignment.center,
             child: ElevatedButton(
               style: ElevatedButton.styleFrom(
-                primary: Color.fromARGB(255, 10, 189, 234),
+                primary: Colors.green[500],
               ),
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => EditProfilePage(userModel: user),
+                  ),
+                );
+              },
               child: Text(
                 'Edit Profile',
                 style: TextStyle(fontSize: 20, color: Colors.white),
@@ -89,7 +131,7 @@ class ProfilePage extends StatelessWidget {
 
   _builderTextField(String labelText, String placeholder) {
     return Padding(
-      padding: const EdgeInsets.all(20),
+      padding: const EdgeInsets.only(left: 20, right: 20, top: 20),
       child: TextField(
         obscureText: false,
         decoration: InputDecoration(

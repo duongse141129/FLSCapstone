@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:scheduler_project/Semester/semester_page.dart';
 import 'package:scheduler_project/constants.dart';
-import 'package:scheduler_project/home/home_page.dart';
-import 'package:scheduler_project/screen/logged_screen.dart';
-import 'package:scheduler_project/subject/dropdown.dart';
-import 'package:scheduler_project/subject/subject_page.dart';
+import 'package:scheduler_project/test_drawer.dart';
 import 'package:scheduler_project/widgets/login.dart';
-
 import './screen/login_screen.dart';
 
 void main() {
@@ -23,8 +18,14 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: kPrimaryColor,
         scaffoldBackgroundColor: Colors.white,
+        dialogTheme: DialogTheme(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(24),
+          ),
+        ),
       ),
-      home: LoginScreen(),
+      home: LoginScreen(), //LoginScreen
       //initialRoute: LoginScreen.routeName,
       routes: {
         LoginScreen.routeName: (ctx) => LoginScreen(),
