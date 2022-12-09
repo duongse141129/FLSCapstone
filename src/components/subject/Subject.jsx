@@ -120,6 +120,14 @@ const Subject = ({ semesterId, semesterState }) => {
         progress: undefined, theme: "light",
       });
     }
+    else{
+      toast.error('Fail to update registered status', {
+        position: "top-right", autoClose: 3000,
+        hideProgressBar: false, closeOnClick: true,
+        pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
   }
 
   return (

@@ -12,6 +12,7 @@ import SlotType from './SlotType'
 import { ToastContainer, toast } from 'react-toastify';
 import SummarySubject from './SummarySubject'
 import ViewConfirm from './ViewConfirm'
+import Alert from '../../alert/Alert'
 
 const SemesterDetailAdmin = () => {
   const navigate = useNavigate();
@@ -25,6 +26,10 @@ const SemesterDetailAdmin = () => {
   const [slotTypes, setSlotTypes] = useState([]);
   const [checkAllConfirm, setCheckAllConfirm] = useState({});
   const [reCheckAll, setReCheckAll] = useState(false);
+  const [courseNumber, setCourseNumber] = useState(0);
+  const [isAlert, setIsAlert] = useState(false);
+  const [contentAlert, setContentAlert] = useState('');
+  const [reloadCourseNumber, setReloadCourseNumber] = useState(false);
 
   //set semester
   useEffect(() => {
@@ -75,6 +80,21 @@ const SemesterDetailAdmin = () => {
     }
   }, [id, reCheckAll])
 
+  //get course number
+  useEffect(() => {
+    setCourseNumber(0)
+    if(id){
+      request.get('Course', {
+        params: {SemesterId: id, sortBy: 'Id', order: 'Asc',
+          pageIndex: 1, pageSize: 1000}
+      }).then(res => {
+        if(res.data.length > 0){
+          setCourseNumber(res.data.length)
+        }
+      }).catch(err => {alert('Fail to get course number')})
+    }
+  }, [id, reloadCourseNumber])
+
   const backToSemester = () => {
     navigate('/admin/semester')
   }
@@ -83,13 +103,42 @@ const SemesterDetailAdmin = () => {
     if(semester.State === 6) return;
 
     setMode('next');
-    if(semester.State === 1) setContent('Next state is Voting. Lecturers can rate subjects, slots and send requests.')
+    if(semester.State === 1){
+      if(courseNumber === 0){
+        setContentAlert('The course number in this semester is 0. Please import or add courses to change to Voting state.')
+        setIsAlert(true)
+      }
+      else{
+        setContent('Next state is Voting. Lecturers can rate subjects, slots and send requests.')
+        setIsConfirm(true)
+      }
+    } 
     else if(semester.State === 2) setContent('Next state is Evaluating. Department Managers can evaluate subjects, courses and slots to Lecturers. ')
     else if(semester.State === 3) setContent('Next state is Blocked. All functions are blocked to begin generating schedule.')
-    else if(semester.State === 4) setContent('Next state is Adjusting. The schedule will be shown for Lecturers and Department Managers. The Managers can adjust the schedule.')
-    else setContent('Next state is Public. The schedule will be public and can not be edited.')
+    else if(semester.State === 4){
+      request.get('CourseAssign', {
+        params: {ScheduleId: schedule.Id ,isAssign: 0, 
+          pageIndex: 1, pageSize: 1000}
+      }).then(res => {
+        if(res.status === 200){
+          if(res.data.length > 0){
+            setContent('Next state is Adjusting. The schedule will be shown for Lecturers and Department Managers. The Managers can adjust the schedule.')
+            setIsConfirm(true);
+          }
+          else{
+            setContentAlert('Please send schedule from winform app before changing to Adjusting state.')
+            setIsAlert(true)
+          }
+        }
+      }).catch(err => {})
+    } 
+    else{
+      checkPublic();
+    } 
     
-    setIsConfirm(true);
+    if(semester.State !== 1 && semester.State !== 4 && semester.State !== 5){
+      setIsConfirm(true);
+    }
   }
 
   const clickPrevState = () => {
@@ -160,6 +209,25 @@ const SemesterDetailAdmin = () => {
         alert('Fail to return previous state')
         setIsConfirm(false)
       })
+  }
+
+  const checkPublic = async() => {
+    const resCheckCourse = await request.get(`CheckConstraint/CheckSemesterPublic/${id}`)
+    const checkCourse = resCheckCourse.data
+    if(checkAllConfirm.message && checkCourse.message){
+      if(checkAllConfirm.success === false){
+        setContentAlert('All department managers have not confirmed schedule yet.')
+        setIsAlert(true)
+      }
+      else if(checkCourse.success === false){
+        setContentAlert('Please check again about course constraint. All courses must be assigned and each lecturer can not have over max course number.')
+        setIsAlert(true)
+      }
+      else{
+        setContent('Next state is Public. The schedule will be public and can not be edited.')
+        setIsConfirm(true);
+      }
+    }
   }
 
   return (
@@ -236,7 +304,7 @@ const SemesterDetailAdmin = () => {
         </Stack>
       </Stack>
       {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id} 
-        slotTypes={slotTypes} semesterState={semester.State}/>}
+        slotTypes={slotTypes} semesterState={semester.State} setReloadCourseNumber={setReloadCourseNumber}/>}
       {selected === 'subjects' && <SummarySubject semesterId={id} scheduleId={schedule.Id}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} scheduleId={schedule.Id}/>}
@@ -244,6 +312,7 @@ const SemesterDetailAdmin = () => {
         setReCheckAll={setReCheckAll}/>}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} content={content} 
         mode={mode} saveNextState={saveNextState} savePrevState={savePrevState} />
+      <Alert isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
       <ToastContainer />
     </Stack>
   )

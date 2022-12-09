@@ -108,7 +108,15 @@ const ExternalSubject = ({ semesterId, semesterState }) => {
 
   const sendRequest = (status) => {
     if(status){
-      toast.success('Send Successfully!', {
+      toast.success('Send successfully', {
+        position: "top-right", autoClose: 3000,
+        hideProgressBar: false, closeOnClick: true,
+        pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
+    else{
+      toast.error('Fail to send request', {
         position: "top-right", autoClose: 3000,
         hideProgressBar: false, closeOnClick: true,
         pauseOnHover: true, draggable: true,

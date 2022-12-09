@@ -20,7 +20,7 @@ const MenuProps = {
   },
 };
 
-const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
+const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloadCourseNumber }) => {
   const fileInput = useRef(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -97,7 +97,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
 
   //get courses by selected subject
   useEffect(() => {
-    if (selectedSubject) {
+    if (selectedSubject && semesterId) {
       request.get('Course', {
         params: {
           SubjectId: selectedSubject === 'all' ? '' : selectedSubject, 
@@ -237,6 +237,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
   const handleAfterImport = (content) => {
     if(content) {
       setReload(prev => !prev)
+      setReloadCourseNumber(prev => !prev)
       toast.success(content, {
         position: "top-right", autoClose: 3000, hideProgressBar: false,
         closeOnClick: true, pauseOnHover: true, draggable: true,
@@ -262,6 +263,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState }) => {
     .then(res => {
       if(res.status === 200){
         setIsDelete(false)
+        setReloadCourseNumber(prev => !prev)
         setReload(prev => !prev)
         toast.success('Delete successfully', {
           position: "top-right", autoClose: 3000, hideProgressBar: false,

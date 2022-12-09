@@ -64,7 +64,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
           }
         })
         .catch(err => {
-          alert('Fail to rate!')
+          setError('Fail to save new point')
           setIsLoading(false)
         })
     }

@@ -43,7 +43,7 @@ const ViewConfirm = ({semesterId, checkAllConfirm, setReCheckAll}) => {
           setIsSet(false)
           setReload(pre => !pre)
           setReCheckAll(pre => !pre)
-          toast.success('Success to change next state!', {
+          toast.success('Set confirmation successfully', {
             position: "top-right", autoClose: 3000, 
             hideProgressBar: false, closeOnClick: true,
             pauseOnHover: true, draggable: true, 

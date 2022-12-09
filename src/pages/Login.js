@@ -38,13 +38,13 @@ const Login = () => {
           }
         })
         .catch(err => {
+          signOut();
           if(err?.response?.data?.status === 404){
             setError('This email can not be signed in.')
           }
           else{
             setError('Fail to sign in.')
           }
-          signOut();
           setIsLoading(false)
         })
     }

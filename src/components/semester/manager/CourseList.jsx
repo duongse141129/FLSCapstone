@@ -69,7 +69,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
 
   //get courses by selected subject
   useEffect(() => {
-    if (selectedSubject) {
+    if (selectedSubject && semesterId) {
       setLoadCourse(true)
       request.get('Course', {
         params: {

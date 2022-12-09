@@ -1,6 +1,6 @@
 import { Beenhere, ManageAccountsOutlined, Check, MoreHoriz } from '@mui/icons-material'
 import { Box, Button, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
-import { green, grey } from '@mui/material/colors';
+import { green, grey, red } from '@mui/material/colors';
 import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import request from '../../../utils/request';
@@ -100,7 +100,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
         }
       }).catch(err => {alert('Fail to get min max course of lecturer')})
     }
-  }, [semester.Id])
+  }, [semester.Id, isSelected])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -178,7 +178,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
         </Stack>
         {!admin && semester.State === 5 && myCourseGroup.Id &&
          ( myCourseGroup.GroupName === 'confirm' ? 
-          <Typography>Schedules have been confirmed</Typography>:
+          <Typography color={red[600]} fontWeight={500}>Schedules have been confirmed</Typography>:
           <Button variant='contained' size='small' color='error' onClick={clickConfirm}>
             Confirm Schedule</Button>)}
       </Stack>
@@ -192,9 +192,10 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
                   <TableCell className='subject-header'>Name</TableCell>
                   <TableCell className='subject-header'>Email</TableCell>
                   <TableCell className='subject-header' align='center'>FullTime</TableCell>
-                  {!admin && account.DepartmentId === selectedDepartment && 
-                  <TableCell className='subject-header' align='center'>
-                    Assigned Courses</TableCell>}
+                  {(admin || account.DepartmentId === selectedDepartment) && 
+                    (semester.State === 5 || semester.State === 6) &&
+                    <TableCell className='subject-header' align='center'>
+                      Assigned Courses</TableCell>}
                   <TableCell className='subject-header' align='center'>More</TableCell>
                 </TableRow>
               </TableHead>
@@ -218,7 +219,8 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
                       <TableCell align='center'>
                         {lecturer.IsFullTime === 1 && <Check />}
                       </TableCell>
-                      {!admin && account.DepartmentId === selectedDepartment && 
+                      {(admin || account.DepartmentId === selectedDepartment) && 
+                        (semester.State === 5 || semester.State === 6)  && 
                       <TableCell align='center'>
                         {assignCourses.filter(course => course.LecturerId === lecturer.Id).length} {' '}
                         ({lecCourseGroups.find(group => group.LecturerId === lecturer.Id)?.MinCourse} {'-'}
@@ -252,7 +254,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
         </Paper>
         <ConfirmSchedule isConfirm={isConfirm} setIsConfirm={setIsConfirm} 
           myCourseGroup={myCourseGroup} afterConfirm={afterConfirm}/>
-        <ToastContainer/>
+        {isSelected === false && <ToastContainer/>}
       </Stack>
     </>
   )
