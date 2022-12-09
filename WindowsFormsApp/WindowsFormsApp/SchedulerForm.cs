@@ -678,7 +678,7 @@ namespace WindowsFormsApp
                 schedulePointLabel.Invoke(new MethodInvoker(() =>
                 {
 
-                    schedulePointLabel.Text = newSchedule.totalAveragePoint + " / 10";
+                    schedulePointLabel.Text = newSchedule.totalAveragePoint + " / 10";                  
                 }));
 
 

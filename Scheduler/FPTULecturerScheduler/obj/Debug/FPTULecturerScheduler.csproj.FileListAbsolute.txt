@@ -1,6 +1,0 @@
-C:\Users\84393\Desktop\Scheduler\FPTULecturerScheduler\bin\Debug\FPTULecturerScheduler.dll
-C:\Users\84393\Desktop\Scheduler\FPTULecturerScheduler\bin\Debug\FPTULecturerScheduler.pdb
-C:\Users\84393\Desktop\Scheduler\FPTULecturerScheduler\obj\Debug\FPTULecturerScheduler.csproj.AssemblyReference.cache
-C:\Users\84393\Desktop\Scheduler\FPTULecturerScheduler\obj\Debug\FPTULecturerScheduler.csproj.CoreCompileInputs.cache
-C:\Users\84393\Desktop\Scheduler\FPTULecturerScheduler\obj\Debug\FPTULecturerScheduler.dll
-C:\Users\84393\Desktop\Scheduler\FPTULecturerScheduler\obj\Debug\FPTULecturerScheduler.pdb
