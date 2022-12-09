@@ -6,11 +6,12 @@ import { toast } from 'react-toastify'
 import request from '../../../utils/request'
 import ViewConfirmModal from './ViewConfirmModal'
 
-const ViewConfirm = ({semesterId, checkAllConfirm, setReCheckAll}) => {
+const ViewConfirm = ({semesterId}) => {
   const [managers, setManagers] = useState([])
   const [lecGroups, setLecGroups] = useState([])
   const [isSet, setIsSet] = useState(false)
   const [reload, setReload] = useState(false)
+  const [checkAllConfirm, setCheckAllConfirm] = useState({});
 
   useEffect(() => {
     request.get('User', {
@@ -22,6 +23,19 @@ const ViewConfirm = ({semesterId, checkAllConfirm, setReCheckAll}) => {
       }
     }).catch(err => {alert('Fail to get managers')})
   }, [])
+
+  //check all manager confirmed
+  useEffect(() => {
+    if(semesterId){
+      request.get(`CheckConstraint/CheckAllDepartmentManagerConfirm/${semesterId}`)
+      .then(res => {
+        if(res.data){
+          setCheckAllConfirm(res.data)
+        }
+      })
+      .catch(err => {alert('Fail to check managers confirmed')})
+    }
+  }, [semesterId, reload])
 
   useEffect(() => {
     if(semesterId){
@@ -42,7 +56,6 @@ const ViewConfirm = ({semesterId, checkAllConfirm, setReCheckAll}) => {
         if(res.status === 200){
           setIsSet(false)
           setReload(pre => !pre)
-          setReCheckAll(pre => !pre)
           toast.success('Set confirmation successfully', {
             position: "top-right", autoClose: 3000, 
             hideProgressBar: false, closeOnClick: true,

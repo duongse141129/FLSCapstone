@@ -24,8 +24,6 @@ const SemesterDetailAdmin = () => {
   const [mode, setMode] = useState('');
   const [schedule, setSchedule] = useState({});
   const [slotTypes, setSlotTypes] = useState([]);
-  const [checkAllConfirm, setCheckAllConfirm] = useState({});
-  const [reCheckAll, setReCheckAll] = useState(false);
   const [courseNumber, setCourseNumber] = useState(0);
   const [isAlert, setIsAlert] = useState(false);
   const [contentAlert, setContentAlert] = useState('');
@@ -66,19 +64,6 @@ const SemesterDetailAdmin = () => {
       if (res.data) setSlotTypes(res.data);
     }).catch(err => alert('Fail to load slottype'))
   }, [id])
-
-  //check all manager confirmed
-  useEffect(() => {
-    if(id){
-      request.get(`CheckConstraint/CheckAllDepartmentManagerConfirm/${id}`)
-      .then(res => {
-        if(res.data){
-          setCheckAllConfirm(res.data)
-        }
-      })
-      .catch(err => {alert('Fail to check managers confirmed')})
-    }
-  }, [id, reCheckAll])
 
   //get course number
   useEffect(() => {
@@ -214,6 +199,8 @@ const SemesterDetailAdmin = () => {
   const checkPublic = async() => {
     const resCheckCourse = await request.get(`CheckConstraint/CheckSemesterPublic/${id}`)
     const checkCourse = resCheckCourse.data
+    const resCheckAllConfirm = await request.get(`CheckConstraint/CheckAllDepartmentManagerConfirm/${id}`)
+    const checkAllConfirm = resCheckAllConfirm.data
     if(checkAllConfirm.message && checkCourse.message){
       if(checkAllConfirm.success === false){
         setContentAlert('All department managers have not confirmed schedule yet.')
@@ -308,8 +295,7 @@ const SemesterDetailAdmin = () => {
       {selected === 'subjects' && <SummarySubject semesterId={id} scheduleId={schedule.Id}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} scheduleId={schedule.Id}/>}
-      {selected === 'confirm' && <ViewConfirm semesterId={id} checkAllConfirm={checkAllConfirm}
-        setReCheckAll={setReCheckAll}/>}
+      {selected === 'confirm' && <ViewConfirm semesterId={id} />}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} content={content} 
         mode={mode} saveNextState={saveNextState} savePrevState={savePrevState} />
       <Alert isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
