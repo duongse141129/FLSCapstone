@@ -33,6 +33,36 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
     }
     return [];
   }, [selectedCourse, assignedCourses])
+  const [subjectOfLecs, setSubjectOfLecs] = useState([]);
+  const renderLecs = useMemo(() => {
+    if(subjectOfLecs.length > 0 && lecturers.length > 0){
+      let external = lecturers
+      let internal = lecturers
+      for(let i in subjectOfLecs){
+        external = external.filter(item => item.Id !== subjectOfLecs[i].LecturerId)
+      }
+      for(let i in external){
+        internal = internal.filter(item => item.Id !== external[i].Id)
+      }
+      return internal 
+    }
+    return []
+  }, [subjectOfLecs, lecturers])
+
+  // get lecturers registered subject of selected course
+  useEffect(() => {
+    if(selectedCourse && semesterId){
+      const subjectId = selectedCourse.split('_')[0]
+      request.get('SubjectOfLecturer', {
+        params: {SemesterId: semesterId, SubjectId: subjectId, isEnable: 1, 
+          pageIndex: 1, pageSize: 100}
+      }).then(res => {
+        if(res.status === 200){
+          setSubjectOfLecs(res.data);
+        }
+      }).catch(err => {alert('Fail to get lecturers who registered the subject of this course')})
+    }
+  }, [selectedCourse, semesterId])
 
   //get departments by group
   useEffect(() => {
@@ -227,7 +257,10 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
             </Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
               {loadLecturer && <Stack px={2} py={1}><ClipLoader size={30} color={green[700]}/></Stack>}
-              {!loadLecturer && lecturers.map(lecturer => (
+              {!loadLecturer && renderLecs.length === 0 && 
+                <Typography px={2} py={1} color={red[600]}>
+                  No lecturers registered this subject of course</Typography>}
+              {!loadLecturer && renderLecs.map(lecturer => (
                 <Typography key={lecturer.Id} px={2} py={1} borderBottom='1px solid #e3e3e3'
                   bgcolor={JSON.stringify(selectedLecturer) === JSON.stringify(lecturer) && green[300]}
                   sx={{
