@@ -208,7 +208,7 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup 
                   <TableCell size='small' className='subject-header'>Slot</TableCell>
                   {semester.State === 3 && !admin && 
                   <TableCell size='small' className='subject-header'>
-                    Delete</TableCell>}
+                    Option</TableCell>}
                 </TableRow>
               </TableHead>
               <TableBody>

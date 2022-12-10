@@ -17,7 +17,7 @@ const RegisteredSubject = ({ semesterId }) => {
       setLoad(true)
       request.get('SubjectOfLecturer', {
         params: {SemesterId: semesterId, LecturerId: account.Id, isEnable: 1, 
-          pageIndex:1, pageSize:100}
+          sortBy: 'SubjectId', order: 'Asc', pageIndex:1, pageSize:100}
       }).then(res => {
         if(res.data.length > 0){
           setRegisSubs(res.data)

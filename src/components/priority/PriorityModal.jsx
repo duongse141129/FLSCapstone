@@ -2,7 +2,7 @@ import { Box, Button, Dialog, DialogActions, DialogContent, DialogTitle,
   MenuItem, Select, Stack, TextField, Typography
 } from '@mui/material';
 import { Try } from '@mui/icons-material';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { green, red } from '@mui/material/colors';
 import request from '../../utils/request';
 import { ClipLoader } from 'react-spinners';
@@ -17,6 +17,35 @@ const PriorityModal = ({ isPriority, setIsPriority, lecturer, semesterId, course
   const [assignCourses, setAssignCourses] = useState([]);
   const [external, setExternal] = useState(false);
   const [loadCourse, setLoadCourse] = useState(false);
+  const [subjectOfLecs, setSubjectOfLecs] = useState([]);
+  const renderSubjects = useMemo(() => {
+    if(listSubject.length > 0 && subjectOfLecs.length >0){
+      let different = listSubject;
+      let similar = listSubject;
+      for(let i in subjectOfLecs){
+        different = different.filter(item => item.Id !== subjectOfLecs[i].SubjectId)
+      }
+      for(let i in different){
+        similar = similar.filter(item => item.Id !== different[i].Id)
+      }
+      return similar
+    }
+    return []
+  }, [listSubject, subjectOfLecs])
+
+  //get registered subjects of lecturer
+  useEffect(() => {
+    if(semesterId && lecturer.Id){
+      request.get('SubjectOfLecturer', {
+        params: {SemesterId: semesterId, LecturerId: lecturer.Id, isEnable: 1, 
+          pageIndex:1, pageSize:100}
+      }).then(res => {
+        if(res.data.length > 0){
+          setSubjectOfLecs(res.data)
+        }
+      }).catch(err => {alert('Fail to get registered subjects');})
+    }
+  }, [semesterId, lecturer.Id])
 
   //set priority for lecturer outside department
   useEffect(() => {
@@ -134,12 +163,8 @@ const PriorityModal = ({ isPriority, setIsPriority, lecturer, semesterId, course
   }
 
   return (
-    <Dialog
-      maxWidth='md'
-      fullWidth={true}
-      open={isPriority}
-      onClose={() => setIsPriority(false)}
-    >
+    <Dialog maxWidth='md' fullWidth={true}
+      open={isPriority} onClose={() => setIsPriority(false)}>
       <DialogTitle>
         <Stack direction='row' alignItems='center' gap={1}>
           <Try />
@@ -178,21 +203,21 @@ const PriorityModal = ({ isPriority, setIsPriority, lecturer, semesterId, course
                 value={searchValue} onChange={(e) => handleSearch(e.target.value)} />
             </Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
-              {
-                listSubject.filter(subject => subject.Id.toLowerCase().includes(searchValue) || subject.SubjectName.toLowerCase().includes(searchValue))
-                  .map(subject => (
-                    <Typography key={subject.Id} p={1} fontSize='15px'
-                      borderBottom='1px solid #e3e3e3' bgcolor={subject.Id === selectedSubject && green[300]}
-                      sx={{
-                        transition: 'all 0.1s linear',
-                        '&:hover': { cursor: 'pointer', bgcolor: green[300] }
-                      }}
-                      onClick={() => selectSubject(subject.Id)}
-                    >
-                      <span style={{ fontWeight: 500 }}>{subject.Id}</span> - {subject.SubjectName}
-                    </Typography>
-                  ))
-              }
+              {renderSubjects.length === 0 && 
+                <Typography p={1} color={red[600]}>No registerd subjects</Typography>}
+              {renderSubjects.filter(subject => subject.Id.toLowerCase().includes(searchValue) || subject.SubjectName.toLowerCase().includes(searchValue))
+                .map(subject => (
+                  <Typography key={subject.Id} p={1} fontSize='15px'
+                    borderBottom='1px solid #e3e3e3' bgcolor={subject.Id === selectedSubject && green[300]}
+                    sx={{
+                      transition: 'all 0.1s linear',
+                      '&:hover': { cursor: 'pointer', bgcolor: green[300] }
+                    }}
+                    onClick={() => selectSubject(subject.Id)}
+                  >
+                    <span style={{ fontWeight: 500 }}>{subject.Id}</span> - {subject.SubjectName}
+                  </Typography>
+                ))}
             </Box>
           </Stack>
           <Stack flex={1}>

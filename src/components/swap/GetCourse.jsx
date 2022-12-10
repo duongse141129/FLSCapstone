@@ -4,7 +4,8 @@ import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useMemo, useState } from 'react';
 import request from '../../utils/request';
 import GetCourseModal from './GetCourseModal';
-import { grey } from '@mui/material/colors';
+import { green, grey } from '@mui/material/colors';
+import { ClipLoader} from 'react-spinners';
 
 const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
@@ -25,6 +26,7 @@ const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
     }
     return []
   }, [slots, myAssignCourses])
+  const [load, setLoad] = useState(false);
 
   //get scheduleId
   useEffect(() => {
@@ -56,6 +58,7 @@ const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
 
   //get slot type and filter with lecturer's courses to find empty slot
   useEffect(() => {
+    setLoad(true)
     if(semesterId){
       request.get('SlotType', {
         params: {SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', 
@@ -63,8 +66,9 @@ const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
       }).then(res => {
         if(res.data.length > 0){
           setSlots(res.data)
+          setLoad(false)
         }
-      }).catch(err => {alert('Fail to get empty slots')})
+      }).catch(err => {alert('Fail to get empty slots'); setLoad(false)})
     }
   }, [semesterId])
 
@@ -105,7 +109,9 @@ const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
       <Typography variant='subtitle1' color={grey[500]} mb={1}>
         *Add course into empty slots.The course will be taken from other internal lecturers.
       </Typography>
-      <Typography fontWeight={500}>Empty Slots</Typography>
+      {load && <ClipLoader color={green[600]} size={30}/>}
+      {!load && 
+      <><Typography fontWeight={500}>Empty Slots</Typography>
       <Paper sx={{ minWidth: 700, mb: 2 }}>
         <TableContainer component={Box}>
           <Table size='small'>
@@ -132,7 +138,7 @@ const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
             </TableBody>
           </Table>
         </TableContainer>
-      </Paper>
+      </Paper></>}
       <GetCourseModal isGet={isGet} setIsGet={setIsGet} insideLecs={lecturers} 
         pickedSlot={pickedSlot} scheduleId={scheduleId} lecturer={lecturer} afterGet={afterGet}/>
       <ToastContainer/></>}

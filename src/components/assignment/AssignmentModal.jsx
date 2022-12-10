@@ -3,7 +3,7 @@ import {
   Stack, TextField, Typography
 } from '@mui/material';
 import { Assignment } from '@mui/icons-material';
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { green, red } from '@mui/material/colors';
 import request from '../../utils/request';
 import { ClipLoader } from 'react-spinners';
@@ -15,10 +15,52 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
   const [assignCourses, setAssignCourses] = useState([]);
   const [slots, setSlots] = useState([]);
   const [searchValue, setSearchValue] = useState('');
-  const [courseTime, setCourseTime] = useState([]);
   const [disableSlots, setDisableSlots] = useState([]);
   const [loadCourse, setLoadCourse] = useState(false);
   const [loadSlot, setLoadSlot] = useState(false);
+  const courseTime = useMemo(() => {
+    if (selectedCourse && allFixCourses.length > 0) {
+      let time = [];
+      for (let i in allFixCourses) {
+        const obj = allFixCourses[i];
+        const classId = obj?.CourseId?.split('_')[1];
+        if (classId === selectedCourse.split('_')[1]) {
+          time.push(obj.SlotTypeId);
+        }
+      }
+      return time
+    }
+    return []
+  }, [selectedCourse, allFixCourses])
+  const [subjectOfLecs, setSubjectOfLecs] = useState([]);
+  const renderSubjects = useMemo(() => {
+    if(listSubject.length > 0 && subjectOfLecs.length >0){
+      let different = listSubject;
+      let similar = listSubject;
+      for(let i in subjectOfLecs){
+        different = different.filter(item => item.Id !== subjectOfLecs[i].SubjectId)
+      }
+      for(let i in different){
+        similar = similar.filter(item => item.Id !== different[i].Id)
+      }
+      return similar
+    }
+    return []
+  }, [listSubject, subjectOfLecs])
+
+  //get registered subjects of lecturer
+  useEffect(() => {
+    if(semesterId && lecturer.Id){
+      request.get('SubjectOfLecturer', {
+        params: {SemesterId: semesterId, LecturerId: lecturer.Id, isEnable: 1, 
+          pageIndex:1, pageSize:100}
+      }).then(res => {
+        if(res.data.length > 0){
+          setSubjectOfLecs(res.data)
+        }
+      }).catch(err => {alert('Fail to get registered subjects');})
+    }
+  }, [semesterId, lecturer.Id])
 
   //get course by selected subject and filter all already assigned courses
   useEffect(() => {
@@ -29,39 +71,22 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
           SubjectId: selectedSubject, SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
           pageIndex: 1, pageSize: 500
         }
-      })
-        .then(res => {
-          if (res.data) {
-            let dataCourse = res.data
-            for (let i in allFixCourses) {
-              const obj = allFixCourses[i]
-              dataCourse = dataCourse.filter(data => data.Id !== obj.CourseId)
-            }
-            setAssignCourses(dataCourse)
-            setLoadCourse(false);
+      }).then(res => {
+        if (res.data) {
+          let dataCourse = res.data
+          for (let i in allFixCourses) {
+            const obj = allFixCourses[i]
+            dataCourse = dataCourse.filter(data => data.Id !== obj.CourseId)
           }
-        })
-        .catch(err => {
-          alert('Fail to load course by subject')
-          setLoadCourse(false)
-        })
+          setAssignCourses(dataCourse)
+          setLoadCourse(false);
+        }
+      }).catch(err => {
+        alert('Fail to load course by subject')
+        setLoadCourse(false)
+      })
     }
   }, [selectedSubject, semesterId, allFixCourses])
-
-  //filter slot by class
-  useEffect(() => {
-    if (selectedCourse && allFixCourses.length > 0) {
-      let time = [];
-      for (let i in allFixCourses) {
-        const obj = allFixCourses[i];
-        const classId = obj?.CourseId?.split('_')[1];
-        if (classId === selectedCourse.split('_')[1]) {
-          time.push(obj.SlotTypeId);
-        }
-      }
-      setCourseTime(time)
-    }
-  }, [selectedCourse, allFixCourses])
 
   //get slots are disable
   useEffect(() => {
@@ -157,12 +182,8 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
   }
 
   return (
-    <Dialog
-      maxWidth='md'
-      fullWidth={true}
-      open={isAssign}
-      onClose={() => setIsAssign(false)}
-    >
+    <Dialog maxWidth='md' fullWidth={true}
+      open={isAssign} onClose={() => setIsAssign(false)}>
       <DialogTitle>
         <Stack direction='row' alignItems='center' gap={1}>
           <Assignment />
@@ -199,9 +220,10 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
                 value={searchValue} onChange={(e) => handleSearch(e.target.value)} />
             </Stack>
             <Box flex={9} border='1px solid gray' overflow='auto'>
-              {
-                listSubject.filter(subject => subject.Id.toLowerCase().includes(searchValue) ||
-                        subject.SubjectName.toLowerCase().includes(searchValue))
+              {renderSubjects.length === 0 && 
+                <Typography p={1} color={red[600]}>No registerd subjects</Typography>}
+              {renderSubjects.filter(subject => subject.Id.toLowerCase().includes(searchValue) ||
+                subject.SubjectName.toLowerCase().includes(searchValue))
                 .map(subject => (
                   <Typography key={subject.Id} p={1} fontSize='15px'
                     borderBottom='1px solid #e3e3e3' bgcolor={subject.Id === selectedSubject && green[300]}
@@ -216,8 +238,7 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
                   >
                     <span style={{ fontWeight: 500 }}>{subject.Id}</span> - {subject.SubjectName}
                   </Typography>
-                ))
-              }
+              ))}
             </Box>
           </Stack>
           <Stack flex={1}>

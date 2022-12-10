@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import request from '../../../utils/request'
 import ViewConfirmModal from './ViewConfirmModal'
 
-const ViewConfirm = ({semesterId}) => {
+const ViewConfirm = ({semesterId, semesterState}) => {
   const [managers, setManagers] = useState([])
   const [lecGroups, setLecGroups] = useState([])
   const [isSet, setIsSet] = useState(false)
@@ -70,6 +70,7 @@ const ViewConfirm = ({semesterId}) => {
 
   return (
     <Stack height='90vh' px={9}>
+      {semesterState === 5 && <>
       <Stack mb={1} direction='row' justifyContent='space-between'>
         <Typography fontWeight={500}>Managers of each Department</Typography>
         {checkAllConfirm.success === false && 
@@ -108,6 +109,7 @@ const ViewConfirm = ({semesterId}) => {
         </TableContainer>
       </Paper>
       <ViewConfirmModal isSet={isSet} setIsSet={setIsSet} handleSetAll={setAllConfirmed}/>
+      </>}
     </Stack>
   )
 }

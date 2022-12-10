@@ -30,13 +30,21 @@ const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
   }, [lecturer.Id, semesterId, reload])
 
   const handleChangeMin = (e) => {
-    setErrorMin('');
+    setErrorMin('')
     const value = e.target.value
     if(value === '') setMin('')
     else setMin(Number(value))
 
+    if(lecturer.IsFullTime === 1 && value < 5){
+      setErrorMin('Fulltime Lecturer must have min at least 5')
+    } 
+
     if(Number(value) <= 0) setErrorMin('Min must be greater than 0')
-    else if(Number(value) >= max) setErrorMin('Min must be less than Max') 
+    else if(Number(value) > max) setErrorMin('Min must be less than or equal Max')
+    
+    if(max >= value && max <= 12 && max > 0){
+      setErrorMax('')
+    }
   }
 
   const handleChangeMax = (e) => {
@@ -45,8 +53,15 @@ const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
     if(value === '') setMax('')
     else setMax(Number(value))
 
-    if(Number(value) <= min) setErrorMax('Max must be greater than Min')
+    if(Number(value) < min) setErrorMax('Max must be greater than or equal Min')
     else if(Number(value) > 12) setErrorMax('Maximum is 12')
+
+    if(lecturer.IsFullTime === 1){
+      if(min >= 5 && min <= value && min > 0) setErrorMin('')
+    }
+    else{
+      if(min <= value && min > 0) setErrorMin('')
+    }
   }
 
   const handleSave = () => {

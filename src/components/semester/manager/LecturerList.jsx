@@ -5,6 +5,7 @@ import React, { useState, useEffect } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import request from '../../../utils/request';
 import ConfirmSchedule from './ConfirmSchedule';
+import Alert from '../../alert/Alert';
 
 const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, myCourseGroup, setReloadConfirm }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
@@ -16,6 +17,8 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
   const [assignCourses, setAssignCourses] = useState([]);
   const [lecCourseGroups, setLecCourseGroups] = useState([]);
   const [isConfirm, setIsConfirm] = useState(false);
+  const [isAlert, setIsAlert] = useState(false);
+  const [contentAlert, setContentAlert] = useState('');
 
   //get departments
   useEffect(() => {
@@ -143,7 +146,20 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
   // }
 
   const clickConfirm = () => {
-    setIsConfirm(true);
+    request.get(`CheckConstraint/CheckCourseOflecrurerInDepartment/${account.DepartmentId}&${semester.Id}`)
+    .then(res => {
+      if(res.data){
+        const resCheck = res.data
+        if(resCheck.success === true){
+          setIsConfirm(true);
+        }
+        else{
+          setContentAlert('Please check again about course number.')
+          setIsAlert(true);
+        }
+      }
+    })
+    .catch(err => {alert('Fail to check course number')}) 
   }
 
   const afterConfirm = (status) => {
@@ -223,7 +239,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
                         (semester.State === 5 || semester.State === 6)  && 
                       <TableCell align='center'>
                         {assignCourses.filter(course => course.LecturerId === lecturer.Id).length} {' '}
-                        ({lecCourseGroups.find(group => group.LecturerId === lecturer.Id)?.MinCourse} {'-'}
+                        ({lecCourseGroups.find(group => group.LecturerId === lecturer.Id)?.MinCourse}{'-'}
                         {lecCourseGroups.find(group => group.LecturerId === lecturer.Id)?.MaxCourse})
                         {/* {checkMinMaxCourse(lecturer.Id) ? 'true' : 'false'} */}
                       </TableCell>}
@@ -254,7 +270,8 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
         </Paper>
         <ConfirmSchedule isConfirm={isConfirm} setIsConfirm={setIsConfirm} 
           myCourseGroup={myCourseGroup} afterConfirm={afterConfirm}/>
-        {isSelected === false && <ToastContainer/>}
+        <Alert isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
+        {!admin && isSelected === false && <ToastContainer/>}
       </Stack>
     </>
   )

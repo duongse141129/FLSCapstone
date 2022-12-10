@@ -197,23 +197,27 @@ const SemesterDetailAdmin = () => {
   }
 
   const checkPublic = async() => {
-    const resCheckCourse = await request.get(`CheckConstraint/CheckSemesterPublic/${id}`)
-    const checkCourse = resCheckCourse.data
-    const resCheckAllConfirm = await request.get(`CheckConstraint/CheckAllDepartmentManagerConfirm/${id}`)
-    const checkAllConfirm = resCheckAllConfirm.data
-    if(checkAllConfirm.message && checkCourse.message){
-      if(checkAllConfirm.success === false){
-        setContentAlert('All department managers have not confirmed schedule yet.')
-        setIsAlert(true)
+    try{
+      const resCheckCourse = await request.get(`CheckConstraint/CheckSemesterPublic/${id}`)
+      const checkCourse = resCheckCourse.data
+      const resCheckAllConfirm = await request.get(`CheckConstraint/CheckAllDepartmentManagerConfirm/${id}`)
+      const checkAllConfirm = resCheckAllConfirm.data
+      if (checkAllConfirm.message && checkCourse.message) {
+        if (checkAllConfirm.success === false) {
+          setContentAlert('All department managers have not confirmed schedule yet.')
+          setIsAlert(true)
+        }
+        else if (checkCourse.success === false) {
+          setContentAlert('Please check again about course constraint.')
+          setIsAlert(true)
+        }
+        else {
+          setContent('Next state is Public. The schedule will be public and can not be edited.')
+          setIsConfirm(true);
+        }
       }
-      else if(checkCourse.success === false){
-        setContentAlert('Please check again about course constraint. All courses must be assigned and each lecturer can not have over max course number.')
-        setIsAlert(true)
-      }
-      else{
-        setContent('Next state is Public. The schedule will be public and can not be edited.')
-        setIsConfirm(true);
-      }
+    }catch(err){
+
     }
   }
 
@@ -295,7 +299,7 @@ const SemesterDetailAdmin = () => {
       {selected === 'subjects' && <SummarySubject semesterId={id} scheduleId={schedule.Id}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} scheduleId={schedule.Id}/>}
-      {selected === 'confirm' && <ViewConfirm semesterId={id} />}
+      {selected === 'confirm' && <ViewConfirm semesterId={id} semesterState={semester.State}/>}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} content={content} 
         mode={mode} saveNextState={saveNextState} savePrevState={savePrevState} />
       <Alert isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
