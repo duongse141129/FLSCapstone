@@ -1,18 +1,15 @@
-import { ArrowBackIosNew, Check, HorizontalRule } from '@mui/icons-material'
+import { ArrowBackIosNew, Check, HorizontalRule, Refresh } from '@mui/icons-material'
 import { Button, IconButton, Stack, Tooltip, Typography } from '@mui/material'
 import { blue, green, grey } from '@mui/material/colors'
-import { useEffect, useState } from 'react'
+import { ToastContainer, toast } from 'react-toastify';
 import { useNavigate, useParams } from 'react-router-dom'
-import request from '../../../utils/request'
+import { useEffect, useState } from 'react'
+import {ConfirmModal, CourseList, SlotType, SummarySubject, 
+  ViewConfirm} from '../admin'
 import Title from '../../title/Title'
 import LecturerContainer from '../manager/LecturerContainer'
-import ConfirmModal from './ConfirmModal'
-import CourseList from './CourseList'
-import SlotType from './SlotType'
-import { ToastContainer, toast } from 'react-toastify';
-import SummarySubject from './SummarySubject'
-import ViewConfirm from './ViewConfirm'
 import Alert from '../../alert/Alert'
+import request from '../../../utils/request'
 import {openVoting, openEvaluating, openBlocked, openAdjusting, openPublic} from '../../../utils/sendEmail'
 
 const SemesterDetailAdmin = () => {
@@ -29,6 +26,7 @@ const SemesterDetailAdmin = () => {
   const [isAlert, setIsAlert] = useState(false);
   const [contentAlert, setContentAlert] = useState('');
   const [reloadCourseNumber, setReloadCourseNumber] = useState(false);
+  const [refresh, setRefresh] = useState(false)
 
   //set semester
   useEffect(() => {
@@ -41,7 +39,7 @@ const SemesterDetailAdmin = () => {
       .catch(err => {
         alert('Fail to load semester')
       })
-  }, [id, isConfirm])
+  }, [id, isConfirm, refresh])
 
   //set schedule
   useEffect(() => {
@@ -246,14 +244,21 @@ const SemesterDetailAdmin = () => {
               <ArrowBackIosNew />
             </IconButton>
           </Tooltip>
-          <Title title={`Semester: ${semester.Term}`} />
+          <Stack direction='row' alignItems='center' gap={1}>
+            <Title title={`Semester: ${semester.Term}`} />
+            <span>|</span>
+            <Tooltip title='refresh' placement='top' arrow>
+              <IconButton size='small' onClick={() => setRefresh(pre => !pre)}>
+                <Refresh/></IconButton>
+            </Tooltip>
+          </Stack>
         </Stack>
         <Stack pr={9} direction='row' gap={1}>
           {semester.State !== 1 && 
             <Button variant='outlined' color='info' size='small' onClick={clickPrevState}>
             Previous State</Button>}
           {semester.State !== 6 && 
-            <Button variant='contained' color='success' size='small' onClick={clickNextState}>
+            <Button variant='contained' color='error' size='small' onClick={clickNextState}>
             Next State</Button>}
         </Stack>
       </Stack>

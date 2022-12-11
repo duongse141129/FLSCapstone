@@ -29,11 +29,11 @@ const ConfirmModal = ({isConfirm, setIsConfirm, content, mode, saveNextState, sa
       </DialogContent>
       <DialogActions>
         <Button onClick={() => setIsConfirm(false)} color='info' variant='outlined'>Cancel</Button>
-        {loading && <Button color='success' variant='contained'>
+        {loading && <Button color='error' variant='contained'>
           <ClipLoader size={24} color='white'/>  
         </Button>}
-        {!loading && <Button color='success' variant='contained' onClick={clickOK} autoFocus>
-          Accept
+        {!loading && <Button color='error' variant='contained' onClick={clickOK} autoFocus>
+          Change
         </Button>}
       </DialogActions>
     </Dialog>

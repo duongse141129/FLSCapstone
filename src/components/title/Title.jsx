@@ -5,10 +5,10 @@ const Title = ({title, subTitle}) => {
   return (
     <Stack>
       <Typography variant='h5' color='#778899' fontWeight={500}>
-        {title}
+        {title ? title : ''}
       </Typography>
       <Typography color='gray' variant='subtitle1'>
-        {subTitle}
+        {subTitle ? subTitle : ''}
       </Typography>
     </Stack>
   )

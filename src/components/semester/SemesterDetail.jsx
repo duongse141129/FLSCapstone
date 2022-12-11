@@ -1,5 +1,5 @@
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
-import { ArrowBackIosNew, Check, HorizontalRule } from '@mui/icons-material';
+import { ArrowBackIosNew, Check, HorizontalRule, Refresh } from '@mui/icons-material';
 import React from 'react';
 import { useState, useEffect } from 'react';
 import SlotType from './SlotType';
@@ -15,6 +15,7 @@ const SemesterDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [semester, setSemester] = useState({});
+  const [refresh, setRefresh] = useState(false)
 
   //get semester by id
   useEffect(() => {
@@ -27,7 +28,7 @@ const SemesterDetail = () => {
       .catch(err => {
         alert('Fail to load Semester Detail!')
       })
-  }, [id])
+  }, [id, refresh])
 
   const backToSemester = () => {
     navigate('/lecturer/semester')
@@ -35,14 +36,21 @@ const SemesterDetail = () => {
 
   return (
     <Stack flex={5} height='90vh' overflow='auto'>
-      <Stack direction='row' alignItems='center' justifyContent='space-between' mt={1}>
+      <Stack direction='row' justifyContent='space-between' mt={1}>
         <Stack direction='row' alignItems='center' gap={4}>
           <Tooltip title='Back to Semester' arrow>
             <IconButton onClick={backToSemester}>
               <ArrowBackIosNew />
             </IconButton>
           </Tooltip>
-          <Title title={`Semester: ${semester.Term}`} />
+          <Stack direction='row' alignItems='center' gap={1}>
+            <Title title={`Semester: ${semester.Term}`} />
+            <span>|</span>
+            <Tooltip title='refresh' placement='top' arrow>
+              <IconButton size='small' onClick={() => setRefresh(pre => !pre)}>
+                <Refresh/></IconButton>
+            </Tooltip>
+          </Stack>
         </Stack>
         <Stack pr={9} alignItems='center'>
           {semester.State === 1 &&
