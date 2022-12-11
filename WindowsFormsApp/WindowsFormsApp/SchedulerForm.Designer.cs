@@ -112,6 +112,8 @@ namespace WindowsFormsApp
             this.checkBox2 = new System.Windows.Forms.CheckBox();
             this.checkBox1 = new System.Windows.Forms.CheckBox();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.totalCourseNotAssignedLabel = new System.Windows.Forms.Label();
+            this.label33 = new System.Windows.Forms.Label();
             this.configDescriptionLabel = new System.Windows.Forms.Label();
             this.schedulePointLabel = new System.Windows.Forms.Label();
             this.label6 = new System.Windows.Forms.Label();
@@ -179,6 +181,7 @@ namespace WindowsFormsApp
             this.toDatelabel = new System.Windows.Forms.Label();
             this.label27 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
+            this.adminLabel = new System.Windows.Forms.Label();
             this.tabControl2.SuspendLayout();
             this.departmentTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.departmentDataGridView)).BeginInit();
@@ -268,7 +271,7 @@ namespace WindowsFormsApp
             this.textBox1.Multiline = true;
             this.textBox1.Name = "textBox1";
             this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(602, 739);
+            this.textBox1.Size = new System.Drawing.Size(602, 711);
             this.textBox1.TabIndex = 0;
             this.textBox1.Text = resources.GetString("textBox1.Text");
             // 
@@ -289,7 +292,7 @@ namespace WindowsFormsApp
             this.departmentDataGridView.ReadOnly = true;
             this.departmentDataGridView.RowHeadersWidthSizeMode = System.Windows.Forms.DataGridViewRowHeadersWidthSizeMode.AutoSizeToDisplayedHeaders;
             this.departmentDataGridView.RowTemplate.Height = 24;
-            this.departmentDataGridView.Size = new System.Drawing.Size(1297, 782);
+            this.departmentDataGridView.Size = new System.Drawing.Size(1297, 754);
             this.departmentDataGridView.TabIndex = 0;
             // 
             // Column1
@@ -315,7 +318,7 @@ namespace WindowsFormsApp
             // Column3
             // 
             this.Column3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Column3.HeaderText = "Total subject";
+            this.Column3.HeaderText = "Total subjects";
             this.Column3.MinimumWidth = 6;
             this.Column3.Name = "Column3";
             this.Column3.ReadOnly = true;
@@ -324,7 +327,7 @@ namespace WindowsFormsApp
             // Column5
             // 
             this.Column5.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Column5.HeaderText = "Total course";
+            this.Column5.HeaderText = "Total courses";
             this.Column5.MinimumWidth = 6;
             this.Column5.Name = "Column5";
             this.Column5.ReadOnly = true;
@@ -333,7 +336,7 @@ namespace WindowsFormsApp
             // Column4
             // 
             this.Column4.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.Column4.HeaderText = "Total lecturer ";
+            this.Column4.HeaderText = "Total lecturers";
             this.Column4.MinimumWidth = 6;
             this.Column4.Name = "Column4";
             this.Column4.ReadOnly = true;
@@ -372,7 +375,7 @@ namespace WindowsFormsApp
             this.textBox2.Multiline = true;
             this.textBox2.Name = "textBox2";
             this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(602, 733);
+            this.textBox2.Size = new System.Drawing.Size(602, 706);
             this.textBox2.TabIndex = 1;
             this.textBox2.Text = "- Subject name column: Name of subject.\r\n\r\n- Total course column: Available cours" +
     "e amount of subject.\r\n\r\n- Total assigned course column: Assigned course amount f" +
@@ -412,7 +415,7 @@ namespace WindowsFormsApp
             this.subjectDataGridView.ReadOnly = true;
             this.subjectDataGridView.RowHeadersWidth = 51;
             this.subjectDataGridView.RowTemplate.Height = 24;
-            this.subjectDataGridView.Size = new System.Drawing.Size(1297, 733);
+            this.subjectDataGridView.Size = new System.Drawing.Size(1297, 706);
             this.subjectDataGridView.TabIndex = 1;
             // 
             // dataGridViewTextBoxColumn1
@@ -436,7 +439,7 @@ namespace WindowsFormsApp
             // dataGridViewTextBoxColumn3
             // 
             this.dataGridViewTextBoxColumn3.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.None;
-            this.dataGridViewTextBoxColumn3.HeaderText = "Total course";
+            this.dataGridViewTextBoxColumn3.HeaderText = "Total courses";
             this.dataGridViewTextBoxColumn3.MinimumWidth = 6;
             this.dataGridViewTextBoxColumn3.Name = "dataGridViewTextBoxColumn3";
             this.dataGridViewTextBoxColumn3.ReadOnly = true;
@@ -444,7 +447,7 @@ namespace WindowsFormsApp
             // 
             // Column16
             // 
-            this.Column16.HeaderText = "Total course assigned";
+            this.Column16.HeaderText = "Total courses assigned";
             this.Column16.MinimumWidth = 6;
             this.Column16.Name = "Column16";
             this.Column16.ReadOnly = true;
@@ -482,7 +485,7 @@ namespace WindowsFormsApp
             this.textBox3.Multiline = true;
             this.textBox3.Name = "textBox3";
             this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(602, 731);
+            this.textBox3.Size = new System.Drawing.Size(602, 707);
             this.textBox3.TabIndex = 2;
             this.textBox3.Text = resources.GetString("textBox3.Text");
             // 
@@ -524,7 +527,7 @@ namespace WindowsFormsApp
             this.lecturerDataGridView.ReadOnly = true;
             this.lecturerDataGridView.RowHeadersWidth = 51;
             this.lecturerDataGridView.RowTemplate.Height = 24;
-            this.lecturerDataGridView.Size = new System.Drawing.Size(1297, 731);
+            this.lecturerDataGridView.Size = new System.Drawing.Size(1297, 707);
             this.lecturerDataGridView.TabIndex = 2;
             // 
             // dataGridViewTextBoxColumn4
@@ -579,7 +582,7 @@ namespace WindowsFormsApp
             // 
             // Column6
             // 
-            this.Column6.HeaderText = "Total priority course ";
+            this.Column6.HeaderText = "Total priority courses";
             this.Column6.MinimumWidth = 6;
             this.Column6.Name = "Column6";
             this.Column6.ReadOnly = true;
@@ -587,7 +590,7 @@ namespace WindowsFormsApp
             // 
             // Column7
             // 
-            this.Column7.HeaderText = "Total assigned course";
+            this.Column7.HeaderText = "Total assigned courses";
             this.Column7.MinimumWidth = 6;
             this.Column7.Name = "Column7";
             this.Column7.ReadOnly = true;
@@ -623,7 +626,7 @@ namespace WindowsFormsApp
             this.textBox4.Multiline = true;
             this.textBox4.Name = "textBox4";
             this.textBox4.ReadOnly = true;
-            this.textBox4.Size = new System.Drawing.Size(602, 729);
+            this.textBox4.Size = new System.Drawing.Size(602, 704);
             this.textBox4.TabIndex = 2;
             this.textBox4.Text = resources.GetString("textBox4.Text");
             // 
@@ -644,7 +647,7 @@ namespace WindowsFormsApp
             this.slotTypeDataGridView.ReadOnly = true;
             this.slotTypeDataGridView.RowHeadersWidth = 51;
             this.slotTypeDataGridView.RowTemplate.Height = 24;
-            this.slotTypeDataGridView.Size = new System.Drawing.Size(1297, 782);
+            this.slotTypeDataGridView.Size = new System.Drawing.Size(1297, 757);
             this.slotTypeDataGridView.TabIndex = 0;
             // 
             // Column26
@@ -697,7 +700,7 @@ namespace WindowsFormsApp
             // 
             // Column12
             // 
-            this.Column12.HeaderText = "Total assigned course";
+            this.Column12.HeaderText = "Total assigned courses";
             this.Column12.MinimumWidth = 6;
             this.Column12.Name = "Column12";
             this.Column12.ReadOnly = true;
@@ -733,7 +736,7 @@ namespace WindowsFormsApp
             this.textBox9.Multiline = true;
             this.textBox9.Name = "textBox9";
             this.textBox9.ReadOnly = true;
-            this.textBox9.Size = new System.Drawing.Size(602, 729);
+            this.textBox9.Size = new System.Drawing.Size(602, 699);
             this.textBox9.TabIndex = 11;
             this.textBox9.Text = resources.GetString("textBox9.Text");
             // 
@@ -753,9 +756,9 @@ namespace WindowsFormsApp
             this.panel1.Controls.Add(this.label8);
             this.panel1.Controls.Add(this.label7);
             this.panel1.Controls.Add(this.label12);
-            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Location = new System.Drawing.Point(6, 6);
             this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1297, 782);
+            this.panel1.Size = new System.Drawing.Size(1294, 749);
             this.panel1.TabIndex = 10;
             // 
             // favoriteSlotValueLabel
@@ -917,7 +920,7 @@ namespace WindowsFormsApp
             this.tabControl1.Controls.Add(this.InputTabPage);
             this.tabControl1.Controls.Add(this.outputTabPage);
             this.tabControl1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.tabControl1.Location = new System.Drawing.Point(46, 119);
+            this.tabControl1.Location = new System.Drawing.Point(44, 168);
             this.tabControl1.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.tabControl1.Name = "tabControl1";
             this.tabControl1.SelectedIndex = 0;
@@ -1110,6 +1113,8 @@ namespace WindowsFormsApp
             // panel2
             // 
             this.panel2.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel2.Controls.Add(this.totalCourseNotAssignedLabel);
+            this.panel2.Controls.Add(this.label33);
             this.panel2.Controls.Add(this.configDescriptionLabel);
             this.panel2.Controls.Add(this.schedulePointLabel);
             this.panel2.Controls.Add(this.label6);
@@ -1128,6 +1133,24 @@ namespace WindowsFormsApp
             this.panel2.Size = new System.Drawing.Size(820, 745);
             this.panel2.TabIndex = 10;
             // 
+            // totalCourseNotAssignedLabel
+            // 
+            this.totalCourseNotAssignedLabel.AutoSize = true;
+            this.totalCourseNotAssignedLabel.Location = new System.Drawing.Point(246, 442);
+            this.totalCourseNotAssignedLabel.Name = "totalCourseNotAssignedLabel";
+            this.totalCourseNotAssignedLabel.Size = new System.Drawing.Size(0, 18);
+            this.totalCourseNotAssignedLabel.TabIndex = 21;
+            // 
+            // label33
+            // 
+            this.label33.AutoSize = true;
+            this.label33.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label33.Location = new System.Drawing.Point(13, 442);
+            this.label33.Name = "label33";
+            this.label33.Size = new System.Drawing.Size(209, 18);
+            this.label33.TabIndex = 20;
+            this.label33.Text = "Total course not assigned:";
+            // 
             // configDescriptionLabel
             // 
             this.configDescriptionLabel.AutoSize = true;
@@ -1141,7 +1164,7 @@ namespace WindowsFormsApp
             // 
             this.schedulePointLabel.AutoSize = true;
             this.schedulePointLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.schedulePointLabel.Location = new System.Drawing.Point(168, 431);
+            this.schedulePointLabel.Location = new System.Drawing.Point(168, 527);
             this.schedulePointLabel.Name = "schedulePointLabel";
             this.schedulePointLabel.Size = new System.Drawing.Size(0, 18);
             this.schedulePointLabel.TabIndex = 17;
@@ -1150,7 +1173,7 @@ namespace WindowsFormsApp
             // 
             this.label6.AutoSize = true;
             this.label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label6.Location = new System.Drawing.Point(13, 431);
+            this.label6.Location = new System.Drawing.Point(13, 527);
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(124, 18);
             this.label6.TabIndex = 16;
@@ -1204,7 +1227,7 @@ namespace WindowsFormsApp
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(16, 507);
+            this.button1.Location = new System.Drawing.Point(16, 603);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(131, 29);
             this.button1.TabIndex = 2;
@@ -1303,7 +1326,7 @@ namespace WindowsFormsApp
             this.textBox5.Multiline = true;
             this.textBox5.Name = "textBox5";
             this.textBox5.ReadOnly = true;
-            this.textBox5.Size = new System.Drawing.Size(602, 737);
+            this.textBox5.Size = new System.Drawing.Size(602, 710);
             this.textBox5.TabIndex = 1;
             this.textBox5.Text = resources.GetString("textBox5.Text");
             // 
@@ -1323,7 +1346,7 @@ namespace WindowsFormsApp
             this.outputDepartmentDataGridView.ReadOnly = true;
             this.outputDepartmentDataGridView.RowHeadersWidth = 51;
             this.outputDepartmentDataGridView.RowTemplate.Height = 24;
-            this.outputDepartmentDataGridView.Size = new System.Drawing.Size(1297, 737);
+            this.outputDepartmentDataGridView.Size = new System.Drawing.Size(1297, 710);
             this.outputDepartmentDataGridView.TabIndex = 1;
             // 
             // dataGridViewTextBoxColumn7
@@ -1344,7 +1367,7 @@ namespace WindowsFormsApp
             // 
             // Column31
             // 
-            this.Column31.HeaderText = "Total course";
+            this.Column31.HeaderText = "Total courses";
             this.Column31.MinimumWidth = 6;
             this.Column31.Name = "Column31";
             this.Column31.ReadOnly = true;
@@ -1352,7 +1375,7 @@ namespace WindowsFormsApp
             // 
             // Column18
             // 
-            this.Column18.HeaderText = "Total assigned course ";
+            this.Column18.HeaderText = "Total assigned courses";
             this.Column18.MinimumWidth = 6;
             this.Column18.Name = "Column18";
             this.Column18.ReadOnly = true;
@@ -1425,7 +1448,7 @@ namespace WindowsFormsApp
             this.textBox6.Multiline = true;
             this.textBox6.Name = "textBox6";
             this.textBox6.ReadOnly = true;
-            this.textBox6.Size = new System.Drawing.Size(602, 731);
+            this.textBox6.Size = new System.Drawing.Size(602, 703);
             this.textBox6.TabIndex = 2;
             this.textBox6.Text = "- Subject name column: Name of subject.\r\n\r\n- Total course column: Available cours" +
     "e amount of subject.\r\n\r\n- Total assigned course column: Assigned course amount f" +
@@ -1463,7 +1486,7 @@ namespace WindowsFormsApp
             this.outputSubjectDataGridView.ReadOnly = true;
             this.outputSubjectDataGridView.RowHeadersWidth = 51;
             this.outputSubjectDataGridView.RowTemplate.Height = 24;
-            this.outputSubjectDataGridView.Size = new System.Drawing.Size(1297, 731);
+            this.outputSubjectDataGridView.Size = new System.Drawing.Size(1297, 703);
             this.outputSubjectDataGridView.TabIndex = 0;
             // 
             // Column19
@@ -1484,7 +1507,7 @@ namespace WindowsFormsApp
             // 
             // Column20
             // 
-            this.Column20.HeaderText = "Total course";
+            this.Column20.HeaderText = "Total courses";
             this.Column20.MinimumWidth = 6;
             this.Column20.Name = "Column20";
             this.Column20.ReadOnly = true;
@@ -1492,7 +1515,7 @@ namespace WindowsFormsApp
             // 
             // Column21
             // 
-            this.Column21.HeaderText = "Total assigned course";
+            this.Column21.HeaderText = "Total assigned courses";
             this.Column21.MinimumWidth = 6;
             this.Column21.Name = "Column21";
             this.Column21.ReadOnly = true;
@@ -1552,7 +1575,7 @@ namespace WindowsFormsApp
             this.textBox7.Multiline = true;
             this.textBox7.Name = "textBox7";
             this.textBox7.ReadOnly = true;
-            this.textBox7.Size = new System.Drawing.Size(602, 728);
+            this.textBox7.Size = new System.Drawing.Size(602, 699);
             this.textBox7.TabIndex = 3;
             this.textBox7.Text = resources.GetString("textBox7.Text");
             // 
@@ -1590,7 +1613,7 @@ namespace WindowsFormsApp
             this.outputLecturerDataGridView.RowHeadersWidth = 51;
             this.outputLecturerDataGridView.RowTemplate.Height = 24;
             this.outputLecturerDataGridView.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.outputLecturerDataGridView.Size = new System.Drawing.Size(1297, 728);
+            this.outputLecturerDataGridView.Size = new System.Drawing.Size(1297, 699);
             this.outputLecturerDataGridView.TabIndex = 0;
             this.outputLecturerDataGridView.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.outputLecturerDataGridView_CellClick);
             // 
@@ -1628,7 +1651,7 @@ namespace WindowsFormsApp
             // 
             // Column25
             // 
-            this.Column25.HeaderText = "Total assigned course";
+            this.Column25.HeaderText = "Total assigned courses";
             this.Column25.MinimumWidth = 6;
             this.Column25.Name = "Column25";
             this.Column25.ReadOnly = true;
@@ -1675,7 +1698,7 @@ namespace WindowsFormsApp
             this.textBox8.Multiline = true;
             this.textBox8.Name = "textBox8";
             this.textBox8.ReadOnly = true;
-            this.textBox8.Size = new System.Drawing.Size(602, 736);
+            this.textBox8.Size = new System.Drawing.Size(602, 708);
             this.textBox8.TabIndex = 3;
             this.textBox8.Text = resources.GetString("textBox8.Text");
             // 
@@ -1695,7 +1718,7 @@ namespace WindowsFormsApp
             this.outputSlotTypeDataGridView.ReadOnly = true;
             this.outputSlotTypeDataGridView.RowHeadersWidth = 51;
             this.outputSlotTypeDataGridView.RowTemplate.Height = 24;
-            this.outputSlotTypeDataGridView.Size = new System.Drawing.Size(1297, 736);
+            this.outputSlotTypeDataGridView.Size = new System.Drawing.Size(1297, 708);
             this.outputSlotTypeDataGridView.TabIndex = 0;
             // 
             // Column37
@@ -1748,7 +1771,7 @@ namespace WindowsFormsApp
             // 
             // Column29
             // 
-            this.Column29.HeaderText = "Total assigned course";
+            this.Column29.HeaderText = "Total assigned courses";
             this.Column29.MinimumWidth = 6;
             this.Column29.Name = "Column29";
             this.Column29.ReadOnly = true;
@@ -1758,7 +1781,7 @@ namespace WindowsFormsApp
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(43, 28);
+            this.label1.Location = new System.Drawing.Point(41, 28);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(72, 18);
             this.label1.TabIndex = 6;
@@ -1768,7 +1791,7 @@ namespace WindowsFormsApp
             // 
             this.fromDatelabel.AutoSize = true;
             this.fromDatelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.fromDatelabel.Location = new System.Drawing.Point(43, 70);
+            this.fromDatelabel.Location = new System.Drawing.Point(41, 125);
             this.fromDatelabel.Name = "fromDatelabel";
             this.fromDatelabel.Size = new System.Drawing.Size(80, 18);
             this.fromDatelabel.TabIndex = 7;
@@ -1778,7 +1801,7 @@ namespace WindowsFormsApp
             // 
             this.toDatelabel.AutoSize = true;
             this.toDatelabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.toDatelabel.Location = new System.Drawing.Point(241, 70);
+            this.toDatelabel.Location = new System.Drawing.Point(239, 125);
             this.toDatelabel.Name = "toDatelabel";
             this.toDatelabel.Size = new System.Drawing.Size(66, 18);
             this.toDatelabel.TabIndex = 8;
@@ -1805,12 +1828,23 @@ namespace WindowsFormsApp
             this.listBox1.TabIndex = 11;
             this.listBox1.SelectedIndexChanged += new System.EventHandler(this.listBox1_SelectedIndexChanged);
             // 
+            // adminLabel
+            // 
+            this.adminLabel.AutoSize = true;
+            this.adminLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.adminLabel.Location = new System.Drawing.Point(41, 78);
+            this.adminLabel.Name = "adminLabel";
+            this.adminLabel.Size = new System.Drawing.Size(57, 18);
+            this.adminLabel.TabIndex = 12;
+            this.adminLabel.Text = "Admin: ";
+            // 
             // SchedulerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.AutoSize = true;
             this.ClientSize = new System.Drawing.Size(1903, 979);
+            this.Controls.Add(this.adminLabel);
             this.Controls.Add(this.listBox1);
             this.Controls.Add(this.label27);
             this.Controls.Add(this.toDatelabel);
@@ -1820,6 +1854,7 @@ namespace WindowsFormsApp
             this.Controls.Add(this.loadDataButton);
             this.Controls.Add(this.semesterCombobox);
             this.Controls.Add(this.runButton);
+            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.Name = "SchedulerForm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
@@ -1900,27 +1935,12 @@ namespace WindowsFormsApp
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ComboBox lecturerCombobox;
         private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
         private System.Windows.Forms.TextBox textBox1;
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column31;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column18;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
-        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
         private System.Windows.Forms.ComboBox outputSubjectCombobox;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.DataGridView outputSubjectDataGridView;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column19;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column30;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column20;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column21;
         private System.Windows.Forms.TabPage Lecturer;
         private System.Windows.Forms.DataGridView outputLecturerDataGridView;
         private System.Windows.Forms.TabPage SlotType;
@@ -1930,17 +1950,7 @@ namespace WindowsFormsApp
         private System.Windows.Forms.TextBox textBox7;
         private System.Windows.Forms.ComboBox outputLecturerCombobox;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column22;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column32;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column23;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column24;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column25;
         private System.Windows.Forms.TextBox textBox8;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
         private System.Windows.Forms.TabPage tabPage1;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox textBox4;
@@ -1976,20 +1986,6 @@ namespace WindowsFormsApp
         private System.Windows.Forms.Label scheduleNOLabel4;
         private System.Windows.Forms.Label schedulePointLabel;
         private System.Windows.Forms.Label label6;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column26;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column35;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column17;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column37;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column33;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column34;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column27;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column36;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column28;
-        private System.Windows.Forms.DataGridViewTextBoxColumn Column29;
         private System.Windows.Forms.Label favoriteSubjectValueLabel;
         private System.Windows.Forms.Label departmentRatingValueLabel;
         private System.Windows.Forms.Label priorityCourseValueLabel;
@@ -2014,6 +2010,18 @@ namespace WindowsFormsApp
         private System.Windows.Forms.TrackBar favoriteSlotTrackBar;
         private System.Windows.Forms.Label label31;
         private System.Windows.Forms.Label configDescriptionLabel;
+        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.Label totalCourseNotAssignedLabel;
+        private System.Windows.Forms.Label label33;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column5;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column4;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn2;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn3;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column16;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn4;
         private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn5;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column8;
@@ -2022,7 +2030,37 @@ namespace WindowsFormsApp
         private System.Windows.Forms.DataGridViewTextBoxColumn Column15;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column6;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column7;
-        private System.Windows.Forms.ListBox listBox1;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column26;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column35;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column17;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column12;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn7;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn8;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column31;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column18;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn9;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn10;
+        private System.Windows.Forms.DataGridViewTextBoxColumn dataGridViewTextBoxColumn11;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column19;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column30;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column20;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column21;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column22;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column32;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column23;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column24;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column25;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column37;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column33;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column34;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column27;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column36;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column28;
+        private System.Windows.Forms.DataGridViewTextBoxColumn Column29;
+        private System.Windows.Forms.Label adminLabel;
     }
 }
 

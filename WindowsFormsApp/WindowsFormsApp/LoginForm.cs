@@ -37,7 +37,7 @@ namespace WindowsFormsApp
             if (tokenKeyTextBox.Text.Count() == 0)
             {
                 invalidTextbox.Show();
-                invalidTextbox.Text = "nhap key vao ";
+                invalidTextbox.Text = "Key cannot be empty!";
             }
             else
             {
@@ -45,7 +45,7 @@ namespace WindowsFormsApp
                 if (user == null)
                 {
                     invalidTextbox.Show();
-                    invalidTextbox.Text = "Invalid key";
+                    invalidTextbox.Text = "Invalid key!";
                 }
                 else
                 {

@@ -54,7 +54,7 @@ namespace WindowsFormsApp
 
         //public LoginForm loginForm1;
 
-        public SchedulerForm(LoginForm loginForm, Lecturer user)
+        public SchedulerForm(LoginForm loginForm, Lecturer adminLoginAccount)
         {
             //Xuat file Excel
             //List<CourseAssign> courseAssignsTemp = LecturerScheduler.Run();
@@ -69,6 +69,7 @@ namespace WindowsFormsApp
             Semesters = JsonConvert.DeserializeObject<List<Semester>>(semestersJson);
             semesterCombobox.DataSource = Semesters;
             semesterCombobox.DisplayMember = "Term";
+            adminLabel.Text = "Admin: "+ adminLoginAccount.Email;
 
             semesterCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
             subjectCombobox.DropDownStyle = ComboBoxStyle.DropDownList;
@@ -95,6 +96,11 @@ namespace WindowsFormsApp
             tabControl1.SelectTab(0);
             tabControl2.SelectTab(0);
             SelectedscheduleItem = new List<CourseAssign>();
+            scheduleShows.Clear();
+            listBox1.Items.Clear();
+            listBox1.Hide();
+            label27.Hide();
+
             outputDepartmentDataGridView.Rows.Clear();
             outputSubjectDataGridView.Rows.Clear();
             outputLecturerDataGridView.Rows.Clear();
@@ -634,7 +640,21 @@ namespace WindowsFormsApp
                     point = point + item.point;
                 }
                 double pointPerRow = point / scheduleItem.Count();
-                newSchedule.totalAveragePoint = Math.Round((pointPerRow * 10) / (newSchedule.pointPerRowMax), 2);
+
+                // diem cua lich = 60% diem course da xep + 40% diem thoa man
+                double DiemThoaMan = Math.Round((pointPerRow *4) / (newSchedule.pointPerRowMax), 2);
+                double DiemCourseDaXep = 6;
+
+                double CourseNotAssigned = Courses.Count() - scheduleItem.Count();
+                if (CourseNotAssigned!=0)
+                {
+                    for(int i = 0; i < CourseNotAssigned; i++)
+                    {
+                        DiemCourseDaXep = DiemCourseDaXep - 0.1;
+                    }
+                }
+
+                newSchedule.totalAveragePoint = DiemCourseDaXep + DiemThoaMan;
 
                 scheduleShows.Add(newSchedule);
 
@@ -669,16 +689,23 @@ namespace WindowsFormsApp
                 {
                     totalCourseLabel.Text = scheduleItem.Count() + "";
                 }));
+
+                totalCourseNotAssignedLabel.Invoke(new MethodInvoker(() =>
+                {
+                    totalCourseNotAssignedLabel.Text = CourseNotAssigned + "";
+                }));
+
                 runTimeLabel.Invoke(new MethodInvoker(() =>
                 {
                     runTimeLabel.Text = elapsedTime + "";
                 }));
 
 
+
                 schedulePointLabel.Invoke(new MethodInvoker(() =>
                 {
 
-                    schedulePointLabel.Text = newSchedule.totalAveragePoint + " / 10";                  
+                    schedulePointLabel.Text = newSchedule.totalAveragePoint + " / 10";
                 }));
 
 
@@ -1282,6 +1309,8 @@ namespace WindowsFormsApp
         {
             loginForm.Close();
         }
+
+
     }
 
     public class ScheduleShow
