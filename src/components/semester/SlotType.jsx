@@ -53,9 +53,6 @@ const SlotType = ({ semesterId, semesterState }) => {
       alert('Fail to load favorite slots!');
     })
 
-    return () => {
-      setFavoriteSlots([]);
-    }
   }, [account.Id, semesterId, reload])
 
   //set pickedslot
@@ -82,7 +79,7 @@ const SlotType = ({ semesterId, semesterState }) => {
   }
 
   const handlePick = (id) => {
-    if (!isEdit || loading || favoriteSlots.length === 0) {
+    if (!isEdit || loading) {
       return;
     }
 

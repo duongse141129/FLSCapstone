@@ -2,11 +2,12 @@ import React, { useEffect, useState } from 'react';
 import { Reorder, AccountBox, Logout, Key } from '@mui/icons-material';
 import { Avatar, Box, Divider, Menu, MenuItem, Snackbar, Stack, Typography } from '@mui/material'
 import { useGoogleAuth } from '../../utils/googleAuth';
-import { useLocation } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 import request from '../../utils/request';
 
 const Navbar = ({ isExtend, setIsExtend }) => {
   const location = useLocation();
+  const  navigate = useNavigate();
   const { signOut, googleUser } = useGoogleAuth();
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -33,9 +34,11 @@ const Navbar = ({ isExtend, setIsExtend }) => {
     setAnchorEl(null);
   };
 
-  const handleSignOut = () => {
+  const handleSignOut = async() => {
     setAnchorEl(null);
-    signOut();
+    await signOut();
+    navigate('/')
+    localStorage.removeItem('web-user')
   }
 
   const handleCopyKey = () => {

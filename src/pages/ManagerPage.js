@@ -10,30 +10,24 @@ import request from '../utils/request'
 const ManagerPage = () => {
   const navigate = useNavigate();
   const [isExtend, setIsExtend] = useState(true);
-  const { isSignedIn, googleUser } = useGoogleAuth();
+  const { isSignedIn, googleUser, isInitialized } = useGoogleAuth();
   const [data, setData] = useState(JSON.parse(localStorage.getItem('web-user')));
 
   useEffect(() => {
-    if (isSignedIn) {
-      request.get(`User/email/${googleUser.profileObj.email}`)
-      .then(res => {
-        if(res.data){
-          if(res.data.RoleIDs.includes('DMA')){
-            setData(localStorage.setItem('web-user', JSON.stringify(res.data)))
+    if(isInitialized){
+      if (isSignedIn) {
+        request.get(`User/email/${googleUser.profileObj.email}`)
+        .then(res => {
+          if(res.data){
+            if(res.data.RoleIDs.includes('DMA')){
+              setData(localStorage.setItem('web-user', JSON.stringify(res.data)))
+            }else{navigate('/');}
           }
-          else{
-            navigate(-1);
-          }
-        }
-      })
-      .catch(err => {
-        navigate(-1);
-      })
+        })
+        .catch(err => {navigate('/');})
+      }else{navigate('/')}
     }
-    else{
-      navigate('/')
-    }
-  }, [isSignedIn, googleUser, navigate])
+  }, [isSignedIn, googleUser, navigate, isInitialized])
 
   return (
     <Box height='100vh'>
