@@ -11,44 +11,48 @@ import { ClipLoader } from 'react-spinners';
 
 const Login = () => {
   const navigate = useNavigate();
-  const { signIn, isSignedIn, googleUser, signOut } = useGoogleAuth();
+  const { signIn, isSignedIn, googleUser, signOut, isInitialized } = useGoogleAuth();
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   console.log(gapi);
 
   useEffect(() => {
-    if (isSignedIn) {
-      setIsLoading(true)
-      localStorage.removeItem('web-user')
-      request.get(`User/email/${googleUser.profileObj.email}`)
-        .then(res => {
-          console.log(res.data)
-          setIsLoading(false)
-          if (res.data) {
-            if (res.data.RoleIDs.includes('LC')) {
-              navigate('/lecturer')
+    if(isInitialized){
+      if (isSignedIn) {
+        setIsLoading(true)
+        request.get(`User/email/${googleUser.profileObj.email}`)
+          .then(res => {
+            setIsLoading(false)
+            if (res.data) {
+              if (res.data.RoleIDs.includes('LC')) {
+                navigate('/lecturer')
+              }
+              else if(res.data.RoleIDs.includes('DMA')){
+                navigate('/manager')
+              }
+              else {
+                navigate('/admin')
+              }
             }
-            else if(res.data.RoleIDs.includes('DMA')){
-              navigate('/manager')
+          })
+          .catch(err => {
+            signOut();
+            if(err?.response?.data?.status === 404){
+              setError('This email can not be signed in.')
             }
-            else {
-              navigate('/admin')
+            else{
+              setError('Fail to sign in.')
             }
-          }
-        })
-        .catch(err => {
-          signOut();
-          if(err?.response?.data?.status === 404){
-            setError('This email can not be signed in.')
-          }
-          else{
-            setError('Fail to sign in.')
-          }
-          setIsLoading(false)
-        })
+            setIsLoading(false)
+          })
+      }
+      else{
+        navigate('/')
+      }
     }
-  }, [isSignedIn, googleUser, signOut, navigate])
+    
+  }, [isSignedIn, googleUser, signOut, navigate, isInitialized])
 
   return (
     <Stack height='100vh' bgcolor='lightblue'

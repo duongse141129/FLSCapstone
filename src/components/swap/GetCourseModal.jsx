@@ -65,8 +65,8 @@ const GetCourseModal = ({isGet, setIsGet, insideLecs, pickedSlot, scheduleId, le
   return (
     <Dialog maxWidth='md' fullWidth={true}
       open={isGet} onClose={() => setIsGet(false)}>
-      <DialogTitle>
-        <Typography variant='h5' fontWeight={500}>Courses from other internal lecturers</Typography>
+      <DialogTitle variant='h5' fontWeight={500}>
+        Courses from other internal lecturers
       </DialogTitle>
       <DialogContent>
         <Stack>

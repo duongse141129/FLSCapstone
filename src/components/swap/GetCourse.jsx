@@ -27,6 +27,16 @@ const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
     return []
   }, [slots, myAssignCourses])
   const [load, setLoad] = useState(false);
+  const [courseGroup, setCourseGroup] = useState({});
+  const equalMax = useMemo(() => {
+    if(courseGroup.Id && myAssignCourses.length > 0){
+      const max= courseGroup.MaxCourse;
+      const assigned = myAssignCourses.length;
+
+      return assigned >= max;
+    }
+    return false
+  }, [courseGroup, myAssignCourses])
 
   //get scheduleId
   useEffect(() => {
@@ -86,6 +96,20 @@ const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
     }
   }, [lecturer.DepartmentId])
 
+  //get lecturer's course group
+  useEffect(() => {
+    if(semesterId && lecturer.Id){
+      request.get('LecturerCourseGroup', {
+        params: {LecturerId: lecturer.Id, SemesterId: semesterId, 
+          pageIndex: 1, pageSize: 10}
+      }).then(res => {
+        if(res.data.length > 0){
+          setCourseGroup(res.data[0])
+        }
+      }).catch(err => {alert('Fail to get min max course of lecturer')})
+    }
+  }, [semesterId, lecturer.Id])
+
   const clickGetCourse = (slot) => {
     setPickedSlot(slot)
     setIsGet(true)
@@ -110,7 +134,8 @@ const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
         *Add course into empty slots.The course will be taken from other internal lecturers.
       </Typography>
       {load && <ClipLoader color={green[600]} size={30}/>}
-      {!load && 
+      {!load && courseGroup.Id && equalMax && <Typography>This lecturer has reached max course number: {courseGroup.MaxCourse}</Typography>} 
+      {!load && courseGroup.Id && !equalMax &&
       <><Typography fontWeight={500}>Empty Slots</Typography>
       <Paper sx={{ minWidth: 700, mb: 2 }}>
         <TableContainer component={Box}>

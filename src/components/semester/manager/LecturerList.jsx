@@ -6,6 +6,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import request from '../../../utils/request';
 import ConfirmSchedule from './ConfirmSchedule';
 import Alert from '../../alert/Alert';
+import { HashLoader } from 'react-spinners';
 
 const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, myCourseGroup, setReloadConfirm }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
@@ -19,6 +20,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
   const [isConfirm, setIsConfirm] = useState(false);
   const [isAlert, setIsAlert] = useState(false);
   const [contentAlert, setContentAlert] = useState('');
+  const [load, setLoad] = useState(false)
 
   //get departments
   useEffect(() => {
@@ -57,18 +59,19 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
 
   //get lecturers by department
   useEffect(() => {
-    request.get('User', {
-      params: {
-        DepartmentId: selectedDepartment, RoleIDs: 'LC', sortBy: 'DepartmentId', order: 'Asc',
-        pageIndex: 1, pageSize: 500
-      }
-    }).then(res => {
-      if (res.data) {
-        setlecturers(res.data)
-      }
-    }).catch(err => {
-      alert('Fail to load lecturers');
-    })
+    setLoad(true)
+    if(selectedDepartment){
+      request.get('User', {
+        params: {DepartmentId: selectedDepartment, RoleIDs: 'LC', sortBy: 'DepartmentId', 
+          order: 'Asc', pageIndex: 1, pageSize: 500
+        }
+      }).then(res => {
+        if (res.data) {
+          setlecturers(res.data)
+          setLoad(false)
+        }
+      }).catch(err => {alert('Fail to load lecturers'); setLoad(false)})
+    }
   }, [selectedDepartment])
 
   //set rows equal lecturers length
@@ -137,13 +140,13 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
     handleSelect(obj)
   }
 
-  // const checkMinMaxCourse= (lecturerId) => {
-  //   const assignedNumber = assignCourses.filter(course => course.LecturerId === lecturerId).length
-  //   const min = lecCourseGroups.find(group => group.LecturerId === lecturerId)?.MinCourse
-  //   const max = lecCourseGroups.find(group => group.LecturerId === lecturerId)?.MaxCourse
+  const checkMinMaxCourse= (lecturerId) => {
+    const assignedNumber = assignCourses.filter(course => course.LecturerId === lecturerId).length
+    const min = lecCourseGroups.find(group => group.LecturerId === lecturerId)?.MinCourse
+    const max = lecCourseGroups.find(group => group.LecturerId === lecturerId)?.MaxCourse
 
-  //   return assignedNumber >= min && assignedNumber <= max
-  // }
+    return assignedNumber >= min && assignedNumber <= max
+  }
 
   const clickConfirm = () => {
     request.get(`CheckConstraint/CheckCourseOflecrurerInDepartment/${account.DepartmentId}&${semester.Id}`)
@@ -198,7 +201,8 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
           <Button variant='contained' size='small' color='error' onClick={clickConfirm}>
             Confirm Schedule</Button>)}
       </Stack>
-      <Stack px={9} mb={2}>
+      {load && <Stack px={9}><HashLoader size={30} color={green[600]}/></Stack>}
+      {!load && <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}>
             <Table size='small'>
@@ -216,7 +220,8 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
                 </TableRow>
               </TableHead>
               <TableBody>
-                {lecturers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                {lecCourseGroups.length > 0 && lecturers.length > 0 && 
+                lecturers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((lecturer) => (
                     <TableRow key={lecturer.Id} hover onClick={() => selectLecturer(lecturer.Id)}
                       sx={{ '&:hover': { cursor: 'pointer' } }}>
@@ -237,11 +242,13 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
                       </TableCell>
                       {(admin || account.DepartmentId === selectedDepartment) && 
                         (semester.State === 5 || semester.State === 6)  && 
-                      <TableCell align='center'>
+                      <TableCell align='center' 
+                        sx={{bgcolor: assignCourses.length > 0 && lecCourseGroups.length > 0 && checkMinMaxCourse(lecturer.Id) ? green[100] : red[100],
+                          borderTop: '1px solid silver', borderBottom: '1px solid silver'
+                        }}>
                         {assignCourses.filter(course => course.LecturerId === lecturer.Id).length} {' '}
                         ({lecCourseGroups.find(group => group.LecturerId === lecturer.Id)?.MinCourse}{'-'}
                         {lecCourseGroups.find(group => group.LecturerId === lecturer.Id)?.MaxCourse})
-                        {/* {checkMinMaxCourse(lecturer.Id) ? 'true' : 'false'} */}
                       </TableCell>}
                       <TableCell align='center'>
                         <Tooltip title='More' placement='right'>
@@ -272,7 +279,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
           myCourseGroup={myCourseGroup} afterConfirm={afterConfirm}/>
         <Alert isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
         {!admin && isSelected === false && <ToastContainer/>}
-      </Stack>
+      </Stack>}
     </>
   )
 }

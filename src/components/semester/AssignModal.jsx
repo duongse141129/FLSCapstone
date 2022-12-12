@@ -101,19 +101,17 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
 
   //get disables slots of lecturer
   useEffect(() => {
-    if(selectedLecturer.Id){
+    if(selectedLecturer.Id && semesterId){
       request.get('LecturerSlotConfig', {
         params: {
           LecturerId: selectedLecturer.Id, SemesterId: semesterId, 
           IsEnable: 0, pageIndex: 1, pageSize:100
         }
-      })
-      .then(res => {
+      }).then(res => {
         if(res.data){
           setDisableSlots(res.data)
         }
-      })
-      .catch(err => {
+      }).catch(err => {
         alert('Fail to load disable slots')
       }) 
     }
@@ -121,7 +119,7 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
 
   //get my assigned courses
   useEffect(() => {
-    if(selectedLecturer.Id){
+    if(selectedLecturer.Id && scheduleId){
       request.get('CourseAssign', {
         params: {
           LecturerId: selectedLecturer.Id, ScheduleId: scheduleId,
@@ -207,10 +205,8 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
   }
 
   return (
-    <Dialog
-      maxWidth='md' fullWidth={true}
-      open={isAssign} onClose={() => setIsAssign(false)}
-    >
+    <Dialog maxWidth='md' fullWidth={true}
+      open={isAssign} onClose={() => setIsAssign(false)}>
       <DialogTitle>
         <Stack direction='row' alignItems='center' gap={1} mb={2}>
           <AssignmentOutlined />
