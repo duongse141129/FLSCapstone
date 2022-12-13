@@ -48,6 +48,12 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
     return []
   }, [listSubject, subjectOfLecs])
 
+  useEffect(() => {
+    setSelectedSubject('')
+    setSelectedCourse('')
+    setSelectedSlot({})
+  }, [lecturer])
+
   //get registered subjects of lecturer
   useEffect(() => {
     if(semesterId && lecturer.Id){
@@ -64,13 +70,11 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
 
   //get course by selected subject and filter all already assigned courses
   useEffect(() => {
-    if (selectedSubject) {
+    if (selectedSubject && semesterId) {
       setLoadCourse(true)
       request.get('Course', {
-        params: {
-          SubjectId: selectedSubject, SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
-          pageIndex: 1, pageSize: 500
-        }
+        params: { SubjectId: selectedSubject, SemesterId: semesterId, 
+          sortBy: 'Id', order: 'Asc', pageIndex: 1, pageSize: 500}
       }).then(res => {
         if (res.data) {
           let dataCourse = res.data
@@ -90,20 +94,16 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
 
   //get slots are disable
   useEffect(() => {
-    request.get('LecturerSlotConfig', {
-      params: {
-        LecturerId: lecturer.Id, SemesterId: semesterId, 
-        IsEnable: 0, pageIndex: 1, pageSize:100
-      }
-    })
-    .then(res => {
-      if(res.data){
-        setDisableSlots(res.data)
-      }
-    })
-    .catch(err => {
-      alert('Fail to load disable slots')
-    }) 
+    if(lecturer.Id && semesterId){
+      request.get('LecturerSlotConfig', {
+        params: {LecturerId: lecturer.Id, SemesterId: semesterId, 
+          IsEnable: 0, pageIndex: 1, pageSize:100}
+      }).then(res => {
+        if(res.data){
+          setDisableSlots(res.data)
+        }
+      }).catch(err => {alert('Fail to load disable slots')})
+    }
   }, [lecturer.Id, semesterId])
 
   //get slot and filter

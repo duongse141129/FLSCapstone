@@ -320,7 +320,7 @@ const SemesterDetailAdmin = () => {
       {selected === 'subjects' && <SummarySubject semesterId={id} scheduleId={schedule.Id}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
       {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} scheduleId={schedule.Id}/>}
-      {selected === 'confirm' && <ViewConfirm semesterId={id} semesterState={semester.State}/>}
+      {selected === 'confirm' && <ViewConfirm semesterId={semester.Id} semesterState={semester.State}/>}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} content={content} 
         mode={mode} saveNextState={saveNextState} savePrevState={savePrevState} />
       <Alert isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>

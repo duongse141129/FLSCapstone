@@ -164,8 +164,8 @@ const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
           </Table>
         </TableContainer>
       </Paper></>}
-      <GetCourseModal isGet={isGet} setIsGet={setIsGet} insideLecs={lecturers} 
-        pickedSlot={pickedSlot} scheduleId={scheduleId} lecturer={lecturer} afterGet={afterGet}/>
+      <GetCourseModal isGet={isGet} setIsGet={setIsGet} insideLecs={lecturers} pickedSlot={pickedSlot} 
+        semesterId={semesterId} scheduleId={scheduleId} lecturer={lecturer} afterGet={afterGet}/>
       <ToastContainer/></>}
     </Stack>
   )

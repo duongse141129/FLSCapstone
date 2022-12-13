@@ -4,11 +4,12 @@ import { useEffect, useMemo, useState } from 'react'
 import request from '../../utils/request'
 import GetCourseConfirm from './GetCourseConfirm'
 
-const GetCourseModal = ({isGet, setIsGet, insideLecs, pickedSlot, scheduleId, lecturer, afterGet}) => {
+const GetCourseModal = ({isGet, setIsGet, insideLecs, pickedSlot, scheduleId, semesterId, lecturer, afterGet}) => {
   const [slotCourses, setSlotCourses] = useState([])
   const [isConfirm, setIsConfirm] = useState(false)
   const [pickedCourse, setPickedCourse] = useState({})
   const [loadSave, setLoadSave] = useState(false)
+  const [regisSubjects, setRegisSubjects] = useState([])
 
   const filterCourses = useMemo(() => {
     if(slotCourses.length > 0 && insideLecs.length > 0){
@@ -25,19 +26,41 @@ const GetCourseModal = ({isGet, setIsGet, insideLecs, pickedSlot, scheduleId, le
     return []
   }, [slotCourses, insideLecs])
 
+  //get course assign by scheduleId and slottype id
   useEffect(() => {
-    if(scheduleId && pickedSlot.Id){
+    if(scheduleId && pickedSlot.Id && regisSubjects.length > 0){
       request.get('CourseAssign', {
         params: {ScheduleId: scheduleId, SlotTypeId: pickedSlot.Id,
-          sortBy: 'LecturerId', order: 'Asc', pageIndex: 1, pageSize: 500
-        }
+          sortBy: 'LecturerId', order: 'Asc', pageIndex: 1, pageSize: 500}
       }).then(res => {
         if(res.data.length > 0){
-          setSlotCourses(res.data)
+          let regis = res.data
+          let unregis = res.data
+          for(let i in regisSubjects){
+            unregis = unregis.filter(item => item.CourseId.split('_')[0] !== regisSubjects[i].SubjectId)
+          }
+          for(let i in unregis){
+            regis = regis.filter(item => item.CourseId !== unregis[i].CourseId)
+          }
+          setSlotCourses(regis)
         }
       }).catch(err => {alert('Fail to get courses of other lecturers')})
     }
-  }, [scheduleId, pickedSlot.Id])
+  }, [scheduleId, pickedSlot.Id, regisSubjects])
+
+  //get registered subjects
+  useEffect(() => {
+    if(semesterId && lecturer.Id){
+      request.get('SubjectOfLecturer', {
+        params: {SemesterId: semesterId, LecturerId: lecturer.Id, isEnable: 1, 
+          sortBy: 'SubjectId', order: 'Asc', pageIndex:1, pageSize:100}
+      }).then(res => {
+        if(res.data.length > 0){
+          setRegisSubjects(res.data)
+        }
+      }).catch(err => {alert('Fail to get registered subjects');})
+    }
+  }, [semesterId, lecturer.Id])
 
   const clickGet = (course) => {
     setPickedCourse(course);

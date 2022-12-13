@@ -105,7 +105,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloa
           pageIndex: 1, pageSize: 1000
         }
       }).then(res => {
-        if (res.data) {
+        if (res.data.length > 0) {
           let internal = res.data
           let external = res.data
           for (let i in subjects) {
@@ -135,18 +135,18 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloa
 
   //get all courses to show total
   useEffect(() => {
-    request.get('Course', {
-      params: {
-        SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
-        pageIndex: 1, pageSize: 1000
-      }
-    })
-      .then(res => {
-        if (res.data) {
+    if(semesterId){
+      request.get('Course', {
+        params: {
+          SemesterId: semesterId, sortBy: 'Id', order: 'Asc',
+          pageIndex: 1, pageSize: 1000
+        }
+      }).then(res => {
+        if (res.data.length > 0) {
           setAllCourses(res.data)
         }
-      })
-      .catch(err => { alert('Fail to load courses') })
+      }).catch(err => { alert('Fail to load courses') })
+    }
   }, [semesterId, reload])
 
   const handleChangePage = (event, newPage) => {
