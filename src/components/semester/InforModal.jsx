@@ -37,7 +37,7 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
     return {}
   }, [lecturers, selectedLec])
 
-
+  //get all subjects
   useEffect(() => {
     request.get('Subject', {
       params: {sortBy: 'Id', order:'Asc', pageIndex:1, pageSize:1000}
@@ -48,6 +48,7 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
     }).catch(err => alert('Fail to get all subjects'))
   }, [])
 
+  //get lecturers by department
   useEffect(() => {
     if(selectedLecturer.Id){
       setSelectedLec(selectedLecturer.Id)
@@ -64,8 +65,7 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
 
   return (
     <Dialog maxWidth='lg' fullWidth={true}
-      open={isSelected} onClose={() => setIsSelected(false)}
-    >
+      open={isSelected} onClose={() => setIsSelected(false)}>
       <DialogTitle>
         <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
           <Typography variant='h5' fontWeight={500}>Lecturer In Semester: {semester.Term}</Typography>
@@ -141,12 +141,17 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
         </Stack>
         {selected === tabs[0].name && <ScheduleAdmin lecturerId={passLec.Id} myCourseGroup={myCourseGroup}
           lecturerDepart={selectedLecturer.DepartmentId} semester={semester} admin={admin}/>}
+
         {selected === tabs[1].name && <AssignmentContainer lecturer={passLec} semester={semester} 
           allSubjects={allSubjects} admin={admin} myCourseGroup={myCourseGroup}/>}
-        {selected === tabs[2].name && <FeedbackSelection id={passLec.Id} semester={semester} admin={admin}/>}
+
+        {selected === tabs[2].name && <FeedbackSelection lecturer={passLec} semester={semester} admin={admin}/>}
+
         {selected === tabs[3].name && <SlotManage lecturer={passLec} semester={semester} admin={admin}/>}
+
         {selected === tabs[4].name && <CourseNumber lecturer={passLec} 
           semesterId={semester.Id} semesterState={semester.State} admin={admin}/>}
+          
         {selected === tabs[5].name && <GetCourse semesterId={semester.Id} semesterState={semester.State}
           lecturer={passLec} myCourseGroup={myCourseGroup}/>}
       </DialogContent>

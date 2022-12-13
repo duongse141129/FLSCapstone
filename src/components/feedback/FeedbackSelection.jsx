@@ -1,24 +1,22 @@
 import { CancelOutlined, ChatOutlined, EditOutlined } from '@mui/icons-material';
-import {
-  Alert, Box, IconButton, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer,
-  TableHead, TablePagination, TableRow, Tooltip, Typography
-} from '@mui/material'
+import {Alert, Box, IconButton, Paper, Stack, Switch, Table, TableBody, TableCell, TableContainer,
+  TableHead, TablePagination, TableRow, Tooltip, Typography} from '@mui/material'
 import { blue, grey, red } from '@mui/material/colors';
 import React, { useEffect, useMemo, useState } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
+import { ClipLoader } from 'react-spinners';
 import FeedbackModal from './FeedbackModal';
 import MaxCourseModal from './MaxCourseModal';
+import AlertComponent from '../alert/Alert';
 import request from '../../utils/request';
 import configData from '../../utils/configData.json'
-import { ClipLoader } from 'react-spinners';
 
-const FeedbackSelection = ({ id, semester, admin }) => {
+const FeedbackSelection = ({ lecturer, semester, admin }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [isFeedback, setIsFeedback] = useState(false);
   const [isMax, setIsMax] = useState(false);
-  const [lecturer, setLecturer] = useState({});
   const [subjects, setSubjects] = useState([]);
   const [points, setPoints] = useState([]);
   const [selectedId, setSelectedId] = useState('');
@@ -26,6 +24,9 @@ const FeedbackSelection = ({ id, semester, admin }) => {
   const [isDisable, setIsDisable] = useState(false);
   const [loadDisable, setLoadDisable] = useState(false);
   const [afterDisable, setAfterDisable] = useState(false);
+  const [scheduledCourses, setScheduledCourses] = useState([]);
+  const [isAlert, setIsAlert] = useState(false);
+  const [contentAlert, setContentAlert] = useState('');
 
   const disableNumber = useMemo(() => {
     if (points.length > 0) {
@@ -33,21 +34,6 @@ const FeedbackSelection = ({ id, semester, admin }) => {
     }
     return 0;
   }, [points])
-
-  //get lecturer by id
-  useEffect(() => {
-    if(id){
-      request.get(`User/${id}`)
-      .then(res => {
-        if (res.data) {
-          setLecturer(res.data)
-        }
-      })
-      .catch(err => {
-        alert('Fail to load lecturer in Schedule')
-      })
-    }
-  }, [id])
 
   //get subject by department of lecturer
   useEffect(() => {
@@ -76,10 +62,8 @@ const FeedbackSelection = ({ id, semester, admin }) => {
     const getFavoriteSubjects = async () => {
       try {
         const response = await request.get('SubjectOfLecturer', {
-          params: {
-            SemesterId: semester.Id, LecturerId: id,
-            pageIndex: 1, pageSize: 1000
-          }
+          params: {SemesterId: semester.Id, LecturerId: lecturer.Id,
+            pageIndex: 1, pageSize: 1000}
         })
         if (response.data) {
           setPoints(response.data)
@@ -87,9 +71,10 @@ const FeedbackSelection = ({ id, semester, admin }) => {
       }
       catch (error) { alert('Fail to load favortite points') }
     }
-
-    getFavoriteSubjects();
-  }, [id, semester.Id, isFeedback, isMax, afterDisable])
+    if(semester.Id && lecturer.Id){
+      getFavoriteSubjects();
+    }
+  }, [lecturer.Id, semester.Id, isFeedback, isMax, afterDisable])
 
   // set row per page
   useEffect(() => {
@@ -97,6 +82,31 @@ const FeedbackSelection = ({ id, semester, admin }) => {
       setRowsPerPage(subjects.length)
     }
   }, [subjects])
+
+  //get scheduled courses of lecturer
+  useEffect(() => {
+    const getScheduledCourses = async() => {
+      try {
+        const resSchedule = await request.get('Schedule', {
+          params: {SemesterId: semester.Id, pageIndex: 1, pageSize: 1}
+        })
+        if(resSchedule.data.length > 0){
+          const scheduleId = resSchedule.data[0]?.Id
+          const resCourse = await request.get('CourseAssign', {
+            params: {LecturerId: lecturer.Id, ScheduleId: scheduleId, 
+              sortBy: 'CourseId', order: 'Asc', pageIndex: 1, pageSize: 100}
+          })
+          if(resCourse.data.length > 0){
+            setScheduledCourses(resCourse.data)
+          }
+        }
+      }catch (error) {}
+    }
+
+    if(semester.Id && lecturer.Id){
+      getScheduledCourses();
+    }
+  }, [semester.Id, lecturer.Id])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -127,6 +137,14 @@ const FeedbackSelection = ({ id, semester, admin }) => {
       if (obj) {
         if (obj.isEnable === 1) {
           if (disableNumber >= configData.DISABLE_SUBJECT) return;
+          if(scheduledCourses.length > 0){
+            const checkCourse = scheduledCourses.find(item => item.CourseId.split('_')[0] === subjectId);
+            if(checkCourse){
+              setContentAlert('This lecturer has been assigned course of this subject, so that can not be disable.')
+              setIsAlert(true);
+              return;
+            }
+          }
         }
         setSelectedId(subjectId)
         setLoadDisable(true)
@@ -283,6 +301,7 @@ const FeedbackSelection = ({ id, semester, admin }) => {
         lecturer={lecturer} subjectId={selectedId} points={points} loadPoint={loadPoint} />
       <MaxCourseModal isMax={isMax} setIsMax={setIsMax} lecturer={lecturer} subjectId={selectedId}
         points={points} loadPoint={loadPoint} />
+      <AlertComponent isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
       <ToastContainer />
     </Stack>
   )

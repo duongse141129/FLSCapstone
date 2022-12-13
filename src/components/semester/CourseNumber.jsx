@@ -2,6 +2,7 @@ import { Alert, Button, Stack, TextField, Typography } from '@mui/material'
 import { useEffect, useState } from 'react';
 import { ClipLoader } from 'react-spinners';
 import { ToastContainer, toast } from 'react-toastify';
+import AlertComponent from '../alert/Alert'
 import request from '../../utils/request';
 
 const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
@@ -13,7 +14,12 @@ const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
   const [errorMax, setErrorMax] = useState('');
   const [reload, setReload] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [scheduleId, setScheduleId] = useState('');
+  const [scheduledCourses, setScheduledCourses] = useState([]);
+  const [isAlert, setIsAlert] = useState(false);
+  const [contentAlert, setContentAlert] = useState('');
 
+  //get min max course
   useEffect(() => {
     setLoading(false);
     request.get('LecturerCourseGroup', {
@@ -28,6 +34,34 @@ const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
       }
     }).catch(err => {alert('Fail to get min and max course number')})
   }, [lecturer.Id, semesterId, reload])
+
+  //get schedule id
+  useEffect(() => {
+    if(semesterId){
+      request.get('Schedule', {
+        params: {SemesterId: semesterId, pageIndex: 1, pageSize: 1}
+      }).then(res => {
+        if(res.data.length > 0){
+          setScheduleId(res.data[0]?.Id)
+        }
+      }).catch(err => {alert('Fail to get schedule of semester')})
+    }
+  }, [semesterId])
+
+  //get scheduled courses of selected lecturer
+  useEffect(() => {
+    if(scheduleId && lecturer.Id){
+      request.get('CourseAssign', {
+        params: {LecturerId: lecturer.Id, ScheduleId: scheduleId, 
+          sortBy: 'CourseId', order: 'Asc', pageIndex: 1, pageSize: 100
+        }
+      }).then(res => {
+        if(res.data.length > 0){
+          setScheduledCourses(res.data)
+        }
+      }).catch(err => {alert('Fail to get assigned courses')})
+    }
+  }, [scheduleId, lecturer.Id])
 
   const handleChangeMin = (e) => {
     setErrorMin('')
@@ -66,21 +100,27 @@ const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
 
   const handleSave = () => {
     if(!(errorMin || errorMax || (group.MinCourse === min && group.MaxCourse === max))){
-      setLoading(true);
-      request.put(`LecturerCourseGroup/${group.Id}`, {
-        LecturerId: lecturer.Id, SemesterId: semesterId,
-        GroupName: group.GroupName, MinCourse: min, MaxCourse: max
-      }).then(res => {
-        if(res.status === 200){
-          setReload(!reload)
-          setLoading(false);
-          toast.success('Save Successfully!', {
-            position: "top-right", autoClose: 3000, hideProgressBar: false,
-            closeOnClick: true, pauseOnHover: true, draggable: true,
-            progress: undefined, theme: "light",
-          });
-        }
-      }).catch(err => {alert('Fail to edit min max number'); setLoading(false);})
+      if(max < scheduledCourses.length){
+        setContentAlert(`This lecturer was assigned ${scheduledCourses.length} courses in fixed courses. \nSo that max can not be less than.`)
+        setIsAlert(true)
+      }
+      else {
+        setLoading(true);
+        request.put(`LecturerCourseGroup/${group.Id}`, {
+          LecturerId: lecturer.Id, SemesterId: semesterId,
+          GroupName: group.GroupName, MinCourse: min, MaxCourse: max
+        }).then(res => {
+          if (res.status === 200) {
+            setReload(!reload)
+            setLoading(false);
+            toast.success('Save Successfully!', {
+              position: "top-right", autoClose: 3000, hideProgressBar: false,
+              closeOnClick: true, pauseOnHover: true, draggable: true,
+              progress: undefined, theme: "light",
+            });
+          }
+        }).catch(err => { alert('Fail to edit min max number'); setLoading(false); })
+      }
     }
   }
 
@@ -114,6 +154,7 @@ const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
           disabled={(errorMin || errorMax || (group.MinCourse === min && group.MaxCourse === max)) ? true : false}>
           Save
         </Button>}
+      <AlertComponent isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
       <ToastContainer /></>}
     </Stack>
   )

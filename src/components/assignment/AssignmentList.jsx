@@ -6,10 +6,11 @@ import { red } from '@mui/material/colors';
 import { useEffect, useState, useMemo } from 'react';
 import { ToastContainer, toast } from 'react-toastify';
 import request from '../../utils/request';
+import Alert from '../alert/Alert';
 import DeleteModal from '../priority/DeleteModal';
 import AssignmentModal from './AssignmentModal';
 
-const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup }) => {
+const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup, lecCourseGroup }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -28,6 +29,8 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup 
     }
     return false
   }, [lecturer.DepartmentId, account.DepartmentId])
+  const [isAlert, setIsAlert] = useState(false);
+  const [contentAlert, setContentAlert] = useState('');
 
   //get scheduleId by semesterId
   useEffect(() => {
@@ -83,9 +86,7 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup 
             setFixCourses(resAssignCourse.data)
           }
         }
-        catch (err) {
-          alert('Fail to load courseAssign!')
-        }
+        catch (err) {alert('Fail to load courseAssign!')}
       }
     }
     getAssignCourse();
@@ -183,6 +184,18 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup 
     }
   }
 
+  const checkAssignMore = () => {
+    if(lecCourseGroup.Id){
+      const scheduled = scheduleCourses.length;
+      const max = lecCourseGroup.MaxCourse;
+      if(scheduled >= max){
+        setContentAlert(`This lecturer has reached max course number: ${max}`)
+        setIsAlert(true)
+      }
+      else setIsAssign(true)
+    }
+  }
+
   return (
     <Stack height='90vh'>
       <Typography color='gray' variant='subtitle1'>
@@ -192,8 +205,8 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup 
         <Typography fontWeight={500}>Fixed Courses: {fixCourses.length}</Typography>
         {(semester.State === 3 || (semester.State === 5 && myCourseGroup.GroupName !== 'confirm')) && !admin && 
         <Button variant='contained' color='success' size='small' endIcon={<AssignmentOutlined />}
-          onClick={() => setIsAssign(true)}>
-          Assign
+          onClick={checkAssignMore}>
+          More
         </Button>}
       </Stack>
       <Stack mb={2}>
@@ -212,8 +225,7 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup 
                 </TableRow>
               </TableHead>
               <TableBody>
-                {
-                  fixCourses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                {fixCourses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map(course => (
                     <TableRow hover key={course.Id}>
                       <TableCell size='small'>{course.CourseId}</TableCell>
@@ -245,8 +257,7 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup 
                         </>}
                       </TableCell>}
                     </TableRow>
-                  ))
-                }
+                  ))}
               </TableBody>
             </Table>
           </TableContainer>
@@ -270,6 +281,7 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup 
         semesterId={semester.Id} allFixCourses={allFixCourses} scheduleId={scheduleId}
         scheduleCourses={scheduleCourses} listSubject={insideSubjects}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} saveDelete={saveDelete} />
+      <Alert isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
       <ToastContainer />
     </Stack>
   )
