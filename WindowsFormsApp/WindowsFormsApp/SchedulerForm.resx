@@ -239,7 +239,6 @@
 - Optimize scheduling based on the feedback score of the department manager for lecturers with the subject.
 - Optimize scheduling based on the department manager's priority for the course in the group course priority list.
 - Optimize teacher preference with slot time.
-- Optimize the rest time between slots.
 </value>
   </data>
   <data name="textBox5.Text" xml:space="preserve">

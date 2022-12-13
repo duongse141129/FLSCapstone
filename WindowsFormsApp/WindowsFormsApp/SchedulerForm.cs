@@ -1095,7 +1095,10 @@ namespace WindowsFormsApp
 
                 List<CourseAssign> scheduleItemShow = SelectedscheduleItem;
                 List<SlotType> slotTypesShow = SlotTypes;
-                ScheduleDetailDialog scheduleDetailDialog = new ScheduleDetailDialog((Semester)semesterCombobox.SelectedItem, lecturerShow, scheduleItemShow, slotTypesShow, scheduleShows[index]);
+                var lecturerCourseGroupShow = from lecturerCourseGroup in LecturerCourseGroups
+                                              where lecturerCourseGroup.LecturerID == lecturerShow.ID
+                                              select lecturerCourseGroup;
+                ScheduleDetailDialog scheduleDetailDialog = new ScheduleDetailDialog((Semester)semesterCombobox.SelectedItem, lecturerShow, scheduleItemShow, slotTypesShow, scheduleShows[index], lecturerCourseGroupShow.ElementAtOrDefault(0));
 
                 scheduleDetailDialog.ShowDialog();
                 //MessageBox.Show(outputLecturerDataGridView.Rows[e.RowIndex].Cells[e.ColumnIndex].Value + "", "Message");

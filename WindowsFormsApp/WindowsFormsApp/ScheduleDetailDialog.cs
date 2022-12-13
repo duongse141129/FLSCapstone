@@ -14,7 +14,7 @@ namespace WindowsFormsApp
     public partial class ScheduleDetailDialog : Form
     {
 
-        public ScheduleDetailDialog(Semester semester, Lecturer lecturer, List<CourseAssign> scheduleItem, List<SlotType> slotTypes, ScheduleShow schedule)
+        public ScheduleDetailDialog(Semester semester, Lecturer lecturer, List<CourseAssign> scheduleItem, List<SlotType> slotTypes, ScheduleShow schedule, LecturerCourseGroup lecturerCourseGroup)
         {
             InitializeComponent();
 
@@ -115,19 +115,33 @@ namespace WindowsFormsApp
                 point = point + item.point;
             }
             double pointPerRow = point / teachableTime.Count();
-            double lecturerPoint = Math.Round((pointPerRow * 10) / (schedule.pointPerRowMax), 2);
+            double DiemThoaMan = Math.Round((pointPerRow * 4) / (schedule.pointPerRowMax), 2);
+            double DiemCourseDaXep = 6;
             for (int i = 0; i < 50; i++)
             {
-                if (lecturerPoint < 10)
+                if (DiemThoaMan < 4)
                 {
                     break;
                 }
                 else
                 {
-                    lecturerPoint = lecturerPoint - 1;
+                    DiemThoaMan = DiemThoaMan - 1;
                 }
             }
-            lecturerPointLabel.Text = "Point: " + lecturerPoint + " / 10";
+
+
+            int Diff_Min_Teachable = lecturerCourseGroup.MinCourse - teachableTime.Count();
+            if(Diff_Min_Teachable > 0)
+            {
+                for (int i = 0; i < Diff_Min_Teachable; i++)
+                {
+                    DiemCourseDaXep = DiemCourseDaXep - 1;
+                }
+            }
+            
+
+
+            lecturerPointLabel.Text = "Satisfaction Point: " + (DiemCourseDaXep + DiemThoaMan)+ " / 10";
 
 
             //load schedule

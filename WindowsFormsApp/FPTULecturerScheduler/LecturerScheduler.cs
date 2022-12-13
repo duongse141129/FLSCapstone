@@ -530,7 +530,7 @@ namespace FPTULecturerScheduler
                     Lecturer LecturerFewCourse = GetLecturerFewCourse(semester.ID, subjects, courses, lecturers, subjectOfLecturers, lecturerCourseGroups, scheduler1, course);
                     if (LecturerFewCourse != null)
                     {
-                        double lecturerCoursePoint = ((3 / 5) * HESO_FEEDBACKPOINT + (3 / 5) * HESO_FAVORITEPOINTSUBJECT);
+                        double lecturerCoursePoint = ((3/5) * HESO_FEEDBACKPOINT) + ((3/5) * HESO_FAVORITEPOINTSUBJECT);
                         CourseAssign courseAssign = new CourseAssign("CA" + courseAssignID++, LecturerFewCourse.ID, course.ID, "", "", 1, lecturerCoursePoint);
                         //fill slot 
                         courseAssign = FillSlot(scheduler1, lecturerSlotConfigs, courseAssign, courses, semester.ID, slotTypes, Max);

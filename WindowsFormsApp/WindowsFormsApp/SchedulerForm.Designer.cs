@@ -975,7 +975,7 @@ namespace WindowsFormsApp
             this.tabPage2.Name = "tabPage2";
             this.tabPage2.Size = new System.Drawing.Size(1920, 789);
             this.tabPage2.TabIndex = 4;
-            this.tabPage2.Text = "Schedule";
+            this.tabPage2.Text = "Schedule generating";
             this.tabPage2.UseVisualStyleBackColor = true;
             // 
             // panel3
@@ -1020,7 +1020,7 @@ namespace WindowsFormsApp
             this.label28.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label28.Location = new System.Drawing.Point(18, 303);
             this.label28.Name = "label28";
-            this.label28.Size = new System.Drawing.Size(897, 110);
+            this.label28.Size = new System.Drawing.Size(897, 88);
             this.label28.TabIndex = 7;
             this.label28.Text = resources.GetString("label28.Text");
             // 

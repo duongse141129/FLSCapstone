@@ -202,9 +202,9 @@
             this.lecturerPointLabel.AutoSize = true;
             this.lecturerPointLabel.Location = new System.Drawing.Point(816, 183);
             this.lecturerPointLabel.Name = "lecturerPointLabel";
-            this.lecturerPointLabel.Size = new System.Drawing.Size(40, 16);
+            this.lecturerPointLabel.Size = new System.Drawing.Size(112, 16);
             this.lecturerPointLabel.TabIndex = 9;
-            this.lecturerPointLabel.Text = "Point:";
+            this.lecturerPointLabel.Text = "Satisfaction Point:";
             // 
             // ScheduleDetailDialog
             // 
