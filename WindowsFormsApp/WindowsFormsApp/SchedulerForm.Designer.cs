@@ -182,6 +182,7 @@ namespace WindowsFormsApp
             this.label27 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.adminLabel = new System.Windows.Forms.Label();
+            this.label32 = new System.Windows.Forms.Label();
             this.tabControl2.SuspendLayout();
             this.departmentTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.departmentDataGridView)).BeginInit();
@@ -743,6 +744,7 @@ namespace WindowsFormsApp
             // panel1
             // 
             this.panel1.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.panel1.Controls.Add(this.label32);
             this.panel1.Controls.Add(this.favoriteSlotValueLabel);
             this.panel1.Controls.Add(this.favoriteSlotTrackBar);
             this.panel1.Controls.Add(this.label31);
@@ -765,7 +767,7 @@ namespace WindowsFormsApp
             // 
             this.favoriteSlotValueLabel.AutoSize = true;
             this.favoriteSlotValueLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.favoriteSlotValueLabel.Location = new System.Drawing.Point(559, 404);
+            this.favoriteSlotValueLabel.Location = new System.Drawing.Point(520, 456);
             this.favoriteSlotValueLabel.Name = "favoriteSlotValueLabel";
             this.favoriteSlotValueLabel.Size = new System.Drawing.Size(212, 20);
             this.favoriteSlotValueLabel.TabIndex = 30;
@@ -774,7 +776,7 @@ namespace WindowsFormsApp
             // favoriteSlotTrackBar
             // 
             this.favoriteSlotTrackBar.LargeChange = 1;
-            this.favoriteSlotTrackBar.Location = new System.Drawing.Point(316, 390);
+            this.favoriteSlotTrackBar.Location = new System.Drawing.Point(277, 442);
             this.favoriteSlotTrackBar.Maximum = 4;
             this.favoriteSlotTrackBar.Name = "favoriteSlotTrackBar";
             this.favoriteSlotTrackBar.Size = new System.Drawing.Size(212, 56);
@@ -786,17 +788,17 @@ namespace WindowsFormsApp
             // 
             this.label31.AutoSize = true;
             this.label31.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label31.Location = new System.Drawing.Point(105, 404);
+            this.label31.Location = new System.Drawing.Point(66, 456);
             this.label31.Name = "label31";
-            this.label31.Size = new System.Drawing.Size(137, 20);
+            this.label31.Size = new System.Drawing.Size(168, 20);
             this.label31.TabIndex = 28;
-            this.label31.Text = "Favorite slot type";
+            this.label31.Text = "Preference slot types";
             // 
             // favoriteSubjectValueLabel
             // 
             this.favoriteSubjectValueLabel.AutoSize = true;
             this.favoriteSubjectValueLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.favoriteSubjectValueLabel.Location = new System.Drawing.Point(559, 301);
+            this.favoriteSubjectValueLabel.Location = new System.Drawing.Point(520, 353);
             this.favoriteSubjectValueLabel.Name = "favoriteSubjectValueLabel";
             this.favoriteSubjectValueLabel.Size = new System.Drawing.Size(212, 20);
             this.favoriteSubjectValueLabel.TabIndex = 27;
@@ -806,7 +808,7 @@ namespace WindowsFormsApp
             // 
             this.departmentRatingValueLabel.AutoSize = true;
             this.departmentRatingValueLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.departmentRatingValueLabel.Location = new System.Drawing.Point(559, 195);
+            this.departmentRatingValueLabel.Location = new System.Drawing.Point(520, 247);
             this.departmentRatingValueLabel.Name = "departmentRatingValueLabel";
             this.departmentRatingValueLabel.Size = new System.Drawing.Size(212, 20);
             this.departmentRatingValueLabel.TabIndex = 26;
@@ -816,7 +818,7 @@ namespace WindowsFormsApp
             // 
             this.priorityCourseValueLabel.AutoSize = true;
             this.priorityCourseValueLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.priorityCourseValueLabel.Location = new System.Drawing.Point(559, 90);
+            this.priorityCourseValueLabel.Location = new System.Drawing.Point(520, 142);
             this.priorityCourseValueLabel.Name = "priorityCourseValueLabel";
             this.priorityCourseValueLabel.Size = new System.Drawing.Size(212, 20);
             this.priorityCourseValueLabel.TabIndex = 25;
@@ -825,7 +827,7 @@ namespace WindowsFormsApp
             // favoriteSubjectTrackBar
             // 
             this.favoriteSubjectTrackBar.LargeChange = 1;
-            this.favoriteSubjectTrackBar.Location = new System.Drawing.Point(316, 287);
+            this.favoriteSubjectTrackBar.Location = new System.Drawing.Point(277, 339);
             this.favoriteSubjectTrackBar.Maximum = 4;
             this.favoriteSubjectTrackBar.Name = "favoriteSubjectTrackBar";
             this.favoriteSubjectTrackBar.Size = new System.Drawing.Size(212, 56);
@@ -836,7 +838,7 @@ namespace WindowsFormsApp
             // departmentRatingTrackBar
             // 
             this.departmentRatingTrackBar.LargeChange = 1;
-            this.departmentRatingTrackBar.Location = new System.Drawing.Point(316, 179);
+            this.departmentRatingTrackBar.Location = new System.Drawing.Point(277, 231);
             this.departmentRatingTrackBar.Maximum = 4;
             this.departmentRatingTrackBar.Name = "departmentRatingTrackBar";
             this.departmentRatingTrackBar.Size = new System.Drawing.Size(212, 56);
@@ -847,7 +849,7 @@ namespace WindowsFormsApp
             // priorityCourseTrackBar
             // 
             this.priorityCourseTrackBar.LargeChange = 1;
-            this.priorityCourseTrackBar.Location = new System.Drawing.Point(316, 76);
+            this.priorityCourseTrackBar.Location = new System.Drawing.Point(277, 128);
             this.priorityCourseTrackBar.Maximum = 4;
             this.priorityCourseTrackBar.Name = "priorityCourseTrackBar";
             this.priorityCourseTrackBar.Size = new System.Drawing.Size(212, 56);
@@ -859,37 +861,37 @@ namespace WindowsFormsApp
             // 
             this.label26.AutoSize = true;
             this.label26.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label26.Location = new System.Drawing.Point(105, 301);
+            this.label26.Location = new System.Drawing.Point(66, 353);
             this.label26.Name = "label26";
-            this.label26.Size = new System.Drawing.Size(128, 20);
+            this.label26.Size = new System.Drawing.Size(137, 20);
             this.label26.TabIndex = 21;
-            this.label26.Text = "Favorite subject";
+            this.label26.Text = "Favorite subjects";
             // 
             // label8
             // 
             this.label8.AutoSize = true;
             this.label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label8.Location = new System.Drawing.Point(105, 194);
+            this.label8.Location = new System.Drawing.Point(66, 246);
             this.label8.Name = "label8";
-            this.label8.Size = new System.Drawing.Size(157, 20);
+            this.label8.Size = new System.Drawing.Size(167, 20);
             this.label8.TabIndex = 20;
-            this.label8.Text = "Department\'s rating";
+            this.label8.Text = "Manager\'s evaluation";
             // 
             // label7
             // 
             this.label7.AutoSize = true;
             this.label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label7.Location = new System.Drawing.Point(105, 89);
+            this.label7.Location = new System.Drawing.Point(66, 141);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(118, 20);
+            this.label7.Size = new System.Drawing.Size(127, 20);
             this.label7.TabIndex = 19;
-            this.label7.Text = "Priority course";
+            this.label7.Text = "Priority courses";
             // 
             // label12
             // 
             this.label12.AutoSize = true;
             this.label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label12.Location = new System.Drawing.Point(106, 511);
+            this.label12.Location = new System.Drawing.Point(67, 563);
             this.label12.Name = "label12";
             this.label12.Size = new System.Drawing.Size(409, 18);
             this.label12.TabIndex = 8;
@@ -1838,6 +1840,16 @@ namespace WindowsFormsApp
             this.adminLabel.TabIndex = 12;
             this.adminLabel.Text = "Admin: ";
             // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label32.Location = new System.Drawing.Point(66, 50);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(465, 22);
+            this.label32.TabIndex = 31;
+            this.label32.Text = "Admin configures input coefficient to schedule by system:\r\n";
+            // 
             // SchedulerForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -2061,6 +2073,7 @@ namespace WindowsFormsApp
         private System.Windows.Forms.DataGridViewTextBoxColumn Column28;
         private System.Windows.Forms.DataGridViewTextBoxColumn Column29;
         private System.Windows.Forms.Label adminLabel;
+        private System.Windows.Forms.Label label32;
     }
 }
 

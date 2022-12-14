@@ -187,5 +187,41 @@ namespace WindowsFormsApp.DAO
                 return null;
             }
         }
+
+        public static async Task<List<Lecturer>> GetAdminByEmail(string email)
+        {
+            List<Lecturer> lecturer;
+            try
+            {
+                var client = new HttpClient();
+
+                //string accessToken = "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJ1bmlxdWVfbmFtZSI6Ik5nbyBEYW5nIEhhIEFuIiwiZW1haWwiOiJtaW5odmlwcHJvbGsxMjNAZ21haWwuY29tIiwic3ViIjoibWluaHZpcHByb2xrMTIzQGdtYWlsLmNvbSIsImp0aSI6ImdyYnRsNmpPblJCeHZuNElJc1VaU2lpQ3JzUEJXcCIsIlVzZXJOYW1lIjoiTmdvIERhbmcgSGEgQW4iLCJJZCI6IkFuTkRIMiIsIm5iZiI6MTY2OTE5MDMwNiwiZXhwIjoxNjY5MTk3NTA2LCJpYXQiOjE2NjkxOTAzMDZ9.XBGvZYjWpGzS1pfRXjnDyVvfyeKAwcdJMnF5dX3jR8gai88K_zqgtF-JIvcpHLGs9fFXVbK9kdcyeN1FeKvMkw";
+                //client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+                //var endpoint = new Uri("http://20.214.249.72/api/UserAuthen?pageIndex=1&pageSize=1000000");
+
+                var endpoint = new Uri("http://20.214.249.72/api/User?Email="+email+"&RoleIDs=AD&pageIndex=1&pageSize=10");
+
+                HttpResponseMessage response = await client.GetAsync(endpoint);
+                var responseContent = await response.Content.ReadAsStringAsync();
+                if (response.IsSuccessStatusCode)
+                {
+                    //Console.WriteLine("Get success ");
+                    //Console.WriteLine("Status Code: " + response.StatusCode);
+                    //Console.WriteLine("Header: " + response.Headers);
+                    //Console.WriteLine("Respone: " + response.Content);
+
+                    //Console.WriteLine("Content Respone: " + responseContent);
+                    lecturer = JsonConvert.DeserializeObject<List<Lecturer>>(responseContent);
+                    return lecturer;
+                }
+                //Console.WriteLine("Get fail");
+                return null;
+            }
+            catch (Exception ex)
+            {
+                //Console.WriteLine("Error at Get: " + ex.Message);
+                return null;
+            }
+        }
     }
 }

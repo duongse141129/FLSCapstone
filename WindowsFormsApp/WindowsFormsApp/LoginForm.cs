@@ -42,17 +42,27 @@ namespace WindowsFormsApp
             else
             {
                 Lecturer user = await LecturerDAO.GetUserByKeyAsync(tokenKeyTextBox.Text.ToString());
-                if (user == null)
+                if(user == null)
                 {
                     invalidTextbox.Show();
                     invalidTextbox.Text = "Invalid key!";
                 }
                 else
                 {
-                    SchedulerForm schedulerForm = new SchedulerForm(this, user);
-                    schedulerForm.Show();
-                    this.Hide();
+                    List<Lecturer> user1 = await LecturerDAO.GetAdminByEmail(user.Email);
+                    if (user1.Count() == 0)
+                    {
+                        invalidTextbox.Show();
+                        invalidTextbox.Text = "Invalid key!";
+                    }
+                    else
+                    {
+                        SchedulerForm schedulerForm = new SchedulerForm(this, user1.First());
+                        schedulerForm.Show();
+                        this.Hide();
+                    }
                 }
+                
             }                                           
         }
 
