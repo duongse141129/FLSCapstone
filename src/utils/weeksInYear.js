@@ -59,15 +59,15 @@ export const getMondays = (year, term) => {
   let lastDayOfSemester;
   if(term.toLowerCase() === 'spring'){
     firstDayOfSemester = new Date(year, 0, 1)
-    lastDayOfSemester = new Date(year, 1, 1)
+    lastDayOfSemester = new Date(year, 0, 15)
   }
   else if(term.toLowerCase() === 'summer'){
     firstDayOfSemester = new Date(year, 4, 1)
-    lastDayOfSemester = new Date(year, 5, 1)
+    lastDayOfSemester = new Date(year, 4, 15)
   }
   else{
     firstDayOfSemester = new Date(year, 8, 1)
-    lastDayOfSemester = new Date(year, 9, 1)
+    lastDayOfSemester = new Date(year, 8, 15)
   } 
   while(firstDayOfSemester <  lastDayOfSemester){
     let monday = getFirstDayOfWeek(firstDayOfSemester);
@@ -82,15 +82,15 @@ export const getSundays = (year, term) => {
   let firstDayOfSemester;
   let lastDayOfSemester;
   if(term.toLowerCase() === 'spring'){
-    firstDayOfSemester = new Date(year, 3, 1)
-    lastDayOfSemester = new Date(year, 4, 1)
+    firstDayOfSemester = new Date(year, 3, 15)
+    lastDayOfSemester = new Date(year, 3, 30)
   }
   else if(term.toLowerCase() === 'summer'){
-    firstDayOfSemester = new Date(year, 7, 1)
-    lastDayOfSemester = new Date(year, 8, 1)
+    firstDayOfSemester = new Date(year, 7, 15)
+    lastDayOfSemester = new Date(year, 7, 30)
   }
   else{
-    firstDayOfSemester = new Date(year, 11, 1)
+    firstDayOfSemester = new Date(year, 11, 15)
     lastDayOfSemester = new Date(year, 11, 31)
   } 
   while(firstDayOfSemester <  lastDayOfSemester){

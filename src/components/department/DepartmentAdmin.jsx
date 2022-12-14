@@ -23,6 +23,7 @@ const DepartmentAdmin = () => {
   const [contentDel, setContentDel] = useState('');
   const [loading, setLoading] = useState(false)
 
+  //get all departments
   useEffect(() => {
     setLoading(true)
     request.get('Department', {
