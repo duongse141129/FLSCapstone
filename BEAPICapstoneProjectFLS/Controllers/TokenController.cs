@@ -400,11 +400,12 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 response.Message = "RefreshToken have been revoked";
                 return NotFound(response);
             }
-            if (DateTime.Now > storedRefreshToken.ExpiredAt)
+
+            if(DateTime.UtcNow > storedRefreshToken.ExpiredAt)
             {
                 response.Success = false;
                 response.Message = "RefreshToken has expired";
-                return NotFound(response);
+                return BadRequest(response);
             }
 
 

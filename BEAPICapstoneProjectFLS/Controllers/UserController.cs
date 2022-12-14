@@ -78,5 +78,15 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 return NotFound();
             return Ok();
         }
+
+
+        [HttpPut("UpdateEmailOfUser/{id}&{email}", Name = "UpdateEmailOfUser")]
+        public async Task<IActionResult> UpdateEmailOfUser(string id, string email)
+        {
+            var userVM = await _IUserService.UpdateEmailOfUser(id, email);
+            if (userVM == null)
+                return BadRequest();
+            return Ok(userVM);
+        }
     }
 }

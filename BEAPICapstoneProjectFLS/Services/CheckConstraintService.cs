@@ -77,7 +77,7 @@ namespace BEAPICapstoneProjectFLS.Services
 
                         foreach (var lecturer in listLecturer)
                         {
-                            var rs = await CheckCourseOflecrurer(lecturer.Id, semesterID);
+                            var rs = await CheckCourseOflecrurerForPublic(lecturer.Id, semesterID);
 
                             if (rs.Success == false)
                             {
@@ -273,6 +273,88 @@ namespace BEAPICapstoneProjectFLS.Services
             }
         }
 
-        
+        public async Task<ApiResponse> CheckCourseOflecrurerInDepartment(string departmentID, string semesterID)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.Success = false;
+            apiResponse.Message = "Check Courses Of lecrurers in Department fail";
+            try
+            {
+                var listUser = _resUser.FindBy(x => x.Status == (int)FLSStatus.Active);
+                UserViewModel flitter = new UserViewModel { RoleIDs = new List<string>() { "LC" }, DepartmentId = departmentID };
+                var listLecturer = await (listUser.ProjectTo<UserViewModel>
+                    (_mapper.ConfigurationProvider)).DynamicFilter(flitter).ToListAsync();
+
+                if(listLecturer == null)
+                {
+                    apiResponse.Data = "list lecturers = null";
+                    return apiResponse;
+                }
+
+                List<CourseOfLecturer> courseOfLecturerList = new List<CourseOfLecturer>();
+                foreach (var lec in listLecturer)
+                {
+                    var rs = await CheckCourseOflecrurer(lec.Id, semesterID);
+
+                    if (rs.Success == false)
+                    {
+                        courseOfLecturerList.Add((CourseOfLecturer)rs.Data);
+                    }
+                }
+
+                if(courseOfLecturerList.Count >0)
+                {
+                    apiResponse.Data = courseOfLecturerList;
+                    return apiResponse;
+                }
+
+
+                apiResponse.Success = true;
+                apiResponse.Message = "Check Courses Of lecrurers in Department success";
+                return apiResponse;
+
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Data = ex.Message;
+                return apiResponse;
+            }
+        }
+
+        public async Task<ApiResponse> CheckCourseOflecrurerForPublic(string lecturerID, string semesterID)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.Success = false;
+            apiResponse.Message = "Check CourseOflecrurer fail";
+            try
+            {
+                var courseOfLecturer = await GetCourseOfLecturer(lecturerID, semesterID);
+
+                if (courseOfLecturer == null)
+                {
+                    apiResponse.Data = "CourseOflecrurer null";
+                    return apiResponse;
+                }
+
+                if ( courseOfLecturer.AvailableCourse <= courseOfLecturer.MaxCourse)
+                {
+                    apiResponse.Success = true;
+                    apiResponse.Message = "Check CourseOflecrurer Success";
+                    apiResponse.Data = courseOfLecturer;
+                    return apiResponse;
+                }
+
+                apiResponse.Data = courseOfLecturer;
+                return apiResponse;
+
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Data = ex.Message;
+                return apiResponse;
+            }
+        }
+
+
     }
 }

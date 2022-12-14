@@ -13,6 +13,7 @@ namespace BEAPICapstoneProjectFLS.IServices
            int pageSize, UserSortBy sortBy, OrderBy order);
         Task<UserViewModel> CreateUser(CreateUserRequest request);
         Task<UserViewModel> UpdateUser(string id, UpdateUserRequest request);
+        Task<UserViewModel> UpdateEmailOfUser(string id, string request);
         Task<bool> DeleteUser(string id);
     }
 }

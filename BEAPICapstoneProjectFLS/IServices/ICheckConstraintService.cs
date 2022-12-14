@@ -9,6 +9,7 @@ namespace BEAPICapstoneProjectFLS.IServices
         Task<ApiResponse> CheckSemesterPublic(string semesterID);
         Task<ApiResponse> CheckAllDepartmentManagerConfirm(string semesterID);
         Task<ApiResponse> CheckCourseOflecrurer(string lecturerID, string semesterID);
+        Task<ApiResponse> CheckCourseOflecrurerInDepartment(string departmentID, string semesterID);
         Task<ApiResponse> SetAllDepartmentManagerConfirm(string semesterID);
     }
 }

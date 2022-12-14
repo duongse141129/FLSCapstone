@@ -184,6 +184,35 @@ namespace BEAPICapstoneProjectFLS.Services
 
         }
 
+
+        public async Task<UserViewModel> UpdateEmailOfUser(string id, string email)
+        {
+            try
+            {
+                var listUser = await _res.FindByAsync(x => x.Id == id && x.Status == (int)UserStatus.Active);
+                if (listUser == null)
+                {
+                    return null;
+                }
+                var user = listUser.FirstOrDefault();
+                if (user == null)
+                {
+                    return null;
+                }
+                user.Email = email; 
+                await _res.UpdateAsync(user);
+                await _res.SaveAsync();
+
+                var userVM = await GetUserById(user.Id);
+                return userVM;
+            }
+            catch
+            {
+                return null;
+            }
+
+        }
+
         //public async Task<IEnumerable<LecturerViewModel>> GetAllLecturerByDepartmentID(string departmentID)
         //{
         //    var lectueres = await _res.GetAllByIQueryable().Where(x => x.Status == (int)LecturerStatus.Active)

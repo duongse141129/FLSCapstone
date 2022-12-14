@@ -18,6 +18,7 @@ namespace BEAPICapstoneProjectFLS.Controllers
             _ISemesterService = SemesterService;
         }
 
+        /*
         [HttpGet("CheckCourseOflecrurer/{lecturerID}&{semesterID}", Name = "CheckCourseOflecrurer")]
         public async Task<IActionResult> CheckCourseOflecrurer(string lecturerID, string semesterID)
         {
@@ -42,6 +43,26 @@ namespace BEAPICapstoneProjectFLS.Controllers
                 //{
                 //    return Ok(apiResponse);
                 //}
+            }
+
+        }*/
+
+        [HttpGet("CheckCourseOflecrurerInDepartment/{departmentID}&{semesterID}", Name = "CheckCourseOflecrurer")]
+        public async Task<IActionResult> CheckCourseOflecrurer(string departmentID, string semesterID)
+        {
+            var checkSemesterID = await _ISemesterService.GetSemesterById(semesterID);
+            if (checkSemesterID == null)
+            {
+                return NotFound();
+            }
+            else
+            {
+                var apiResponse = await _ICheckConstraintService.CheckCourseOflecrurerInDepartment(departmentID, semesterID);
+                if (apiResponse != null)
+                {
+                    return Ok(apiResponse);
+                }
+                return BadRequest();
             }
 
         }

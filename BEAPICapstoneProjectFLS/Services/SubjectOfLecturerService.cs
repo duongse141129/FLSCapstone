@@ -94,6 +94,26 @@ namespace BEAPICapstoneProjectFLS.Services
                         listSubjectOfLecturerViewModel = (IQueryable<SubjectOfLecturerViewModel>)listSubjectOfLecturerViewModel.OrderByDescending(x => x.Id);
                     }
                     break;
+                case "SubjectId":
+                    if (order.ToString() == "Asc")
+                    {
+                        listSubjectOfLecturerViewModel = (IQueryable<SubjectOfLecturerViewModel>)listSubjectOfLecturerViewModel.OrderBy(x => x.SubjectId);
+                    }
+                    else
+                    {
+                        listSubjectOfLecturerViewModel = (IQueryable<SubjectOfLecturerViewModel>)listSubjectOfLecturerViewModel.OrderByDescending(x => x.SubjectId);
+                    }
+                    break;
+                case "DepartmentName":
+                    if (order.ToString() == "Asc")
+                    {
+                        listSubjectOfLecturerViewModel = (IQueryable<SubjectOfLecturerViewModel>)listSubjectOfLecturerViewModel.OrderBy(x => x.DepartmentName).ThenBy(x => x.SubjectId);
+                    }
+                    else
+                    {
+                        listSubjectOfLecturerViewModel = (IQueryable<SubjectOfLecturerViewModel>)listSubjectOfLecturerViewModel.OrderByDescending(x => x.DepartmentName).ThenBy(x => x.SubjectId);
+                    }
+                    break;
             }
             return PagedListExtensions.ToPagedList<SubjectOfLecturerViewModel>(listSubjectOfLecturerViewModel, pageIndex, pageSize);
         }

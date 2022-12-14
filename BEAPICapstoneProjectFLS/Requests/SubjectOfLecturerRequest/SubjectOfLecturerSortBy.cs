@@ -3,7 +3,9 @@
     public enum SubjectOfLecturerSortBy
     {
         Id,
-        LecturerId
+        LecturerId,
+        SubjectId,
+        DepartmentName
 
     }
 }

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "G:\\backupAPIbasic\\ProjectNopDoc\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj": {}
+    "G:\\CSharpProject\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj": {}
   },
   "projects": {
-    "G:\\backupAPIbasic\\ProjectNopDoc\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj": {
+    "G:\\CSharpProject\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "G:\\backupAPIbasic\\ProjectNopDoc\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj",
+        "projectUniqueName": "G:\\CSharpProject\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj",
         "projectName": "BEAPICapstoneProjectFLS",
-        "projectPath": "G:\\backupAPIbasic\\ProjectNopDoc\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj",
+        "projectPath": "G:\\CSharpProject\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj",
         "packagesPath": "C:\\Users\\Admin\\.nuget\\packages\\",
-        "outputPath": "G:\\backupAPIbasic\\ProjectNopDoc\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\obj\\",
+        "outputPath": "G:\\CSharpProject\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Admin\\AppData\\Roaming\\NuGet\\NuGet.Config",

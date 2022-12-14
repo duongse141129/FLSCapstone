@@ -33,5 +33,9 @@ namespace BEAPICapstoneProjectFLS.ViewModel
         public int? isEnable { get; set; }
         [JsonProperty("Status")]
         public int? Status { get; set; }
+        [JsonProperty("DepartmentName")]
+        public string DepartmentName { get; set; }
+        [JsonProperty("InOrOut")]
+        public string InOrOut { get; set; }
     }
 }

@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "YFRv0nxedab7oiIJGxDiJoNPMK4+59ZUnaSJRlsttoi8Knn+SlBf5EE8VR2YBZVlqHpBgsLnCsWp60zua05XPw==",
+  "dgSpecHash": "eCahzs4EPHelhyxMMN4S7vitvGd50VyzwqaPqImZiwv8oe2mwtrInK77uUo17hWEJlAhvHegToyF5jbJS0oCMg==",
   "success": true,
-  "projectFilePath": "G:\\backupAPIbasic\\ProjectNopDoc\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj",
+  "projectFilePath": "G:\\CSharpProject\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS\\BEAPICapstoneProjectFLS.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Admin\\.nuget\\packages\\automapper\\10.1.1\\automapper.10.1.1.nupkg.sha512",
     "C:\\Users\\Admin\\.nuget\\packages\\automapper.extensions.microsoft.dependencyinjection\\8.1.1\\automapper.extensions.microsoft.dependencyinjection.8.1.1.nupkg.sha512",
