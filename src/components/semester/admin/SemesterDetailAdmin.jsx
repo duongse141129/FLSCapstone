@@ -315,7 +315,7 @@ const SemesterDetailAdmin = () => {
             Confirmation</Typography>}
         </Stack>
       </Stack>
-      {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id} 
+      {selected === 'courses' && <CourseList semesterId={id} scheduleId={schedule.Id} refresh={refresh}
         slotTypes={slotTypes} semesterState={semester.State} setReloadCourseNumber={setReloadCourseNumber}/>}
       {selected === 'subjects' && <SummarySubject semesterId={id} scheduleId={schedule.Id}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}

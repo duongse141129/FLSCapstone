@@ -4,6 +4,7 @@ import { Box, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, Tabl
 } from '@mui/material'
 import { green } from '@mui/material/colors';
 import { useEffect, useMemo, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
 import { HashLoader } from 'react-spinners';
 import request from '../../../utils/request';
 import AssignModal from '../AssignModal';
@@ -19,7 +20,7 @@ const MenuProps = {
   },
 };
 
-const CourseList = ({ semesterId, semesterState, scheduleId }) => {
+const CourseList = ({ semesterId, semesterState, scheduleId, refresh }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -105,7 +106,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
         }
       }).catch(err => alert('Fail to load course assign'))
     }
-  }, [scheduleId, isAssign, isClear])
+  }, [scheduleId, isAssign, isClear, refresh])
 
   //get slot types
   useEffect(() => {
@@ -162,6 +163,17 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
     }
   }
 
+  const afterAssign = (status) => {
+    if(status){
+      toast.success('Assign successfully', {
+        position: "top-right", autoClose: 3000,
+        hideProgressBar: false, closeOnClick: true,
+        pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
+  }
+
   const confirmClear = (courseId) => {
     let already = false;
     for (let i in assignedCourses) {
@@ -190,9 +202,16 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
           .then(res => {
             if (res.status === 200) {
               setIsClear(false);
+              toast.success('Clear assigment successfully', {
+                position: "top-right", autoClose: 3000,
+                hideProgressBar: false, closeOnClick: true,
+                pauseOnHover: true, draggable: true,
+                progress: undefined, theme: "light",
+              });
             }
           })
           .catch(err => {
+            setIsClear(false)
             alert('Fail to Clear Assignment')
           })
       }
@@ -229,7 +248,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
               <TableRow>
                 <TableCell className='subject-header'>Course</TableCell>
                 <TableCell className='subject-header'>Subject</TableCell>
-                <TableCell className='subject-header'>Slot Amount</TableCell>
+                <TableCell className='subject-header' align='center'>Slot Amount</TableCell>
                 <TableCell className='subject-header'>Assigned To</TableCell>
                 <TableCell className='subject-header request-border'>Teaching Slot</TableCell>
                 {(semesterState === 3 || semesterState === 5) &&
@@ -243,7 +262,7 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
                   <TableRow key={course.Id} hover>
                     <TableCell>{course.Id}</TableCell>
                     <TableCell>{course.SubjectId}</TableCell>
-                    <TableCell>{course.SlotAmount}</TableCell>
+                    <TableCell align='center'>{course.SlotAmount}</TableCell>
                     <TableCell>
                       {assignedCourses.find(item => item.CourseId === course.Id)?.LecturerId ||
                         <span style={{ color: 'red' }}>Not Yet</span>
@@ -295,9 +314,12 @@ const CourseList = ({ semesterId, semesterState, scheduleId }) => {
         />
       </Paper>}
       <AssignModal isAssign={isAssign} setIsAssign={setIsAssign} selectedCourse={selectedCourse}
-        semesterId={semesterId} scheduleId={scheduleId} assignedCourses={assignedCourses} />
+        semesterId={semesterId} scheduleId={scheduleId} assignedCourses={assignedCourses}
+        afterAssign={afterAssign} />
+
       <ClearConfirm isClear={isClear} setIsClear={setIsClear} selectedCourse={selectedCourse}
         saveClear={saveClear} />
+      <ToastContainer/>
     </Stack>
   )
 }

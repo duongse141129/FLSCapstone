@@ -7,7 +7,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
-const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, scheduleId, assignedCourses }) => {
+const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, scheduleId, assignedCourses, afterAssign }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [selectedDepartment, setSelectedDepartment] = useState(account.DepartmentId);
   const [departments, setDepartments] = useState([]);
@@ -136,27 +136,31 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
   //get slots type by semesterId
   useEffect(() => {
     setLoadSlot(true);
-    request.get('SlotType', {
-      params: {
-        SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc',
-        pageIndex: 1, pageSize: 100,
-      }
-    }).then(res => {
-      if (res.data) {
-        let dataSlot = res.data; 
-        for(let i in myCourses){
-          dataSlot = dataSlot.filter(data => data.Id !== myCourses[i].SlotTypeId)
+    if(semesterId){
+      request.get('SlotType', {
+        params: {
+          SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc',
+          pageIndex: 1, pageSize: 100,
         }
-        for(let i in courseTime){
-          dataSlot = dataSlot.filter(data => data.Id !== courseTime[i])
+      }).then(res => {
+        if (res.data) {
+          let dataSlot = res.data; 
+          for(let i in myCourses){
+            dataSlot = dataSlot.filter(data => data.Id !== myCourses[i].SlotTypeId)
+          }
+          for(let i in courseTime){
+            dataSlot = dataSlot.filter(data => data.Id !== courseTime[i])
+          }
+          for(let i in disableSlots){
+            dataSlot = dataSlot.filter(data => data.Id !== disableSlots[i].SlotTypeId)
+          }
+          setSlots(dataSlot)
+          setTimeout(() => {
+            setLoadSlot(false); 
+          }, 200)
         }
-        for(let i in disableSlots){
-          dataSlot = dataSlot.filter(data => data.Id !== disableSlots[i].SlotTypeId)
-        }
-        setSlots(dataSlot)
-        setLoadSlot(false); 
-      }
-    }).catch(err => alert('Fail to load slots'))
+      }).catch(err => alert('Fail to load slots'))
+    }
   }, [semesterId, myCourses, courseTime, disableSlots])
 
   const handleSelectDepartment = (e) => {
@@ -185,22 +189,19 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
   const handleSave = () => {
     if(selectedLecturer.Id && selectedSlot.Id){
       request.post('CourseAssign', {
-        LecturerId: selectedLecturer.Id,
-        CourseId: selectedCourse,
-        SlotTypeId: selectedSlot.Id,
-        ScheduleId: scheduleId,
+        LecturerId: selectedLecturer.Id, CourseId: selectedCourse,
+        SlotTypeId: selectedSlot.Id, ScheduleId: scheduleId,
         isAssign: 1
+      }).then(res => {
+        if (res.status === 201) {
+          setIsAssign(false);
+          setSelectedLecturer({});
+          setSelectedSlot({});
+          afterAssign(true)
+        }
+      }).catch(err => {
+        alert('Fail to save!')
       })
-        .then(res => {
-          if (res.status === 201) {
-            setIsAssign(false);
-            setSelectedLecturer({});
-            setSelectedSlot({});
-          }
-        })
-        .catch(err => {
-          alert('Fail to save!')
-        })
     }
   }
 
@@ -277,8 +278,8 @@ const AssignModal = ({ isAssign, setIsAssign, selectedCourse, semesterId, schedu
               {selectedLecturer.Id && loadSlot && 
                 <Stack px={2} py={1}><ClipLoader size={30} color={green[700]}/></Stack>
               }
-              {slots.length === 0 && <Typography px={2} py={1} color={red[600]}>
-                No available slots</Typography>}
+              {selectedLecturer.Id && !loadSlot && slots.length === 0 && 
+                <Typography px={2} py={1} color={red[600]}>No available slots</Typography>}
               {selectedLecturer.Id && !loadSlot && slots.map(slot => (
                 <Typography key={slot.Id} px={2} py={1} borderBottom='1px solid #e3e3e3'
                   bgcolor={JSON.stringify(selectedSlot) === JSON.stringify(slot) && green[300]}

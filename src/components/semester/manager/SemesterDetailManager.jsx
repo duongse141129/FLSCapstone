@@ -17,6 +17,7 @@ const SemesterDetailManager = () => {
   const [schedule, setSchedule] = useState({});
   const [refresh, setRefresh] = useState(false)
 
+  //get semester
   useEffect(() => {
     request.get(`Semester/${id}`)
       .then(res => {
@@ -29,6 +30,7 @@ const SemesterDetailManager = () => {
       })
   }, [id, refresh])
 
+  //get schedule by semesterId
   useEffect(() => {
     request.get('Schedule', {
       params: { SemesterId: id, pageIndex: 1, pageSize: 10 }
@@ -121,7 +123,8 @@ const SemesterDetailManager = () => {
           ))}
         </Stack>
       </Stack>
-      {selected === tabs[0].name && <CourseList semesterId={id} semesterState={semester.State} scheduleId={schedule.Id} />}
+      {selected === tabs[0].name && <CourseList semesterId={id} semesterState={semester.State} 
+          scheduleId={schedule.Id} refresh={refresh}/>}
       {selected === tabs[1].name && <SubjectRequest semesterId={id} semesterState={semester.State} scheduleId={schedule.Id}/>}
       {selected === tabs[2].name && <LecturerContainer semester={semester} scheduleId={schedule.Id}/>}
     </Stack>

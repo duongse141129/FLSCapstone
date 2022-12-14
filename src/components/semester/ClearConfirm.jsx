@@ -16,11 +16,10 @@ const ClearConfirm = ({isClear, setIsClear, selectedCourse, saveClear}) => {
 
   return (
     <Dialog fullWidth={true} maxWidth='xs'
-      open={isClear} onClose={() => setIsClear(false)}
-    >
+      open={isClear} onClose={() => setIsClear(false)}>
       <DialogContent>
         <Typography fontSize='18px'>
-          Clear Assignment of Course: {selectedCourse}
+          Clear Assignment of Course: <span style={{fontWeight: 500}}>{selectedCourse}</span>
         </Typography>
       </DialogContent>
       <DialogActions>

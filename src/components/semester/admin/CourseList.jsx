@@ -1,7 +1,9 @@
 import { Add, DeleteOutlined, EditOutlined, FileUploadOutlined } from '@mui/icons-material';
 import { Box, Button, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, 
   TableContainer, TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
+import { green } from '@mui/material/colors';
 import React, { useState, useRef, useEffect, useMemo } from 'react';
+import { HashLoader } from 'react-spinners';
 import { toast } from 'react-toastify';
 import * as XLSX from "xlsx";
 import request from '../../../utils/request';
@@ -20,7 +22,7 @@ const MenuProps = {
   },
 };
 
-const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloadCourseNumber }) => {
+const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloadCourseNumber, refresh }) => {
   const fileInput = useRef(null);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(20);
@@ -57,6 +59,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloa
     }
     return 0;
   }, [assignedCourses, selectedSubject, subjects])
+  const [loadCourse, setLoadCourse] = useState(false)
 
   //get all departments 
   useEffect(() => {
@@ -97,7 +100,8 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloa
 
   //get courses by selected subject
   useEffect(() => {
-    if (selectedSubject && semesterId) {
+    setLoadCourse(true)
+    if (selectedSubject && semesterId && subjects.length > 0) {
       request.get('Course', {
         params: {
           SubjectId: selectedSubject === 'all' ? '' : selectedSubject, 
@@ -105,7 +109,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloa
           pageIndex: 1, pageSize: 1000
         }
       }).then(res => {
-        if (res.data.length > 0) {
+        if (res.status === 200) {
           let internal = res.data
           let external = res.data
           for (let i in subjects) {
@@ -115,8 +119,9 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloa
             internal = internal.filter(course => course.SubjectId !== external[i].SubjectId)
           }
           setCourses(internal)
+          setLoadCourse(false)
         }
-      }).catch(err => { alert('Fail to load courses') })
+      }).catch(err => { alert('Fail to load courses'); setLoadCourse(false) })
     }
   }, [semesterId, selectedSubject, subjects, reload])
 
@@ -131,7 +136,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloa
         }
       }).catch(err => alert('Fail to load course assign'))
     }
-  }, [scheduleId])
+  }, [scheduleId, refresh])
 
   //get all courses to show total
   useEffect(() => {
@@ -338,7 +343,8 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloa
           </Button>
         </Stack>}
       </Stack>
-      <Paper sx={{ minWidth: 700, mb: 2 }}>
+      {loadCourse && <HashLoader color={green[600]} size={30}/>}
+      {!loadCourse && <Paper sx={{ minWidth: 700, mb: 2 }}>
         <TableContainer component={Box}>
           <Table size='small'> 
             <TableHead>
@@ -353,7 +359,8 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloa
               </TableRow>
             </TableHead>
             <TableBody>
-              {courses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {courses.length > 0 && 
+              courses.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map(course => (
                   <TableRow key={course.Id} hover>
                     <TableCell>{course.Id}</TableCell>
@@ -403,7 +410,7 @@ const CourseList = ({ semesterId, scheduleId, slotTypes, semesterState, setReloa
             bgcolor: 'ghostwhite'
           }}
         />
-      </Paper>
+      </Paper>}
       <ImportModal isImport={isImport} setIsImport={setIsImport} importCourses={importCourses}
         semesterId={semesterId} handleAfterImport={handleAfterImport}/>
       <AddModal isAdd={isAdd} setIsAdd={setIsAdd} departments={departments} semesterId={semesterId}
