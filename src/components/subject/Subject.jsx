@@ -1,13 +1,14 @@
 import {Box, Paper, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Typography, TablePagination, Tooltip, IconButton
 } from '@mui/material';
-import { StarBorder, DoDisturb, CheckCircleOutlined } from '@mui/icons-material';
-import React, { useState, useEffect } from 'react';
-import RatingModal from '../department/RatingModal';
 import { blue, green, grey, red } from '@mui/material/colors';
+import { StarBorder, DoDisturb, CheckCircleOutlined } from '@mui/icons-material';
 import {HashLoader} from 'react-spinners';
 import { ToastContainer, toast } from 'react-toastify';
+import React, { useState, useEffect, useMemo } from 'react';
+import RatingModal from '../department/RatingModal';
 import RegisterConfirm from './RegisterConfirm';
+import AlertComponent from '../alert/Alert';
 import request from '../../utils/request';
 import configData from  '../../utils/configData.json';
 import './Subject.css';
@@ -26,6 +27,14 @@ const Subject = ({ semesterId, semesterState }) => {
   const [pointOne, setPointOne] = useState(0);
   const [loadSubject, setLoadSubject] = useState(false);
   const [isRegister, setIsRegister] = useState(false);
+  const [isAlert, setIsAlert] = useState(false);
+  const [contentAlert, setContentAlert] = useState('');
+  const disableSubs = useMemo(() => {
+    if(favoriteSubjects.length > 0){
+      return favoriteSubjects.filter(item => item.isEnable === 0)
+    }
+    return []
+  }, [favoriteSubjects])
 
   //get Subject by my department
   useEffect(() => {
@@ -56,12 +65,8 @@ const Subject = ({ semesterId, semesterState }) => {
     const getFavoriteSubjects = async () => {
       try {
         const response = await request.get('SubjectOfLecturer', {
-          params: {
-            SemesterId: semesterId,
-            LecturerId: account.Id,
-            pageIndex: 1,
-            pageSize: 1000
-          }
+          params: {SemesterId: semesterId, LecturerId: account.Id,
+            pageIndex: 1,pageSize: 1000}
         })
         if (response.data) {
           setFavoriteSubjects(response.data)
@@ -72,7 +77,9 @@ const Subject = ({ semesterId, semesterState }) => {
       }
     }
 
-    getFavoriteSubjects();
+    if(semesterId && account.Id){
+      getFavoriteSubjects();
+    }
   }, [isRating, account.Id, semesterId, isRegister])
 
   //set number subjecs at point 1 and 5
@@ -83,6 +90,7 @@ const Subject = ({ semesterId, semesterState }) => {
     }
   }, [favoriteSubjects])
 
+  //set rows per page of subject'length
   useEffect(() => {
     if (subjects.length > 0) {
       setRowsPerPage(subjects.length)
@@ -107,8 +115,19 @@ const Subject = ({ semesterId, semesterState }) => {
 
   const clickRegister = (id) => {
     if(semesterState !== 2) return;
-    setSubjectId(id)
-    setIsRegister(true)
+
+    if(favoriteSubjects.length > 0){
+      const obj = favoriteSubjects.find(item => item.SubjectId === id)
+      if(obj.isEnable === 1){
+        if(disableSubs.length >= configData.DISABLE_SUBJECT){
+          setContentAlert(`You have reached max number of unregistration: ${configData.DISABLE_SLOT}.`)
+          setIsAlert(true)
+          return;
+        }
+      }
+      setSubjectId(id)
+      setIsRegister(true)
+    }
   }
 
   const afterRegister = (content) => {
@@ -139,7 +158,7 @@ const Subject = ({ semesterId, semesterState }) => {
           <Typography>{account.DepartmentName}</Typography>
         </Stack>
         <Stack direction='row' alignItems='center' gap={4}>
-          <Stack>
+          <Stack bgcolor={grey[100]} borderRadius={2} p={1}>
             <Typography color={red[600]} fontSize='14px'>
               <span style={{fontWeight: 500}}>Subjects at point 1:</span> {pointOne}/{configData.POINT_ONE_NUMBER}
             </Typography>
@@ -147,8 +166,15 @@ const Subject = ({ semesterId, semesterState }) => {
               <span style={{fontWeight: 500}}>Subjects at point 5:</span> {pointFive}/{configData.POINT_FIVE_NUMBER}
             </Typography>
           </Stack>
-          <Stack bgcolor={semesterState === 2 ? blue[100] : grey[200]} p={1} fontSize='14px' borderRadius={2}>
-            {semesterState === 2 ? 'Click to register or unregister' : 'Registration is closed'}
+          <Stack bgcolor={grey[100]} p={1} fontSize='14px' borderRadius={2}>
+            {semesterState === 2 ? 
+              <>
+                <Typography fontSize='14px' color={green[600]}>Can register or unregister</Typography>
+                <Typography fontSize='14px' textAlign='center' color={red[600]}>
+                  <span style={{fontWeight: 500}}>Unregistration:</span> {disableSubs.length}/{configData.DISABLE_SUBJECT}
+                </Typography>
+              </> : 
+            <Typography fontSize='14px' color={red[600]}>Registration is closed</Typography>}
           </Stack>
         </Stack>
       </Stack>
@@ -227,6 +253,7 @@ const Subject = ({ semesterId, semesterState }) => {
       <RegisterConfirm isRegister={isRegister} setIsRegister={setIsRegister}
         subjectId={subjectId} subjects={subjects} favoriteSubjects={favoriteSubjects}
         afterRegister={afterRegister}/>
+      <AlertComponent isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
       <ToastContainer />
     </Stack>
   )

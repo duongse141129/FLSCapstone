@@ -3,10 +3,10 @@ import { Box, FormControl, FormControlLabel, Paper, Radio, RadioGroup, Stack, Sw
 import React, { useState, useEffect } from 'react'
 import request from '../../utils/request'
 import configData from '../../utils/configData.json';
-import { blue, grey, red } from '@mui/material/colors'
+import { blue, green, grey, red } from '@mui/material/colors'
 import { ToastContainer, toast } from 'react-toastify';
 import { ThumbDown, ThumbUp } from '@mui/icons-material';
-import { ClipLoader } from 'react-spinners';
+import { ClipLoader, HashLoader } from 'react-spinners';
 
 const SlotType = ({ semesterId, semesterState }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
@@ -19,40 +19,40 @@ const SlotType = ({ semesterId, semesterState }) => {
   const [isEdit, setIsEdit] = useState(false);
   const [loading, setLoading] = useState(false);
   const [picked, setPicked] = useState('');
+  const [loadSlot, setLoadSlot] = useState(false);
 
   //get slottype list
   useEffect(() => {
-    request.get('SlotType', {
-      params: {
-        SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', order: 'Asc',
-        pageIndex: 1, pageSize: 100,
-      }
-    })
-      .then(res => {
+    setLoadSlot(true)
+    if(semesterId){
+      request.get('SlotType', {
+        params: {SemesterId: semesterId, sortBy: 'DayOfWeekAndTimeStart', 
+          order: 'Asc', pageIndex: 1, pageSize: 100}
+      }).then(res => {
         if (res.status === 200) {
           setSlots(res.data)
+          setLoadSlot(false)
         }
-      })
-      .catch(err => {
-        alert('Fail to load slot!')
-      })
+      }).catch(err => {alert('Fail to load slot!'); setLoadSlot(false)})
+    }
   }, [semesterId])
 
   //get slotfavorite by lecturerId, semesterId
   useEffect(() => {
-    request.get('LecturerSlotConfig', {
-      params: {
-        LecturerId: account.Id, SemesterId: semesterId,
-        pageIndex: 1, pageSize: 100
-      }
-    }).then(res => {
-      if (res.status === 200) {
-        setFavoriteSlots(res.data)
-      }
-    }).catch(err => {
-      alert('Fail to load favorite slots!');
-    })
-
+    if(account.Id && semesterId){
+      request.get('LecturerSlotConfig', {
+        params: {
+          LecturerId: account.Id, SemesterId: semesterId,
+          pageIndex: 1, pageSize: 100
+        }
+      }).then(res => {
+        if (res.status === 200) {
+          setFavoriteSlots(res.data)
+        }
+      }).catch(err => {
+        alert('Fail to load favorite slots!');
+      })
+    }
   }, [account.Id, semesterId, reload])
 
   //set pickedslot
@@ -185,18 +185,19 @@ const SlotType = ({ semesterId, semesterState }) => {
   return (
     <Box px={9} mb={2}>
       <Stack direction='row' gap={4}>
-        <Typography color={blue[600]}>Like: {likes.length}/{configData.LIKE_SLOT_NUMBER}</Typography>
-        <Typography color={red[600]}>Dislike: {dislikes.length}/{configData.DISLIKE_SLOT_NUMBER}</Typography>
+        <Typography color={blue[600]}>
+          <span style={{fontWeight: 500}}>Like:</span> {likes.length}/{configData.LIKE_SLOT_NUMBER}
+        </Typography>
+        <Typography color={red[600]}>
+          <span style={{fontWeight: 500}}>Dislike:</span> {dislikes.length}/{configData.DISLIKE_SLOT_NUMBER}
+        </Typography>
       </Stack>
       {semesterState === 2 &&
       <Stack direction='row' alignItems='center' justifyContent='space-between' mb={1}>
         <Stack direction='row' alignItems='center' gap={2}>
           <Typography fontWeight={500}>Mode: </Typography>
           <FormControl>
-            <RadioGroup
-              value={mode}
-              onChange={handleChangeMode}
-            >
+            <RadioGroup value={mode} onChange={handleChangeMode}>
               <Stack direction='row' >
                 <FormControlLabel value='like' control={<Radio color='primary' />} label="Like" />
                 <FormControlLabel value='dislike' control={<Radio color='error' />} label="Dislike" />
@@ -212,7 +213,8 @@ const SlotType = ({ semesterId, semesterState }) => {
           </Typography>
         </Stack>
       </Stack>}
-      <Stack mb={2}>
+      {loadSlot && <HashLoader size={30} color={green[600]}/>}
+      {!loadSlot && <Stack mb={2}>
         <Paper sx={{ minWidth: 700, mb: 2 }}>
           <TableContainer component={Box}>
             <Table size='small'>
@@ -261,7 +263,7 @@ const SlotType = ({ semesterId, semesterState }) => {
             </Table>
           </TableContainer>
         </Paper>
-      </Stack>
+      </Stack>}
       <ToastContainer />
     </Box>
   )
