@@ -126,7 +126,8 @@ const SemesterDetailManager = () => {
       {selected === tabs[0].name && <CourseList semesterId={id} semesterState={semester.State} 
           scheduleId={schedule.Id} refresh={refresh}/>}
       {selected === tabs[1].name && <SubjectRequest semesterId={id} semesterState={semester.State} scheduleId={schedule.Id}/>}
-      {selected === tabs[2].name && <LecturerContainer semester={semester} scheduleId={schedule.Id}/>}
+      {selected === tabs[2].name && <LecturerContainer semester={semester} scheduleId={schedule.Id}
+          refresh={refresh}/>}
     </Stack>
   )
 }

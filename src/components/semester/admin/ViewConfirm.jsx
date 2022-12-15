@@ -6,7 +6,7 @@ import { toast } from 'react-toastify'
 import request from '../../../utils/request'
 import ViewConfirmModal from './ViewConfirmModal'
 
-const ViewConfirm = ({semesterId, semesterState}) => {
+const ViewConfirm = ({semesterId, semesterState, refresh}) => {
   const [managers, setManagers] = useState([])
   const [lecGroups, setLecGroups] = useState([])
   const [isSet, setIsSet] = useState(false)
@@ -35,8 +35,9 @@ const ViewConfirm = ({semesterId, semesterState}) => {
       })
       .catch(err => {alert('Fail to check managers confirmed')})
     }
-  }, [semesterId, reload])
+  }, [semesterId, reload, refresh])
 
+  //get confirm of departments
   useEffect(() => {
     if(semesterId){
       request.get('LecturerCourseGroup', {
@@ -47,7 +48,7 @@ const ViewConfirm = ({semesterId, semesterState}) => {
         }
       }).catch(err => {alert('Fail to get confirmation status')})
     }
-  }, [semesterId, reload])
+  }, [semesterId, reload, refresh])
 
   const setAllConfirmed = () => {
     if(semesterId){

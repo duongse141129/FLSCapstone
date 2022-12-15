@@ -319,8 +319,10 @@ const SemesterDetailAdmin = () => {
         slotTypes={slotTypes} semesterState={semester.State} setReloadCourseNumber={setReloadCourseNumber}/>}
       {selected === 'subjects' && <SummarySubject semesterId={id} scheduleId={schedule.Id}/>}
       {selected === 'slot' && <SlotType semesterId={id} />}
-      {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} scheduleId={schedule.Id}/>}
-      {selected === 'confirm' && <ViewConfirm semesterId={semester.Id} semesterState={semester.State}/>}
+      {selected === 'lecturers' && <LecturerContainer semester={semester} admin={true} 
+        scheduleId={schedule.Id} refresh={refresh}/>}
+      {selected === 'confirm' && <ViewConfirm semesterId={semester.Id} semesterState={semester.State}
+        refresh={refresh}/>}
       <ConfirmModal isConfirm={isConfirm} setIsConfirm={setIsConfirm} content={content} 
         mode={mode} saveNextState={saveNextState} savePrevState={savePrevState} />
       <Alert isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>

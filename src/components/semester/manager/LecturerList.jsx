@@ -8,7 +8,7 @@ import ConfirmSchedule from './ConfirmSchedule';
 import Alert from '../../alert/Alert';
 import { HashLoader } from 'react-spinners';
 
-const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, myCourseGroup, setReloadConfirm }) => {
+const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, myCourseGroup, setReloadConfirm, refresh }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -93,7 +93,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
         }
       }).catch(err => {alert('Fail to get assigned courses of lecturers')})
     }
-  }, [scheduleId, isSelected])
+  }, [scheduleId, isSelected, refresh])
 
   //get lecturer course group to show min max course
   useEffect(() => {
@@ -106,7 +106,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
         }
       }).catch(err => {alert('Fail to get min max course of lecturer')})
     }
-  }, [semester.Id, isSelected])
+  }, [semester.Id, isSelected, refresh])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
