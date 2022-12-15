@@ -121,10 +121,10 @@ const Schedule = ({ semester, selectedId, popUp, isManager, lecturerDepart, myCo
           </Stack>
         }
       </Stack>
-      {(semester.State !== 5 && semester.State !== 6) && 
+      {semester.State && (semester.State !== 5 && semester.State !== 6) && 
         <Typography px={popUp ? '' : 9}>The system haven't generated the schedule yet</Typography>}
       
-      {(semester.State === 5 || semester.State === 6) && <>
+      {semester.State && (semester.State === 5 || semester.State === 6) && <>
       <Timetable selectedSemester={semester?.Id} selectedWeekObj={selectedWeekObj}
         lecturerId={selectedId ? selectedId : account.Id} popUp={popUp} isSwap={isSwap}
         clickSlotToSwap={clickSlotToSwap} afterSwap={afterSwap}/>

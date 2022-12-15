@@ -245,7 +245,7 @@ const SemesterDetailAdmin = () => {
             </IconButton>
           </Tooltip>
           <Stack direction='row' alignItems='center' gap={1}>
-            <Title title={`Semester: ${semester.Term}`} />
+            <Title title={`Semester: ${semester.Term ? semester.Term : ''}`} />
             <span>|</span>
             <Tooltip title='refresh' placement='top' arrow>
               <IconButton size='small' onClick={() => setRefresh(pre => !pre)}>
