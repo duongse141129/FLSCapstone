@@ -25,7 +25,8 @@ const Schedule = ({ semester, selectedId, popUp, isManager, lecturerDepart, myCo
   const [isSwap, setIsSwap] = useState(false);
   const [isSwapModal, setIsSwapModal] = useState(false);
   const [selectedSwap, setSelectedSwap] = useState({});
-  const [afterSwap, setAfterSwap] = useState(false)
+  const [afterSwap, setAfterSwap] = useState(false);
+  const [overTen, setOverTen] = useState(false);
 
   //set Week in year
   useEffect(() => {
@@ -66,6 +67,21 @@ const Schedule = ({ semester, selectedId, popUp, isManager, lecturerDepart, myCo
       }
     }
   }, [weeksInSemester])
+
+  //get over ten week or not
+  useEffect(() => {
+    if(selectedWeek && selectedWeekObj.id && weeksInSemester.length > 0){
+      let numberWeek = 0
+      for (let i in weeksInSemester) {
+        if (weeksInSemester[i].id === selectedWeek) {
+          numberWeek = Number(i)
+          break;
+        }
+      }
+      if (numberWeek >= 10) setOverTen(true)
+      else setOverTen(false)
+    }
+  }, [selectedWeek, selectedWeekObj, weeksInSemester])
 
   const handleSelectWeek = (e) => {
     setSelectedWeek(e.target.value)
@@ -127,7 +143,7 @@ const Schedule = ({ semester, selectedId, popUp, isManager, lecturerDepart, myCo
       {semester.State && (semester.State === 5 || semester.State === 6) && <>
       <Timetable selectedSemester={semester?.Id} selectedWeekObj={selectedWeekObj}
         lecturerId={selectedId ? selectedId : account.Id} popUp={popUp} isSwap={isSwap}
-        clickSlotToSwap={clickSlotToSwap} afterSwap={afterSwap}/>
+        clickSlotToSwap={clickSlotToSwap} afterSwap={afterSwap} overTen={overTen}/>
       <Box height='16px'>
       </Box>
       <SwapModal isSwapModal={isSwapModal} setIsSwapModal={setIsSwapModal} 

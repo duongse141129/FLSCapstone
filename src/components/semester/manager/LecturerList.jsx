@@ -220,7 +220,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
                 </TableRow>
               </TableHead>
               <TableBody>
-                {lecCourseGroups.length > 0 && lecturers.length > 0 && 
+                {lecturers.length > 0 && 
                 lecturers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                   .map((lecturer) => (
                     <TableRow key={lecturer.Id} hover onClick={() => selectLecturer(lecturer.Id)}

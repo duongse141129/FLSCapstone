@@ -58,14 +58,11 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
   }
 
   return (
-    <Dialog
-      open={isFeedback}
-      onClose={() => setIsFeedback(false)}
-    >
+    <Dialog open={isFeedback} onClose={() => setIsFeedback(false)}>
       <DialogTitle color={blue[700]} mb={1}>
         <Stack direction='row' alignItems='center' gap={1}>
           <Chat />
-          <Typography variant='h5'>Evaluate to Lecturer with Subject</Typography>
+          <Typography variant='h5'>Evaluate to Lecturer with each subject</Typography>
         </Stack>
       </DialogTitle>
       <DialogContent>
@@ -83,10 +80,7 @@ const FeedbackModal = ({ isFeedback, setIsFeedback, lecturer, subjectId, points,
         </Stack>
         <Stack alignItems='center'>
           <FormControl margin='normal'>
-            <RadioGroup
-              value={value}
-              onChange={handleChangeValue}
-            >
+            <RadioGroup value={value} onChange={handleChangeValue}>
               <Stack direction='row' alignItems='center'>
                 <FormControlLabel value='1' control={<Radio color='error' />} label="Weak" labelPlacement='bottom' />
                 <FormControlLabel value='2' control={<Radio color='error' />} label="Not Good" labelPlacement='bottom' />

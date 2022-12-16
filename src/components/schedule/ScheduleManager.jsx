@@ -63,24 +63,22 @@ const ScheduleManager = ({ admin }) => {
 
   useEffect(() => {
     setLoadLecturer(true)
-    request.get('User', {
-      params: {
-        DepartmentId: selectedDepartment,
-        RoleIDs: 'LC', sortBy:'DepartmentId', order:'Asc',
-        pageIndex: 1,
-        pageSize: 500
-      }
-    })
-      .then(res => {
+    if(selectedDepartment){
+      request.get('User', {
+        params: { DepartmentId: selectedDepartment,
+          RoleIDs: 'LC', sortBy:'DepartmentId', order:'Asc',
+          pageIndex: 1, pageSize: 500
+        }
+      }).then(res => {
         if (res.data) {
           setlecturers(res.data)
           setLoadLecturer(false);
         }
-      })
-      .catch(err => {
+      }).catch(err => {
         alert('Fail to load lecturers');
         setLoadLecturer(false)
       })
+    }
   }, [selectedDepartment])
 
   useEffect(() => {

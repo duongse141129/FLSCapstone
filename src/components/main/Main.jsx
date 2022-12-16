@@ -24,6 +24,7 @@ const Main = () => {
   const [weeksInSemester, setWeeksInSemester] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedWeekObj, setSelectedWeekObj] = useState({});
+  const [overTen, setOverTen] = useState(false);
 
   //get semester list
   useEffect(() => {
@@ -104,6 +105,21 @@ const Main = () => {
     }
   }, [weeksInSemester])
 
+  //get over ten week or not
+  useEffect(() => {
+    if(selectedWeek && selectedWeekObj.id && weeksInSemester.length > 0){
+      let numberWeek = 0
+      for (let i in weeksInSemester) {
+        if (weeksInSemester[i].id === selectedWeek) {
+          numberWeek = Number(i)
+          break;
+        }
+      }
+      if (numberWeek >= 10) setOverTen(true)
+      else setOverTen(false)
+    }
+  }, [selectedWeek, selectedWeekObj, weeksInSemester])
+
   const handleSelectSemester = (e) => {
     setSelectedSemester(e.target.value)
     const selected = semesters.find(item => item.Id === e.target.value)
@@ -125,26 +141,20 @@ const Main = () => {
         <Stack direction='row' gap={4}>
           <Stack direction='row' gap={1} alignItems='center'>
             <Typography fontWeight={500}>Semester</Typography>
-            <Select color='success'
-              size='small'
-              value={selectedSemester}
-              onChange={handleSelectSemester}
-            >
-              {
-                semesters.map(semester => (
-                  <MenuItem value={semester.Id} key={semester.Id}>
-                    {semester.Term}
-                  </MenuItem>
-                ))
-              }
+            <Select color='success' size='small'
+              value={selectedSemester} onChange={handleSelectSemester}>
+              {semesters.map(semester => (
+                <MenuItem value={semester.Id} key={semester.Id}>
+                  {semester.Term}
+                </MenuItem>
+              ))}
             </Select>
           </Stack>
           <Stack direction='row' gap={1} alignItems='center'>
             <Typography fontWeight={500}>Week</Typography>
             <Select color='success' size='small' MenuProps={MenuProps}
               value={selectedWeek} onChange={handleSelectWeek}>
-              {
-                weeksInSemester.length > 0 &&
+              {weeksInSemester.length > 0 &&
                 weeksInSemester.map(week => (
                   <MenuItem value={week.id} key={week.id}>
                     <span>{week.week.split(' to ')[0].split('-')[2]}</span>
@@ -153,14 +163,13 @@ const Main = () => {
                     <span>{week.week.split(' to ')[1].split('-')[2]}</span>
                     <span>/{week.week.split(' to ')[1].split('-')[1]}</span>
                   </MenuItem>
-                ))
-              }
+              ))}
             </Select>
           </Stack>
         </Stack>
       </Stack>
       <Timetable selectedSemester={selectedSemester} selectedWeekObj={selectedWeekObj}
-        lecturerId={account.Id} isPublic={true}/>
+        lecturerId={account.Id} isPublic={true} overTen={overTen}/>
     </Stack>
   )
 }

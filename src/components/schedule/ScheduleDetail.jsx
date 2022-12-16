@@ -6,6 +6,16 @@ import request from '../../utils/request';
 import { getSemesterWeeks, getWeeksInYear } from '../../utils/weeksInYear';
 import Timetable from '../main/Timetable';
 
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+    },
+  },
+};
+
 const ScheduleDetail = ({admin}) => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -17,7 +27,9 @@ const ScheduleDetail = ({admin}) => {
   const [weeksInSemester, setWeeksInSemester] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedWeekObj, setSelectedWeekObj] = useState({});
+  const [overTen, setOverTen] = useState(false);
 
+  //get lecturer info
   useEffect(() => {
     request.get(`User/${id}`)
     .then(res => {
@@ -30,29 +42,26 @@ const ScheduleDetail = ({admin}) => {
     })
   }, [id])
 
+  //get semester list
   useEffect(() => {
     const getSemesters = async() => {
       try {
         const response = await request.get('Semester', {
-          params: {
-            sortBy: 'DateEnd',
-            order: 'Des',
-            pageIndex: 1,
-            pageSize: 999
+          params: { sortBy: 'DateEnd', order: 'Des',
+            pageIndex: 1,pageSize: 999
           }
         })
         if(response.status === 200){
           setSemesters(response.data)
         }
       } 
-      catch (error) {
-        alert('Fail to load Semester!')
-      }
+      catch (error) {alert('Fail to load Semester!')}
     }
 
     getSemesters();
   }, [])
 
+  //after response semester list, set selected semester by current time
   useEffect(() => {
     if(semesters.length > 0){
       let state = false;
@@ -74,6 +83,7 @@ const ScheduleDetail = ({admin}) => {
     }
   }, [semesters])
 
+  //get weeks in semesters after set selected semester
   useEffect(() => {
     if(Object.values(selectedSemesterObj).length > 0){
       const result = getSemesterWeeks(weeksInYear, selectedSemesterObj.DateStartFormat, selectedSemesterObj.DateEndFormat)
@@ -81,6 +91,7 @@ const ScheduleDetail = ({admin}) => {
     }
   }, [selectedSemesterObj, weeksInYear])
 
+  //set selected weeks by current time
   useEffect(() => {
     if(weeksInSemester.length > 0){
       const currentDay = new Date();
@@ -104,6 +115,21 @@ const ScheduleDetail = ({admin}) => {
       }
     }
   }, [weeksInSemester])
+
+  //get over ten week or not
+  useEffect(() => {
+    if(selectedWeek && selectedWeekObj.id && weeksInSemester.length > 0){
+      let numberWeek = 0
+      for (let i in weeksInSemester) {
+        if (weeksInSemester[i].id === selectedWeek) {
+          numberWeek = Number(i)
+          break;
+        }
+      }
+      if (numberWeek >= 10) setOverTen(true)
+      else setOverTen(false)
+    }
+  }, [selectedWeek, selectedWeekObj, weeksInSemester])
 
   const handleSelectSemester = (e) => {
     setSelectedSemester(e.target.value)
@@ -135,23 +161,19 @@ const ScheduleDetail = ({admin}) => {
           </IconButton>
         </Tooltip>
         <Typography variant='h5' fontWeight={500}>
-          Schedule: {lecturer.Name}
+          Schedule of Lecturer: {lecturer.Name}
         </Typography>
       </Stack>
-      <Stack direction='row' gap={8} px={9} mb={4}>
-        <Typography>Name: {lecturer.Name}</Typography>
-        <Typography>Email: {lecturer.Email}</Typography>
-        <Typography>Department: {lecturer.DepartmentName}</Typography>
+      <Stack direction='row' gap={8} px={9} mb={2}>
+        <Typography><span style={{fontWeight: 500}}>Email:</span> {lecturer.Email}</Typography>
+        <Typography><span style={{fontWeight: 500}}>Department:</span> {lecturer.DepartmentName}</Typography>
       </Stack>
       <Box height='100%' mb={1}>
-        <Stack direction='row' gap={1} mb={1}>
-          <Stack direction='row' alignItems='center' px={9} gap={1}>
+        <Stack direction='row' gap={4} mb={1} px={9}>
+          <Stack direction='row' alignItems='center' gap={1}>
             <Typography fontWeight={500}>Semester:</Typography>
-            <Select color='success'
-              size='small'
-              value={selectedSemester}
-              onChange={handleSelectSemester}
-            >
+            <Select color='success' size='small' value={selectedSemester}
+              onChange={handleSelectSemester}>
               {
                 semesters.map(semester => (
                   <MenuItem value={semester.Id} key={semester.Id}>
@@ -161,13 +183,10 @@ const ScheduleDetail = ({admin}) => {
               }
             </Select>
           </Stack>
-          <Stack direction='row' alignItems='center' px={9} gap={1}>
+          <Stack direction='row' alignItems='center' gap={1}>
             <Typography fontWeight={500}>Week</Typography>
-            <Select color='success'
-              size='small'
-              value={selectedWeek}
-              onChange={handleSelectWeek}
-            >
+            <Select color='success' size='small' MenuProps={MenuProps}
+              value={selectedWeek} onChange={handleSelectWeek}>
               {
                 weeksInSemester.length > 0 &&
                 weeksInSemester.map(week => (
@@ -183,9 +202,10 @@ const ScheduleDetail = ({admin}) => {
             </Select>
           </Stack>
         </Stack>
-
         <Timetable selectedSemester={selectedSemester} selectedWeekObj={selectedWeekObj} 
-          lecturerId={id}/>
+          lecturerId={id} isPublic={true} overTen={overTen}/>
+        <Box height='12px'>
+        </Box>
       </Box>
     </Stack>
   )

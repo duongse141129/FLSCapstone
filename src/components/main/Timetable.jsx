@@ -1,16 +1,17 @@
 import { Stack, Typography } from '@mui/material';
-import { green } from '@mui/material/colors';
+import { green, red } from '@mui/material/colors';
 import { HashLoader } from 'react-spinners';
 import React, { useEffect, useMemo, useState } from 'react';
 import Day from './Day';
 import request from '../../utils/request'
 
-const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwap, clickSlotToSwap, afterSwap, isPublic }) => {
+const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwap, clickSlotToSwap, afterSwap, isPublic, overTen }) => {
   const [courseAssign, setCourseAssign] = useState([]);
   const [slotType, setSlotType] = useState([]);
   const [loadingCourseAssign, setLoadingCourseAssign] = useState(false);
   const [loadingSlotType, setLoadingSlotType] = useState(false);
   const [dates, setDates] = useState([]);
+  const [schedulePublic, setSchedulePublic] = useState(-1)
 
   const [mon, setMon] = useState([]);
   const [tue, setTue] = useState([]);
@@ -31,10 +32,22 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
     ]
   }, [mon, tue, wed, thu, fri, sat])
 
+  //get schedule is public or not
+  useEffect(() => {
+    if(selectedSemester){
+      request.get('Schedule', {
+        params: { SemesterId: selectedSemester,
+          pageIndex: 1, pageSize: 1}
+      }).then(res => {
+        if(res.data.length > 0) setSchedulePublic(res.data[0].IsPublic)
+      }).catch(err => {})
+    }
+  }, [selectedSemester])
+
   //1. get Schedule by semester, ispublic - 2.get course assign by lecturerId, scheduleId
   useEffect(() => {
+    setLoadingCourseAssign(true)
     const getCourseAssign = async () => {
-      setLoadingCourseAssign(true)
       try {
         const responseSchedule = await request.get('Schedule', {
           params: {
@@ -52,6 +65,11 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
             }
           })
           if(responseCourseAssign.data){
+            if(overTen){
+              setCourseAssign([])
+              setLoadingCourseAssign(false)
+              return
+            }
             setCourseAssign(responseCourseAssign.data)
             setLoadingCourseAssign(false)
           }
@@ -66,14 +84,14 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
       }
     }
 
-    if(selectedSemester){
+    if(selectedSemester && lecturerId){
       getCourseAssign();
     }
 
     return () => {
       setCourseAssign([]);
     }
-  }, [lecturerId, selectedSemester, selectedWeekObj, afterSwap, isPublic])
+  }, [lecturerId, selectedSemester, selectedWeekObj, afterSwap, isPublic, overTen])
 
   //get slottype list
   useEffect(() => {
@@ -179,10 +197,10 @@ const Timetable = ({ selectedSemester, selectedWeekObj, lecturerId, popUp, isSwa
           </Stack>
         ) : (
           <>
-          {
-            courseAssign.length === 0 &&
-            <Typography color='red' px={popUp ? '' : 9}>No courses or not public yet in this time</Typography>
-          }
+          {schedulePublic === 0 && courseAssign.length === 0 &&
+            <Typography color={red[600]} px={popUp ? '' : 9}>The schedule haven't been public yet</Typography>}
+          {schedulePublic === 1 && courseAssign.length === 0 &&
+            <Typography color={red[600]} px={popUp ? '' : 9}>No courses in this time</Typography>}
           <Stack height='100%' direction='row' px={popUp ? '' : 9} mb={1} minWidth='920px' minHeight='445px'>
             <Stack flex={0.6} bgcolor='white'>
               <Stack flex={0.8} color='white' bgcolor={green[600]}

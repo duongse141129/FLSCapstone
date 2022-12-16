@@ -149,6 +149,14 @@ const SemesterDetailAdmin = () => {
       }).catch(err => {alert('Fail to public schedule')})
     }
 
+    if(semester.State === 3){
+      request.put(`Request/UpdateAllRequestWaiting/${semester.Id}`)
+      .then(res => {
+
+      })
+      .catch(err => {alert('Fail to update request')})
+    }
+
     request.put(`Semester/${id}`, {
       Term: semester.Term, DateStart: semester.DateStart,
       DateEnd: semester.DateEnd, State: (semester.State + 1)
@@ -193,21 +201,29 @@ const SemesterDetailAdmin = () => {
       }).catch(err => {alert('Fail to update schedule')})
     }
 
+    if(semester.State === 4){
+      request.put(`Request/RollBackToUpdateAllRequestWaiting/${semester.Id}`)
+      .then(res => {
+
+      })
+      .catch(err => {alert('Fail to return state of request')})
+    }
+
     request.put(`Semester/${id}`, {
       Term: semester.Term, DateStart: semester.DateStart,
       DateEnd: semester.DateEnd, State: (semester.State - 1)
     }).then(res => {
-        if (res.status === 200) {
-          setIsConfirm(false)
-          toast.success('Success to return previous state', {
-            position: "top-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true,
-            pauseOnHover: true, draggable: true, progress: undefined, theme: "light",
-          });
-        }
-      }).catch(err => {
-        alert('Fail to return previous state')
+      if (res.status === 200) {
         setIsConfirm(false)
-      })
+        toast.success('Success to return previous state', {
+          position: "top-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true,
+          pauseOnHover: true, draggable: true, progress: undefined, theme: "light",
+        });
+      }
+    }).catch(err => {
+      alert('Fail to return previous state')
+      setIsConfirm(false)
+    })
   }
 
   const checkPublic = async() => {

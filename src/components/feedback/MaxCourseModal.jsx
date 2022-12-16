@@ -56,7 +56,7 @@ const MaxCourseModal = ({ isMax, setIsMax, lecturer, subjectId, points, loadPoin
       <DialogTitle color={blue[700]} mb={1}>
         <Stack direction='row' alignItems='center' gap={1}>
           <EditOutlined />
-          <Typography variant='h5'>Edit max courses number</Typography>
+          <Typography variant='h5'>Edit max courses number of each subject</Typography>
         </Stack>
       </DialogTitle>
       <DialogContent>
@@ -73,9 +73,11 @@ const MaxCourseModal = ({ isMax, setIsMax, lecturer, subjectId, points, loadPoin
           <Typography>{subjectId} - {subject?.SubjectName}</Typography>
         </Stack>
         <Stack direction='row' alignItems='center' gap={1}>
-          <Typography fontWeight={500}>Max courses: </Typography>
+          <Typography fontWeight={500}>Max number: </Typography>
           <Select color='success' size='small'
             value={value} onChange={(e) => setValue(Number(e.target.value))}>
+            <MenuItem value='1'>1 course</MenuItem>
+            <MenuItem value='2'>2 courses</MenuItem>
             <MenuItem value='3'>3 courses</MenuItem>
             <MenuItem value='4'>4 courses</MenuItem>
             <MenuItem value='5'>5 courses</MenuItem>
