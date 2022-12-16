@@ -5,8 +5,10 @@ import {
 import { Visibility, ManageAccountsOutlined, Check } from '@mui/icons-material';
 import React, { useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom';
+import {HashLoader} from 'react-spinners';
 import Title from '../title/Title'
 import request from '../../utils/request';
+import { green } from '@mui/material/colors';
 
 const LecturerAdmin = () => {
   const navigate = useNavigate()
@@ -15,14 +17,13 @@ const LecturerAdmin = () => {
   const [selectedDepartment, setSelectedDepartment] = useState('all');
   const [departments, setDepartments] = useState([]);
   const [lecturers, setLecturers] = useState([]);
+  const [load, setLoad] = useState(false);
 
+  //get list departments
   useEffect(() => {
     request.get('Department', {
-      params: {
-        sortBy: 'Id',
-        order:'Asc',
-        pageIndex: 1,
-        pageSize: 1000
+      params: { sortBy: 'Id', order:'Asc',
+        pageIndex: 1, pageSize: 1000
       }
     })
     .then(res => {
@@ -35,23 +36,26 @@ const LecturerAdmin = () => {
     })
   }, [])
 
+  //get list lecturers by selectedDepartment
   useEffect(() => {
+    setLoad(true)
     if(selectedDepartment){
       request.get('User', {
         params: {
           DepartmentId: selectedDepartment === 'all' ? '' : selectedDepartment,
           RoleIDs: 'LC', sortBy:'DepartmentId', order:'Asc',
-          pageIndex: 1,
-          pageSize: 500
+          pageIndex: 1, pageSize: 500
         }
       })
       .then(res => {
         if(res.data){
           setLecturers(res.data)
+          setLoad(false)
         }
       })
       .catch(err => {
         alert('Fail to load lecturers');
+        setLoad(false)
       })
     }
   }, [selectedDepartment])
@@ -79,14 +83,9 @@ const LecturerAdmin = () => {
         <Title title='Lecturer' subTitle='List of all lecturers'/>
       </Stack>
       <Stack direction='row' mb={1} alignItems='center' gap={1} px={9}>
-        <Typography fontWeight={500}>
-          Department:
-        </Typography>
-        <Select color='success'
-          size='small'
-          value={selectedDepartment}
-          onChange={handleSelectDepartment}
-        >
+        <Typography fontWeight={500}>Department:</Typography>
+        <Select color='success' size='small'
+          value={selectedDepartment} onChange={handleSelectDepartment}>
           <MenuItem value='all'>All</MenuItem>
           {departments.map(department => (
             <MenuItem key={department.Id} value={department.Id}>
@@ -95,7 +94,8 @@ const LecturerAdmin = () => {
           ))}
         </Select>
       </Stack>
-      <Stack px={9} mb={2}>
+      {load && <Stack px={9}><HashLoader size={30} color={green[600]}/></Stack>}
+      {!load && <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}>
             <Table>
@@ -160,7 +160,7 @@ const LecturerAdmin = () => {
             }}
           />
         </Paper>
-      </Stack>
+      </Stack>}
     </Stack>
   )
 }

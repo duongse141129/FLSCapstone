@@ -23,6 +23,7 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
   const [managerId, setManagerId] = useState('');
   const [loadCreate, setLoadCreate] = useState(false);
 
+  //get list department
   useEffect(() => {
     const getDepartments = async () => {
       try {
@@ -46,6 +47,7 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
     getDepartments();
   }, [account.DepartmentId])
 
+  //get manager by department
   useEffect(() => {
     if(selectedDepartment){
       request.get('User', {
@@ -58,6 +60,7 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
     }
   }, [selectedDepartment])
 
+  //get subjects and filter requested subjects
   useEffect(() => {
     if (selectedDepartment) {
       request.get('Subject', {
@@ -72,7 +75,7 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
             dataSubject = dataSubject.filter(data => (data.Id !== requests[i].SubjectId))
           }
           setSubjects(dataSubject);
-          setSelectedSubject(dataSubject[0].Id)
+          setSelectedSubject(dataSubject[0]?.Id)
         }
       }).catch(err => { alert('Fail to load subjects !!' + err); })
     }
@@ -130,7 +133,7 @@ const RequestModal = ({ isRequest, setIsRequest, requests, semesterId, sendReque
         {loadCreate ?
           <Button variant='contained'><ClipLoader size={20} color='white'/></Button> :
           <Button variant='contained' onClick={createRequest}>
-            Request</Button>}
+            Send</Button>}
       </DialogActions>
     </Dialog>
   )

@@ -171,9 +171,9 @@ const Department = () => {
                   <Table size='small'>
                     <TableHead>
                       <TableRow>
-                        <TableCell size='small' className='subject-header'>Code</TableCell>
-                        <TableCell size='small' className='subject-header'>Name</TableCell>
-                        <TableCell size='small' className='subject-header'>Department</TableCell>
+                        <TableCell className='subject-header'>Code</TableCell>
+                        <TableCell className='subject-header'>Name</TableCell>
+                        <TableCell className='subject-header' align='center'>Department</TableCell>
                       </TableRow>
                     </TableHead>
                     <TableBody>
@@ -181,9 +181,9 @@ const Department = () => {
                         subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                           .map((subject) => (
                             <TableRow key={subject.Id} hover>
-                              <TableCell size='small'>{subject.Id}</TableCell>
-                              <TableCell size='small'>{subject.SubjectName}</TableCell>
-                              <TableCell size='small'>{subject.DepartmentId}</TableCell>
+                              <TableCell>{subject.Id}</TableCell>
+                              <TableCell>{subject.SubjectName}</TableCell>
+                              <TableCell align='center'>{subject.DepartmentId}</TableCell>
                             </TableRow>
                           ))
                       }

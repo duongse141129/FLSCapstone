@@ -79,7 +79,7 @@ const SlotType = ({ semesterId, semesterState }) => {
   }
 
   const handlePick = (id) => {
-    if (!isEdit || loading) {
+    if (!isEdit || loading || semesterState !== 2) {
       return;
     }
 
@@ -239,7 +239,7 @@ const SlotType = ({ semesterId, semesterState }) => {
               </TableHead>
               <TableBody>
                 {slots.map(slot => (
-                  <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: isEdit ? 'pointer' : 'default' } }} 
+                  <TableRow key={slot.Id} hover sx={{ '&:hover': { cursor: semesterState === 2 && isEdit ? 'pointer' : 'default' } }} 
                     onClick={() => handlePick(slot.Id)}>
                     <TableCell align='center' className='manage-slot'>{slot.SlotTypeCode}</TableCell>
                     <TableCell align='center' className='manage-slot'>{slot.ConvertDateOfWeek}</TableCell>

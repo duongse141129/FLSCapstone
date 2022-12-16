@@ -49,6 +49,20 @@ const Navbar = ({ isExtend, setIsExtend }) => {
     navigator.clipboard.writeText(key)
   }
 
+  const goToProfile = () => {
+    setAnchorEl(null)
+    const url = location.pathname
+    if(url.startsWith('/lecturer')){
+      navigate('/lecturer/profile')
+    }
+    else if(url.startsWith('/manager')){
+      navigate('/manager/profile')
+    }
+    else{
+      navigate('/admin/profile')
+    }
+  }
+
   return (
     <Box bgcolor='white' px={4} py={1}
       sx={{
@@ -79,10 +93,10 @@ const Navbar = ({ isExtend, setIsExtend }) => {
 
         <Stack direction='row' alignItems='center' gap={4}>
           <Typography>
+            <span style={{fontWeight: 500}}> 
             {location.pathname.startsWith('/lecturer') && 'Lecturer'}
             {location.pathname.startsWith('/manager') && 'Department Manager'}
-            {location.pathname.startsWith('/admin') && 'Admin'}
-            : {googleUser?.profileObj?.email}
+            {location.pathname.startsWith('/admin') && 'Admin'}:</span> {googleUser?.profileObj?.email}
           </Typography>
           <Avatar
             src={googleUser && googleUser?.profileObj?.imageUrl}
@@ -95,12 +109,12 @@ const Navbar = ({ isExtend, setIsExtend }) => {
             onClick={handleClick}
           />
           <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
-            <MenuItem onClick={handleClose}>
+            <MenuItem onClick={goToProfile}>
               <AccountBox sx={{ mr: 1 }} /> Profile
             </MenuItem>
             {account?.RoleIDs && account.RoleIDs.includes('AD') && 
             key && <MenuItem onClick={handleCopyKey}>
-              <Key sx={{ mr: 1 }} /> Copy Key
+              <Key sx={{ mr: 1 }} /> Token Key
             </MenuItem>}
             <Divider />
             <MenuItem onClick={handleSignOut}>
@@ -112,7 +126,7 @@ const Navbar = ({ isExtend, setIsExtend }) => {
       <Snackbar open={isCopied}
         autoHideDuration={2000}
         onClose={() => setIsCopied(false)}
-        message="Key is copied."
+        message="Token Key is copied."
       />
     </Box>
   )

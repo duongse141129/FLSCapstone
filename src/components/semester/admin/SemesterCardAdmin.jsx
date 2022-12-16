@@ -26,8 +26,8 @@ const SemesterCardAdmin = ({ semester, clickDelete, clickUpdate }) => {
   }
 
   return (
-    <Stack width='300px' height='240px' bgcolor='white' minWidth='250px' mb={4}
-      borderRadius='12px' boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
+    <Stack height='240px' bgcolor='white' borderRadius='12px' 
+      boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
       sx={{ '&:hover':{scale: '1.1', cursor: 'pointer', transition: 'all 0.2s linear'}}}
       onClick={toSemesterDetail}
     >

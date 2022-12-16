@@ -11,15 +11,13 @@ const Slot = () => {
   const [selectedSemester, setSelectedSemester] = useState('');
   const [slots, setSlots] = useState([]);
 
+  //get semester lists
   useEffect(() => {
     const getSemesters = async () => {
       try {
         const response = await request.get('Semester', {
-          params: {
-            sortBy: 'DateEnd',
-            order: 'Des',
-            pageIndex: 1,
-            pageSize: 100
+          params: {sortBy: 'DateEnd', order: 'Des',
+            pageIndex: 1, pageSize: 100
           }
         })
         if (response.status === 200) {
@@ -34,6 +32,7 @@ const Slot = () => {
     getSemesters();
   }, [])
 
+  //get current semester
   useEffect(() => {
     if (semesters.length > 0) {
       let state = false;
@@ -52,25 +51,20 @@ const Slot = () => {
     }
   }, [semesters])
 
+  //get list slots
   useEffect(() => {
     if (selectedSemester) {
       request.get('SlotType', {
-        params: {
-          SemesterId: selectedSemester,
-          sortBy: 'Id',
-          order: 'Asc',
-          pageIndex: 1,
-          pageSize: 100,
+        params: { SemesterId: selectedSemester, sortBy: 'DayOfWeekAndTimeStart',
+          order: 'Asc', pageIndex: 1, pageSize: 100,
         }
+      }).then(res => {
+        if (res.status === 200) {
+          setSlots(res.data)
+        }
+      }).catch(err => {
+        alert('Fail to load slot!')
       })
-        .then(res => {
-          if (res.status === 200) {
-            setSlots(res.data)
-          }
-        })
-        .catch(err => {
-          alert('Fail to load slot!')
-        })
     }
   }, [selectedSemester])
 
@@ -102,20 +96,22 @@ const Slot = () => {
       <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}>
-            <Table>
+            <Table size='small'>
               <TableHead>
                 <TableRow>
-                  <TableCell size='small' className='subject-header'>Day of Week</TableCell>
-                  <TableCell size='small' className='subject-header'>Duration</TableCell>
-                  <TableCell size='small' className='subject-header'>Slot Number</TableCell>
+                  <TableCell className='subject-header' align='center'>Code</TableCell>
+                  <TableCell className='subject-header'>Day of Week</TableCell>
+                  <TableCell className='subject-header'>Duration</TableCell>
+                  <TableCell className='subject-header' align='center'>Slot Number</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
                 {slots.map(slot => (
                   <TableRow key={slot.Id} hover>
-                    <TableCell size='small'>{slot.ConvertDateOfWeek}</TableCell>
-                    <TableCell size='small'>{slot.Duration}</TableCell>
-                    <TableCell size='small'>{slot.SlotNumber}</TableCell>
+                    <TableCell align='center'>{slot.SlotTypeCode}</TableCell>
+                    <TableCell>{slot.ConvertDateOfWeek}</TableCell>
+                    <TableCell>{slot.Duration}</TableCell>
+                    <TableCell align='center'>{slot.SlotNumber}</TableCell>
                   </TableRow>
                 ))}
               </TableBody>

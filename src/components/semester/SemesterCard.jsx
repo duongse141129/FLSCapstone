@@ -21,7 +21,7 @@ const SemesterCard = ({semester}) => {
   }
 
   return (
-    <Stack width='300px' height='200px' bgcolor='white' minWidth='250px'
+    <Stack height='200px' bgcolor='white' minWidth='220px'
       borderRadius='12px' boxShadow= 'rgba(0, 0, 0, 0.24) 0px 3px 8px'
       sx={{
         '&:hover':{

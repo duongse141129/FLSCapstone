@@ -12,6 +12,7 @@ const RegisteredSubject = ({ semesterId }) => {
   const [rowsPerPage, setRowsPerPage] = useState(10);
   const [load, setLoad] = useState(false);
   
+  //get subject of lecturer
   useEffect(() => {
     if(semesterId && account.Id){
       setLoad(true)
@@ -27,6 +28,7 @@ const RegisteredSubject = ({ semesterId }) => {
     }
   }, [semesterId, account.Id])
 
+  //get subjects
   useEffect(() => {
     request.get('Subject', {
       params: {sortBy:'Id', order: 'Asc', pageIndex: 1, pageSize: 500}

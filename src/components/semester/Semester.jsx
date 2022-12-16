@@ -1,4 +1,4 @@
-import { Stack, Typography } from '@mui/material'
+import { Grid, Stack, Typography } from '@mui/material'
 import { useState, useEffect } from 'react'
 import './Semester.css'
 import {HashLoader} from 'react-spinners';
@@ -41,17 +41,14 @@ const Semester = () => {
       <Typography color='gray' px={9} variant='subtitle1' mb={4}>
         List of all semesters
       </Typography>
-      <Stack px={9} gap={4} direction='row' flexWrap='wrap' justifyContent='space-between'>
-        {
-          loading && <HashLoader size={30} color={green[600]}/>
-        }
-        {
-          !loading &&
-          semesters.map(semester => (
-            <SemesterCard key={semester.Id} semester={semester} />
-          ))
-        }
-      </Stack>
+      {loading && <Stack px={9}><HashLoader size={30} color={green[600]}/></Stack>}
+      {!loading && <Grid container spacing={6} px={9} mb={2}>
+        {semesters.map(semester => (
+          <Grid item xs={4} key={semester.Id}>
+            <SemesterCard semester={semester} />
+          </Grid>
+        ))}
+      </Grid>}
     </Stack>
   )
 }

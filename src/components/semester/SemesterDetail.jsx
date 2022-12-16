@@ -1,6 +1,5 @@
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import { ArrowBackIosNew, Check, HorizontalRule, Refresh } from '@mui/icons-material';
-import React from 'react';
 import { useState, useEffect } from 'react';
 import SlotType from './SlotType';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -15,7 +14,7 @@ const SemesterDetail = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const [semester, setSemester] = useState({});
-  const [refresh, setRefresh] = useState(false)
+  const [refresh, setRefresh] = useState(false);
 
   //get semester by id
   useEffect(() => {
@@ -82,9 +81,13 @@ const SemesterDetail = () => {
         </Stack>
       </Stack>
       <Stack px={11} gap={1} mb={1}>
-        <Typography><span style={{fontWeight: 500}}>Start:</span> {semester.DateStartFormat}</Typography>
-        <Typography><span style={{fontWeight: 500}}>End:</span> {semester.DateEndFormat}</Typography>
-        <Typography><span style={{fontWeight: 500}}>Status:</span> {semester.DateStatus}</Typography>
+        <Typography><span style={{fontWeight: 500}}>Start:</span> {' '}
+          {semester.DateStartFormat && semester.DateStartFormat.split('-').reverse().join('/')}
+        </Typography>
+        <Typography><span style={{fontWeight: 500}}>End:</span> {' '}
+          {semester.DateEndFormat && semester.DateEndFormat.split('-').reverse().join('/')}
+        </Typography>
+        <Typography><span style={{fontWeight: 500}}>Time Status:</span> {semester.DateStatus}</Typography>
       </Stack>
       <Stack px={9} mb={2}>
         <Stack direction='row' gap={1} border='1px solid #e3e3e3' py={0.5} borderRadius={2}
