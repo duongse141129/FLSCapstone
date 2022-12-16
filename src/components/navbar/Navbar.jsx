@@ -6,6 +6,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import request from '../../utils/request';
 
 const Navbar = ({ isExtend, setIsExtend }) => {
+  const account = JSON.parse(localStorage.getItem('web-user'));
   const location = useLocation();
   const  navigate = useNavigate();
   const { signOut, googleUser } = useGoogleAuth();
@@ -19,7 +20,7 @@ const Navbar = ({ isExtend, setIsExtend }) => {
       request.post(`Token/Login?email=${googleUser?.profileObj?.email}`)
       .then(res => {
         if(res.status === 200 || res.status === 201){
-          setKey(res.data.refresh_token)
+          setKey(`${res.data.refresh_token}`)
         }
       })
       .catch(err => {alert('Fail to get key')})
@@ -39,6 +40,7 @@ const Navbar = ({ isExtend, setIsExtend }) => {
     await signOut();
     navigate('/')
     localStorage.removeItem('web-user')
+    request.delete(`Token/DeleteRefreshToken/${key}`)
   }
 
   const handleCopyKey = () => {
@@ -96,7 +98,8 @@ const Navbar = ({ isExtend, setIsExtend }) => {
             <MenuItem onClick={handleClose}>
               <AccountBox sx={{ mr: 1 }} /> Profile
             </MenuItem>
-            {key && <MenuItem onClick={handleCopyKey}>
+            {account?.RoleIDs && account.RoleIDs.includes('AD') && 
+            key && <MenuItem onClick={handleCopyKey}>
               <Key sx={{ mr: 1 }} /> Copy Key
             </MenuItem>}
             <Divider />
