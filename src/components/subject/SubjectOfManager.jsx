@@ -17,6 +17,7 @@ const SubjectOfManager = () => {
   const [loadDepart, setLoadDepart] = useState(false);
   const [loadSubject, setLoadSubject] = useState(false);
 
+  //get department list
   useEffect(() => {
     const getDepartments = async () => {
       setLoadDepart(true);
@@ -43,15 +44,15 @@ const SubjectOfManager = () => {
     getDepartments();
   }, [account.DepartmentId])
 
+  //get list subject by departments
   useEffect(() => {
+    setLoadSubject(true)
     const getSubjects = async () => {
-      setLoadSubject(true)
       try {
         const response = await request.get('Subject', {
           params: {
-            DepartmentId: selectedDepartment,
-            pageIndex: 1,
-            pageSize: 1000
+            DepartmentId: selectedDepartment, sortBy: 'Id', order: 'Asc',
+            pageIndex: 1, pageSize: 1000
           }
         })
         if (response.data) {
@@ -65,7 +66,9 @@ const SubjectOfManager = () => {
       }
     }
 
-    getSubjects();
+    if(selectedDepartment){
+      getSubjects();
+    }
   }, [selectedDepartment])
 
   useEffect(() => {
@@ -74,14 +77,13 @@ const SubjectOfManager = () => {
     }
   }, [subjects])
 
+  //get manager of department
   useEffect(() => {
     if (selectedDepartment) {
       request.get('User', {
         params: {
-          DepartmentId: selectedDepartment,
-          RoleIDs: 'DMA',
-          pageIndex: 1,
-          pageSize: 1
+          DepartmentId: selectedDepartment, RoleIDs: 'DMA',
+          pageIndex: 1, pageSize: 1
         }
       })
         .then(res => {
@@ -163,41 +165,27 @@ const SubjectOfManager = () => {
       <Stack px={9} mb={2}>
         {(loadDepart || loadSubject) && <HashLoader size={30} color={green[600]}/>}
         {!loadDepart && !loadSubject && <Paper sx={{ minWidth: 700 }}>
-          <TableContainer component={Box}
-            sx={{ overflow: 'auto' }}>
-            <Table>
+          <TableContainer component={Box} sx={{ overflow: 'auto' }}>
+            <Table size='small'>
               <TableHead>
                 <TableRow>
-                  <TableCell size='small' className='subject-header'
-                    sx={{ borderRight: '1px solid #e3e3e3' }}>
-                    Code 
-                  </TableCell>
-                  <TableCell size='small' className='subject-header'
-                    sx={{ borderRight: '1px solid #e3e3e3' }}>
-                    Name
-                  </TableCell>
-                  <TableCell size='small' className='subject-header'>
-                    Department
-                  </TableCell>
+                  <TableCell className='subject-header'>
+                    Code </TableCell>
+                  <TableCell className='subject-header'>
+                    Name </TableCell>
+                  <TableCell className='subject-header' align='center'>
+                    Department</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>
-                {
-                  subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((subject) => (
-                      <TableRow key={subject.Id} hover>
-                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
-                          <Typography>{subject.Id}</Typography>
-                        </TableCell>
-                        <TableCell size='small' sx={{ borderRight: '1px solid #e3e3e3' }}>
-                          <Typography>{subject.SubjectName}</Typography>
-                        </TableCell>
-                        <TableCell size='small'>
-                          <Typography>{subject.DepartmentId}</Typography>
-                        </TableCell>
-                      </TableRow>
-                    ))
-                }
+                {subjects.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                  .map((subject) => (
+                    <TableRow key={subject.Id} hover>
+                      <TableCell>{subject.Id}</TableCell>
+                      <TableCell>{subject.SubjectName}</TableCell>
+                      <TableCell align='center'>{subject.DepartmentId}</TableCell>
+                    </TableRow>
+                ))}
               </TableBody>
             </Table>
           </TableContainer>
