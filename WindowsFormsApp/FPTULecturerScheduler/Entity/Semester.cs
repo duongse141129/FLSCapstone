@@ -17,18 +17,22 @@ namespace FPTULecturerScheduler.Entity
         public string DateStart { get; set; }
         [JsonProperty("DateEndFormat")]
         public string DateEnd { get; set; }
+        [JsonProperty("State")]
+        public int state { get; set; }
         [JsonProperty("Status")]
         public int status { get; set; }
 
         public Semester()
         {
         }
-        public Semester(string Id, string term, string dateStart, string dateEnd, int status)
+
+        public Semester(string iD, string term, string dateStart, string dateEnd, int state, int status)
         {
-            ID = Id;
+            ID = iD;
             Term = term;
             DateStart = dateStart;
             DateEnd = dateEnd;
+            this.state = state;
             this.status = status;
         }
     }

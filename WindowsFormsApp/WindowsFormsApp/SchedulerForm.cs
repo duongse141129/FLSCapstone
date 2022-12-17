@@ -92,155 +92,164 @@ namespace WindowsFormsApp
 
         private async void loadDataButton_Click(object sender, EventArgs e)
         {
-            //reset output
-            tabControl1.SelectTab(0);
-            tabControl2.SelectTab(0);
-            SelectedscheduleItem = new List<CourseAssign>();
-            scheduleShows.Clear();
-            listBox1.Items.Clear();
-            listBox1.Hide();
-            label27.Hide();
-
-            outputDepartmentDataGridView.Rows.Clear();
-            outputSubjectDataGridView.Rows.Clear();
-            outputLecturerDataGridView.Rows.Clear();
-            outputSlotTypeDataGridView.Rows.Clear();
-
-          
-            //////////////////
-            await loadDataAsync((Semester)semesterCombobox.SelectedItem);
-
-            //load data vao department gridView
-            departmentDataGridView.RowCount = Departments.Count();
-            for (int i = 0; i < Departments.Count(); i++)
+            //semester state = blocked moi duoc load data
+            string semestersJson = new WebClient().DownloadString("http://20.214.249.72/api/Semester/"+ ((Semester)semesterCombobox.SelectedItem).ID);
+            Semester semesterLoad = JsonConvert.DeserializeObject<Semester>(semestersJson);
+            if (semesterLoad.state != 4)
             {
-
-                var subjectAmount = from subject in Subjects
-                                    where subject.DepartmentID == Departments.ElementAtOrDefault(i).ID
-                                    group subject by subject.DepartmentID into gr
-                                    let count = gr.Count()
-                                    select count;
-
-                var lecturerAmount = from lecturer in Lecturers
-                                     where lecturer.DepartmentID == Departments.ElementAtOrDefault(i).ID
-                                     group lecturer by lecturer.DepartmentID into gr
-                                     let count = gr.Count()
-                                     select count;
-
-                var courseAmount = from course in Courses
-                                   join subject in Subjects on course.SubjectID equals subject.ID
-                                   where subject.DepartmentID == Departments.ElementAtOrDefault(i).ID
-                                   select course.ID;
-
-                departmentDataGridView.Rows[i].Cells[0].Value = Departments.ElementAtOrDefault(i).ID;
-                departmentDataGridView.Rows[i].Cells[1].Value = Departments.ElementAtOrDefault(i).DepartmentName;
-                departmentDataGridView.Rows[i].Cells[2].Value = subjectAmount.ElementAtOrDefault(0);
-                departmentDataGridView.Rows[i].Cells[3].Value = courseAmount.Count();
-                departmentDataGridView.Rows[i].Cells[4].Value = lecturerAmount.ElementAtOrDefault(0);
-                
+                MessageBox.Show("Can only generate schedule when state of semester is blocked", "Scheduler");
             }
-
-            //load data vao department subject comboBox
-            subjectCombobox.DataSource = Departments;
-            subjectCombobox.DisplayMember = "DepartmentName";
-
-            //load data vao subject gridView
-            var SubjectsShowByDepartment = from subject in Subjects
-                                           join department in Departments on subject.DepartmentID equals department.ID
-                                           where department.ID == ((Department)subjectCombobox.SelectedItem).ID
-                                           select subject;
-
-            subjectDataGridView.RowCount = SubjectsShowByDepartment.Count();
-            for (int i = 0; i < SubjectsShowByDepartment.Count(); i++)
+            else
             {
-                var courseAmount = from course in Courses
-                                   where course.SubjectID == SubjectsShowByDepartment.ElementAtOrDefault(i).ID
-                                   group course by course.SubjectID into gr
-                                   let count = gr.Count()
-                                   select count;
+                //reset output
+                tabControl1.SelectTab(0);
+                tabControl2.SelectTab(0);
+                SelectedscheduleItem = new List<CourseAssign>();
+                scheduleShows.Clear();
+                listBox1.Items.Clear();
+                listBox1.Hide();
+                label27.Hide();
 
-                var assignCourseAmount = from course in Courses
-                                         join courseAssign in CourseAssigns on course.ID equals courseAssign.CourseID
-                                         where course.SubjectID == SubjectsShowByDepartment.ElementAtOrDefault(i).ID
-                                         group course by course.SubjectID into gr
+                outputDepartmentDataGridView.Rows.Clear();
+                outputSubjectDataGridView.Rows.Clear();
+                outputLecturerDataGridView.Rows.Clear();
+                outputSlotTypeDataGridView.Rows.Clear();
+
+
+                //////////////////
+                await loadDataAsync((Semester)semesterCombobox.SelectedItem);
+
+                //load data vao department gridView
+                departmentDataGridView.RowCount = Departments.Count();
+                for (int i = 0; i < Departments.Count(); i++)
+                {
+
+                    var subjectAmount = from subject in Subjects
+                                        where subject.DepartmentID == Departments.ElementAtOrDefault(i).ID
+                                        group subject by subject.DepartmentID into gr
+                                        let count = gr.Count()
+                                        select count;
+
+                    var lecturerAmount = from lecturer in Lecturers
+                                         where lecturer.DepartmentID == Departments.ElementAtOrDefault(i).ID
+                                         group lecturer by lecturer.DepartmentID into gr
                                          let count = gr.Count()
                                          select count;
 
-                subjectDataGridView.Rows[i].Cells[0].Value = SubjectsShowByDepartment.ElementAtOrDefault(i).ID;
-                subjectDataGridView.Rows[i].Cells[1].Value = SubjectsShowByDepartment.ElementAtOrDefault(i).SubjectName;
-                subjectDataGridView.Rows[i].Cells[2].Value = courseAmount.ElementAtOrDefault(0);
-                subjectDataGridView.Rows[i].Cells[3].Value = assignCourseAmount.ElementAtOrDefault(0);
+                    var courseAmount = from course in Courses
+                                       join subject in Subjects on course.SubjectID equals subject.ID
+                                       where subject.DepartmentID == Departments.ElementAtOrDefault(i).ID
+                                       select course.ID;
+
+                    departmentDataGridView.Rows[i].Cells[0].Value = Departments.ElementAtOrDefault(i).ID;
+                    departmentDataGridView.Rows[i].Cells[1].Value = Departments.ElementAtOrDefault(i).DepartmentName;
+                    departmentDataGridView.Rows[i].Cells[2].Value = subjectAmount.ElementAtOrDefault(0);
+                    departmentDataGridView.Rows[i].Cells[3].Value = courseAmount.Count();
+                    departmentDataGridView.Rows[i].Cells[4].Value = lecturerAmount.ElementAtOrDefault(0);
+
+                }
+
+                //load data vao department subject comboBox
+                subjectCombobox.DataSource = Departments;
+                subjectCombobox.DisplayMember = "DepartmentName";
+
+                //load data vao subject gridView
+                var SubjectsShowByDepartment = from subject in Subjects
+                                               join department in Departments on subject.DepartmentID equals department.ID
+                                               where department.ID == ((Department)subjectCombobox.SelectedItem).ID
+                                               select subject;
+
+                subjectDataGridView.RowCount = SubjectsShowByDepartment.Count();
+                for (int i = 0; i < SubjectsShowByDepartment.Count(); i++)
+                {
+                    var courseAmount = from course in Courses
+                                       where course.SubjectID == SubjectsShowByDepartment.ElementAtOrDefault(i).ID
+                                       group course by course.SubjectID into gr
+                                       let count = gr.Count()
+                                       select count;
+
+                    var assignCourseAmount = from course in Courses
+                                             join courseAssign in CourseAssigns on course.ID equals courseAssign.CourseID
+                                             where course.SubjectID == SubjectsShowByDepartment.ElementAtOrDefault(i).ID
+                                             group course by course.SubjectID into gr
+                                             let count = gr.Count()
+                                             select count;
+
+                    subjectDataGridView.Rows[i].Cells[0].Value = SubjectsShowByDepartment.ElementAtOrDefault(i).ID;
+                    subjectDataGridView.Rows[i].Cells[1].Value = SubjectsShowByDepartment.ElementAtOrDefault(i).SubjectName;
+                    subjectDataGridView.Rows[i].Cells[2].Value = courseAmount.ElementAtOrDefault(0);
+                    subjectDataGridView.Rows[i].Cells[3].Value = assignCourseAmount.ElementAtOrDefault(0);
+                }
+
+                //load data vao department lecturer comboBox
+                lecturerCombobox.DataSource = Departments;
+                lecturerCombobox.DisplayMember = "DepartmentName";
+
+                //load data vao lecturer gridView
+                var LecturerShowByDepartment = from lecturer in Lecturers
+                                               join department in Departments on lecturer.DepartmentID equals department.ID
+                                               where department.ID == ((Department)lecturerCombobox.SelectedItem).ID
+                                               select lecturer;
+
+                lecturerDataGridView.RowCount = LecturerShowByDepartment.Count();
+                for (int i = 0; i < LecturerShowByDepartment.Count(); i++)
+                {
+                    var semesterConfig = from lecturerCourseGroup in LecturerCourseGroups
+                                         where lecturerCourseGroup.LecturerID == LecturerShowByDepartment.ElementAtOrDefault(i).ID
+                                         select (lecturerCourseGroup.MinCourse, lecturerCourseGroup.MaxCourse);
+
+                    var priorityCourseAmount = from courseGroupItem in CourseGroupItems
+                                               join lecturerCourseGroup in LecturerCourseGroups on courseGroupItem.LecturerCourseGroupID equals lecturerCourseGroup.ID
+                                               where lecturerCourseGroup.LecturerID == LecturerShowByDepartment.ElementAtOrDefault(i).ID
+                                               group courseGroupItem by LecturerShowByDepartment.ElementAtOrDefault(i).ID into gr
+                                               let count = gr.Count()
+                                               select count;
+
+                    var assignCourseAmount = from courseAssign in CourseAssigns
+                                             where courseAssign.LecturerID == LecturerShowByDepartment.ElementAtOrDefault(i).ID
+                                             group courseAssign by courseAssign.LecturerID into gr
+                                             let count = gr.Count()
+                                             select count;
+
+                    lecturerDataGridView.Rows[i].Cells[0].Value = LecturerShowByDepartment.ElementAtOrDefault(i).ID;
+                    lecturerDataGridView.Rows[i].Cells[1].Value = LecturerShowByDepartment.ElementAtOrDefault(i).LecturerName;
+                    lecturerDataGridView.Rows[i].Cells[2].Value = LecturerShowByDepartment.ElementAtOrDefault(i).IsFullTime;
+                    lecturerDataGridView.Rows[i].Cells[3].Value = semesterConfig.ElementAtOrDefault(0).MinCourse;
+                    lecturerDataGridView.Rows[i].Cells[4].Value = semesterConfig.ElementAtOrDefault(0).MaxCourse;
+                    lecturerDataGridView.Rows[i].Cells[5].Value = LecturerShowByDepartment.ElementAtOrDefault(i).PriorityLecturer;
+                    lecturerDataGridView.Rows[i].Cells[6].Value = priorityCourseAmount.ElementAtOrDefault(0);
+                    lecturerDataGridView.Rows[i].Cells[7].Value = assignCourseAmount.ElementAtOrDefault(0);
+                }
+
+
+                //load data vao slotType gridView
+                slotTypeDataGridView.RowCount = SlotTypes.Count();
+                for (int i = 0; i < SlotTypes.Count(); i++)
+                {
+                    var assignAmount = from courseAssign in CourseAssigns
+                                       where courseAssign.SlotTypeID == SlotTypes.ElementAtOrDefault(i).ID
+                                       group courseAssign by courseAssign.SlotTypeID into gr
+                                       let count = gr.Count()
+                                       select count;
+
+                    slotTypeDataGridView.Rows[i].Cells[0].Value = SlotTypes.ElementAtOrDefault(i).SlotTypeCode;
+                    slotTypeDataGridView.Rows[i].Cells[1].Value = SlotTypes.ElementAtOrDefault(i).SlotNumber;
+                    slotTypeDataGridView.Rows[i].Cells[2].Value = SlotTypes.ElementAtOrDefault(i).TimeStart;
+                    slotTypeDataGridView.Rows[i].Cells[3].Value = SlotTypes.ElementAtOrDefault(i).TimeEnd;
+                    slotTypeDataGridView.Rows[i].Cells[4].Value = SlotTypes.ElementAtOrDefault(i).DateOfWeek;
+                    slotTypeDataGridView.Rows[i].Cells[5].Value = roomSemester.ElementAtOrDefault(0).Quantity;
+                    slotTypeDataGridView.Rows[i].Cells[6].Value = assignAmount.ElementAtOrDefault(0);
+                }
+
+                //load from, to label
+                string[] temp1 = ((Semester)semesterCombobox.SelectedItem).DateStart.Split('-');
+                string[] temp2 = ((Semester)semesterCombobox.SelectedItem).DateEnd.Split('-');
+                DateTime dateStart = new DateTime(Convert.ToInt32(temp1[0]), Convert.ToInt32(temp1[1]), Convert.ToInt32(temp1[2]));
+                DateTime dateEnd = new DateTime(Convert.ToInt32(temp2[0]), Convert.ToInt32(temp2[1]), Convert.ToInt32(temp2[2]));
+                //fromDatelabel.Text = "From date: "+((Semester)semesterCombobox.SelectedItem).DateStart;
+                fromDatelabel.Text = "From date: " + String.Format("{0:MM/dd/yyyy}", dateStart);
+                toDatelabel.Text = "To date: " + String.Format("{0:MM/dd/yyyy}", dateEnd);
             }
-
-            //load data vao department lecturer comboBox
-            lecturerCombobox.DataSource = Departments;
-            lecturerCombobox.DisplayMember = "DepartmentName";
-
-            //load data vao lecturer gridView
-            var LecturerShowByDepartment = from lecturer in Lecturers
-                                           join department in Departments on lecturer.DepartmentID equals department.ID
-                                           where department.ID == ((Department)lecturerCombobox.SelectedItem).ID
-                                           select lecturer;
-
-            lecturerDataGridView.RowCount = LecturerShowByDepartment.Count();
-            for (int i = 0; i < LecturerShowByDepartment.Count(); i++)
-            {
-                var semesterConfig = from lecturerCourseGroup in LecturerCourseGroups
-                                     where lecturerCourseGroup.LecturerID == LecturerShowByDepartment.ElementAtOrDefault(i).ID
-                                     select (lecturerCourseGroup.MinCourse, lecturerCourseGroup.MaxCourse);
-
-                var priorityCourseAmount = from courseGroupItem in CourseGroupItems
-                                           join lecturerCourseGroup in LecturerCourseGroups on courseGroupItem.LecturerCourseGroupID equals lecturerCourseGroup.ID
-                                           where lecturerCourseGroup.LecturerID == LecturerShowByDepartment.ElementAtOrDefault(i).ID
-                                           group courseGroupItem by LecturerShowByDepartment.ElementAtOrDefault(i).ID into gr
-                                           let count = gr.Count()
-                                           select count;
-
-                var assignCourseAmount = from courseAssign in CourseAssigns                                          
-                                         where courseAssign.LecturerID == LecturerShowByDepartment.ElementAtOrDefault(i).ID
-                                         group courseAssign by courseAssign.LecturerID into gr
-                                         let count = gr.Count()
-                                         select count;
-
-                lecturerDataGridView.Rows[i].Cells[0].Value = LecturerShowByDepartment.ElementAtOrDefault(i).ID;
-                lecturerDataGridView.Rows[i].Cells[1].Value = LecturerShowByDepartment.ElementAtOrDefault(i).LecturerName;
-                lecturerDataGridView.Rows[i].Cells[2].Value = LecturerShowByDepartment.ElementAtOrDefault(i).IsFullTime;
-                lecturerDataGridView.Rows[i].Cells[3].Value = semesterConfig.ElementAtOrDefault(0).MinCourse;
-                lecturerDataGridView.Rows[i].Cells[4].Value = semesterConfig.ElementAtOrDefault(0).MaxCourse;
-                lecturerDataGridView.Rows[i].Cells[5].Value = LecturerShowByDepartment.ElementAtOrDefault(i).PriorityLecturer;
-                lecturerDataGridView.Rows[i].Cells[6].Value = priorityCourseAmount.ElementAtOrDefault(0);
-                lecturerDataGridView.Rows[i].Cells[7].Value = assignCourseAmount.ElementAtOrDefault(0);
-            }
-
-
-            //load data vao slotType gridView
-            slotTypeDataGridView.RowCount = SlotTypes.Count();
-            for (int i = 0; i < SlotTypes.Count(); i++)
-            {
-                var assignAmount = from courseAssign in CourseAssigns
-                                   where courseAssign.SlotTypeID == SlotTypes.ElementAtOrDefault(i).ID
-                                   group courseAssign by courseAssign.SlotTypeID into gr
-                                   let count = gr.Count()
-                                   select count;
-
-                slotTypeDataGridView.Rows[i].Cells[0].Value = SlotTypes.ElementAtOrDefault(i).SlotTypeCode;
-                slotTypeDataGridView.Rows[i].Cells[1].Value = SlotTypes.ElementAtOrDefault(i).SlotNumber;
-                slotTypeDataGridView.Rows[i].Cells[2].Value = SlotTypes.ElementAtOrDefault(i).TimeStart;
-                slotTypeDataGridView.Rows[i].Cells[3].Value = SlotTypes.ElementAtOrDefault(i).TimeEnd;
-                slotTypeDataGridView.Rows[i].Cells[4].Value = SlotTypes.ElementAtOrDefault(i).DateOfWeek;
-                slotTypeDataGridView.Rows[i].Cells[5].Value = roomSemester.ElementAtOrDefault(0).Quantity;
-                slotTypeDataGridView.Rows[i].Cells[6].Value = assignAmount.ElementAtOrDefault(0);
-            }
-
-            //load from, to label
-            string[] temp1 = ((Semester)semesterCombobox.SelectedItem).DateStart.Split('-');
-            string[] temp2 = ((Semester)semesterCombobox.SelectedItem).DateEnd.Split('-');
-            DateTime dateStart = new DateTime(Convert.ToInt32(temp1[0]), Convert.ToInt32(temp1[1]), Convert.ToInt32(temp1[2]));
-            DateTime dateEnd = new DateTime(Convert.ToInt32(temp2[0]), Convert.ToInt32(temp2[1]), Convert.ToInt32(temp2[2]));
-            //fromDatelabel.Text = "From date: "+((Semester)semesterCombobox.SelectedItem).DateStart;
-            fromDatelabel.Text = "From date: " + String.Format("{0:MM/dd/yyyy}", dateStart);
-            toDatelabel.Text = "To date: " + String.Format("{0:MM/dd/yyyy}", dateEnd);
-
         }
 
         
@@ -249,7 +258,7 @@ namespace WindowsFormsApp
         {
             if (Courses.Count()==0 || Lecturers.Count() == 0 || Departments.Count() == 0 || SlotTypes.Count() == 0 || Subjects.Count() == 0 )
             {
-                MessageBox.Show("Please load data of semester to run", "Message");
+                MessageBox.Show("Please load data of semester to run", "Scheduler");
             }
             else
             {
@@ -900,11 +909,11 @@ namespace WindowsFormsApp
         {
             if (SelectedscheduleItem.Count() < 1)
             {
-                MessageBox.Show("No infomation schedule to send !", "Message");
+                MessageBox.Show("No infomation schedule to send !", "Scheduler");
             }
             else
             {
-                DialogResult dialogResult = MessageBox.Show("You want to send this schedule to sever ?", "Message", MessageBoxButtons.YesNo);
+                DialogResult dialogResult = MessageBox.Show("You want to send this schedule to sever ?", "Scheduler", MessageBoxButtons.YesNo);
                 if (dialogResult == DialogResult.Yes)
                 {
                     string Json = new WebClient().DownloadString("http://20.214.249.72/api/CourseAssign?ScheduleId=" + schedule.ElementAtOrDefault(0).Id + "&isAssign=0&pageIndex=1&pageSize=1000");
@@ -912,7 +921,7 @@ namespace WindowsFormsApp
 
                     if (test.Count() > 1)
                     {
-                        MessageBox.Show("You can not send more schedule !", "Message");
+                        MessageBox.Show("You can not send more schedule !", "Scheduler");
                     }
                     else
                     {
@@ -948,7 +957,7 @@ namespace WindowsFormsApp
             waitingDialog.Invoke(new MethodInvoker(() => {
                 waitingDialog.Hide();
             }));
-            MessageBox.Show("Send schedule successful !", "Message");
+            MessageBox.Show("Send schedule successful !", "Scheduler");
         }
 
         private void departmentCbxSubject_SelectedIndexChanged(object sender, EventArgs e)
