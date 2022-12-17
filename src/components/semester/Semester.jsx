@@ -4,7 +4,7 @@ import './Semester.css'
 import {HashLoader} from 'react-spinners';
 import request from '../../utils/request';
 import SemesterCard from './SemesterCard';
-import { green } from '@mui/material/colors';
+import { green, red } from '@mui/material/colors';
 
 const Semester = () => {
   const [semesters, setSemesters] = useState([]);
@@ -42,6 +42,8 @@ const Semester = () => {
         List of all semesters
       </Typography>
       {loading && <Stack px={9}><HashLoader size={30} color={green[600]}/></Stack>}
+      {!loading && semesters.length === 0 && 
+        <Typography px={9} color={red[600]}>No semesters have been created.</Typography>}
       {!loading && <Grid container spacing={6} px={9} mb={2}>
         {semesters.map(semester => (
           <Grid item xs={4} key={semester.Id}>
