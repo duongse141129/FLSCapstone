@@ -114,6 +114,14 @@ const SemesterCreate = ({ isCreate, setIsCreate, handleAfterCreate }) => {
     .catch(err => {alert('Fail to create schedule for new semester')})
   }
 
+  const newRoom = (semesterId) => {
+    request.post('RoomSemester', {
+      SemesterId: semesterId,
+      RoomTypeId: 'R1',
+      Quantity: 60
+    })
+  }
+
   const createSemester = () => {
     if(selectedTerm && selectedYear && startDate && endDate && !duplicateTerm){
       setLoadCreate(true)
@@ -128,6 +136,7 @@ const SemesterCreate = ({ isCreate, setIsCreate, handleAfterCreate }) => {
           newSubjectOfLec(newSemesterId)
           newSlotAndConfig(newSemesterId)
           newSchedule(newSemesterId)
+          newRoom(newSemesterId)
 
           setIsCreate(false)
           setLoadCreate(false)
@@ -142,9 +151,7 @@ const SemesterCreate = ({ isCreate, setIsCreate, handleAfterCreate }) => {
   }
 
   return (
-    <Dialog fullWidth={true}
-      open={isCreate} onClose={() => setIsCreate(false)}
-    >
+    <Dialog fullWidth={true} open={isCreate} onClose={() => setIsCreate(false)}>
       <DialogTitle>
         <Typography variant='h5' fontWeight={500}>Create Semester</Typography>
       </DialogTitle>
