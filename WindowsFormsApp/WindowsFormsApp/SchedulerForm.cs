@@ -65,7 +65,7 @@ namespace WindowsFormsApp
 
             this.loginForm = loginForm;
 
-            string semestersJson = new WebClient().DownloadString("http://20.214.249.72/api/Semester?pageIndex=1&pageSize=100");
+            string semestersJson = new WebClient().DownloadString("http://20.214.249.72/api/Semester?sortBy=DateEnd&order=Des&pageIndex=1&pageSize=100");
             Semesters = JsonConvert.DeserializeObject<List<Semester>>(semestersJson);
             semesterCombobox.DataSource = Semesters;
             semesterCombobox.DisplayMember = "Term";
@@ -868,7 +868,7 @@ namespace WindowsFormsApp
             string courseGroupItemsJson = new WebClient().DownloadString("http://20.214.249.72/api/CourseGroupItem?Status=1&pageIndex=1&pageSize=100000");
             CourseGroupItems = JsonConvert.DeserializeObject<List<CourseGroupItem>>(courseGroupItemsJson);
 
-            string roomSemesterItemsJson = new WebClient().DownloadString("http://20.214.249.72/api/RoomSemester?RoomTypeId=R1&pageIndex=1&pageSize=10");
+            string roomSemesterItemsJson = new WebClient().DownloadString("http://20.214.249.72/api/RoomSemester?SemesterId="+ semesterId + "&RoomTypeId=R1&pageIndex=1&pageSize=10");
             roomSemester = JsonConvert.DeserializeObject<List<RoomSemester>>(roomSemesterItemsJson);
 
             string scheduleJson = new WebClient().DownloadString("http://20.214.249.72/api/Schedule?SemesterId="+ semesterId + "&pageIndex=1&pageSize=100");
