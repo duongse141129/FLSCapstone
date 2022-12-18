@@ -21,27 +21,41 @@ const Login = () => {
     if(isInitialized){
       if (isSignedIn) {
         setIsLoading(true)
-        request.get(`User/email/${googleUser.profileObj.email}`)
+        request.post(`Token/Login?email=${googleUser?.profileObj?.email}`)
           .then(res => {
-            setIsLoading(false)
-            if (res.data) {
-              if (res.data.RoleIDs.includes('LC')) {
-                navigate('/lecturer')
-              }
-              else if(res.data.RoleIDs.includes('DMA')){
-                navigate('/manager')
-              }
-              else {
-                navigate('/admin')
-              }
+            if (res.status === 200) {
+              const accessKey = res.data.access_token
+              request.get(`UserAuthen/email/${googleUser?.profileObj?.email}`, {
+                headers: {Authorization: `Bearer ${accessKey}`}
+              }).then(res => {
+                setIsLoading(false)
+                if (res.data.RoleIDs.includes('LC')) {
+                  navigate('/lecturer')
+                }
+                else if (res.data.RoleIDs.includes('DMA')) {
+                  navigate('/manager')
+                }
+                else {
+                  navigate('/admin')
+                }
+              }).catch(err => {
+                signOut();
+                if (err?.response?.data?.status === 404) {
+                  setError('This email can not be signed in.')
+                }
+                else {
+                  setError('Fail to sign in.')
+                }
+                setIsLoading(false)
+              })
             }
           })
           .catch(err => {
             signOut();
-            if(err?.response?.data?.status === 404){
+            if (err?.response?.data?.status === 404) {
               setError('This email can not be signed in.')
             }
-            else{
+            else {
               setError('Fail to sign in.')
             }
             setIsLoading(false)

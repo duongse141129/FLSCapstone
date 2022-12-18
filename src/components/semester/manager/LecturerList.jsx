@@ -119,6 +119,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
 
   const handleSelectDepartment = (e) => {
     setSelectedDepartment(e.target.value);
+    setPage(0);
   }
 
   const myDepartment = () => {
@@ -195,7 +196,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
             />
           </Tooltip>}
         </Stack>
-        {!admin && semester.State === 5 && myCourseGroup.Id &&
+        {!admin && semester.State === 5 && account.DepartmentId === selectedDepartment && myCourseGroup.Id &&
          ( myCourseGroup.GroupName === 'confirm' ? 
           <Typography color={red[600]} fontWeight={500}>Schedules have been confirmed</Typography>:
           <Button variant='contained' size='small' color='error' onClick={clickConfirm}>
@@ -215,7 +216,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
                   {(admin || account.DepartmentId === selectedDepartment) && 
                     (semester.State === 5 || semester.State === 6) &&
                     <TableCell className='subject-header' align='center'>
-                      Assigned Courses</TableCell>}
+                      Courses</TableCell>}
                   <TableCell className='subject-header' align='center'>More</TableCell>
                 </TableRow>
               </TableHead>

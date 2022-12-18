@@ -23,7 +23,7 @@ const ScheduleDetail = ({admin}) => {
   const [semesters, setSemesters] = useState([])
   const [selectedSemesterObj, setSelectedSemesterObj] = useState({});
   const [selectedSemester, setSelectedSemester] = useState('');
-  const [weeksInYear, setWeeksInYear] = useState(getWeeksInYear(new Date().getFullYear()));
+  const [weeksInYear, setWeeksInYear] = useState([]);
   const [weeksInSemester, setWeeksInSemester] = useState([]);
   const [selectedWeek, setSelectedWeek] = useState('');
   const [selectedWeekObj, setSelectedWeekObj] = useState({});
@@ -83,9 +83,17 @@ const ScheduleDetail = ({admin}) => {
     }
   }, [semesters])
 
+  //set week in years after selected semester
+  useEffect(() => {
+    if(selectedSemesterObj.Term){
+      const year = Number(selectedSemesterObj.Term.split(' ')[1])
+      setWeeksInYear(getWeeksInYear(year))
+    }
+  }, [selectedSemesterObj])
+
   //get weeks in semesters after set selected semester
   useEffect(() => {
-    if(Object.values(selectedSemesterObj).length > 0){
+    if(Object.values(selectedSemesterObj).length > 0 && weeksInYear.length > 0){
       const result = getSemesterWeeks(weeksInYear, selectedSemesterObj.DateStartFormat, selectedSemesterObj.DateEndFormat)
       setWeeksInSemester(result);
     }
@@ -135,7 +143,6 @@ const ScheduleDetail = ({admin}) => {
     setSelectedSemester(e.target.value)
     const selected = semesters.find(item => item.Id === e.target.value)
     setSelectedSemesterObj(selected)
-    setWeeksInYear(getWeeksInYear(Number(selected.Term.split(' ')[1])))
   }
 
   const handleSelectWeek = (e) => {
