@@ -4,8 +4,7 @@ import { useEffect, useState } from 'react'
 import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
-const SubjectEdit = ({isEdit, setIsEdit, pickedSubject, afterEdit}) => {
-  const [departments, setDepartments] = useState([]);
+const SubjectEdit = ({isEdit, setIsEdit, pickedSubject, afterEdit, departments}) => {
   const [selectedDepart, setSelectedDepart] = useState('');
   const [subName, setSubName] = useState('');
   const [subDes, setSubDes] = useState('');
@@ -18,16 +17,6 @@ const SubjectEdit = ({isEdit, setIsEdit, pickedSubject, afterEdit}) => {
       setSubDes(pickedSubject.Description || '')
     }
   }, [pickedSubject, isEdit])
-
-  useEffect(() => {
-    request.get('Department', {
-      params: {sortBy: 'Id', order:'Asc', pageIndex: 1, pageSize: 100}
-    }).then(res => {
-      if(res.status === 200){
-        setDepartments(res.data)
-      }
-    }).catch(err => {alert('Fail to get departments')})
-  }, [])
 
   const saveEdit = () => {
     if(selectedDepart && subName && (selectedDepart !== pickedSubject.DepartmentId || 
@@ -59,12 +48,13 @@ const SubjectEdit = ({isEdit, setIsEdit, pickedSubject, afterEdit}) => {
         </Stack>
         <Stack mb={2}>
           <Typography fontWeight={500}>Department</Typography>
+          {departments.length > 0 && 
           <Select size='small' value={selectedDepart} 
             onChange={(e) => setSelectedDepart(e.target.value)}>
             {departments.map(depart => (
               <MenuItem key={depart.Id} value={depart.Id}>{depart.Id} - {depart.DepartmentName}</MenuItem>
             ))}
-          </Select>
+          </Select>}
         </Stack>
         <Stack mb={2}>
           <Typography fontWeight={500}>Name<span style={{color: red[600]}}>*</span></Typography>
@@ -78,7 +68,8 @@ const SubjectEdit = ({isEdit, setIsEdit, pickedSubject, afterEdit}) => {
       <DialogActions>
         <Button color='info' variant='outlined' onClick={() => setIsEdit(false)}>Cancel</Button>
         {loadSave ? <Button variant='contained'><ClipLoader size={20} color='white'/></Button> :
-         <Button variant='contained' onClick={saveEdit} disabled={subName.length === 0 || (subName === pickedSubject.SubjectName && selectedDepart === pickedSubject.DepartmentId && subDes === pickedSubject.Description)}>
+         <Button variant='contained' onClick={saveEdit} 
+         disabled={subName.length === 0 || (subName === pickedSubject.SubjectName && selectedDepart === pickedSubject.DepartmentId && subDes === pickedSubject.Description)}>
           Edit</Button>}
       </DialogActions>
     </Dialog>

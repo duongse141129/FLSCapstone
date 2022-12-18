@@ -100,6 +100,7 @@ const SubjectAdmin = () => {
 
   const handleSelectDepartment = (event) => {
     setSelectedDepartment(event.target.value);
+    setPage(0);
   };
 
   const clickCreate = () => {
@@ -126,6 +127,13 @@ const SubjectAdmin = () => {
   }
 
   const clickEdit = (subject) => {
+    const number = semesters.filter(item => item.State >= 2 && item.State <= 5).length
+    if(number > 0){
+      setContentAlert('The system is having semesters in schedule generating process.')
+      setIsAlert(true)
+      return
+    }
+
     setPickedSubject(subject)
     setIsEdit(true);
   }
@@ -250,9 +258,10 @@ const SubjectAdmin = () => {
           />
         </Paper>
       </Stack>}
-      <SubjectCreate isCreate={isCreate} setIsCreate={setIsCreate} afterCreate={afterCreate}/>
+      <SubjectCreate isCreate={isCreate} setIsCreate={setIsCreate} afterCreate={afterCreate}
+        departments={departments}/>
       <SubjectEdit isEdit={isEdit} setIsEdit={setIsEdit} pickedSubject={pickedSubject}
-        afterEdit={afterEdit}/>
+        afterEdit={afterEdit} departments={departments}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} contentDelete={contentDel}
         saveDelete={saveDelete}/>
       <AlertComponent isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>

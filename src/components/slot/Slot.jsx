@@ -2,7 +2,9 @@ import {
   Box, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer,
   TableHead, TableRow, Typography
 } from '@mui/material'
+import { green } from '@mui/material/colors';
 import { useEffect, useState } from 'react';
+import { HashLoader } from 'react-spinners';
 import request from '../../utils/request';
 import Title from '../title/Title'
 
@@ -10,6 +12,7 @@ const Slot = () => {
   const [semesters, setSemesters] = useState([]);
   const [selectedSemester, setSelectedSemester] = useState('');
   const [slots, setSlots] = useState([]);
+  const [load, setLoad] = useState(false);
 
   //get semester lists
   useEffect(() => {
@@ -53,6 +56,7 @@ const Slot = () => {
 
   //get list slots
   useEffect(() => {
+    setLoad(true)
     if (selectedSemester) {
       request.get('SlotType', {
         params: { SemesterId: selectedSemester, sortBy: 'DayOfWeekAndTimeStart',
@@ -61,9 +65,11 @@ const Slot = () => {
       }).then(res => {
         if (res.status === 200) {
           setSlots(res.data)
+          setLoad(false)
         }
       }).catch(err => {
         alert('Fail to load slot!')
+        setLoad(false)
       })
     }
   }, [selectedSemester])
@@ -93,7 +99,8 @@ const Slot = () => {
           }
         </Select>
       </Stack>
-      <Stack px={9} mb={2}>
+      {load && <Stack px={9}><HashLoader size={30} color={green[600]}/></Stack>}
+      {!load && <Stack px={9} mb={2}>
         <Paper sx={{ minWidth: 700 }}>
           <TableContainer component={Box}>
             <Table size='small'>
@@ -118,7 +125,7 @@ const Slot = () => {
             </Table>
           </TableContainer>
         </Paper>
-      </Stack>
+      </Stack>}
     </Stack>
   )
 }

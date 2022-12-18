@@ -1,33 +1,45 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useMemo } from 'react'
 import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
-const SubjectCreate = ({isCreate, setIsCreate, afterCreate}) => {
-  const [departments, setDepartments] = useState([]);
+const SubjectCreate = ({isCreate, setIsCreate, afterCreate, departments}) => {
   const [selectedDepart, setSelectedDepart] = useState('');
   const [code, setCode] = useState('');
   const [name, setName] = useState('');
   const [des, setDes] = useState('');
   const [load, setLoad] = useState(false);
+  const [subjects, setSubjects] = useState([]);
+  const duplicateCode = useMemo(() => {
+    if(code.length > 0 && subjects.length > 0){
+      return subjects.find(item => item.Id.toLowerCase() === code.toLowerCase()) ? true : false
+    }
+    return false
+  }, [code, subjects])
 
+  //get departments
   useEffect(() => {
-    request.get('Department', {
-      params: {sortBy: 'Id', order:'Asc', pageIndex: 1, pageSize: 100}
-    }).then(res => {
-      if(res.status === 200){
-        setDepartments(res.data)
-        setSelectedDepart(res.data[0]?.Id)
-      }
-    }).catch(err => {alert('Fail to get departments')})
+    if(departments.length > 0){
+      setSelectedDepart(departments[0].Id)
+    }
+  }, [departments])
+
+  //get subjects
+  useEffect(() => {
+    request.get('Subject', {params: {pageIndex: 1, pageSize: 500}})
+      .then(res => {
+        if (res.data.length > 0) {
+          setSubjects(res.data)
+        }
+      })
   }, [])
 
   const createSubject = () => {
     if(code && name && selectedDepart){
       setLoad(true)
       request.post('Subject', {
-        Id: code, SubjectName: name,
+        Id: code.toUpperCase(), SubjectName: name,
         Description: des, DepartmentId: selectedDepart
       }).then(res => {
         if(res.status === 200 || res.status === 201){
@@ -48,6 +60,9 @@ const SubjectCreate = ({isCreate, setIsCreate, afterCreate}) => {
         Create Subject
       </DialogTitle>
       <DialogContent>
+        {duplicateCode && 
+          <Typography color={red[600]} mb={1}>This code was created.</Typography>
+        }
         <Stack mb={2}>
           <Typography fontWeight={500}>Department</Typography>
           <Select size='small' value={selectedDepart} 
@@ -73,7 +88,8 @@ const SubjectCreate = ({isCreate, setIsCreate, afterCreate}) => {
       <DialogActions>
         <Button color='info' variant='outlined' onClick={() => setIsCreate(false)}>Cancel</Button>
         {load ? <Button variant='contained'><ClipLoader size={20} color='white'/></Button> : 
-        <Button variant='contained' onClick={createSubject} disabled={code.length === 0 || name.length === 0 || selectedDepart.length === 0}>
+        <Button variant='contained' onClick={createSubject} 
+          disabled={code.length === 0 || name.length === 0 || selectedDepart.length === 0 || duplicateCode}>
           Create</Button>}
       </DialogActions>
     </Dialog>

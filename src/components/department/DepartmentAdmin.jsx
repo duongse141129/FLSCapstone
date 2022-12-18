@@ -35,7 +35,7 @@ const DepartmentAdmin = () => {
     setLoading(true)
     request.get('Department', {
       params: {sortBy: 'Id', order: 'Asc',
-        pageIndex: 1, pageSize: 1000
+        pageIndex: 1, pageSize: 100
       }
     }).then(res => {
       if (res.data) {
@@ -61,7 +61,7 @@ const DepartmentAdmin = () => {
     })
   }, [])
 
-  //get subjects by department
+  //get subjects
   useEffect(() => {
     request.get('Subject', {params: {pageIndex: 1, pageSize: 500}})
       .then(res => {
@@ -114,6 +114,13 @@ const DepartmentAdmin = () => {
   }
 
   const clickEdit = (depart) => {
+    const number = semesters.filter(item => item.State >= 2 && item.State <= 5).length
+    if(number > 0){
+      setContentAlert('The system is having semesters in schedule generating process.')
+      setIsAlert(true)
+      return
+    }
+
     setPickedDepart(depart)
     setIsEdit(true)
   }
@@ -229,7 +236,8 @@ const DepartmentAdmin = () => {
           />
         </Paper>
       </Stack>}
-      <DepartmentCreate isCreate={isCreate} setIsCreate={setIsCreate} afterCreate={afterCreate}/>
+      <DepartmentCreate isCreate={isCreate} setIsCreate={setIsCreate} afterCreate={afterCreate}
+        departs={departments}/>
       <DepartmentEdit isEdit={isEdit} setIsEdit={setIsEdit} pickedDepart={pickedDepart}
         afterEdit={afterEdit}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} contentDelete={contentDel}
