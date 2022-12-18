@@ -4,6 +4,7 @@ import { green, red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
 import { toast } from 'react-toastify'
 import request from '../../../utils/request'
+import Alert from '../../alert/Alert'
 import ViewConfirmModal from './ViewConfirmModal'
 
 const ViewConfirm = ({semesterId, semesterState, refresh}) => {
@@ -11,7 +12,9 @@ const ViewConfirm = ({semesterId, semesterState, refresh}) => {
   const [lecGroups, setLecGroups] = useState([])
   const [isSet, setIsSet] = useState(false)
   const [reload, setReload] = useState(false)
-  const [checkAllConfirm, setCheckAllConfirm] = useState({});
+  const [checkAllConfirm, setCheckAllConfirm] = useState({})
+  const [isAlert, setIsAlert] = useState(false)
+  const [contentAlert, setContentAlert] = useState('')
 
   useEffect(() => {
     request.get('User', {
@@ -50,6 +53,24 @@ const ViewConfirm = ({semesterId, semesterState, refresh}) => {
     }
   }, [semesterId, reload, refresh])
 
+  const checkCourseConstraint = () => {
+    if(semesterId){
+      request.get(`CheckConstraint/CheckSemesterPublic/${semesterId}`)
+      .then(res => {
+        if(res.data){
+          const data = res.data
+          if(data.success === false){
+            setContentAlert('Please inform department managers check again about course constraint')
+            setIsAlert(true)
+          }
+          else{
+            setIsSet(true)
+          }
+        }
+      })
+    }
+  }
+
   const setAllConfirmed = () => {
     if(semesterId){
       request.put(`CheckConstraint/SetAllDepartmentManagerConfirm/${semesterId}`)
@@ -75,7 +96,7 @@ const ViewConfirm = ({semesterId, semesterState, refresh}) => {
       <Stack mb={1} direction='row' justifyContent='space-between'>
         <Typography fontWeight={500}>Managers of each Department</Typography>
         {checkAllConfirm.success === false && 
-          <Button size='small' variant='contained' onClick={() => setIsSet(true)}>
+          <Button size='small' variant='contained' onClick={checkCourseConstraint}>
             Set All Confirmed</Button>}
       </Stack>
       <Paper sx={{ minWidth: 700 }}>
@@ -110,6 +131,7 @@ const ViewConfirm = ({semesterId, semesterState, refresh}) => {
         </TableContainer>
       </Paper>
       <ViewConfirmModal isSet={isSet} setIsSet={setIsSet} handleSetAll={setAllConfirmed}/>
+      <Alert isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
       </>}
     </Stack>
   )

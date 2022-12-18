@@ -20,7 +20,7 @@ const MenuProps = {
   },
 };
 
-const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, admin, myCourseGroup }) => {
+const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, admin, myCourseGroup, scheduleId }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [selected, setSelected] = useState(tabs[0].name)
   const [allSubjects, setAllSubjects] = useState([]);
@@ -36,6 +36,9 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
     }
     return {}
   }, [lecturers, selectedLec])
+  const [assignedCourses, setAssignedCourses] = useState([])
+  const [lecGroup, setLecGroup] = useState({})
+  const [refreshCourse, setRefreshCourse] = useState(false)
 
   //get all subjects
   useEffect(() => {
@@ -62,6 +65,34 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
       }).catch(err => {alert('Fail to get lecturers')})
     }
   }, [selectedLecturer])
+
+  //get all assign course after generate schedule
+  useEffect(() => {
+    if(scheduleId && passLec.Id){
+      request.get('CourseAssign', {
+        params: {ScheduleId: scheduleId, LecturerId: passLec.Id,  
+          pageIndex: 1, pageSize: 500}
+      }).then(res => {
+        if(res.data.length > 0){
+          setAssignedCourses(res.data)
+        }
+      }).catch(err => {alert('Fail to get assigned courses of lecturers')})
+    }
+  }, [scheduleId, passLec.Id, refreshCourse])
+
+  //get lecturer course group to show min max course
+  useEffect(() => {
+    if(semester.Id && passLec.Id){
+      request.get('LecturerCourseGroup', {
+        params: {SemesterId: semester.Id, LecturerId: passLec.Id,
+          pageIndex:1, pageSize:1}
+      }).then(res => {
+        if(res.data.length > 0){
+          setLecGroup(res.data[0])
+        }
+      }).catch(err => {alert('Fail to get min max course of lecturer')})
+    }
+  }, [semester.Id, passLec.Id, refreshCourse])
 
   return (
     <Dialog maxWidth='lg' fullWidth={true}
@@ -94,6 +125,10 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
           <Stack direction='row' gap={1} alignItems='center'>
             <Typography fontWeight={500}>Full-time:</Typography>
             {passLec.IsFullTime === 1 ? <Check/> : <Close/>}
+          </Stack>
+          <Stack direction='row' gap={1}>
+            <Typography fontWeight={500}>Courses: </Typography>
+            <Typography>{assignedCourses.length} ({lecGroup.MinCourse} - {lecGroup.MaxCourse})</Typography>
           </Stack>
         </Stack>
         <Stack direction='row' gap={4} borderBottom='1px solid #e3e3e3' mb={2}>
@@ -143,17 +178,17 @@ const InforModal = ({ isSelected, setIsSelected, semester, selectedLecturer, adm
           lecturerDepart={selectedLecturer.DepartmentId} semester={semester} admin={admin}/>}
 
         {selected === tabs[1].name && <AssignmentContainer lecturer={passLec} semester={semester} 
-          allSubjects={allSubjects} admin={admin} myCourseGroup={myCourseGroup}/>}
+          allSubjects={allSubjects} admin={admin} myCourseGroup={myCourseGroup} setRefreshCourse={setRefreshCourse}/>}
 
         {selected === tabs[2].name && <FeedbackSelection lecturer={passLec} semester={semester} admin={admin}/>}
 
         {selected === tabs[3].name && <SlotManage lecturer={passLec} semester={semester} admin={admin}/>}
 
-        {selected === tabs[4].name && <CourseNumber lecturer={passLec} 
+        {selected === tabs[4].name && <CourseNumber lecturer={passLec} setRefreshCourse={setRefreshCourse}
           semesterId={semester.Id} semesterState={semester.State} admin={admin}/>}
           
         {selected === tabs[5].name && <GetCourse semesterId={semester.Id} semesterState={semester.State}
-          lecturer={passLec} myCourseGroup={myCourseGroup}/>}
+          lecturer={passLec} myCourseGroup={myCourseGroup} setRefreshCourse={setRefreshCourse}/>}
       </DialogContent>
     </Dialog>
   )

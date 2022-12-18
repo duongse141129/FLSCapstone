@@ -4,12 +4,14 @@ import {Box, Button, IconButton, Paper, Stack, Table, TableBody, TableCell, Tabl
 } from '@mui/material';
 import { green } from '@mui/material/colors';
 import {HashLoader} from 'react-spinners'
+import { ToastContainer, toast } from 'react-toastify';
 import React, { useState, useEffect } from 'react'
 import request from '../../utils/request';
 import Title from '../title/Title'
 import DepartmentCreate from './DepartmentCreate';
 import DepartmentEdit from './DepartmentEdit';
 import DeleteModal from '../priority/DeleteModal';
+import AlertComponent from '../alert/Alert';
 
 const DepartmentAdmin = () => {
   const [page, setPage] = useState(0);
@@ -21,7 +23,12 @@ const DepartmentAdmin = () => {
   const [pickedDepart, setPickedDepart] = useState({})
   const [isDelete, setIsDelete] = useState(false);
   const [contentDel, setContentDel] = useState('');
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+  const [isAlert, setIsAlert] = useState(false);
+  const [contentAlert, setContentAlert] = useState('');
+  const [subjects, setSubjects] = useState([]);
+  const [semesters, setSemesters] = useState([]);
 
   //get all departments
   useEffect(() => {
@@ -39,8 +46,9 @@ const DepartmentAdmin = () => {
       alert('Fail to load departments')
       setLoading(false)
     })
-  }, [])
+  }, [reload])
 
+  //get managers
   useEffect(() => {
     request.get('User', {
       params:{RoleIDs: 'DMA',pageIndex: 1, pageSize: 100}
@@ -53,6 +61,26 @@ const DepartmentAdmin = () => {
     })
   }, [])
 
+  //get subjects by department
+  useEffect(() => {
+    request.get('Subject', {params: {pageIndex: 1, pageSize: 500}})
+      .then(res => {
+        if (res.data.length > 0) {
+          setSubjects(res.data)
+        }
+      })
+  }, [])
+
+  //get semesters
+  useEffect(() => {
+    request.get('Semester', {params: {pageIndex: 1, pageSize: 100}})
+    .then(res => {
+      if(res.data.length > 0){
+        setSemesters(res.data)
+      }
+    })
+  }, [])
+
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
   };
@@ -62,19 +90,75 @@ const DepartmentAdmin = () => {
     setPage(0);
   };
 
+  const clickCreate = () => {
+    const number = semesters.filter(item => item.State >= 2 && item.State <= 5).length
+    if(number > 0){
+      setContentAlert('The system is having semesters in schedule generating process.')
+      setIsAlert(true)
+      return
+    }
+
+    setIsCreate(true)
+  }
+
+  const afterCreate = (status) => {
+    if (status) {
+      setReload(pre => !pre)
+      toast.success('Create successfully', {
+        position: "top-right", autoClose: 3000,
+        hideProgressBar: false, closeOnClick: true,
+        pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
+  }
+
   const clickEdit = (depart) => {
     setPickedDepart(depart)
     setIsEdit(true)
   }
 
+  const afterEdit = (status) => {
+    if (status) {
+      setReload(pre => !pre)
+      toast.success('Edit successfully', {
+        position: "top-right", autoClose: 3000,
+        hideProgressBar: false, closeOnClick: true,
+        pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
+  }
+
   const clickDelete = (depart) =>{
+    const subjectNumber = subjects.filter(item => item.DepartmentId === depart.Id).length
+    if(subjectNumber > 0){
+      setContentAlert(`Department: ${depart.DepartmentName} is having subjects.`)
+      setIsAlert(true)
+      return
+    }
+
     setPickedDepart(depart)
     setContentDel(`department: ${depart.Id}`)
     setIsDelete(true)
   }
   
   const saveDelete = () => {
-    setIsDelete(false)
+    if(pickedDepart.Id){
+      request.delete(`Department/${pickedDepart.Id}`)
+      .then(res => {
+        if(res.status === 200){
+          setIsDelete(false)
+          setReload(pre => !pre)
+          toast.success('Delete successfully', {
+            position: "top-right", autoClose: 3000,
+            hideProgressBar: false, closeOnClick: true,
+            pauseOnHover: true, draggable: true,
+            progress: undefined, theme: "light",
+          });
+        }
+      })
+    }
   }
 
   return (
@@ -83,7 +167,7 @@ const DepartmentAdmin = () => {
         <Title title='Department' subTitle='List of all departments' />
       </Stack>
       <Stack px={9} alignItems='flex-end' mb={1}>
-        <Button variant='contained' endIcon={<Add/>} onClick={() => setIsCreate(true)}>
+        <Button size='small' variant='contained' endIcon={<Add/>} onClick={clickCreate}>
           Create
         </Button>
       </Stack>
@@ -145,10 +229,13 @@ const DepartmentAdmin = () => {
           />
         </Paper>
       </Stack>}
-      <DepartmentCreate isCreate={isCreate} setIsCreate={setIsCreate}/>
-      <DepartmentEdit isEdit={isEdit} setIsEdit={setIsEdit} pickedDepart={pickedDepart}/>
+      <DepartmentCreate isCreate={isCreate} setIsCreate={setIsCreate} afterCreate={afterCreate}/>
+      <DepartmentEdit isEdit={isEdit} setIsEdit={setIsEdit} pickedDepart={pickedDepart}
+        afterEdit={afterEdit}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} contentDelete={contentDel}
         saveDelete={saveDelete}/>
+      <AlertComponent isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
+      <ToastContainer/>
     </Stack>
   )
 }

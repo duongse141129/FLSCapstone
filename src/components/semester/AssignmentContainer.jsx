@@ -5,7 +5,7 @@ import request from '../../utils/request';
 import AssignmentList from '../assignment/AssignmentList';
 import PriorityList from '../priority/PriorityList';
 
-const AssignmentContainer = ({lecturer, semester, allSubjects, admin, myCourseGroup}) => {
+const AssignmentContainer = ({lecturer, semester, allSubjects, admin, myCourseGroup, setRefreshCourse}) => {
   const [selected, setSelected] = useState('fixed');
   const [lecCourseGroup, setLecCourseGroup] = useState({});
 
@@ -34,7 +34,7 @@ const AssignmentContainer = ({lecturer, semester, allSubjects, admin, myCourseGr
           Priority Courses
         </Button>
       </Stack>
-      {selected === 'fixed' && <AssignmentList lecturer={lecturer} semester={semester} 
+      {selected === 'fixed' && <AssignmentList lecturer={lecturer} semester={semester} setRefreshCourse={setRefreshCourse}
         allSubjects={allSubjects} admin={admin} myCourseGroup={myCourseGroup} lecCourseGroup={lecCourseGroup}/>}
       {selected === 'priority' && <PriorityList lecturer={lecturer} semester={semester} 
           allSubjects={allSubjects} admin={admin}/>}

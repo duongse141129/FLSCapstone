@@ -1,6 +1,6 @@
 import { Cached, Close } from '@mui/icons-material';
 import { Box, Button, Dialog, DialogContent, DialogTitle, Paper, Stack, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from '@mui/material'
-import { grey } from '@mui/material/colors';
+import { grey, red } from '@mui/material/colors';
 import React, { useEffect, useState } from 'react'
 import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
@@ -13,7 +13,9 @@ const SwapModal = ({ isSwapModal, setIsSwapModal, selectedSwap, handleAfterSwap 
   const [alertConfirm, setAlertConfirm] = useState('');
   const [selected, setSelected] = useState({});
   const [loadingSwap, setLoadingSwap] = useState(false);
+  const [disableSlots, setDisableSlots] = useState([]);
 
+  //get swapable slots 
   useEffect(() => {
     if (selectedSwap.Id) {
       request.get(`Swap/CourseAssignToSwap/${selectedSwap.Id}`)
@@ -30,6 +32,20 @@ const SwapModal = ({ isSwapModal, setIsSwapModal, selectedSwap, handleAfterSwap 
     }
 
   }, [selectedSwap.Id, isSwapModal])
+
+  //get disable slots
+  useEffect(() => {
+    if(selectedSwap.Id){
+      request.get('LecturerSlotConfig', {
+        params: {LecturerId: selectedSwap.LecturerId, SemesterId: selectedSwap.SemesterId,
+          IsEnable: 0, pageIndex: 1, pageSize: 100}
+      }).then(res => {
+        if(res.data.length > 0){
+          setDisableSlots(res.data)
+        }
+      }).catch(err => {})
+    }
+  }, [selectedSwap])
 
   const clickEmptySlot = (picked) => {
     setSelected(picked)
@@ -107,22 +123,25 @@ const SwapModal = ({ isSwapModal, setIsSwapModal, selectedSwap, handleAfterSwap 
           <Typography fontWeight={500}>Swapable slots</Typography>
           <Paper sx={{ minWidth: 700, mb: 2 }}>
             <TableContainer component={Box}>
-              <Table>
+              <Table size='small'>
                 <TableHead>
                   <TableRow>
-                    <TableCell size='small' className='subject-header'>Slot Code</TableCell>
-                    <TableCell size='small' className='subject-header'>Slot Info</TableCell>
-                    <TableCell size='small' className='subject-header'>Assigned Course</TableCell>
-                    <TableCell size='small' className='subject-header'>Action</TableCell>
+                    <TableCell className='subject-header'>Slot Code</TableCell>
+                    <TableCell className='subject-header'>Slot Info</TableCell>
+                    <TableCell className='subject-header'>Assigned Course</TableCell>
+                    <TableCell className='subject-header'>Note</TableCell>
+                    <TableCell className='subject-header' align='center'>Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
                   {blankSlots.map(slot => (
                     <TableRow key={slot.Id}>
-                      <TableCell size='small'>{slot.SlotTypeCode}</TableCell>
-                      <TableCell size='small'>{slot.Duration}, {slot.ConvertDateOfWeek}</TableCell>
-                      <TableCell size='small' sx={{color: grey[500]}}>No assigned course</TableCell>
-                      <TableCell size='small'>
+                      <TableCell>{slot.SlotTypeCode}</TableCell>
+                      <TableCell>{slot.Duration}, {slot.ConvertDateOfWeek}</TableCell>
+                      <TableCell sx={{color: grey[500]}}>No assigned course</TableCell>
+                      <TableCell>{disableSlots.find(item => item.SlotTypeId === slot.Id) ? 
+                        <span style={{color: red[600]}}>Disable</span> : '-'}</TableCell>
+                      <TableCell align='center'>
                         {loadingSwap ? (selected.Id === slot.Id ? 
                           <Button size='small' variant='contained'>
                             <ClipLoader size={20} color='white'/>
@@ -139,10 +158,13 @@ const SwapModal = ({ isSwapModal, setIsSwapModal, selectedSwap, handleAfterSwap 
                   ))}
                   {swapCourses.map(course => (
                     <TableRow key={course.Id}>
-                      <TableCell size='small'>{course.SlotTypeCode}</TableCell>
-                      <TableCell size='small'>{course.Duration}, {course.ConvertDateOfWeek}</TableCell>
-                      <TableCell size='small'>{course.CourseId}</TableCell>
-                      <TableCell size='small'>
+                      <TableCell>{course.SlotTypeCode}</TableCell>
+                      <TableCell>{course.Duration}, {course.ConvertDateOfWeek}</TableCell>
+                      <TableCell>{course.CourseId}</TableCell>
+                      <TableCell>{course.isAssign === 0 && '-'}
+                        {course.isAssign === 1 && <span style={{color: red[600]}}>Fixed</span>}
+                      </TableCell>
+                      <TableCell align='center'>
                         {loadingSwap ? (selected.Id === course.Id ? 
                           <Button size='small' variant='contained'>
                             <ClipLoader size={20} color='white'/>

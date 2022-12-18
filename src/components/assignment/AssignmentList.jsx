@@ -10,7 +10,7 @@ import Alert from '../alert/Alert';
 import DeleteModal from '../priority/DeleteModal';
 import AssignmentModal from './AssignmentModal';
 
-const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup, lecCourseGroup }) => {
+const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup, lecCourseGroup, setRefreshCourse }) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(10);
@@ -171,10 +171,11 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup,
         .then(res => {
           if (res.status === 200) {
             setIsDelete(false);
+            setRefreshCourse(pre => !pre)
             toast.success('Delete Successfully!', {
               position: "top-right", autoClose: 1000, hideProgressBar: false,
-              closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined,
-              theme: "colored",
+              closeOnClick: true, pauseOnHover: true, draggable: true, 
+              progress: undefined, theme: "colored",
             });
           }
         })
@@ -279,7 +280,7 @@ const AssignmentList = ({ lecturer, semester, allSubjects, admin, myCourseGroup,
       </Stack>
       <AssignmentModal isAssign={isAssign} setIsAssign={setIsAssign} lecturer={lecturer}
         semesterId={semester.Id} allFixCourses={allFixCourses} scheduleId={scheduleId}
-        scheduleCourses={scheduleCourses} listSubject={insideSubjects}/>
+        scheduleCourses={scheduleCourses} listSubject={insideSubjects} setRefreshCourse={setRefreshCourse}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} saveDelete={saveDelete} />
       <Alert isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
       <ToastContainer />

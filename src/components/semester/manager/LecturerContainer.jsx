@@ -21,7 +21,7 @@ const LecturerContainer = ({admin, semester, scheduleId, refresh}) => {
         }
       }).catch(err => {alert('Fail to get manager course group')})
     }
-  }, [account.Id, semester, reloadConfirm])
+  }, [account.Id, semester, reloadConfirm, refresh])
 
   const handleSelect = (lecturer) => {
     setSelectedLecturer(lecturer)
@@ -32,7 +32,7 @@ const LecturerContainer = ({admin, semester, scheduleId, refresh}) => {
     <>
       <LecturerList handleSelect={handleSelect} admin={admin} scheduleId={scheduleId} refresh={refresh}
         isSelected={isSelected} semester={semester} myCourseGroup={myCourseGroup} setReloadConfirm={setReloadConfirm}/>
-      <InforModal isSelected={isSelected} setIsSelected={setIsSelected} semester={semester}
+      <InforModal isSelected={isSelected} setIsSelected={setIsSelected} semester={semester} scheduleId={scheduleId}
         selectedLecturer={selectedLecturer} admin={admin} myCourseGroup={myCourseGroup}/>
     </>
   )

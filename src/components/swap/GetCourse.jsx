@@ -7,7 +7,7 @@ import GetCourseModal from './GetCourseModal';
 import { green, grey } from '@mui/material/colors';
 import { ClipLoader} from 'react-spinners';
 
-const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
+const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup, setRefreshCourse}) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [scheduleId, setScheduleId] = useState('');
   const [slots, setSlots] = useState([]);
@@ -165,7 +165,8 @@ const GetCourse = ({semesterId, semesterState, lecturer, myCourseGroup}) => {
         </TableContainer>
       </Paper></>}
       <GetCourseModal isGet={isGet} setIsGet={setIsGet} insideLecs={lecturers} pickedSlot={pickedSlot} 
-        semesterId={semesterId} scheduleId={scheduleId} lecturer={lecturer} afterGet={afterGet}/>
+        semesterId={semesterId} scheduleId={scheduleId} lecturer={lecturer} afterGet={afterGet}
+        setRefreshCourse={setRefreshCourse}/>
       <ToastContainer/></>}
     </Stack>
   )

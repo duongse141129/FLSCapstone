@@ -2,13 +2,15 @@ import { Add, DeleteOutlined, EditOutlined } from '@mui/icons-material';
 import { Box, Button, IconButton, MenuItem, Paper, Select, Stack, Table, TableBody, TableCell, TableContainer, 
   TableHead, TablePagination, TableRow, Tooltip, Typography } from '@mui/material'
 import { green } from '@mui/material/colors';
-import {HashLoader} from 'react-spinners'
+import {HashLoader} from 'react-spinners';
+import { ToastContainer, toast } from 'react-toastify';
 import { useEffect, useState } from 'react';
 import request from '../../utils/request';
 import DeleteModal from '../priority/DeleteModal';
 import Title from '../title/Title'
 import SubjectCreate from './SubjectCreate';
 import SubjectEdit from './SubjectEdit';
+import AlertComponent from '../alert/Alert';
 
 const SubjectAdmin = () => {
   const [page, setPage] = useState(0);
@@ -22,7 +24,13 @@ const SubjectAdmin = () => {
   const [isDelete, setIsDelete] = useState(false);
   const [contentDel, setContentDel] = useState('');
   const [loading, setLoading] = useState(false);
+  const [reload, setReload] = useState(false);
+  const [courses, setCourses] = useState([]);
+  const [isAlert, setIsAlert] = useState(false);
+  const [contentAlert, setContentAlert] = useState('');
+  const [semesters, setSemesters] = useState([]);
 
+  //get all departments
   useEffect(() => {
     request.get('Department', {
       params: { sortBy: 'Id', order:'Asc',
@@ -38,6 +46,7 @@ const SubjectAdmin = () => {
     })
   }, [])
 
+  //get subjects by departments
   useEffect(() => {
     setLoading(true)
     if(selectedDepartment){
@@ -57,7 +66,28 @@ const SubjectAdmin = () => {
         setLoading(false)
       })
     }
-  }, [selectedDepartment])
+  }, [selectedDepartment, reload])
+
+  //get all courses
+  useEffect(() => {
+    request.get('Course', {params: {pageIndex: 1, pageSize: 1000}})
+    .then(res => {
+      if(res.data.length > 0){
+        setCourses(res.data)
+      }
+    })
+    .catch(err => {})
+  }, [])
+
+  //get semesters
+  useEffect(() => {
+    request.get('Semester', {params: {pageIndex: 1, pageSize: 100}})
+    .then(res => {
+      if(res.data.length > 0){
+        setSemesters(res.data)
+      }
+    })
+  }, [])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -73,21 +103,75 @@ const SubjectAdmin = () => {
   };
 
   const clickCreate = () => {
+    const number = semesters.filter(item => item.State >= 2 && item.State <= 5).length
+    if(number > 0){
+      setContentAlert('The system is having semesters in schedule generating process.')
+      setIsAlert(true)
+      return
+    }
+
     setIsCreate(true);
   }
+
+  const afterCreate = (status) => {
+    if(status){
+      setReload(pre => !pre)
+      toast.success('Create successfully', {
+        position: "top-right", autoClose: 3000,
+        hideProgressBar: false, closeOnClick: true,
+        pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
+  }
+
   const clickEdit = (subject) => {
     setPickedSubject(subject)
     setIsEdit(true);
   }
 
+  const afterEdit = (status) => {
+    if(status){
+      setReload(pre => !pre)
+      toast.success('Edit successfully', {
+        position: "top-right", autoClose: 3000,
+        hideProgressBar: false, closeOnClick: true,
+        pauseOnHover: true, draggable: true,
+        progress: undefined, theme: "light",
+      });
+    }
+  }
+
   const clickDelete = (subject) => {
+    const courseNumber = courses.filter(item => item.SubjectId === subject.Id)
+    if(courseNumber.length > 0){
+      setContentAlert(`Subject: ${subject.Id} is having courses.`)
+      setIsAlert(true)
+      return
+    }
+
     setPickedSubject(subject)
     setContentDel(`subject: ${subject.Id}`)
     setIsDelete(true)
   }
 
   const saveDelete = () => {
-    setIsDelete(false)
+    if(pickedSubject.Id){
+      request.delete(`Subject/${pickedSubject.Id}`)
+      .then(res => {
+        if(res.status === 200){
+          setIsDelete(false)
+          setReload(pre => !pre)
+          toast.success('Delete successfully', {
+            position: "top-right", autoClose: 3000,
+            hideProgressBar: false, closeOnClick: true,
+            pauseOnHover: true, draggable: true,
+            progress: undefined, theme: "light",
+          });
+        }
+      })
+      .catch(err => {})
+    }
   }
 
   return (
@@ -107,7 +191,7 @@ const SubjectAdmin = () => {
             ))}
           </Select>
         </Stack>
-        <Button variant='contained' endIcon={<Add/>} onClick={clickCreate}>
+        <Button size='small' variant='contained' endIcon={<Add/>} onClick={clickCreate}>
           Create
         </Button>
       </Stack>
@@ -166,10 +250,13 @@ const SubjectAdmin = () => {
           />
         </Paper>
       </Stack>}
-      <SubjectCreate isCreate={isCreate} setIsCreate={setIsCreate}/>
-      <SubjectEdit isEdit={isEdit} setIsEdit={setIsEdit} pickedSubject={pickedSubject}/>
+      <SubjectCreate isCreate={isCreate} setIsCreate={setIsCreate} afterCreate={afterCreate}/>
+      <SubjectEdit isEdit={isEdit} setIsEdit={setIsEdit} pickedSubject={pickedSubject}
+        afterEdit={afterEdit}/>
       <DeleteModal isDelete={isDelete} setIsDelete={setIsDelete} contentDelete={contentDel}
         saveDelete={saveDelete}/>
+      <AlertComponent isAlert={isAlert} setIsAlert={setIsAlert} contentAlert={contentAlert}/>
+      <ToastContainer/>
     </Stack>
   )
 }

@@ -8,7 +8,7 @@ import { green, red } from '@mui/material/colors';
 import request from '../../utils/request';
 import { ClipLoader } from 'react-spinners';
 
-const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCourses, scheduleId, scheduleCourses, listSubject}) => {
+const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCourses, scheduleId, scheduleCourses, listSubject, setRefreshCourse}) => {
   const [selectedSubject, setSelectedSubject] = useState('');
   const [selectedCourse, setSelectedCourse] = useState('');
   const [selectedSlot, setSelectedSlot] = useState({});
@@ -171,6 +171,7 @@ const AssignmentModal = ({ isAssign, setIsAssign, lecturer, semesterId, allFixCo
       .then(res => {
         if (res.status === 201) {
           setIsAssign(false);
+          setRefreshCourse(pre => !pre)
           setSelectedSubject('');
           setSelectedCourse('');
           setSelectedSlot({});

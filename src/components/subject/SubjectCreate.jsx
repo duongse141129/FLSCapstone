@@ -1,11 +1,16 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
+import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
-const SubjectCreate = ({isCreate, setIsCreate}) => {
+const SubjectCreate = ({isCreate, setIsCreate, afterCreate}) => {
   const [departments, setDepartments] = useState([]);
   const [selectedDepart, setSelectedDepart] = useState('');
+  const [code, setCode] = useState('');
+  const [name, setName] = useState('');
+  const [des, setDes] = useState('');
+  const [load, setLoad] = useState(false);
 
   useEffect(() => {
     request.get('Department', {
@@ -17,6 +22,25 @@ const SubjectCreate = ({isCreate, setIsCreate}) => {
       }
     }).catch(err => {alert('Fail to get departments')})
   }, [])
+
+  const createSubject = () => {
+    if(code && name && selectedDepart){
+      setLoad(true)
+      request.post('Subject', {
+        Id: code, SubjectName: name,
+        Description: des, DepartmentId: selectedDepart
+      }).then(res => {
+        if(res.status === 200 || res.status === 201){
+          setIsCreate(false)
+          setCode('')
+          setName('')
+          setDes('')
+          setLoad(false)
+          afterCreate(true)
+        }
+      }).catch(err => {setLoad(false)})
+    }
+  }
 
   return (
     <Dialog open={isCreate} onClose={() => setIsCreate(false)} fullWidth={true}>
@@ -35,20 +59,22 @@ const SubjectCreate = ({isCreate, setIsCreate}) => {
         </Stack>
         <Stack mb={2}>
           <Typography fontWeight={500}>Code<span style={{color: red[600]}}>*</span></Typography>
-          <TextField size='small'/>
+          <TextField size='small' value={code} onChange={(e) => setCode(e.target.value)}/>
         </Stack>
         <Stack mb={2}>
           <Typography fontWeight={500}>Name<span style={{color: red[600]}}>*</span></Typography>
-          <TextField size='small'/>
+          <TextField size='small' value={name} onChange={(e) => setName(e.target.value)}/>
         </Stack>
         <Stack mb={2}>
           <Typography fontWeight={500}>Description</Typography>
-          <TextField size='small'/>
+          <TextField size='small' value={des} onChange={(e) => setDes(e.target.value)}/>
         </Stack>
       </DialogContent>
       <DialogActions>
         <Button color='info' variant='outlined' onClick={() => setIsCreate(false)}>Cancel</Button>
-        <Button variant='contained' onClick={() => setIsCreate(false)}>Create</Button>
+        {load ? <Button variant='contained'><ClipLoader size={20} color='white'/></Button> : 
+        <Button variant='contained' onClick={createSubject} disabled={code.length === 0 || name.length === 0 || selectedDepart.length === 0}>
+          Create</Button>}
       </DialogActions>
     </Dialog>
   )

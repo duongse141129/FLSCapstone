@@ -1,13 +1,15 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { useEffect, useState } from 'react'
+import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
-const SubjectEdit = ({isEdit, setIsEdit, pickedSubject}) => {
+const SubjectEdit = ({isEdit, setIsEdit, pickedSubject, afterEdit}) => {
   const [departments, setDepartments] = useState([]);
   const [selectedDepart, setSelectedDepart] = useState('');
   const [subName, setSubName] = useState('');
   const [subDes, setSubDes] = useState('');
+  const [loadSave, setLoadSave] = useState(false)
 
   useEffect(() => {
     if(pickedSubject.Id){
@@ -26,6 +28,24 @@ const SubjectEdit = ({isEdit, setIsEdit, pickedSubject}) => {
       }
     }).catch(err => {alert('Fail to get departments')})
   }, [])
+
+  const saveEdit = () => {
+    if(selectedDepart && subName && (selectedDepart !== pickedSubject.DepartmentId || 
+      subName !== pickedSubject.SubjectName || subDes !== pickedSubject.Description)){
+      setLoadSave(true)
+      request.put(`Subject/${pickedSubject.Id}`, {
+        SubjectName: subName,
+        Description: subDes,
+        DepartmentId: selectedDepart
+      }).then(res => {
+        if(res.status === 200){
+          setIsEdit(false)
+          setLoadSave(false)
+          afterEdit(true)
+        }
+      }).catch(err => {setLoadSave(false)})
+    }
+  }
 
   return (
     <Dialog open={isEdit} onClose={() => setIsEdit(false)} fullWidth={true}>
@@ -57,7 +77,9 @@ const SubjectEdit = ({isEdit, setIsEdit, pickedSubject}) => {
       </DialogContent>
       <DialogActions>
         <Button color='info' variant='outlined' onClick={() => setIsEdit(false)}>Cancel</Button>
-        <Button variant='contained' onClick={() => setIsEdit(false)}>Edit</Button>
+        {loadSave ? <Button variant='contained'><ClipLoader size={20} color='white'/></Button> :
+         <Button variant='contained' onClick={saveEdit} disabled={subName.length === 0 || (subName === pickedSubject.SubjectName && selectedDepart === pickedSubject.DepartmentId && subDes === pickedSubject.Description)}>
+          Edit</Button>}
       </DialogActions>
     </Dialog>
   )

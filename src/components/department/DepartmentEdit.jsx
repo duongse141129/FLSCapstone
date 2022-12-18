@@ -1,12 +1,14 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
 import { useEffect, useState } from 'react';
+import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
-const DepartmentEdit = ({isEdit, setIsEdit, pickedDepart}) => {
+const DepartmentEdit = ({isEdit, setIsEdit, pickedDepart, afterEdit}) => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState('');
-  const [inputName, setInputName] = useState('')
+  const [inputName, setInputName] = useState('');
+  const [loadSave, setLoadSave] = useState(false);
 
   useEffect(() => {
     if(pickedDepart.Id){
@@ -24,6 +26,23 @@ const DepartmentEdit = ({isEdit, setIsEdit, pickedDepart}) => {
       }
     }).catch(err => {alert('Fail to get department groups')})
   }, [])
+
+  const saveEdit = () => {
+    if(inputName && (selectedGroup !== pickedDepart.DepartmentGroupId ||
+      inputName !== pickedDepart.DepartmentName)){
+      setLoadSave(true)
+      request.put(`Department/${pickedDepart.Id}`, {
+        DepartmentName: inputName,
+        DepartmentGroupId: selectedGroup
+      }).then(res => {
+        if(res.status === 200){
+          setIsEdit(false)
+          setLoadSave(false)
+          afterEdit(true)
+        }
+      }).catch(err => setLoadSave(false))
+    }
+  }
 
   return (
     <Dialog open={isEdit} onClose={() => setIsEdit(false)} fullWidth={true}>
@@ -51,7 +70,9 @@ const DepartmentEdit = ({isEdit, setIsEdit, pickedDepart}) => {
       </DialogContent>
       <DialogActions>
         <Button color='info' variant='outlined' onClick={() => setIsEdit(false)}>Cancel</Button>
-        <Button variant='contained' onClick={() => setIsEdit(false)}>Create</Button>
+        {loadSave ? <Button variant='contained'><ClipLoader size={20} color='white'/></Button> : 
+        <Button variant='contained' onClick={saveEdit} disabled={inputName.length === 0 || (inputName === pickedDepart.DepartmentName && selectedGroup === pickedDepart.DepartmentGroupId) }>
+          Save</Button>}
       </DialogActions>
     </Dialog>
   )

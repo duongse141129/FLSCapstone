@@ -1,25 +1,14 @@
 import { Button, Dialog, DialogActions, DialogContent, DialogTitle, MenuItem, Select, Stack, TextField, Typography } from '@mui/material'
 import { red } from '@mui/material/colors'
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
+import { ClipLoader } from 'react-spinners';
 import request from '../../utils/request';
 
-const DepartmentCreate = ({isCreate, setIsCreate}) => {
+const DepartmentCreate = ({isCreate, setIsCreate, afterCreate}) => {
   const [groups, setGroups] = useState([]);
   const [selectedGroup, setSelectedGroup] = useState('');
   const [departName, setDepartName] = useState('');
-  const departCode = useMemo(() => {
-    if(departName.length > 0){
-      const array = departName.split(' ');
-      let code = []
-      for (let i in array) {
-        code.push(array[i].charAt().toUpperCase())
-      }
-      return code.join('')
-    }
-    return ''
-  }, [departName])
-
-  console.log(departCode)
+  const [loadSave, setLoadSave] = useState(false);
 
   useEffect(() => {
     request.get('DepartmentGroup', {
@@ -33,16 +22,27 @@ const DepartmentCreate = ({isCreate, setIsCreate}) => {
   }, [])
 
   const saveCreate = () => {
-    if(departName && departCode && selectedGroup){
-      const obj = {Id: departCode, DepartmentName: departName,
-        DepartmentGroupId: selectedGroup}
+    if(departName && selectedGroup){
+      setLoadSave(true)
+      const array = departName.split(' ');
+      let code = []
+      for (let i in array) {
+        code.push(array[i].charAt(0).toUpperCase())
+      }
+      const obj = {
+        Id: code.join(''), DepartmentName: departName,
+        DepartmentGroupId: selectedGroup
+      }
       request.post('Department', obj)
       .then(res => {
         if(res.status === 201){
-          setIsCreate(false);
+          setIsCreate(false)
+          setLoadSave(false)
+          setDepartName('')
+          afterCreate(true)
         }
       })
-      .catch(err => {})
+      .catch(err => {setLoadSave(false)})
     }
   }
 
@@ -61,18 +61,16 @@ const DepartmentCreate = ({isCreate, setIsCreate}) => {
             ))}
           </Select>
         </Stack>
-        {/* <Stack mb={2}>
-          <Typography fontWeight={500}>Code<span style={{color: red[600]}}>*</span></Typography>
-          <TextField size='small'/>
-        </Stack> */}
-        <Stack mb={2}>
+        <Stack>
           <Typography fontWeight={500}>Name<span style={{color: red[600]}}>*</span></Typography>
           <TextField size='small' value={departName} onChange={(e) => setDepartName(e.target.value)}/>
         </Stack>
       </DialogContent>
       <DialogActions>
         <Button color='info' variant='outlined' onClick={() => setIsCreate(false)}>Cancel</Button>
-        <Button variant='contained' onClick={saveCreate}>Create</Button>
+        {loadSave ? <Button variant='contained'><ClipLoader color='white' size={20}/></Button> : 
+        <Button variant='contained' onClick={saveCreate} disabled={departName.length === 0 || selectedGroup.length === 0}>
+          Create</Button>}
       </DialogActions>
     </Dialog>
   )

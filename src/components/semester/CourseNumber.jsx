@@ -5,7 +5,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import AlertComponent from '../alert/Alert'
 import request from '../../utils/request';
 
-const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
+const CourseNumber = ({lecturer, semesterId, semesterState, admin, setRefreshCourse}) => {
   const account = JSON.parse(localStorage.getItem('web-user'));
   const [min, setMin] = useState(0);
   const [max, setMax] = useState(0);
@@ -112,7 +112,8 @@ const CourseNumber = ({lecturer, semesterId, semesterState, admin}) => {
         }).then(res => {
           if (res.status === 200) {
             setReload(!reload)
-            setLoading(false);
+            setRefreshCourse(pre => !pre)
+            setLoading(false)
             toast.success('Save Successfully!', {
               position: "top-right", autoClose: 3000, hideProgressBar: false,
               closeOnClick: true, pauseOnHover: true, draggable: true,

@@ -4,7 +4,7 @@ import { useEffect, useMemo, useState } from 'react'
 import request from '../../utils/request'
 import GetCourseConfirm from './GetCourseConfirm'
 
-const GetCourseModal = ({isGet, setIsGet, insideLecs, pickedSlot, scheduleId, semesterId, lecturer, afterGet}) => {
+const GetCourseModal = ({isGet, setIsGet, insideLecs, pickedSlot, scheduleId, semesterId, lecturer, afterGet, setRefreshCourse}) => {
   const [slotCourses, setSlotCourses] = useState([])
   const [isConfirm, setIsConfirm] = useState(false)
   const [pickedCourse, setPickedCourse] = useState({})
@@ -77,6 +77,7 @@ const GetCourseModal = ({isGet, setIsGet, insideLecs, pickedSlot, scheduleId, se
         isAssign: pickedCourse.isAssign
       }).then(res => {
         if(res.status === 200){
+          setRefreshCourse(pre => !pre)
           setIsGet(false)
           setLoadSave(false)
           afterGet(true)
