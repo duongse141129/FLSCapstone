@@ -93,7 +93,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
         }
       }).catch(err => {alert('Fail to get assigned courses of lecturers')})
     }
-  }, [scheduleId, isSelected, refresh])
+  }, [scheduleId, isSelected, refresh, semester.State])
 
   //get lecturer course group to show min max course
   useEffect(() => {
@@ -106,7 +106,7 @@ const LecturerList = ({ handleSelect, admin, scheduleId, isSelected, semester, m
         }
       }).catch(err => {alert('Fail to get min max course of lecturer')})
     }
-  }, [semester.Id, isSelected, refresh])
+  }, [semester.Id, isSelected, refresh, semester.State])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

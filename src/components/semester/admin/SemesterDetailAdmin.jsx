@@ -266,7 +266,7 @@ const SemesterDetailAdmin = () => {
         <Typography><span style={{fontWeight: 500}}>Start:</span> {' '}
           {semester.DateStartFormat && semester.DateStartFormat.split('-').reverse().join('/')}
         </Typography>
-        <Typography><span style={{fontWeight: 500}}>End:</span> 
+        <Typography><span style={{fontWeight: 500}}>End:</span> {' '}
           {semester.DateEndFormat && semester.DateEndFormat.split('-').reverse().join('/')}
         </Typography>
         <Typography><span style={{fontWeight: 500}}>Time Status:</span> {semester.DateStatus}</Typography>

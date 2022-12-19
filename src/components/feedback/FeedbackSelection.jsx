@@ -231,7 +231,8 @@ const FeedbackSelection = ({ lecturer, semester, admin }) => {
                         <TableCell sx={{ borderRight: '1px solid #e3e3e3' }}>{subject.Id} - {subject.SubjectName}</TableCell>
                         <TableCell sx={{ borderRight: '1px solid #e3e3e3' }} align='center'>
                           <Typography fontSize='15px'>
-                            {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.FavoritePoint}
+                            {points.length > 0 && (points.find(item => item.SubjectId === subject.Id)?.isEnable === 1 ?
+                              points.find(item => item.SubjectId === subject.Id)?.FavoritePoint : '-')}
                           </Typography>
                         </TableCell>
                         <TableCell sx={{ borderRight: '1px solid #e3e3e3' }}>
