@@ -10,7 +10,6 @@ import Title from '../../title/Title'
 import LecturerContainer from '../manager/LecturerContainer'
 import Alert from '../../alert/Alert'
 import request from '../../../utils/request'
-import {openVoting, openEvaluating, openBlocked, openAdjusting, openPublic} from '../../../utils/sendEmail'
 
 const SemesterDetailAdmin = () => {
   const navigate = useNavigate();
@@ -154,7 +153,7 @@ const SemesterDetailAdmin = () => {
       .then(res => {
 
       })
-      .catch(err => {alert('Fail to update request')})
+      .catch(err => {})
     }
 
     request.put(`Semester/${id}`, {
@@ -162,21 +161,6 @@ const SemesterDetailAdmin = () => {
       DateEnd: semester.DateEnd, State: (semester.State + 1)
     }).then(res => {
       if (res.status === 200) {
-        if(semester.State === 1){
-          openVoting();
-        }
-        else if(semester.State === 2){
-          openEvaluating();
-        }
-        else if(semester.State === 3){
-          openBlocked();
-        }
-        else if(semester.State === 4){
-          openAdjusting();
-        }
-        else if(semester.State === 5){
-          openPublic();
-        }
         setIsConfirm(false)
         toast.success('Success to change next state!', {
           position: "top-right", autoClose: 2000, hideProgressBar: false, closeOnClick: true,
