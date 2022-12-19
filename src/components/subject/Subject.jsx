@@ -120,7 +120,7 @@ const Subject = ({ semesterId, semesterState }) => {
       const obj = favoriteSubjects.find(item => item.SubjectId === id)
       if(obj.isEnable === 1){
         if(disableSubs.length >= configData.DISABLE_SUBJECT){
-          setContentAlert(`You have reached max number of unregistration: ${configData.DISABLE_SLOT}.`)
+          setContentAlert(`You have reached max number of unregistration: ${configData.DISABLE_SUBJECT}.`)
           setIsAlert(true)
           return;
         }
@@ -200,8 +200,9 @@ const Subject = ({ semesterId, semesterState }) => {
                       <TableCell>{subject.Id}</TableCell>
                       <TableCell className='request-border'>{subject.SubjectName}</TableCell>
                       <TableCell className='request-border'>
+                        {favoriteSubjects.find(item => item.SubjectId === subject.Id)?.isEnable === 1 ?
                         <Stack direction='row' alignItems='center' gap={1} justifyContent='center'>
-                          <Typography borderRight={semesterState === 2 && '1px solid gray'} pr={2}>
+                          <Typography>
                             {favoriteSubjects.length > 0 &&
                               favoriteSubjects.find(item => item.SubjectId === subject.Id)?.FavoritePoint
                             }
@@ -213,7 +214,7 @@ const Subject = ({ semesterId, semesterState }) => {
                                 <StarBorder />
                               </IconButton>
                             </Tooltip>}
-                        </Stack>
+                        </Stack> : <Typography textAlign='center'>-</Typography>}
                       </TableCell>
                       <TableCell align='center' onClick={() => clickRegister(subject.Id)}
                         sx={{ '&:hover': { bgcolor: semesterState === 2 ? blue[100] : '', cursor: semesterState === 2 ? 'pointer' : 'default' } }}>

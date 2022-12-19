@@ -179,7 +179,7 @@ const RatingModal = ({ isRating, setIsRating, subjectId, favoriteSubjects, loadP
               </Stack>
             </RadioGroup>
           </FormControl>
-          <Typography>{value} point</Typography>
+          <Typography>{value} {value === 1 ? 'point' : 'points' }</Typography>
         </Stack>
       </DialogContent>
       <DialogActions>

@@ -235,8 +235,9 @@ const FeedbackSelection = ({ lecturer, semester, admin }) => {
                           </Typography>
                         </TableCell>
                         <TableCell sx={{ borderRight: '1px solid #e3e3e3' }}>
-                          <Stack direction='row' alignItems='center' justifyContent='center'>
-                            <Typography fontSize='15px' borderRight={semester.State === 3 && !admin && '1px solid gray'} pr={1}>
+                          {points.find(item => item.SubjectId === subject.Id)?.isEnable === 1 ?
+                            <Stack direction='row' alignItems='center' justifyContent='center' gap={1}>
+                            <Typography fontSize='15px'>
                               {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 1 && 'Weak'}
                               {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 2 && 'Not good'}
                               {points.find(item => item.SubjectId === subject.Id)?.FeedbackPoint === 3 && 'Normal'}
@@ -250,21 +251,22 @@ const FeedbackSelection = ({ lecturer, semester, admin }) => {
                                   <ChatOutlined />
                                 </IconButton>
                               </Tooltip>}
-                          </Stack>
+                          </Stack> : <Typography textAlign='center'>-</Typography>}
                         </TableCell>
                         <TableCell sx={{ borderRight: '1px solid #e3e3e3' }}>
+                          {points.find(item => item.SubjectId === subject.Id)?.isEnable === 1 ? 
                           <Stack direction='row' alignItems='center' gap={1} justifyContent='center'>
-                            <Typography fontSize='15px' borderRight={semester.State === 3 && !admin && '1px solid gray'} pr={2}>
+                            <Typography fontSize='15px'>
                               {points.length > 0 && points.find(item => item.SubjectId === subject.Id)?.MaxCourseSubject}
                             </Typography>
-                            {semester.State === 3 && !admin &&
+                            {semester.State === 3 && !admin && 
                               <Tooltip title='Edit' placement='right'>
                                 <IconButton color='primary' onClick={() => handleEditMax(subject.Id)}
                                   size='small'>
                                   <EditOutlined />
                                 </IconButton>
                               </Tooltip>}
-                          </Stack>
+                          </Stack> : <Typography textAlign='center'>-</Typography>}
                         </TableCell>
                         <TableCell align='center'
                           sx={{
