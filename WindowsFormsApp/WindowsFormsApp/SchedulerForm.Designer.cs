@@ -81,6 +81,7 @@ namespace WindowsFormsApp
             this.label18 = new System.Windows.Forms.Label();
             this.textBox9 = new System.Windows.Forms.TextBox();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.label32 = new System.Windows.Forms.Label();
             this.favoriteSlotValueLabel = new System.Windows.Forms.Label();
             this.favoriteSlotTrackBar = new System.Windows.Forms.TrackBar();
             this.label31 = new System.Windows.Forms.Label();
@@ -182,7 +183,6 @@ namespace WindowsFormsApp
             this.label27 = new System.Windows.Forms.Label();
             this.listBox1 = new System.Windows.Forms.ListBox();
             this.adminLabel = new System.Windows.Forms.Label();
-            this.label32 = new System.Windows.Forms.Label();
             this.tabControl2.SuspendLayout();
             this.departmentTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.departmentDataGridView)).BeginInit();
@@ -763,6 +763,16 @@ namespace WindowsFormsApp
             this.panel1.Size = new System.Drawing.Size(1294, 749);
             this.panel1.TabIndex = 10;
             // 
+            // label32
+            // 
+            this.label32.AutoSize = true;
+            this.label32.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label32.Location = new System.Drawing.Point(66, 50);
+            this.label32.Name = "label32";
+            this.label32.Size = new System.Drawing.Size(465, 22);
+            this.label32.TabIndex = 31;
+            this.label32.Text = "Admin configures input coefficient to schedule by system:\r\n";
+            // 
             // favoriteSlotValueLabel
             // 
             this.favoriteSlotValueLabel.AutoSize = true;
@@ -1138,7 +1148,7 @@ namespace WindowsFormsApp
             // totalCourseNotAssignedLabel
             // 
             this.totalCourseNotAssignedLabel.AutoSize = true;
-            this.totalCourseNotAssignedLabel.Location = new System.Drawing.Point(246, 442);
+            this.totalCourseNotAssignedLabel.Location = new System.Drawing.Point(256, 442);
             this.totalCourseNotAssignedLabel.Name = "totalCourseNotAssignedLabel";
             this.totalCourseNotAssignedLabel.Size = new System.Drawing.Size(0, 18);
             this.totalCourseNotAssignedLabel.TabIndex = 21;
@@ -1149,9 +1159,9 @@ namespace WindowsFormsApp
             this.label33.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label33.Location = new System.Drawing.Point(13, 442);
             this.label33.Name = "label33";
-            this.label33.Size = new System.Drawing.Size(209, 18);
+            this.label33.Size = new System.Drawing.Size(218, 18);
             this.label33.TabIndex = 20;
-            this.label33.Text = "Total course not assigned:";
+            this.label33.Text = "Total courses not assigned:";
             // 
             // configDescriptionLabel
             // 
@@ -1185,7 +1195,7 @@ namespace WindowsFormsApp
             // 
             this.totalCourseLabel.AutoSize = true;
             this.totalCourseLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.totalCourseLabel.Location = new System.Drawing.Point(218, 365);
+            this.totalCourseLabel.Location = new System.Drawing.Point(231, 365);
             this.totalCourseLabel.Name = "totalCourseLabel";
             this.totalCourseLabel.Size = new System.Drawing.Size(0, 18);
             this.totalCourseLabel.TabIndex = 14;
@@ -1223,9 +1233,9 @@ namespace WindowsFormsApp
             this.label25.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label25.Location = new System.Drawing.Point(13, 365);
             this.label25.Name = "label25";
-            this.label25.Size = new System.Drawing.Size(180, 18);
+            this.label25.Size = new System.Drawing.Size(189, 18);
             this.label25.TabIndex = 8;
-            this.label25.Text = "Total course assigned:";
+            this.label25.Text = "Total courses assigned:";
             // 
             // button1
             // 
@@ -1839,16 +1849,6 @@ namespace WindowsFormsApp
             this.adminLabel.Size = new System.Drawing.Size(57, 18);
             this.adminLabel.TabIndex = 12;
             this.adminLabel.Text = "Admin: ";
-            // 
-            // label32
-            // 
-            this.label32.AutoSize = true;
-            this.label32.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label32.Location = new System.Drawing.Point(66, 50);
-            this.label32.Name = "label32";
-            this.label32.Size = new System.Drawing.Size(465, 22);
-            this.label32.TabIndex = 31;
-            this.label32.Text = "Admin configures input coefficient to schedule by system:\r\n";
             // 
             // SchedulerForm
             // 

@@ -116,7 +116,7 @@ namespace WindowsFormsApp
             }
             double pointPerRow = point / teachableTime.Count();
             double DiemThoaMan = Math.Round((pointPerRow * 4) / (schedule.pointPerRowMax), 2);
-            double DiemCourseDaXep = 6;
+            double DiemCourseDaXep = 5;
             for (int i = 0; i < 50; i++)
             {
                 if (DiemThoaMan < 4)
@@ -138,10 +138,15 @@ namespace WindowsFormsApp
                     DiemCourseDaXep = DiemCourseDaXep - 1;
                 }
             }
-            
+
+            double DiffDuration = 0;
+            if ((inSchoolTime) - (teachableTime.Count() * 2.25) > 2.9)
+            {
+                DiffDuration = DiffDuration + 0.5;
+            }
 
 
-            lecturerPointLabel.Text = "Satisfaction Point: " + (DiemCourseDaXep + DiemThoaMan)+ " / 10";
+            lecturerPointLabel.Text = "Satisfaction Point: " + ((DiemCourseDaXep + DiemThoaMan) - DiffDuration) + " / 10";
 
 
             //load schedule

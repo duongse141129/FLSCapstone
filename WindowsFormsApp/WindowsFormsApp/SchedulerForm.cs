@@ -652,7 +652,7 @@ namespace WindowsFormsApp
 
                 // diem cua lich = 60% diem course da xep + 40% diem thoa man
                 double DiemThoaMan = Math.Round((pointPerRow *4) / (newSchedule.pointPerRowMax), 2);
-                double DiemCourseDaXep = 6;
+                double DiemCourseDaXep = 5;
 
                 double CourseNotAssigned = Courses.Count() - scheduleItem.Count();
                 if (CourseNotAssigned!=0)
@@ -663,7 +663,7 @@ namespace WindowsFormsApp
                     }
                 }
 
-                newSchedule.totalAveragePoint = DiemCourseDaXep + DiemThoaMan;
+                newSchedule.totalAveragePoint = Math.Round(DiemCourseDaXep + DiemThoaMan, 2);
 
                 scheduleShows.Add(newSchedule);
 
@@ -1321,7 +1321,6 @@ namespace WindowsFormsApp
         {
             loginForm.Close();
         }
-
 
     }
 
