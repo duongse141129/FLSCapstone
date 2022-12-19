@@ -156,6 +156,11 @@ const SemesterDetailAdmin = () => {
       .catch(err => {})
     }
 
+    if(semester.State === 4){
+      request.put(`LecturerCourseGroup/UpdateAllGroupNameNotConfirm/${id}`)
+      .then(res => {})
+    }
+
     request.put(`Semester/${id}`, {
       Term: semester.Term, DateStart: semester.DateStart,
       DateEnd: semester.DateEnd, State: (semester.State + 1)
@@ -180,9 +185,10 @@ const SemesterDetailAdmin = () => {
       request.put(`Schedule/${schedule.Id}`, {
         IsPublic: 0, SemesterId: id,
         Description: '', DateCreate: ''
-      }).then(res => {
+      }).then(res => {})
 
-      }).catch(err => {alert('Fail to update schedule')})
+      request.put(`LecturerCourseGroup/UpdateAllGroupNameNotConfirm/${id}`)
+      .then(res => {})
     }
 
     if(semester.State === 4){

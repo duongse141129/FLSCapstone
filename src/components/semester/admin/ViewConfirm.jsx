@@ -38,7 +38,7 @@ const ViewConfirm = ({semesterId, semesterState, refresh}) => {
       })
       .catch(err => {alert('Fail to check managers confirmed')})
     }
-  }, [semesterId, reload, refresh])
+  }, [semesterId, reload, refresh, semesterState])
 
   //get confirm of departments
   useEffect(() => {
@@ -51,7 +51,7 @@ const ViewConfirm = ({semesterId, semesterState, refresh}) => {
         }
       }).catch(err => {alert('Fail to get confirmation status')})
     }
-  }, [semesterId, reload, refresh])
+  }, [semesterId, reload, refresh, semesterState])
 
   const checkCourseConstraint = () => {
     if(semesterId){
