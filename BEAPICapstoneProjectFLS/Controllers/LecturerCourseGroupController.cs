@@ -115,5 +115,23 @@ namespace BEAPICapstoneProjectFLS.Controllers
 
         }
 
+
+        [HttpPut("UpdateGroupName/{id}")]
+        public async Task<IActionResult> UpdateGroupName(string id)
+        {
+            var LecturerCourseGroupVM = await _ILecturerCourseGroupService.UpdateGroupName(id);
+            if (LecturerCourseGroupVM == null)
+                return BadRequest();
+            return Ok(LecturerCourseGroupVM);
+        }
+
+        [HttpPut("UpdateAllGroupNameNotConfirm/{semesterID}")]
+        public async Task<IActionResult> UpdateAllGroupNameNotConfirm(string semesterID)
+        {
+            var response = await _ILecturerCourseGroupService.UpdateAllGroupNameNotConfirm(semesterID);
+            return Ok(response);
+        }
+
+
     }
 }

@@ -24,5 +24,6 @@ namespace BEAPICapstoneProjectFLS.IServices
 
         Task<bool> DeleteListCourseAssignInSemester(string ScheduleID);
         Task<bool> DeleteAssignedCourses(string ScheduleID);
+        Task<ApiResponse> DeleteAllAssignedCoursesInSemester(string semesterID);
     }
 }

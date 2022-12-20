@@ -138,6 +138,79 @@ namespace BEAPICapstoneProjectFLS.Services
             }
         }
 
+
+        public async Task<LecturerCourseGroupViewModel> UpdateGroupName(string id)
+        {
+            try
+            {
+                var listLecturerCourseGroup = await _res.FindByAsync(x => x.Id == id && x.Status == (int)LecturerCourseGroupStatus.Active);
+                if (listLecturerCourseGroup == null)
+                {
+                    return null;
+                }
+                var lecturerCourseGroup = listLecturerCourseGroup.FirstOrDefault();
+                if (lecturerCourseGroup == null)
+                {
+                    return null;
+                }
+                lecturerCourseGroup.GroupName = "The priority courses of lecturer "+ lecturerCourseGroup.LecturerId;
+                await _res.UpdateAsync(lecturerCourseGroup);
+                await _res.SaveAsync();
+
+                var lcrVM = await GetLecturerCourseGroupById(lecturerCourseGroup.Id);
+                return lcrVM;
+            }
+            catch
+            {
+                return null;
+            }
+        }
+
+        public async Task<List<UserViewModel>> GetListDepartmentManager()
+        {
+            var listUser = _resUser.FindBy(x => x.Status == (int)FLSStatus.Active);
+            UserViewModel flitter = new UserViewModel { RoleIDs = new List<string>() { "DMA" } };
+            var listDepartmentManager = await (listUser.ProjectTo<UserViewModel>
+                (_mapper.ConfigurationProvider)).DynamicFilter(flitter).ToListAsync();
+            return listDepartmentManager;
+        }
+
+        public async Task<ApiResponse> UpdateAllGroupNameNotConfirm(string semesterID)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.Success = false;
+            apiResponse.Message = "Update All GroupName Not Confirm fail";
+            try
+            {
+                var listDepartmentManager = await GetListDepartmentManager();
+
+                if(listDepartmentManager == null)
+                {
+                    apiResponse.Data = "ListDepartmenManager is Empty";
+                    return apiResponse;
+                }
+                foreach(var dma in listDepartmentManager)
+                {
+                    var lecturerCourseGroup = await _res.GetAllByIQueryable()
+                                                   .Where(x => x.LecturerId == dma.Id && x.SemesterId == semesterID && x.Status == (int)LecturerCourseGroupStatus.Active)
+                                                   .FirstOrDefaultAsync();
+
+                    lecturerCourseGroup.GroupName = "The priority courses of lecturer " + lecturerCourseGroup.LecturerId;
+
+                    await _res.UpdateAsync(lecturerCourseGroup);
+                    await _res.SaveAsync();
+                }
+                apiResponse.Success = true;
+                apiResponse.Message = "Update All GroupName Not Confirm Success";
+                return apiResponse;
+            }
+            catch(Exception ex)
+            {
+                apiResponse.Data = ex.Message;
+                return apiResponse;
+            }
+        }
+
         public int getMinCourseOfLecturer(int? isFullTime)
         {
             if (isFullTime.HasValue)

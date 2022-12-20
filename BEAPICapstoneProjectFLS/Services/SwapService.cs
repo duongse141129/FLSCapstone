@@ -161,7 +161,7 @@ namespace BEAPICapstoneProjectFLS.Services
                         .FirstOrDefaultAsync();
 
             var listCourseAssign = await _resCourseAssign.GetAllByIQueryable()
-                        .Where(x => x.Id != courseAssignID && x.LecturerId ==   courseAssign.LecturerId && x.Status == (int)CourseAssignStatus.Active)
+                        .Where(x => x.Id != courseAssignID && x.ScheduleId == courseAssign.ScheduleId && x.LecturerId ==   courseAssign.LecturerId && x.Status == (int)CourseAssignStatus.Active)
                         .Include(x => x.Lecturer)
                         .Include(x => x.SlotType)
                         .Include(x => x.Course)

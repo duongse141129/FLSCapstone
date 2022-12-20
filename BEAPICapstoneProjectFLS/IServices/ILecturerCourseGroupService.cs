@@ -14,8 +14,11 @@ namespace BEAPICapstoneProjectFLS.IServices
            int pageSize, LecturerCourseGroupSortBy sortBy, OrderBy order);
         Task<LecturerCourseGroupViewModel> CreateLecturerCourseGroup(CreateLecturerCourseGroupRequest request);
         Task<LecturerCourseGroupViewModel> UpdateLecturerCourseGroup(string id, UpdateLecturerCourseGroupRequest request);
+        
         Task<bool> DeleteLecturerCourseGroup(string id);
         Task<ApiResponse> CreateLecturerCourseGroupInSemester(string semesterID);
         Task<ApiResponse> DeleteLecturerCourseGroupInSemester(string semesterID);
+        Task<LecturerCourseGroupViewModel> UpdateGroupName(string id);
+        Task<ApiResponse> UpdateAllGroupNameNotConfirm(string semesterID);
     }
 }

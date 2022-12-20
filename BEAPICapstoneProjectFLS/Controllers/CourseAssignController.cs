@@ -115,6 +115,15 @@ namespace BEAPICapstoneProjectFLS.Controllers
             return Ok();
         }
 
+        [HttpDelete("DeleteAllAssignedCoursesInSemester/{semesterID}")]
+        public async Task<IActionResult> DeleteAllAssignedCoursesInSemester(string semesterID)
+        {
+            var rs = await _ICourseAssignService.DeleteAllAssignedCoursesInSemester(semesterID);
+            if (rs.Success == false)
+                return NotFound(rs);
+            return Ok(rs);
+        }
+
 
         [HttpGet("GetUserAssignInDepartment/{subjectID}&{semesterID}", Name = "GetUserAssignInDepartment")]
         public async Task<IActionResult> GetUserAssignInDepartment(string subjectID, string semesterID)

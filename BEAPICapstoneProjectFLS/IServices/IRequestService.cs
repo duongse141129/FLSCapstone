@@ -13,6 +13,8 @@ namespace BEAPICapstoneProjectFLS.IServices
            int pageSize, RequestSortBy sortBy, OrderBy order);
         Task<RequestViewModel> CreateRequest(CreateRequest request);
         Task<RequestViewModel> UpdateRequest(string id, UpdateRequest request);
+        Task<ApiResponse> UpdateAllRequestWaiting(string semesterID);
+        Task<ApiResponse> RollBackToUpdateAllRequestWaiting(string semesterID);
         Task<bool> DeleteRequest(string id);
         Task<ApiResponse> DeleteRequestInSemester(string semesterID);
     }

@@ -25,16 +25,18 @@ namespace BEAPICapstoneProjectFLS.Services
         private readonly IGenericRepository<Course> _resCourse;
         private readonly IGenericRepository<User> _resUser;
         private readonly IGenericRepository<Subject> _resSubject;
+        private readonly IGenericRepository<Schedule> _resSchedule;
         private readonly IMapper _mapper;
 
         public CourseAssignService(IGenericRepository<CourseAssign> repository, IGenericRepository<Course> courseRepository,
-                            IGenericRepository<User> userRepository, IGenericRepository<Subject> subjectRepository,
+                            IGenericRepository<User> userRepository, IGenericRepository<Subject> subjectRepository, IGenericRepository<Schedule> scheduleRepository,
                             IMapper mapper)
         {
             _res = repository;
             _resCourse = courseRepository;
             _resUser = userRepository;
             _resSubject = subjectRepository;
+            _resSchedule = scheduleRepository;
             _mapper = mapper;
         }
 
@@ -163,6 +165,52 @@ namespace BEAPICapstoneProjectFLS.Services
             {
                 var message = ex.Message;
                 return false;
+            }
+        }
+
+
+        public async Task<ApiResponse> DeleteAllAssignedCoursesInSemester(string semesterID)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.Success = false;
+            apiResponse.Message = "Delete AllAssignedCourses In Semester Fail";
+
+            try
+            {
+                var schedule = await _resSchedule.GetAllByIQueryable().Where(x => x.SemesterId == semesterID).FirstOrDefaultAsync();
+                if(schedule == null)
+                {
+                    apiResponse.Data = "Not found schedule";
+                    return apiResponse;
+                }
+
+
+                var listCourseAssign = await _res.GetAllByIQueryable()
+                    .Where(x => x.ScheduleId == schedule.Id)
+                    .ToListAsync();
+                if (listCourseAssign.Count <= 0)
+                {
+                    apiResponse.Success = true;
+                    apiResponse.Message = "Delete AllAssignedCourses In Semester Success";
+                    apiResponse.Data = "List Course Assigns in semester have already empty";
+                    return apiResponse;
+                }
+                else
+                {
+                    foreach (var CourseAssign in listCourseAssign)
+                    {
+                        await _res.DeleteAsync(CourseAssign.Id);
+                    }
+                    apiResponse.Success = true;
+                    apiResponse.Message = "Delete All Assigned Courses In Semester Success";
+                    return apiResponse;
+                }
+
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Data = ex.Message;
+                return apiResponse;
             }
         }
 

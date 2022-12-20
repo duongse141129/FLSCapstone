@@ -60,6 +60,24 @@ namespace BEAPICapstoneProjectFLS.Controllers
             return Ok(RequestVM);
         }
 
+        [HttpPut("UpdateAllRequestWaiting/{semesterID}")]
+        public async Task<IActionResult> UpdateAllRequestWaiting(string semesterID)
+        {
+            var RequestVM = await _IRequestService.UpdateAllRequestWaiting(semesterID);
+            if (RequestVM.Success == false)
+                return Ok(RequestVM);
+            return Ok(RequestVM);
+        }
+
+        [HttpPut("RollBackToUpdateAllRequestWaiting/{semesterID}")]
+        public async Task<IActionResult> RollBackToUpdateAllRequestWaiting(string semesterID)
+        {
+            var RequestVM = await _IRequestService.RollBackToUpdateAllRequestWaiting(semesterID);
+            if (RequestVM.Success == false)
+                return Ok(RequestVM);
+            return Ok(RequestVM);
+        }
+
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteRequest(string id)
         {

@@ -106,6 +106,7 @@ namespace BEAPICapstoneProjectFLS
             services.AddScoped<ISwapService, SwapService>();
             services.AddScoped<ITokenService, TokenService>();
             services.AddScoped<ICheckConstraintService, CheckConstraintService>();
+            services.AddScoped<IDeleteAllDataInSemesterService, DeleteAllDataInSemesterService>();
 
             services.AddControllersWithViews()
                 .AddNewtonsoftJson(option =>

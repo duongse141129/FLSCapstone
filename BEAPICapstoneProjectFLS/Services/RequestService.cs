@@ -172,6 +172,90 @@ namespace BEAPICapstoneProjectFLS.Services
 
         }
 
+        public async Task<ApiResponse> UpdateAllRequestWaiting(string semesterID)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.Success = false;
+            apiResponse.Message = "Update All Waiting Requests Fail";
+            try
+            {
+                var listRequestWaiting = await _res.GetAllByIQueryable()
+                                            .Where(x => x.SemesterId == semesterID && x.ResponseState == 0 && x.Status == (int)RequestStatus.Active)
+                                            .ToListAsync();
+                if(listRequestWaiting == null)
+                {
+                    apiResponse.Success = true;
+                    apiResponse.Message = "Update All Waiting Requests Success";
+                    apiResponse.Data = "List Waiting Requests are empty";
+                    return apiResponse;
+                }
+
+                foreach(var waitingRequest in listRequestWaiting)
+                {
+                    waitingRequest.ResponseState = -1;                
+                    waitingRequest.DateRespone = DateTime.Now;
+                    waitingRequest.Description = "Processing time has expired";
+                    await _res.UpdateAsync(waitingRequest);
+                    await _res.SaveAsync();
+                }
+                apiResponse.Success = true;
+                apiResponse.Message = "Update All Waiting Requests Success";
+                return apiResponse;
+
+
+
+            }
+            catch(Exception ex)
+            {
+                apiResponse.Data = ex.Message;
+                return apiResponse;
+            }
+
+
+        }
+
+        public async Task<ApiResponse> RollBackToUpdateAllRequestWaiting(string semesterID)
+        {
+            ApiResponse apiResponse = new ApiResponse();
+            apiResponse.Success = false;
+            apiResponse.Message = "RollBack to Update All Waiting Requests RollBack Fail";
+            try
+            {
+                var listRequestWaiting = await _res.GetAllByIQueryable()
+                                            .Where(x => x.SemesterId == semesterID && x.ResponseState == -1 && x.Description == "Processing time has expired" && x.Status == (int)RequestStatus.Active)
+                                            .ToListAsync();
+                if (listRequestWaiting == null)
+                {
+                    apiResponse.Success = true;
+                    apiResponse.Message = "RollBack to Update All Waiting Requests Success";
+                    apiResponse.Data = "List Expired Requests are empty";
+                    return apiResponse;
+                }
+
+                foreach (var waitingRequest in listRequestWaiting)
+                {
+                    waitingRequest.ResponseState = 0;
+                    waitingRequest.DateRespone = null;
+                    waitingRequest.Description = "";
+                    await _res.UpdateAsync(waitingRequest);
+                    await _res.SaveAsync();
+                }
+                apiResponse.Success = true;
+                apiResponse.Message = "RollBack to Update All Waiting Requests Success";
+                return apiResponse;
+
+
+
+            }
+            catch (Exception ex)
+            {
+                apiResponse.Data = ex.Message;
+                return apiResponse;
+            }
+
+
+        }
+
 
         public async Task<ApiResponse> DeleteRequestInSemester(string semesterID)
         {
